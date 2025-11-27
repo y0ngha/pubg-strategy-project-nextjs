@@ -40,7 +40,7 @@ const products = await service.getAll();
 // 3개 파일 필요
 ```
 
-1. Use Case 계층의 경량화 및 실용성
+2. Use Case 계층의 경량화 및 실용성
     - 클린 아키텍처
         - Domain → Application (← Use Case) → Presentation → Data 4계층 구조를 가진다.
         - Use Case 계층은 비즈니스 규칙의 실행 단위를 별도의 클래스나 함수로 만듭니다.
