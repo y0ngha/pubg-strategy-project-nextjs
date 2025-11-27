@@ -1,8 +1,8 @@
 # 아키텍처
 
-1. Clean Architecture vs Hexagonal Architecture(Port & Adapter Architecture)
+Clean Architecture vs Hexagonal Architecture(Port & Adapter Architecture)
 
-[기술 스펙]에 따르면, Next.js를 선택하기로 했다.
+[기술 스펙](Techincal_specifications.md)에 따르면, Next.js를 선택하기로 했다.
 
 Clean Architecture는 계층이 4개(Domain, Application, Presentation, Data)로 세분화되어 있어 Next.js의 단순한 서버-클라이언트 구조에는 다소 무겁다.
 
