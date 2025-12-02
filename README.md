@@ -28,3 +28,7 @@
 # 요구사항
 > 문서
 > [Requests](docs/Requests.md)
+
+# 설계 문서
+> 문서 
+> [Domain Design](docs/Domain_Design.md)
