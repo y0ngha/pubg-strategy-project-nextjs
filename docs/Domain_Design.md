@@ -2,7 +2,8 @@
 
 ![Domain Model](Domain_Design.png)
 
-<aside>
+---
+
 # Shared Kernel
 
 ### 〒 Value Object
@@ -10,7 +11,6 @@
 > 불변 객체, 동등성 비교로 관리
 > 
 
-<aside>
 [UserId]
 
 ---
@@ -23,9 +23,7 @@
 
 1. 유저 아이디가 같은지 비교할 수 있는 함수를 제공한다.
 2. 원시 값 반환에 대한 함수를 제공한다.
-</aside>
 
-<aside>
 [Email]
 
 ---
@@ -35,11 +33,9 @@
 ---
 
 1. `@`, `.` 포함 여부를 확인하여 이메일 형식을 검증한다.
-</aside>
 
 ### 📑 Enum
 
-<aside>
 [Map]
 
 > PUBG 맵
@@ -54,11 +50,8 @@
 - Karakin (카라킨)
 - Taego (태이고)
 - Rondo (론도)
-</aside>
 
-</aside>
 
-<aside>
 # **User Context**
 
 ## 📌 책임 (Responsibility)
@@ -106,7 +99,6 @@
 > 불변 객체, 동등성 비교로 관리
 > 
 
-<aside>
 [Password]
 
 ---
@@ -118,14 +110,12 @@
 1. 비밀번호 유효성 검증을 진행한다.
     1. 비밀번호는 최소 8자 이상
     2. 대문자, 소문자, 숫자, 특수문자 포함 여부 확인
-</aside>
 
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
 > 
 
-<aside>
 [PasswordValidator]
 
 ---
@@ -134,13 +124,10 @@
     
     > `Email`, `Password` 만 있으면 되어서 순수 도메인 로직(Entity)의 책임으로 돌릴 수 있으나, 비밀번호 정책이 User Entity와 강결합을 원하지 않아 Service로 분리한다.
     > 
-</aside>
 
 ### 📑 Enum
 
-</aside>
 
-<aside>
 # Friend Context
 
 ## 📌 책임 (Responsibility)
@@ -190,7 +177,6 @@
 > 불변 객체, 동등성 비교로 관리
 > 
 
-<aside>
 [FriendshipId]
 
 ---
@@ -203,13 +189,11 @@
 
 1. 원시 값 반환에 대한 함수를 제공한다.
 2. 백엔드에서 부터 받은 ID값을 string → FriendshipId로 변환한다.
-</aside>
 
 ### ⛓️ Service
 
 ### 📑 Enum
 
-<aside>
 [FriendshipStatus]
 
 > 친구 관계에 대한 Enum Class.
@@ -220,11 +204,8 @@
 - PENDING(대기)
 - ACCEPTED(수락)
 - REJECTED(거절)
-</aside>
 
-</aside>
 
-<aside>
 # Strategy
 
 ## 📌 책임 (Responsibility)
@@ -310,7 +291,6 @@
 
 ### ⚙️ Domain Entity
 
-<aside>
 📖
 
 TeamPlayer
@@ -344,9 +324,7 @@ TeamPlayer
 4. 플레이어 색상 가져오기
     1. 0 → RED, 1 → ORANGE, 2 → YELLOW, 3 → GREEN
     2. 이는 마커와 웨이포인트에도 적용된다.
-</aside>
 
-<aside>
 📖
 
 EnemyTeam
@@ -376,9 +354,7 @@ EnemyTeam
 1. 팀 레이블 변경
 2. 위치 변경
 3. 상대 팀 삭제
-</aside>
 
-<aside>
 📖
 
 StrategyShare
@@ -407,9 +383,7 @@ StrategyShare
 1. 전략 공유하기
 2. 권한 변경
 3. 전략 공유해제
-</aside>
 
-<aside>
 📖
 
 Comment
@@ -443,9 +417,7 @@ Comment
 3. 댓글 수정
 4. 답변인지 여부 체크
 5. 탑 레벨인지 여부 체크 (부모 댓글인지)
-</aside>
 
-<aside>
 📖
 
 Circle
@@ -478,9 +450,7 @@ Circle
 4. 자기장 넓이 계산
 5. 자기장 색깔 계산
     1. 페이즈 낮음 → 페이즈 큼 수준으로 색깔이 진해짐
-</aside>
 
-<aside>
 📖
 
 AirplanePath
@@ -509,9 +479,7 @@ AirplanePath
 1. 비행기 동선 생성
 2. 비행기 동선 삭제
 3. 비행기 동선 수정
-</aside>
 
-<aside>
 📖
 
 Waypoint
@@ -539,9 +507,7 @@ Waypoint
 1. 웨이포인트 생성
 2. 웨이포인트 삭제
 3. 웨이포인트 수정
-</aside>
 
-<aside>
 📖
 
 Marker
@@ -569,9 +535,7 @@ Marker
 1. 마커 생성
 2. 마커 삭제
 3. 마커 수정
-</aside>
 
-<aside>
 📖
 
 Tag
@@ -600,14 +564,12 @@ Tag
 1. 태그 생성
 2. 태그 삭제
 3. 태그 수정
-</aside>
 
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
 > 
 
-<aside>
 [StrategyId]
 
 ---
@@ -622,9 +584,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 StrategyId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [TeamPlayerId]
 
 ---
@@ -639,9 +599,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 TeamPlayerId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [EnemyTeamId]
 
 ---
@@ -656,9 +614,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 EnemyTeamId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [StrategyShareId]
 
 ---
@@ -673,9 +629,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 StrategyShareId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [CommentId]
 
 ---
@@ -690,9 +644,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CommentId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [CircleId]
 
 ---
@@ -707,9 +659,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CircleId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [AirplanePathId]
 
 ---
@@ -724,9 +674,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 AirplanePathId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [WaypointId]
 
 ---
@@ -741,9 +689,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 WaypointId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [MarkerId]
 
 ---
@@ -758,9 +704,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 Marker로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [TagId]
 
 ---
@@ -775,9 +719,7 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 TagId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [TeamLabel]
 
 ---
@@ -792,9 +734,7 @@ Tag
 
 한 글자 이상 제약조건, A - Z까지만 가능한 제약 조건을 관리한다.
 
-</aside>
 
-<aside>
 [Position]
 
 ---
@@ -808,25 +748,21 @@ Tag
 
 x, y 값을 관리한다.
 
-</aside>
 
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
 > 
 
-<aside>
 [Service Name]
 
 ---
 
 역할
 
-</aside>
 
 ### 📑 Enum
 
-<aside>
 [PlayerColor]
 
 > 팀 플레이어 색상
@@ -838,9 +774,7 @@ x, y 값을 관리한다.
 - ORANGE
 - YELLOW
 - GREEN
-</aside>
 
-<aside>
 [SharePermission]
 
 > 팀 플레이어 색상
@@ -850,11 +784,8 @@ x, y 값을 관리한다.
 
 - READ_ONLY
 - EDIT
-</aside>
 
-</aside>
 
-<aside>
 # Player Statistics
 
 ## 📌 책임 (Responsibility)
@@ -907,7 +838,6 @@ x, y 값을 관리한다.
 
 ### ⚙️ Domain Entity
 
-<aside>
 📖
 
 MatchHistory
@@ -934,9 +864,7 @@ MatchHistory
 **[주요 도메인 로직]**
 
 1. 팀에서 몇인분 했는지 계산 → 상세 도메인 로직 구상 필요
-</aside>
 
-<aside>
 📖
 
 SeasonStat
@@ -979,9 +907,7 @@ SeasonStat
 
 ---
 
-</aside>
 
-<aside>
 📖
 
 SeasonWeaponStat
@@ -1017,14 +943,12 @@ SeasonWeaponStat
 
 ---
 
-</aside>
 
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
 > 
 
-<aside>
 [PlayerId]
 
 ---
@@ -1039,9 +963,7 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 PlayerId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [MatchId]
 
 ---
@@ -1056,9 +978,7 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 MatchId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [SeasonStatId]
 
 ---
@@ -1073,9 +993,7 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 SeasonStatId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [SeasonWeaponStatId]
 
 ---
@@ -1090,9 +1008,7 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 SeasonWeaponStatId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [WeaponId]
 
 ---
@@ -1107,9 +1023,7 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 WeaponId로 돌려주는 함수도 있다.
 
-</aside>
 
-<aside>
 [Leaderboard]
 
 ---
@@ -1133,25 +1047,21 @@ SeasonWeaponStat
 
 플레이어의 성과에 대해 관리한다.
 
-</aside>
 
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
 > 
 
-<aside>
 [Service Name]
 
 ---
 
 역할
 
-</aside>
 
 ### 📑 Enum
 
-<aside>
 [GameMode]
 
 > PUBG 게임 모드
@@ -1162,6 +1072,3 @@ SeasonWeaponStat
 - SOLO
 - DUO
 - SQUAD
-</aside>
-
-</aside>
