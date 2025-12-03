@@ -2,11 +2,7 @@
 
 ![Domain Model](Domain_Design.png)
 
-Domain Model
-
 <aside>
-🚧
-
 # Shared Kernel
 
 ### 〒 Value Object
@@ -15,9 +11,7 @@ Domain Model
 > 
 
 <aside>
-➡️
-
-UserId 
+[UserId]
 
 ---
 
@@ -32,9 +26,7 @@ UserId
 </aside>
 
 <aside>
-➡️
-
-Email
+[Email]
 
 ---
 
@@ -48,9 +40,7 @@ Email
 ### 📑 Enum
 
 <aside>
-➡️
-
-Map
+[Map]
 
 > PUBG 맵
 > 
@@ -69,8 +59,6 @@ Map
 </aside>
 
 <aside>
-🚧
-
 # **User Context**
 
 ## 📌 책임 (Responsibility)
@@ -119,9 +107,7 @@ Map
 > 
 
 <aside>
-➡️
-
-Password
+[Password]
 
 ---
 
@@ -140,9 +126,7 @@ Password
 > 
 
 <aside>
-➡️
-
-PasswordValidator
+[PasswordValidator]
 
 ---
 
@@ -157,8 +141,6 @@ PasswordValidator
 </aside>
 
 <aside>
-🚧
-
 # Friend Context
 
 ## 📌 책임 (Responsibility)
@@ -209,9 +191,7 @@ PasswordValidator
 > 
 
 <aside>
-➡️
-
-FriendshipId
+[FriendshipId]
 
 ---
 
@@ -230,9 +210,7 @@ FriendshipId
 ### 📑 Enum
 
 <aside>
-➡️
-
-FriendshipStatus
+[FriendshipStatus]
 
 > 친구 관계에 대한 Enum Class.
 > 
@@ -247,8 +225,6 @@ FriendshipStatus
 </aside>
 
 <aside>
-🚧
-
 # Strategy
 
 ## 📌 책임 (Responsibility)
@@ -325,6 +301,7 @@ FriendshipStatus
 | circles | List<Circle> | 전략의 자기장
 | 최대 8개까지 생성될 수 있다. |
 | airplanePath | AirplanePath | 비행기 동선 좌표 |
+| tags | List<Tag> | 지도 내 태그 목록 |
 | shares | List<StrategyShare> | 공유된 전략 정보 |
 | comments | List<Comment> | 댓글 |
 | isEditing | boolean | 전략 편집 여부 → 애매함. 더 고민 필요 |
@@ -364,6 +341,9 @@ TeamPlayer
 1. 마커 생성, 삭제
 2. 웨이포인트 생성, 삭제
 3. 위치 변경
+4. 플레이어 색상 가져오기
+    1. 0 → RED, 1 → ORANGE, 2 → YELLOW, 3 → GREEN
+    2. 이는 마커와 웨이포인트에도 적용된다.
 </aside>
 
 <aside>
@@ -415,7 +395,6 @@ StrategyShare
 | --- | --- | --- |
 | id | StrategyShareId? | 전략 공유 고유 식별자
 | 최초 생성시에는 Null을 허용한다. |
-| strategyId | StrategyId | 전략 고유 식별자 |
 | sharedWithUserId | UserId | 전략을 공유 받을 유저 고유 식별자 |
 | sharedWithEmail | string | 전략을 공유 받을 유저 고유 이메일 |
 | permission | SharePermission | 공유 받을 유저의 권한 |
@@ -447,7 +426,6 @@ Comment
 | --- | --- | --- |
 | id | CommentId? | 댓글 고유 식별자
 | 최초 생성시에는 Null을 허용한다. |
-| strategyId | StrategyId | 전략 고유 식별자 |
 | position | Position | 맵 위 댓글 위치 |
 | authorId | UserId | 댓글 작성 유저 고유 식별자 |
 | authorEmail | string | 댓글 작성 유저 이메일 |
@@ -467,15 +445,170 @@ Comment
 5. 탑 레벨인지 여부 체크 (부모 댓글인지)
 </aside>
 
+<aside>
+📖
+
+Circle
+
+---
+
+**[📌 책임 (Responsibility)]**
+
+1. 자기장에 대한 내용을 관리한다.
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | CircleId? | 자기장 고유 식별자
+| 최초 생성시에는 Null을 허용한다. |
+| centerPosition | Position | 가운데 위치값 |
+| radius | number | 반지름 |
+| phase | number | 페이즈 |
+| createdAt | Date | 생성일시 |
+| updatedAt | Date | 수정일시 |
+
+---
+
+**[주요 도메인 로직]**
+
+1. 자기장 생성
+2. 자기장 수정
+3. 자기장 삭제
+4. 자기장 넓이 계산
+5. 자기장 색깔 계산
+    1. 페이즈 낮음 → 페이즈 큼 수준으로 색깔이 진해짐
+</aside>
+
+<aside>
+📖
+
+AirplanePath
+
+---
+
+**[📌 책임 (Responsibility)]**
+
+1. 전략 내 비행기 동선에 대해 관리한다.
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | AirplanePathId? | 비행기 동선 고유 식별자
+| 최초 생성시에는 Null을 허용한다. |
+| startPosition | Position | 맵 위 비행기 시작 위치 |
+| endPosition | Position | 맵 위 비행기 종료 위치 |
+| createdAt | Date | 생성일시 |
+| updatedAt | Date | 수정일시 |
+
+---
+
+**[주요 도메인 로직]**
+
+1. 비행기 동선 생성
+2. 비행기 동선 삭제
+3. 비행기 동선 수정
+</aside>
+
+<aside>
+📖
+
+Waypoint
+
+---
+
+**[📌 책임 (Responsibility)]**
+
+1. 전략 내 웨이포인트에 대해 관리한다.
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | WaypointId? | 댓글 고유 식별자
+| 최초 생성시에는 Null을 허용한다. |
+| position | Position | 맵 위 웨이포인트 위치 |
+| createdAt | Date | 생성일시 |
+| updatedAt | Date | 수정일시 |
+
+---
+
+**[주요 도메인 로직]**
+
+1. 웨이포인트 생성
+2. 웨이포인트 삭제
+3. 웨이포인트 수정
+</aside>
+
+<aside>
+📖
+
+Marker
+
+---
+
+**[📌 책임 (Responsibility)]**
+
+1. 전략에 대한 마커를 관리한다.
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | MarkerId? | 마커 고유 식별자
+| 최초 생성시에는 Null을 허용한다. |
+| position | Position | 맵 위 마커 위치 |
+| createdAt | Date | 생성일시 |
+| updatedAt | Date | 수정일시 |
+
+---
+
+**[주요 도메인 로직]**
+
+1. 마커 생성
+2. 마커 삭제
+3. 마커 수정
+</aside>
+
+<aside>
+📖
+
+Tag
+
+---
+
+**[📌 책임 (Responsibility)]**
+
+1. 전략에 대한 태그를 관리한다.
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | TagId? | 태그 고유 식별자
+| 최초 생성시에는 Null을 허용한다. |
+| position | Position | 맵 위 태그 위치 |
+| content | string | 내용 |
+| createdAt | Date | 생성일시 |
+| updatedAt | Date | 수정일시 |
+
+---
+
+**[주요 도메인 로직]**
+
+1. 태그 생성
+2. 태그 삭제
+3. 태그 수정
+</aside>
+
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
 > 
 
 <aside>
-➡️
-
-StrategyId
+[StrategyId]
 
 ---
 
@@ -492,9 +625,7 @@ StrategyId
 </aside>
 
 <aside>
-➡️
-
-TeamPlayerId
+[TeamPlayerId]
 
 ---
 
@@ -511,9 +642,7 @@ TeamPlayerId
 </aside>
 
 <aside>
-➡️
-
-EnemyTeamId
+[EnemyTeamId]
 
 ---
 
@@ -530,9 +659,7 @@ EnemyTeamId
 </aside>
 
 <aside>
-➡️
-
-StrategyShareId
+[StrategyShareId]
 
 ---
 
@@ -549,64 +676,109 @@ StrategyShareId
 </aside>
 
 <aside>
-➡️
-
-Circle
+[CommentId]
 
 ---
 
 | 필드명 | 타입 | 설명 |
 | --- | --- | --- |
-| centerPosition | Position | 가운데 위치값 |
-| radius | number | 반지름 |
-| phase | number | 페이즈 |
+| id | string | 댓글 고유 식별자 |
 
 ---
 
-center x,y 값 / 크기 / 페이즈를 관리한다.
+전략 내 생성된 댓글 고유 식별자를 관리한다.
+
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CommentId로 돌려주는 함수도 있다.
 
 </aside>
 
 <aside>
-➡️
-
-Waypoint
+[CircleId]
 
 ---
 
 | 필드명 | 타입 | 설명 |
 | --- | --- | --- |
-| position | Position | 위치값 |
+| id | string | 자기장 고유 식별자 |
 
 ---
 
-x, y 값을 포함하여 어디로 이동하는지 관리한다.
+전략 내 생성된 자기장 고유 식별자를 관리한다.
 
-중복된 위치로의 이동인지를 검증한다.
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CircleId로 돌려주는 함수도 있다.
 
 </aside>
 
 <aside>
-➡️
-
-Marker
+[AirplanePathId]
 
 ---
 
 | 필드명 | 타입 | 설명 |
 | --- | --- | --- |
-| position | Position | 위치값 |
+| id | string | 비행기 동선 고유 식별자 |
 
 ---
 
-x, y 값을 포함하여 마커를 관리한다.
+전략 내 생성된 웨이포인트 고유 식별자를 관리한다.
+
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 AirplanePathId로 돌려주는 함수도 있다.
 
 </aside>
 
 <aside>
-➡️
+[WaypointId]
 
-TeamLabel
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | string | 웨이포인트 고유 식별자 |
+
+---
+
+전략 내 생성된 웨이포인트 고유 식별자를 관리한다.
+
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 WaypointId로 돌려주는 함수도 있다.
+
+</aside>
+
+<aside>
+[MarkerId]
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | string | 마커 고유 식별자 |
+
+---
+
+전략 내 생성된 마커 고유 식별자를 관리한다.
+
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 Marker로 돌려주는 함수도 있다.
+
+</aside>
+
+<aside>
+[TagId]
+
+---
+
+| 필드명 | 타입 | 설명 |
+| --- | --- | --- |
+| id | string | 태그 고유 식별자 |
+
+---
+
+전략 내 생성된 태그 고유 식별자를 관리한다.
+
+원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 TagId로 돌려주는 함수도 있다.
+
+</aside>
+
+<aside>
+[TeamLabel]
 
 ---
 
@@ -623,9 +795,7 @@ TeamLabel
 </aside>
 
 <aside>
-➡️
-
-Position
+[Position]
 
 ---
 
@@ -640,32 +810,13 @@ x, y 값을 관리한다.
 
 </aside>
 
-<aside>
-➡️
-
-AirplanePath
-
----
-
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| position | Position | 위치값 |
-
----
-
-x, y 값을 관리한다.
-
-</aside>
-
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
 > 
 
 <aside>
-➡️
-
-Service Name
+[Service Name]
 
 ---
 
@@ -676,9 +827,7 @@ Service Name
 ### 📑 Enum
 
 <aside>
-➡️
-
-PlayerColor
+[PlayerColor]
 
 > 팀 플레이어 색상
 > 
@@ -692,9 +841,7 @@ PlayerColor
 </aside>
 
 <aside>
-➡️
-
-SharePermission
+[SharePermission]
 
 > 팀 플레이어 색상
 > 
@@ -708,8 +855,6 @@ SharePermission
 </aside>
 
 <aside>
-🚧
-
 # Player Statistics
 
 ## 📌 책임 (Responsibility)
@@ -880,9 +1025,7 @@ SeasonWeaponStat
 > 
 
 <aside>
-➡️
-
-PlayerId
+[PlayerId]
 
 ---
 
@@ -899,9 +1042,7 @@ PlayerId
 </aside>
 
 <aside>
-➡️
-
-MatchId
+[MatchId]
 
 ---
 
@@ -918,9 +1059,7 @@ MatchId
 </aside>
 
 <aside>
-➡️
-
-SeasonStatId
+[SeasonStatId]
 
 ---
 
@@ -937,9 +1076,7 @@ SeasonStatId
 </aside>
 
 <aside>
-➡️
-
-SeasonWeaponStatId
+[SeasonWeaponStatId]
 
 ---
 
@@ -956,9 +1093,7 @@ SeasonWeaponStatId
 </aside>
 
 <aside>
-➡️
-
-WeaponId
+[WeaponId]
 
 ---
 
@@ -975,9 +1110,7 @@ WeaponId
 </aside>
 
 <aside>
-➡️
-
-Leaderboard
+[Leaderboard]
 
 ---
 
@@ -1008,9 +1141,7 @@ Leaderboard
 > 
 
 <aside>
-➡️
-
-Service Name
+[Service Name]
 
 ---
 
@@ -1021,9 +1152,7 @@ Service Name
 ### 📑 Enum
 
 <aside>
-➡️
-
-GameMode
+[GameMode]
 
 > PUBG 게임 모드
 > 
