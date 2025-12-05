@@ -1,0 +1,38 @@
+{
+  "name": "pubg-strategy-project-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "배틀그라운드 전략 분석",
+  "author": "신용하 <dev.y0ngha@gmail.com>",
+  "packageManager": "yarn@4.12.0",
+  "scripts": {
+    "dev": "next dev --turbopack -p 4200",
+    "build": "rm -rf .next && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint-css": "stylelint --allow-empty-input '**/*.{css,scss}'",
+    "lint-fix": "next lint --fix",
+    "lint-fix-css": "stylelint --fix '**/*.{css,scss}'",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage",
+    "test-coverage-watch": "jest --coverage --watch",
+    "test-coverage-report": "jest --coverage --coverageReporters=text-summary"
+  },
+  "dependencies": {
+    "@types/jest": "^30.0.0",
+    "next": "16.0.7",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
