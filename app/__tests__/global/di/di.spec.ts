@@ -12,7 +12,7 @@ describe('InversifyJS Dependency Injection Setup', () => {
 
     const dataSourceInstance = new Map<number, string>();
 
-    const configValue = "production_key_12345";
+    const configValue = "test_config_value";
 
     const dependencyInjectionSymbols: DependencyInjectionSymbol = {
         TestService: Symbol.for("TestService"),
