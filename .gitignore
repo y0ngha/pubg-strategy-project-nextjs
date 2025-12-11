@@ -39,3 +39,6 @@ next-env.d.ts
 
 *storybook.log
 /.idea/
+
+# jest
+.jest

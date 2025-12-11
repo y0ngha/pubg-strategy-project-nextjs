@@ -35,6 +35,6 @@
 
 # 실행방법
 1. Node 25.2.1 버전 설치
-2. `npm install -g yarn`
+2. `npm install -g yarn jest`
 3. 폴더에 들어와서 `yarn install`
 4. `yarn dev` 로 개발서버 실행
