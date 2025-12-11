@@ -13,11 +13,11 @@
     "lint-css": "stylelint --allow-empty-input '**/*.{css,scss}'",
     "lint-fix": "next lint --fix",
     "lint-fix-css": "stylelint --fix '**/*.{css,scss}'",
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "test-coverage": "jest --coverage",
-    "test-coverage-watch": "jest --coverage --watch",
-    "test-coverage-report": "jest --coverage --coverageReporters=text-summary"
+    "test": "npx jest",
+    "test-watch": "npx jest --watch",
+    "test-coverage": "npx jest --coverage",
+    "test-coverage-watch": "npx jest --coverage --watch",
+    "test-coverage-report": "npx jest --coverage --coverageReporters=text-summary"
   },
   "dependencies": {
     "@types/jest": "^30.0.0",
