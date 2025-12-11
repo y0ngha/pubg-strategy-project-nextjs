@@ -1,4 +1,4 @@
-type DISymbol = { [symbolKey: string]: symbol } 
+export type DependencyInjectionSymbol = { [symbolKey: string]: symbol } 
 
-export const DISymbols: DISymbol = {
+export const dependencyInjectionSymbols: DependencyInjectionSymbol = {
 }
