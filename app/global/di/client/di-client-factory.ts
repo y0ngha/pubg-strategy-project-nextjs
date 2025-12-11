@@ -1,0 +1,27 @@
+import { Container } from "inversify";
+import { autoDependenciesBindForClass, autoDependenciesBindForValue } from "../helpers/auto-inject";
+import { ClassDependency, ValueDependency } from "../types/di-types";
+
+let container: Container | null = null;
+
+const dependencyInjectedClasses: ClassDependency = {
+} as const;
+
+const dependencyInjectedValues: ValueDependency = {
+} as const;
+
+export function getClientContainer(): Container {
+    if (typeof window === 'undefined') {
+        throw new Error("[getClientContainer] 서버 환경에서는 사용할 수 없는 코드입니다.");
+    }
+    
+    if (!container) {
+        container = new Container();
+
+        autoDependenciesBindForClass(dependencyInjectedClasses, container);
+        autoDependenciesBindForValue(dependencyInjectedValues, container);
+    }
+
+    // 5. 이미 생성된 싱글톤 컨테이너 반환
+    return container;
+}
