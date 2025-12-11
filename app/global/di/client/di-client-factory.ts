@@ -22,6 +22,5 @@ export function getClientContainer(): Container {
         autoDependenciesBindForValue(dependencyInjectedValues, container);
     }
 
-    // 5. 이미 생성된 싱글톤 컨테이너 반환
     return container;
 }
