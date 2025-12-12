@@ -13,26 +13,32 @@
     "lint-css": "stylelint --allow-empty-input '**/*.{css,scss}'",
     "lint-fix": "next lint --fix",
     "lint-fix-css": "stylelint --fix '**/*.{css,scss}'",
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "test-coverage": "jest --coverage",
-    "test-coverage-watch": "jest --coverage --watch",
-    "test-coverage-report": "jest --coverage --coverageReporters=text-summary"
+    "test": "npx jest",
+    "test-watch": "npx jest --watch",
+    "test-coverage": "npx jest --coverage",
+    "test-coverage-watch": "npx jest --coverage --watch",
+    "test-coverage-report": "npx jest --coverage --coverageReporters=text-summary"
   },
   "dependencies": {
     "@types/jest": "^30.0.0",
+    "inversify": "^7.10.6",
     "next": "16.0.7",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/reflect-metadata": "^0.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
   }
 }
