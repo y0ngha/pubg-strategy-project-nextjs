@@ -7,7 +7,7 @@ export function autoDependenciesBindForClass(
 ): void {
     for (const classDefinition of Object.values(classes)) {
         container
-            .bind<globalThis.InstanceType<typeof classDefinition.class>>(classDefinition.symbol)
+            .bind<InstanceType<typeof classDefinition.class>>(classDefinition.symbol)
             .to(classDefinition.class)
             .inSingletonScope();
     }
