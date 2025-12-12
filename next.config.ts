@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
+import '@infrastructure/config/environment-variables'
 
 const nextConfig: NextConfig = {
-  // 기존 설정...
+
 };
 
 export default nextConfig;
