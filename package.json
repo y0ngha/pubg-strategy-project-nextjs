@@ -20,11 +20,13 @@
     "test-coverage-report": "npx jest --coverage --coverageReporters=text-summary"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@types/jest": "^30.0.0",
     "inversify": "^7.10.6",
     "next": "16.0.7",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-hook-form": "^7.68.0",
     "reflect-metadata": "^0.2.2",
     "zod": "^4.1.13"
   },
