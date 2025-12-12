@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const EnvironmentVariablesSchema: z.ZodObject = z.object({
+export const EnvironmentVariablesSchema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     NEXT_PUBLIC_API_URL: z.url({
         message: 'NEXT_PUBLIC_API_URL must be a valid URL',
