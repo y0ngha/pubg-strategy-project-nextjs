@@ -1,8 +1,12 @@
 import { ServiceIdentifier } from "inversify";
 import { createServerRequestContainer } from "./di-server-factory";
 
-export function getDependencyFromContainer<T>(
-    identifier: ServiceIdentifier<T>,
-): T {
-    return createServerRequestContainer().get<T>(identifier);
+export function initializeRequestServices() {
+    const container = createServerRequestContainer();
+    
+    return function getServiceFromRequestContainer<T>(
+        identifier: ServiceIdentifier<T>
+    ): T {
+        return container.get<T>(identifier);
+    };
 }
