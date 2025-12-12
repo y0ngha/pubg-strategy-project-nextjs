@@ -38,3 +38,16 @@
 2. `npm install -g yarn`
 3. 폴더에 들어와서 `yarn install`
 4. `yarn dev` 로 개발서버 실행
+
+--
+
+# 환경변수
+
+## 구글 관련
+```markdown
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI
+```
+--
+빌드시 위 환경 변수를 추가해주세요.

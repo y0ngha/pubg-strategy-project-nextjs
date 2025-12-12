@@ -26,7 +26,13 @@
     ],
     "paths": {
       "@/*": [
-        "./src/*"
+        "./app/*"
+      ],
+      "@infrastructure/*": [
+        "./app/infrastructure/*"
+      ],
+      "@global/*": [
+        "./app/global/*"
       ]
     }
   },
