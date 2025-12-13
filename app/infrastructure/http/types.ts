@@ -8,11 +8,11 @@ export interface ApiRequestConfig<T = unknown> {
     withAuthorizationHeader?: boolean;
 }
 
-type RequestInterceptorGeneralType = { url: string; config: ApiRequestConfig }
+type RequestInterceptorGeneralType<T> = { url: string; config: ApiRequestConfig<T> }
 
-export type RequestInterceptor = (
+export type RequestInterceptor<T> = (
     url: string,
-    config: ApiRequestConfig
-) => Promise<RequestInterceptorGeneralType>;
+    config: ApiRequestConfig<T>
+) => Promise<RequestInterceptorGeneralType<T>>;
 
 export type ResponseInterceptor = (response: Response) => Response;

@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { env } from '../config/environment-variables';
 import { RequestInterceptor, ResponseInterceptor } from './types';
 
-export const loggingRequestInterceptor: RequestInterceptor = async (url, config) => {
+export const loggingRequestInterceptor: RequestInterceptor<unknown> = async (url, config) => {
     if (env.NODE_ENV === 'development') {
         console.log(`[API Request] ${config.method} ${url}`);
         console.log('[API Body]', config.body);
@@ -17,7 +17,7 @@ export const loggingResponseInterceptor: ResponseInterceptor = (response) => {
     return response;
 };
 
-export const authRequestInterceptor: RequestInterceptor = async (url, config) => {
+export const authRequestInterceptor: RequestInterceptor<unknown> = async (url, config) => {
     if (config.withAuthorizationHeader) {
         const token = (await cookies()).get('auth_token')?.value;
         if (token) {

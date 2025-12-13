@@ -22,7 +22,7 @@ import {
 export class ApiClient {
     private readonly baseUrl: string;
     private readonly defaultTimeout: number;
-    private requestInterceptors: RequestInterceptor[];
+    private requestInterceptors: RequestInterceptor<unknown>[];
     private responseInterceptors: ResponseInterceptor[];
 
     constructor(
@@ -95,6 +95,9 @@ export class ApiClient {
 
         for (const interceptor of this.requestInterceptors) {
             const result = await interceptor(processedUrl, processedConfig);
+            if (!this.isApiRequestConfig<D>(result.config)) {
+                throw new Error('Invalid interceptor configuration.');
+            }
             processedUrl = result.url;
             processedConfig = result.config as ApiRequestConfig<D>;
         }
@@ -178,5 +181,24 @@ export class ApiClient {
         } catch (error) {
             throw new ApiError("응답 형식이 일치하지 않습니다.", response.status, text);
         }
+    }
+
+    private isApiRequestConfig<D>(
+        config: any
+    ): config is ApiRequestConfig<D> {
+
+        if (typeof config !== 'object' || config === null) {
+            return false;
+        }
+
+        if (!('method' in config)) {
+            return false;
+        }
+
+        if (typeof config.method !== 'string') {
+            return false;
+        }
+
+        return true;
     }
 }
