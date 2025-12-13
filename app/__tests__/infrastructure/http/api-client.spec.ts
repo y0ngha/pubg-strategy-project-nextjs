@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import 'reflect-metadata';
 import { http, HttpResponse } from 'msw';
 import { ApiClient } from '@/infrastructure/http/api-client';
@@ -23,6 +27,7 @@ describe('ApiClient 테스트', () => {
     beforeEach(() => {
         client = new ApiClient(BASE_URL);
     });
+
 
     describe('성공 테스트', () => {
         it('GET 요청이 성공하고 데이터를 반환해야 한다', async () => {
