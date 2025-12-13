@@ -1,4 +1,3 @@
-import { ApiError } from '@/infrastructure/http/api-errors';
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
