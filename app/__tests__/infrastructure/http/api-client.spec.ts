@@ -4,7 +4,6 @@ import { ApiClient } from '@/infrastructure/http/api-client';
 import { NotFoundError, UnauthorizedError, TimeoutError, NetworkError, ApiError } from '@/infrastructure/http/api-errors';
 import { server } from './api-client.setup';
 
-// 테스트를 위한 Base URL
 const BASE_URL = 'http://localhost:3001';
 
 jest.mock('next/headers', () => ({
@@ -22,11 +21,8 @@ describe('ApiClient', () => {
     let client: ApiClient;
 
     beforeEach(() => {
-        // 테스트 케이스마다 새로운 인스턴스 생성
         client = new ApiClient(BASE_URL);
     });
-
-    // --- 성공 케이스 테스트 ---
 
     test('GET 요청이 성공하고 데이터를 반환해야 한다', async () => {
         const user = await client.get<{ id: number; name: string }>('/api/users/1');
@@ -82,11 +78,6 @@ describe('ApiClient', () => {
     });
 
     test('Authorizaiton Header를 자동으로 추가하여 전송해야한다.', async () => {
-
-
-        // Mocking 검증:
-        // (await cookies()).get('auth_token')?.value; 이 구문이 이제 정상적으로 작동할 것입니다.
-
         const result = await client.get<{ success: boolean }>('/api/protected', {
             withAuthorizationHeader: true,
         });
@@ -96,7 +87,6 @@ describe('ApiClient', () => {
 
     })
 
-    // --- 에러/예외 케이스 테스트 ---
     test('404 Not Found 응답 시 NotFoundError를 throw 해야 한다', async () => {
         await expect(client.get('/api/users/999')).rejects.toThrow(NotFoundError);
     });
@@ -110,22 +100,18 @@ describe('ApiClient', () => {
     });
 
     test('요청 타임아웃 발생 시 TimeoutError를 throw 해야 한다', async () => {
-        // 클라이언트 생성 시 기본 타임아웃을 짧게 설정하거나, 요청별 config로 설정
-        const shortTimeoutClient = new ApiClient(BASE_URL, 10); // 100ms 타임아웃
+        const shortTimeoutClient = new ApiClient(BASE_URL, 10);
 
         await expect(shortTimeoutClient.get('/api/slow')).rejects.toThrow(TimeoutError);
     });
 
     test('네트워크 연결 실패 시 NetworkError를 throw 해야 한다', async () => {
-        // MSW가 처리하지 않는 URL에 대한 요청을 시도하거나, fetch가 실제로 실패하도록 서버를 일시적으로 끄는 등의 고급 설정이 필요할 수 있습니다.
-        // MSW 환경에서는 `fetch` 함수 자체를 모킹하여 네트워크 에러(TypeError)를 시뮬레이션 하는 것이 일반적입니다.
         const mockFetch = jest.spyOn(global, 'fetch').mockImplementation(() => {
-            // TypeError를 발생시켜 네트워크 에러를 시뮬레이션
             throw new TypeError('Failed to fetch');
         });
 
         await expect(client.get('http://nonexistent-host/test')).rejects.toThrow(NetworkError);
 
-        mockFetch.mockRestore(); // Mock 복구
+        mockFetch.mockRestore();
     });
 });
