@@ -19,12 +19,14 @@ export const loggingResponseInterceptor: ResponseInterceptor = (response) => {
 
 export const authRequestInterceptor: RequestInterceptor<unknown> = async (url, config) => {
     if (config.withAuthorizationHeader) {
-        const token = (await cookies()).get('auth_token')?.value;
-        if (token) {
-            config.headers = {
-                ...config.headers,
-                'Authorization': `Bearer ${token}`,
-            };
+        if (typeof window === 'undefined') {
+            const token = (await cookies()).get('auth_token')?.value;
+            if (token) {
+                config.headers = {
+                    ...config.headers,
+                    'Authorization': `Bearer ${token}`,
+                };
+            }
         }
     }
 
