@@ -42,16 +42,16 @@ export const handlers = [
         return new HttpResponse(null, { status: 404 });
     }),
 
-
     http.get('http://localhost:3001/api/protected', ({ request }) => {
         const authHeader = request.headers.get('authorization');
-        if (!authHeader) {
-            return HttpResponse.json(null, { status: 401, statusText: 'Unauthorized' });
-        } else {
-            expect(authHeader).toBe('Bearer test-token-123');
 
-            return HttpResponse.json({ success: true }, { status: 200 });
+        if (authHeader) {
+            if (authHeader === 'Bearer test-token-123') {
+                return HttpResponse.json({ success: true }, { status: 200 });
+            }
         }
+
+        return HttpResponse.json(null, { status: 401, statusText: 'Unauthorized' });
     }),
 
     http.get('http://localhost:3001/api/error', () => {
