@@ -132,10 +132,10 @@ export class ApiClient {
                 if (error.name == 'AbortError') {
                     throw new TimeoutError(`Request timeout after ${timeout}ms`);
                 }
-            }
 
-            if (error instanceof TypeError) {
-                throw new NetworkError('Network request failed');
+                if (error instanceof TypeError) {
+                    throw new NetworkError('Network request failed');
+                }
             }
 
             throw error;
@@ -160,7 +160,6 @@ export class ApiClient {
                 try {
                     body = JSON.parse(bodyText);
                 } catch {
-                    // Not a JSON, so we keep the raw text.
                 }
 
                 throw new ApiError(errorMessage, response.status, body);
