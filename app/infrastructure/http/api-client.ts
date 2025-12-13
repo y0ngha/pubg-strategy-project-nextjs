@@ -184,7 +184,7 @@ export class ApiClient {
     }
 
     private isApiRequestConfig<D>(
-        config: any
+        config: unknown
     ): config is ApiRequestConfig<D> {
 
         if (typeof config !== 'object' || config === null) {
