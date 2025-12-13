@@ -158,14 +158,16 @@ export class ApiClient {
     }
 
     private async parseResponse<T>(response: Response): Promise<T | undefined> {
-        if (response.status === 204) {
+        const text = await response.text();
+
+        if (text.length === 0) {
             return undefined;
         }
 
         try {
-            return await response.json();
-        } catch {
-            throw new ApiError("응답 형식이 일치하지 않습니다.", 500, await response.json());
+            return JSON.parse(text);
+        } catch (error) {
+            throw new ApiError("응답 형식이 일치하지 않습니다.", response.status, text);
         }
     }
 }
