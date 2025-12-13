@@ -131,14 +131,18 @@ export class ApiClient {
             return await this.parseResponse<T>(processedResponse);
         } catch (error) {
             clearTimeout(timeoutId);
-            if (Error.isError(error)) {
-                if (error.name === 'AbortError') {
-                    throw new TimeoutError(`Request timeout after ${timeout}ms`);
-                }
 
-                if (error instanceof TypeError) {
-                    throw new NetworkError('Network request failed');
-                }
+            if (
+                typeof error === 'object' &&
+                error !== null &&
+                'name' in error &&
+                error.name === 'AbortError'
+            ) {
+                throw new TimeoutError(`Request timeout after ${timeout}ms`);
+            }
+
+            if (error instanceof TypeError) {
+                throw new NetworkError('Network request failed');
             }
 
             throw error;
