@@ -153,7 +153,17 @@ export class ApiClient {
             case 404:
                 throw new NotFoundError(errorMessage);
             default:
-                throw new ApiError(errorMessage, response.status, await response.json());
+                const bodyText = await response.text();
+
+                let body: unknown = bodyText;
+
+                try {
+                    body = JSON.parse(bodyText);
+                } catch {
+                    // Not a JSON, so we keep the raw text.
+                }
+
+                throw new ApiError(errorMessage, response.status, body);
         }
     }
 
