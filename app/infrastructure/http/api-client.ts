@@ -132,7 +132,7 @@ export class ApiClient {
         } catch (error) {
             clearTimeout(timeoutId);
             if (Error.isError(error)) {
-                if (error.name == 'AbortError') {
+                if (error.name === 'AbortError') {
                     throw new TimeoutError(`Request timeout after ${timeout}ms`);
                 }
 
