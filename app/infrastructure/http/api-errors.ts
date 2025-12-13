@@ -32,7 +32,7 @@ export class TimeoutError extends Error {
 }
 
 export class BadRequestError extends ApiError {
-    constructor(message: string = 'Unauthorized') {
+    constructor(message: string = 'BadRequest') {
         super(message, 400);
         this.name = 'BadRequestError';
     }
