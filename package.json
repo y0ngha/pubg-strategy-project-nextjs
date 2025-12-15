@@ -18,7 +18,7 @@
         "test-coverage": "npx jest --coverage",
         "test-coverage-watch": "npx jest --coverage --watch",
         "test-coverage-report": "npx jest --coverage --coverageReporters=text-summary",
-        "format": "npx prettier \"./*.{js,jsx,ts,tsx,json,css,scss,html}\" --write"
+        "format": "prettier --write ."
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.2",
