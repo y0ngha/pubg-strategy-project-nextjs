@@ -23,7 +23,8 @@
         "paths": {
             "@/*": ["./app/*"],
             "@infrastructure/*": ["./app/infrastructure/*"],
-            "@global/*": ["./app/global/*"]
+            "@global/*": ["./app/global/*"],
+            "@domain/*": ["./app/domain/*"]
         }
     },
     "include": [

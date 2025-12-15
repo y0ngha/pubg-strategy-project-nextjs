@@ -6,12 +6,8 @@ export function validateEnvironmentVariables<T extends z.ZodObject>(
     const parsed = envSchema.safeParse(process.env);
 
     if (!parsed.success) {
-        console.error(
-            '❌ Invalid environment variables:',
-            JSON.stringify(parsed.error.format(), null, 2)
-        );
         throw new Error(
-            'Invalid environment variables. Please check the configuration.'
+            `Invalid environment variables. Please check the configuration. > ${JSON.stringify(parsed.error.format(), null, 2)}`
         );
     }
 

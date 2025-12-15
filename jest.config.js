@@ -1,6 +1,7 @@
 module.exports = {
     cacheDirectory: './.jest/cache',
     testEnvironment: 'jest-fixed-jsdom',
+    setupFiles: ['<rootDir>/jest.setup.ts'],
     setupFilesAfterEnv: [
         '<rootDir>/app/__tests__/infrastructure/http/api-client.setup.ts',
     ],
@@ -19,6 +20,7 @@ module.exports = {
         '^@/(.*)$': '<rootDir>/app/$1',
         '^@infrastructure/(.*)$': '<rootDir>/app/infrastructure/$1',
         '^@global/(.*)$': '<rootDir>/app/global/$1',
+        '^@domain/(.*)$': '<rootDir>/app/domain/$1',
     },
     testEnvironmentOptions: {
         customExportConditions: [''],
