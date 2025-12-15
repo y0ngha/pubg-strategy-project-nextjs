@@ -27,9 +27,7 @@ export class PasswordCipherAdapter implements PasswordCipherPort {
     public decrypt(encryptedText: string): string {
         const textParts = encryptedText.split(':');
         if (textParts.length !== 2) {
-            throw new Error(
-                'Invalid encrypted text format. Format must be IV:EncryptedData'
-            );
+            throw new Error('Invalid encrypted text format');
         }
 
         const iv = Buffer.from(textParts[0], 'hex');
