@@ -1,8 +1,6 @@
-import type { NextConfig } from "next";
-import '@infrastructure/config/environment-variables'
+import type { NextConfig } from 'next';
+import '@infrastructure/config/environment-variables';
 
-const nextConfig: NextConfig = {
-
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

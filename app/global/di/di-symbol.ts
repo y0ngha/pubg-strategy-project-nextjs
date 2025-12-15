@@ -1,4 +1,3 @@
-export type DependencyInjectionSymbol = { [symbolKey: string]: symbol } 
+export type DependencyInjectionSymbol = { [symbolKey: string]: symbol };
 
-export const dependencyInjectionSymbols: DependencyInjectionSymbol = {
-}
+export const dependencyInjectionSymbols: DependencyInjectionSymbol = {};

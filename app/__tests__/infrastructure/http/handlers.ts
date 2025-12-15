@@ -4,14 +4,16 @@ export const handlers = [
     http.get('http://localhost:3001/api/users/:id', ({ params }) => {
         const { id } = params;
         if (id === '1') {
-            return HttpResponse.json({ id: 1, name: 'Test User' }, { status: 200 });
+            return HttpResponse.json(
+                { id: 1, name: 'Test User' },
+                { status: 200 }
+            );
         }
         return new HttpResponse(null, { status: 404 });
     }),
 
-
     http.post('http://localhost:3001/api/posts', async ({ request }) => {
-        const newPost = await request.json() as { [key: string]: unknown };
+        const newPost = (await request.json()) as { [key: string]: unknown };
         return HttpResponse.json({ id: 101, ...newPost }, { status: 201 });
     }),
 
@@ -23,23 +25,39 @@ export const handlers = [
         return new HttpResponse(null, { status: 404 });
     }),
 
-    http.put('http://localhost:3001/api/users/:id', async ({ params, request }) => {
-        const { id } = params;
-        if (id === '1') {
-            const payload = await request.json() as { [key: string]: unknown };
-            return HttpResponse.json({ id: 1, ...payload }, { status: 200 });
+    http.put(
+        'http://localhost:3001/api/users/:id',
+        async ({ params, request }) => {
+            const { id } = params;
+            if (id === '1') {
+                const payload = (await request.json()) as {
+                    [key: string]: unknown;
+                };
+                return HttpResponse.json(
+                    { id: 1, ...payload },
+                    { status: 200 }
+                );
+            }
+            return new HttpResponse(null, { status: 404 });
         }
-        return new HttpResponse(null, { status: 404 });
-    }),
+    ),
 
-    http.patch('http://localhost:3001/api/users/:id', async ({ params, request }) => {
-        const { id } = params;
-        if (id === '1') {
-            const payload = await request.json() as { [key: string]: unknown };
-            return HttpResponse.json({ id: 1, ...payload }, { status: 200 });
+    http.patch(
+        'http://localhost:3001/api/users/:id',
+        async ({ params, request }) => {
+            const { id } = params;
+            if (id === '1') {
+                const payload = (await request.json()) as {
+                    [key: string]: unknown;
+                };
+                return HttpResponse.json(
+                    { id: 1, ...payload },
+                    { status: 200 }
+                );
+            }
+            return new HttpResponse(null, { status: 404 });
         }
-        return new HttpResponse(null, { status: 404 });
-    }),
+    ),
 
     http.get('http://localhost:3001/api/protected', ({ request }) => {
         const authHeader = request.headers.get('authorization');
@@ -50,15 +68,24 @@ export const handlers = [
             }
         }
 
-        return HttpResponse.json(null, { status: 401, statusText: 'Unauthorized' });
+        return HttpResponse.json(null, {
+            status: 401,
+            statusText: 'Unauthorized',
+        });
     }),
 
     http.get('http://localhost:3001/api/error', () => {
-        return HttpResponse.json(null, { status: 500, statusText: 'Internal Server Error' });
+        return HttpResponse.json(null, {
+            status: 500,
+            statusText: 'Internal Server Error',
+        });
     }),
 
     http.get('http://localhost:3001/api/slow', async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        return HttpResponse.json({ message: 'Delayed success' }, { status: 200 });
+        return HttpResponse.json(
+            { message: 'Delayed success' },
+            { status: 200 }
+        );
     }),
 ];

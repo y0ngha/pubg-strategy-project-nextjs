@@ -1,5 +1,5 @@
-import { Container } from "inversify";
-import { ClassDependency, ValueDependency } from "../types/di-types";
+import { Container } from 'inversify';
+import { ClassDependency, ValueDependency } from '../types/di-types';
 
 export function autoDependenciesBindForClass(
     classes: ClassDependency,
@@ -7,7 +7,9 @@ export function autoDependenciesBindForClass(
 ): void {
     for (const classDefinition of Object.values(classes)) {
         container
-            .bind<InstanceType<typeof classDefinition.class>>(classDefinition.symbol)
+            .bind<
+                InstanceType<typeof classDefinition.class>
+            >(classDefinition.symbol)
             .to(classDefinition.class)
             .inSingletonScope();
     }
@@ -20,6 +22,6 @@ export function autoDependenciesBindForValue(
     for (const valueDefinition of Object.values(values)) {
         container
             .bind<typeof valueDefinition.value>(valueDefinition.symbol)
-            .toConstantValue(valueDefinition.value)
+            .toConstantValue(valueDefinition.value);
     }
 }
