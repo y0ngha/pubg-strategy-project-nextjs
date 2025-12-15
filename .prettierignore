@@ -11,7 +11,7 @@
 !.yarn/versions
 
 # testing
-/coverage
+/coverage/
 
 # next.js
 /.next/
@@ -39,10 +39,12 @@ next-env.d.ts
 /.idea/
 
 # jest
-.jest
+/.jest/
 
 # docs
-.docs
+/.docs/
 
 # public
-public
+/public/
+
+*.md

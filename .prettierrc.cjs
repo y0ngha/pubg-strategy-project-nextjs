@@ -13,9 +13,7 @@ module.exports = {
 
     // [Tailwind CSS 클래스 정렬 플러그인]
     // **중요:** 확장 프로그램 충돌을 피하기 위해 직접 require 대신 플러그인 이름 문자열을 사용합니다.
-    plugins: [
-        'prettier-plugin-tailwindcss' 
-    ],
+    plugins: ['prettier-plugin-tailwindcss'],
 
     // [SCSS 관련 오버라이드]
     overrides: [

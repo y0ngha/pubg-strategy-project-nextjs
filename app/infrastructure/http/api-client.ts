@@ -15,7 +15,7 @@ import {
 import {
     ApiRequestConfig,
     RequestInterceptor,
-    ResponseInterceptor
+    ResponseInterceptor,
 } from './types';
 
 @injectable()
@@ -25,23 +25,24 @@ export class ApiClient {
     private requestInterceptors: RequestInterceptor<unknown>[];
     private responseInterceptors: ResponseInterceptor[];
 
-    constructor(
-        baseUrl?: string,
-        timeout: number = 30000
-    ) {
-        this.baseUrl = baseUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    constructor(baseUrl?: string, timeout: number = 30000) {
+        this.baseUrl =
+            baseUrl ||
+            process.env.NEXT_PUBLIC_API_URL ||
+            'http://localhost:3001';
         this.defaultTimeout = timeout;
 
         this.requestInterceptors = [
             loggingRequestInterceptor,
             authRequestInterceptor,
         ];
-        this.responseInterceptors = [
-            loggingResponseInterceptor,
-        ];
+        this.responseInterceptors = [loggingResponseInterceptor];
     }
 
-    async get<T = unknown>(url: string, config?: Partial<ApiRequestConfig>): Promise<T | undefined> {
+    async get<T = unknown>(
+        url: string,
+        config?: Partial<ApiRequestConfig>
+    ): Promise<T | undefined> {
         return this.request<T, unknown>(url, {
             method: 'GET',
             timeout: this.defaultTimeout,
@@ -49,7 +50,11 @@ export class ApiClient {
         });
     }
 
-    async post<T = unknown, D = unknown>(url: string, data?: D, config?: Partial<ApiRequestConfig<D>>): Promise<T | undefined> {
+    async post<T = unknown, D = unknown>(
+        url: string,
+        data?: D,
+        config?: Partial<ApiRequestConfig<D>>
+    ): Promise<T | undefined> {
         return this.request<T, D>(url, {
             method: 'POST',
             body: data,
@@ -58,7 +63,11 @@ export class ApiClient {
         });
     }
 
-    async put<T = unknown, D = unknown>(url: string, data?: D, config?: Partial<ApiRequestConfig<D>>): Promise<T | undefined> {
+    async put<T = unknown, D = unknown>(
+        url: string,
+        data?: D,
+        config?: Partial<ApiRequestConfig<D>>
+    ): Promise<T | undefined> {
         return this.request<T, D>(url, {
             method: 'PUT',
             body: data,
@@ -67,7 +76,11 @@ export class ApiClient {
         });
     }
 
-    async patch<T = unknown, D = unknown>(url: string, data?: D, config?: Partial<ApiRequestConfig<D>>): Promise<T | undefined> {
+    async patch<T = unknown, D = unknown>(
+        url: string,
+        data?: D,
+        config?: Partial<ApiRequestConfig<D>>
+    ): Promise<T | undefined> {
         return this.request<T, D>(url, {
             method: 'PATCH',
             body: data,
@@ -76,7 +89,10 @@ export class ApiClient {
         });
     }
 
-    async delete<T = unknown>(url: string, config?: Partial<ApiRequestConfig>): Promise<T | undefined> {
+    async delete<T = unknown>(
+        url: string,
+        config?: Partial<ApiRequestConfig>
+    ): Promise<T | undefined> {
         return this.request<T, unknown>(url, {
             method: 'DELETE',
             timeout: this.defaultTimeout,
@@ -113,7 +129,9 @@ export class ApiClient {
                     'Content-Type': 'application/json',
                     ...processedConfig.headers,
                 },
-                body: processedConfig.body ? JSON.stringify(processedConfig.body) : undefined,
+                body: processedConfig.body
+                    ? JSON.stringify(processedConfig.body)
+                    : undefined,
                 signal: controller.signal,
             });
 
@@ -166,8 +184,7 @@ export class ApiClient {
 
                 try {
                     body = JSON.parse(bodyText);
-                } catch {
-                }
+                } catch {}
 
                 throw new ApiError(errorMessage, response.status, body);
         }
@@ -183,14 +200,17 @@ export class ApiClient {
         try {
             return JSON.parse(text);
         } catch (error) {
-            throw new ApiError("응답 형식이 일치하지 않습니다.", response.status, text);
+            throw new ApiError(
+                '응답 형식이 일치하지 않습니다.',
+                response.status,
+                text
+            );
         }
     }
 
     private isApiRequestConfig<D>(
         config: unknown
     ): config is ApiRequestConfig<D> {
-
         if (typeof config !== 'object' || config === null) {
             return false;
         }
