@@ -63,6 +63,6 @@ export class Password {
     }
 
     toJSON(): string {
-        return this.value;
+        return '[PROTECTED]';
     }
 }

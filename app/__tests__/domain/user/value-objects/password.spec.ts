@@ -172,7 +172,7 @@ describe('Password', () => {
             const result = JSON.stringify({ password });
 
             // Then
-            expect(result).toBe(`{"password":"${password}"}`);
+            expect(result).toBe(`{"password":"[PROTECTED]"}`);
         });
     });
 });
