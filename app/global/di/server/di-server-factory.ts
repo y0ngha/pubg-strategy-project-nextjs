@@ -4,8 +4,15 @@ import {
     autoDependenciesBindForClass,
     autoDependenciesBindForValue,
 } from '../helpers/auto-inject';
+import { DependencyInjectionSymbols, SymbolKeys } from '../di-symbol';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 
-const dependencyInjectedClasses: ClassDependency = {} as const;
+const dependencyInjectedClasses: ClassDependency = {
+    [SymbolKeys.PasswordCipher]: {
+        symbol: DependencyInjectionSymbols[SymbolKeys.PasswordCipher],
+        class: PasswordCipherAdapter,
+    },
+} as const;
 
 const dependencyInjectedValues: ValueDependency = {} as const;
 
