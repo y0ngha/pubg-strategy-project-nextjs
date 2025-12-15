@@ -30,14 +30,14 @@ describe('Email', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('')).toThrow(
-                '이메일은 비어있을 수 없습니다.'
+                '이메일은 빈 값일 수 없습니다.'
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('   ')).toThrow(
-                '이메일은 비어있을 수 없습니다.'
+                '이메일은 빈 값일 수 없습니다.'
             );
         });
 

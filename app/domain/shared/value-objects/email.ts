@@ -7,7 +7,7 @@ export class Email {
 
     static create(value: string): Email {
         if (!value || value.trim().length === 0) {
-            throw new Error('이메일은 비어있을 수 없습니다.');
+            throw new Error('이메일은 빈 값일 수 없습니다.');
         }
 
         const trimmed = value.trim().toLowerCase();
