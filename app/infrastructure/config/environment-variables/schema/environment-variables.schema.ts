@@ -14,6 +14,9 @@ export const EnvironmentVariablesSchema = z
         GOOGLE_CLIENT_ID: z.string().optional(),
         GOOGLE_CLIENT_SECRET: z.string().optional(),
         GOOGLE_REDIRECT_URI: z.url().optional(),
+        AES256_SECRET_KEY: z
+            .string()
+            .length(32, 'AES256_SECRET_KEY must be 32 bytes for AES-256.'),
     })
     .refine(
         data => {
