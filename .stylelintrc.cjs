@@ -72,12 +72,17 @@ module.exports = {
     ignoreFiles: [
         '**/*.js',
         '**/*.ts',
-        '**/*.jsx',
-        '**/*.tsx',
         '**/*.json',
         '**/*.md',
         '**/.next/**', // Next.js 빌드 결과물
         '**/dist/**',
         '**/node_modules/**',
+    ],
+
+    overrides: [
+        {
+            files: ['**/*.{jsx,tsx}'],
+            customSyntax: 'postcss-html',
+        },
     ],
 };
