@@ -201,9 +201,9 @@ export class ApiClient {
             return JSON.parse(text);
         } catch (error) {
             throw new ApiError(
-                '응답 형식이 일치하지 않습니다.',
+                `${text} - 응답 형식이 일치하지 않습니다.`,
                 response.status,
-                text
+                error
             );
         }
     }
