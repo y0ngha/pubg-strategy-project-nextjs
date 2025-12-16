@@ -3,7 +3,7 @@ import { User } from '../entities/user.entity';
 import { Email } from '@/domain/shared/value-objects/email';
 
 export interface UserRepository {
-    save(user: User): Promise<void>;
+    save(user: User): Promise<User>;
 
     findByUserId(id: UserId): Promise<User | null>;
 
