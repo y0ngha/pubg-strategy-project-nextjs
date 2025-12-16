@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 
-export function autoDependenciesBindForClass(
+export function injectServerEnvironmentClassAutomaticDependencies(
     classes: ClassDependency,
     container: Container
 ): void {
@@ -11,11 +11,11 @@ export function autoDependenciesBindForClass(
                 InstanceType<typeof classDefinition.class>
             >(classDefinition.symbol)
             .to(classDefinition.class)
-            .inSingletonScope();
+            .inRequestScope();
     }
 }
 
-export function autoDependenciesBindForValue(
+export function injectServerEnvironmentValueAutomaticDependencies(
     values: ValueDependency,
     container: Container
 ): void {
