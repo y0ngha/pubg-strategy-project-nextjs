@@ -53,15 +53,20 @@ export class User {
         );
     }
 
-    changePassword(currentPassword: Password, newPassword: Password): void {
-        if (!this.verifyPassword(currentPassword)) {
-            throw new Error('Current password is incorrect');
-        }
+    changePassword(
+        currentPassword: Password | null,
+        newPassword: Password
+    ): void {
+        if (this.password != null && currentPassword != null) {
+            if (!this.verifyPassword(currentPassword)) {
+                throw new Error('비밀번호가 일치하지 않습니다.');
+            }
 
-        if (currentPassword.equals(newPassword)) {
-            throw new Error(
-                'New password must be different from current password'
-            );
+            if (currentPassword.equals(newPassword)) {
+                throw new Error(
+                    '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
+                );
+            }
         }
 
         this._password = newPassword;
@@ -89,9 +94,14 @@ export class User {
             id: this.id?.toString(),
             email: this.email.toString(),
             authProvider: this.authProvider.toString(),
+            hasPassword: this.hasPassword(),
             createdAt: this.createdAt.toISOString(),
             updatedAt: this._updatedAt.toISOString(),
         };
+    }
+
+    hasPassword(): boolean {
+        return this._password != null;
     }
 
     get password(): Password | null {
@@ -103,8 +113,8 @@ export class User {
     }
 
     private verifyPassword(inputPassword: Password): boolean {
-        if (!this._password) {
-            throw new Error('User has no password (SSO user)');
+        if (this._password == null) {
+            return false;
         }
 
         return this._password.equals(inputPassword);
