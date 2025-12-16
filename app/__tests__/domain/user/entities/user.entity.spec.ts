@@ -261,6 +261,7 @@ describe('User Entity', () => {
             // Given
             const user = User.createWithSSO(validEmail);
 
+            // When & Then
             expect(user.hasPassword()).toBeFalsy();
         });
 
