@@ -5,6 +5,6 @@ import { injectable } from 'inversify';
 @injectable()
 export class PasswordValidatorService {
     validate(email: Email, password: Password): boolean {
-        return password.toString().toLowerCase().search(email.localPart) == -1;
+        return !password.contains(email.localPart);
     }
 }
