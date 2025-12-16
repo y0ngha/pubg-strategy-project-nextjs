@@ -2,7 +2,7 @@ export class Email {
     private readonly value: string;
 
     private constructor(value: string) {
-        this.value = value;
+        this.value = value.toLowerCase();
     }
 
     static create(value: string): Email {
@@ -31,6 +31,10 @@ export class Email {
         }
 
         return new Email(trimmed);
+    }
+
+    get localPart(): string {
+        return this.value.split('@')[0];
     }
 
     equals(other: Email): boolean {
