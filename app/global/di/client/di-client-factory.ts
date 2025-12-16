@@ -1,8 +1,8 @@
 import { Container } from 'inversify';
 import {
-    autoDependenciesBindForClass,
-    autoDependenciesBindForValue,
-} from '../helpers/auto-inject';
+    injectClientEnvironmentClassAutomaticDependencies,
+    injectClientEnvironmentValueAutomaticDependencies,
+} from './client-auto-inject';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 
 let container: Container | null = null;
@@ -21,8 +21,14 @@ export function getClientContainer(): Container {
     if (!container) {
         container = new Container();
 
-        autoDependenciesBindForClass(dependencyInjectedClasses, container);
-        autoDependenciesBindForValue(dependencyInjectedValues, container);
+        injectClientEnvironmentClassAutomaticDependencies(
+            dependencyInjectedClasses,
+            container
+        );
+        injectClientEnvironmentValueAutomaticDependencies(
+            dependencyInjectedValues,
+            container
+        );
     }
 
     return container;
