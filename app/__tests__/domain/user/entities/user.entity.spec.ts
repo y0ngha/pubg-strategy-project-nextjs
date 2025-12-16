@@ -128,6 +128,39 @@ describe('User Entity', () => {
             jest.useRealTimers();
         });
 
+        it('현재 비밀번호가 없는 User 객체면(SSO 유저) 별도의 검증 없이 성공한다.', () => {
+            // Given
+            const user = User.createWithSSO(validEmail);
+            const newPassword = Password.create('NewPass1234!');
+            const oldUpdatedAt = user.updatedAt;
+
+            // 시간 차이를 두기 위해 약간 대기
+            jest.useFakeTimers();
+            jest.advanceTimersByTime(1000);
+
+            // When
+            user.changePassword(null, newPassword);
+
+            // Then
+            expect(user.password).toBe(newPassword);
+            expect(user.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
+
+            jest.useRealTimers();
+        });
+
+        it('현재 비밀번호가 있는 User 객체인데, changePassword에서 currentPassword를 null로 호출할 경우 에러를 던진다.', () => {
+            // Given
+            const user = User.createWithEmail(validEmail, validPassword);
+            const newPassword = Password.create('NewPass1234!');
+
+            // When & Then
+            expect(() => user.changePassword(null, newPassword)).toThrow(
+                '기존 비밀번호를 입력해야 합니다.'
+            );
+        });
+
         it('현재 비밀번호가 일치하지 않으면 에러를 던진다', () => {
             // Given
             const user = User.createWithEmail(validEmail, validPassword);
@@ -137,7 +170,7 @@ describe('User Entity', () => {
             // When & Then
             expect(() =>
                 user.changePassword(wrongPassword, newPassword)
-            ).toThrow('Current password is incorrect');
+            ).toThrow('비밀번호가 일치하지 않습니다.');
         });
 
         it('새 비밀번호가 현재 비밀번호와 같으면 에러를 던진다', () => {
@@ -147,7 +180,7 @@ describe('User Entity', () => {
             // When & Then
             expect(() =>
                 user.changePassword(validPassword, validPassword)
-            ).toThrow('New password must be different from current password');
+            ).toThrow('기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.');
         });
     });
 
@@ -234,6 +267,24 @@ describe('User Entity', () => {
         });
     });
 
+    describe('hasPassword', () => {
+        it('SSO 사용자는 최초 생성 후 password가 null이기에 hasPassword는 false로 반환된다.', () => {
+            // Given
+            const user = User.createWithSSO(validEmail);
+
+            // When & Then
+            expect(user.hasPassword()).toBeFalsy();
+        });
+
+        it('Email 사용자는 최초 생성 후 password가 존재하기에 hasPassword는 true 반환된다.', () => {
+            // Given
+            const user = User.createWithEmail(validEmail, validPassword);
+
+            // When & Then
+            expect(user.hasPassword()).toBeTruthy();
+        });
+    });
+
     describe('toJSON', () => {
         it('비밀번호를 제외하고 JSON으로 변환한다', () => {
             // Given
@@ -246,6 +297,7 @@ describe('User Entity', () => {
             expect(json).toEqual({
                 id: user.id?.toString(),
                 email: user.email.toString(),
+                hasPassword: true,
                 authProvider: AuthProvider.EMAIL.toString(),
                 createdAt: user.createdAt.toISOString(),
                 updatedAt: user.updatedAt.toISOString(),
@@ -264,6 +316,7 @@ describe('User Entity', () => {
             expect(json).toEqual({
                 id: user.id?.toString(),
                 email: user.email.toString(),
+                hasPassword: false,
                 authProvider: AuthProvider.GOOGLE.toString(),
                 createdAt: user.createdAt.toISOString(),
                 updatedAt: user.updatedAt.toISOString(),
