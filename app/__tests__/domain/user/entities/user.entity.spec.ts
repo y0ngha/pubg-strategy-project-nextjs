@@ -150,6 +150,17 @@ describe('User Entity', () => {
             jest.useRealTimers();
         });
 
+        it('현재 비밀번호가 있는 User 객체인데, changePassword에서 currentPassword를 null로 호출할 경우 에러를 던진다.', () => {
+            // Given
+            const user = User.createWithEmail(validEmail, validPassword);
+            const newPassword = Password.create('NewPass1234!');
+
+            // When & Then
+            expect(() => user.changePassword(null, newPassword)).toThrow(
+                '기존 비밀번호를 입력해야 합니다.'
+            );
+        });
+
         it('현재 비밀번호가 일치하지 않으면 에러를 던진다', () => {
             // Given
             const user = User.createWithEmail(validEmail, validPassword);

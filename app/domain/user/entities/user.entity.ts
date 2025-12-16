@@ -57,7 +57,11 @@ export class User {
         currentPassword: Password | null,
         newPassword: Password
     ): void {
-        if (this.password != null && currentPassword != null) {
+        if (this.hasPassword()) {
+            if (currentPassword === null) {
+                throw new Error('기존 비밀번호를 입력해야 합니다.');
+            }
+
             if (!this.verifyPassword(currentPassword)) {
                 throw new Error('비밀번호가 일치하지 않습니다.');
             }
