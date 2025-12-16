@@ -1,13 +1,13 @@
-import { Container } from 'inversify';
 import {
-    autoDependenciesBindForClass,
-    autoDependenciesBindForValue,
-} from '../../../global/di/helpers/auto-inject';
+    injectServerEnvironmentClassAutomaticDependencies,
+    injectServerEnvironmentValueAutomaticDependencies,
+} from '@/global/di/server/server-auto-inject';
+import { Container } from 'inversify';
+import { DependencyInjectionSymbol } from '../../../global/di/di-symbol';
 import {
     ClassDependency,
     ValueDependency,
 } from '../../../global/di/types/di-types';
-import { DependencyInjectionSymbol } from '../../../global/di/di-symbol';
 
 describe('InversifyJS Dependency Injection Setup', () => {
     let container: Container;
@@ -47,8 +47,14 @@ describe('InversifyJS Dependency Injection Setup', () => {
     beforeEach(() => {
         container = new Container();
 
-        autoDependenciesBindForClass(dependencyInjectedClasses, container);
-        autoDependenciesBindForValue(dependencyInjectedValues, container);
+        injectServerEnvironmentClassAutomaticDependencies(
+            dependencyInjectedClasses,
+            container
+        );
+        injectServerEnvironmentValueAutomaticDependencies(
+            dependencyInjectedValues,
+            container
+        );
 
         expect(container).toBeInstanceOf(Container);
     });
@@ -63,7 +69,7 @@ describe('InversifyJS Dependency Injection Setup', () => {
             expect(instance).toBeInstanceOf(TestService);
         });
 
-        it('TestService를 Container에서 두번 가져오고, 처음 가져온 Instance와 다음으로 가져온 Instance가 동일해야합니다(Singleton).', () => {
+        it('TestService를 Container에서 두번 가져오고, 처음 가져온 Instance와 다음으로 가져온 Instance가 동일하지 않습니다. (요청당 세션 유지)', () => {
             const instance = container.get<TestService>(
                 dependencyInjectionSymbols.TestService
             );
@@ -71,7 +77,7 @@ describe('InversifyJS Dependency Injection Setup', () => {
                 dependencyInjectionSymbols.TestService
             );
 
-            expect(instance).toBe(secondInstance);
+            expect(instance).not.toBe(secondInstance);
             expect(instance.isService).toBe(true);
         });
     });

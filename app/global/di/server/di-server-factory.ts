@@ -1,11 +1,11 @@
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 import { Container } from 'inversify';
+import { DependencyInjectionSymbols, SymbolKeys } from '../di-symbol';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 import {
-    autoDependenciesBindForClass,
-    autoDependenciesBindForValue,
-} from '../helpers/auto-inject';
-import { DependencyInjectionSymbols, SymbolKeys } from '../di-symbol';
-import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
+    injectServerEnvironmentClassAutomaticDependencies,
+    injectServerEnvironmentValueAutomaticDependencies,
+} from './server-auto-inject';
 
 const dependencyInjectedClasses: ClassDependency = {
     [SymbolKeys.PasswordCipher]: {
@@ -25,8 +25,14 @@ export function createServerRequestContainer(): Container {
 
     const container = new Container();
 
-    autoDependenciesBindForClass(dependencyInjectedClasses, container);
-    autoDependenciesBindForValue(dependencyInjectedValues, container);
+    injectServerEnvironmentClassAutomaticDependencies(
+        dependencyInjectedClasses,
+        container
+    );
+    injectServerEnvironmentValueAutomaticDependencies(
+        dependencyInjectedValues,
+        container
+    );
 
     return container;
 }
