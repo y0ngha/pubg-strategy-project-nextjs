@@ -2,14 +2,12 @@ import { Container } from 'inversify';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 
 export function injectClientEnvironmentClassAutomaticDependencies(
-    classes: ClassDependency,
+    classes: ClassDependency[],
     container: Container
 ): void {
-    for (const classDefinition of Object.values(classes)) {
+    for (const classDefinition of classes) {
         container
-            .bind<
-                InstanceType<typeof classDefinition.class>
-            >(classDefinition.symbol)
+            .bind(classDefinition.abstract ?? classDefinition.class)
             .to(classDefinition.class)
             .inSingletonScope();
     }

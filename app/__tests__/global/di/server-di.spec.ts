@@ -1,9 +1,9 @@
+import { DependencyInjectionSymbol } from '@/global/di/di-symbol';
 import {
     injectServerEnvironmentClassAutomaticDependencies,
     injectServerEnvironmentValueAutomaticDependencies,
 } from '@/global/di/server/server-auto-inject';
 import { Container } from 'inversify';
-import { DependencyInjectionSymbol } from '../../../global/di/di-symbol';
 import {
     ClassDependency,
     ValueDependency,
@@ -11,6 +11,16 @@ import {
 
 describe('InversifyJS Dependency Injection Setup', () => {
     let container: Container;
+
+    abstract class TestPort {
+        abstract test(): void;
+    }
+
+    class TestAdapter extends TestPort {
+        test(): void {
+            console.log('Hi');
+        }
+    }
 
     class TestService {
         isService: boolean = true;
@@ -21,17 +31,19 @@ describe('InversifyJS Dependency Injection Setup', () => {
     const configValue = 'test_config_value';
 
     const dependencyInjectionSymbols: DependencyInjectionSymbol = {
-        TestService: Symbol.for('TestService'),
         DataSource: Symbol.for('DataSource'),
         Config: Symbol.for('Config'),
     };
 
-    const dependencyInjectedClasses: ClassDependency = {
-        TestService: {
-            symbol: dependencyInjectionSymbols.TestService,
+    const dependencyInjectedClasses: ClassDependency[] = [
+        {
             class: TestService,
         },
-    } as const;
+        {
+            class: TestAdapter,
+            abstract: TestPort,
+        },
+    ];
 
     const dependencyInjectedValues: ValueDependency = {
         DataSource: {
@@ -61,24 +73,26 @@ describe('InversifyJS Dependency Injection Setup', () => {
 
     describe('Class Bindings (.to(Class)) 테스트', () => {
         it('TestService를 Container에서 가져오고, 이는 타입이 동일해야합니다.', () => {
-            const instance = container.get<TestService>(
-                dependencyInjectionSymbols.TestService
-            );
+            const instance = container.get<TestService>(TestService);
 
             expect(instance).toBeDefined();
             expect(instance).toBeInstanceOf(TestService);
         });
 
         it('TestService를 Container에서 두번 가져오고, 처음 가져온 Instance와 다음으로 가져온 Instance가 동일하지 않습니다. (요청당 세션 유지)', () => {
-            const instance = container.get<TestService>(
-                dependencyInjectionSymbols.TestService
-            );
-            const secondInstance = container.get<TestService>(
-                dependencyInjectionSymbols.TestService
-            );
+            const instance = container.get<TestService>(TestService);
+            const secondInstance = container.get<TestService>(TestService);
 
             expect(instance).not.toBe(secondInstance);
             expect(instance.isService).toBe(true);
+        });
+
+        it('TestPort를 가져왔을 때 TestAdapter를 사용할 수 있는지 테스트합니다.', () => {
+            const instance = container.get(TestPort);
+
+            expect(instance).toBeDefined();
+            expect(instance).toBeInstanceOf(TestAdapter);
+            expect(instance).toHaveProperty('test');
         });
     });
 

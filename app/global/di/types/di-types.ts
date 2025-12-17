@@ -1,9 +1,18 @@
-import { Newable } from 'inversify';
+export type AbstractNewable<
+    TInstance = unknown,
+    TArgs extends unknown[] = unknown[],
+> = abstract new (...args: TArgs) => TInstance;
 
-export type ConstructorType = new (...args: unknown[]) => unknown;
+export type Newable<
+    TInstance = unknown,
+    TArgs extends unknown[] = unknown[],
+> = new (...args: TArgs) => TInstance;
+
 export type ClassDependency = {
-    [symbolKey: string]: { symbol: symbol; class: Newable<unknown> };
+    class: Newable<unknown>;
+    abstract?: AbstractNewable<unknown>;
 };
+
 export type ValueDependency = {
     [symbolKey: string]: { symbol: symbol; value: unknown };
 };
