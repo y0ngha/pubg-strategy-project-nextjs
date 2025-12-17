@@ -13,7 +13,7 @@ describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
     let mockUserRepository: jest.Mocked<UserRepository>;
     let passwordValidatorService: PasswordValidatorService;
-    let passwordCipher: PasswordCipherPort;
+    let passwordCipher: jest.Mocked<PasswordCipherPort>;
 
     beforeEach(() => {
         mockUserRepository = {
@@ -24,7 +24,11 @@ describe('RegisterWithEmailUseCase', () => {
         } as jest.Mocked<UserRepository>;
 
         passwordValidatorService = new PasswordValidatorService();
-        passwordCipher = new PasswordCipherAdapter();
+
+        passwordCipher = {
+            encrypt: jest.fn(),
+            decrypt: jest.fn(),
+        } as jest.Mocked<PasswordCipherPort>;
 
         useCase = new RegisterWithEmailUseCase(
             mockUserRepository,
