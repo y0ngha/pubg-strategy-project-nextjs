@@ -8,6 +8,7 @@ import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-ci
 import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
 import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/user.repository.adapter';
 import { UserRepository } from '@/domain/user/port/user.repository';
+import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 
 const dependencyInjectedClasses: ClassDependency[] = [
     {
@@ -17,6 +18,9 @@ const dependencyInjectedClasses: ClassDependency[] = [
     {
         class: UserRepositoryAdapter,
         abstract: UserRepository,
+    },
+    {
+        class: PasswordValidatorService,
     },
 ];
 

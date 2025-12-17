@@ -14,3 +14,12 @@ export const RegisterWithEmailRequestSchema = z.object({
 export type RegisterWithEmailRequestObject = z.infer<
     typeof RegisterWithEmailRequestSchema
 >;
+
+export const RegisterWithEmailResponseSchema = z.object({
+    id: z.string(),
+    email: z.string(),
+});
+
+export type RegisterWithEmailResponseObject = z.infer<
+    typeof RegisterWithEmailResponseSchema
+>;

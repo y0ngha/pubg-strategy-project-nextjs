@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 export class UserId {
     private readonly value: string;
 
@@ -17,6 +19,10 @@ export class UserId {
         }
 
         return new UserId(value);
+    }
+
+    static generate(): UserId {
+        return new UserId(randomUUID());
     }
 
     equals(userId: UserId): boolean {
