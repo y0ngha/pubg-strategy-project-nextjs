@@ -1,4 +1,5 @@
-export interface PasswordCipherPort {
-    encrypt(raw: string): string;
-    decrypt(encryptedValue: string): string;
+export abstract class PasswordCipherPort {
+    abstract encrypt(raw: string): string;
+    
+    abstract decrypt(encryptedValue: string): string;
 }
