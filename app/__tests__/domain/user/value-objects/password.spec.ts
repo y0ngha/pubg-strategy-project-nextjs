@@ -1,4 +1,4 @@
-import { Password } from '@domain/user/value-objects/password';
+import { Password } from '@/domain/user/value-objects/password';
 
 describe('Password', () => {
     const validPassword = 'Test1234!';
@@ -16,49 +16,49 @@ describe('Password', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('')).toThrow(
-                '패스워드는 빈 값일 수 없습니다.'
+                '비밀번호는 빈 값일 수 없습니다.'
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('   ')).toThrow(
-                '패스워드는 빈 값일 수 없습니다.'
+                '비밀번호는 빈 값일 수 없습니다.'
             );
         });
 
         it('8자 미만은 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('Test1!')).toThrow(
-                '패스워드는 최소 8자리 이상으로 구성되어야 합니다.'
+                '비밀번호는 최소 8자리 이상으로 구성되어야 합니다.'
             );
         });
 
         it('대문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('test1234!')).toThrow(
-                '패스워드에는 최소 1글자 이상 대문자 영문이 포함되어야 합니다.'
+                '비밀번호에는 최소 1글자 이상 대문자 영문이 포함되어야 합니다.'
             );
         });
 
         it('소문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('TEST1234!')).toThrow(
-                '패스워드에는 최소 1글자 이상 소문자 영문이 포함되어야 합니다.'
+                '비밀번호에는 최소 1글자 이상 소문자 영문이 포함되어야 합니다.'
             );
         });
 
         it('숫자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('TestTest!')).toThrow(
-                '패스워드에는 최소 1글자 이상 숫자가 포함되어야 합니다.'
+                '비밀번호에는 최소 1글자 이상 숫자가 포함되어야 합니다.'
             );
         });
 
         it('특수문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('Test1234')).toThrow(
-                '패스워드에는 최소 1글자 이상 특수문자가 포함되어야 합니다.'
+                '비밀번호에는 최소 1글자 이상 특수문자가 포함되어야 합니다.'
             );
         });
 

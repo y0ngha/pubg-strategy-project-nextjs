@@ -1,3 +1,4 @@
+import { InvalidEmailException } from '@/domain/user/exceptions/user.exceptions';
 import { Email } from '@domain/shared/value-objects/email';
 
 describe('Email', () => {
@@ -30,59 +31,65 @@ describe('Email', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('')).toThrow(
-                '이메일은 빈 값일 수 없습니다.'
+                new InvalidEmailException('이메일은 빈 값일 수 없습니다.')
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('   ')).toThrow(
-                '이메일은 빈 값일 수 없습니다.'
+                new InvalidEmailException('이메일은 빈 값일 수 없습니다.')
             );
         });
 
         it('@ 가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('testexample.com')).toThrow(
-                '이메일에는 "@"가 필수로 포함되어야 합니다.'
+                new InvalidEmailException(
+                    '이메일에는 "@"가 필수로 포함되어야 합니다.'
+                )
             );
         });
 
         it('. 이 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('test@examplecom')).toThrow(
-                '이메일에는 "."이 필수로 포함되어야 합니다.'
+                new InvalidEmailException(
+                    '이메일에는 "."이 필수로 포함되어야 합니다.'
+                )
             );
         });
 
         it('@ 앞부분이 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('@example.com')).toThrow(
-                '유효하지 않은 이메일 형식입니다.'
+                new InvalidEmailException('유효하지 않은 이메일 형식입니다.')
             );
         });
 
         it('@ 뒷부분이 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('test@')).toThrow(
-                '유효하지 않은 이메일 형식입니다.'
+                new InvalidEmailException('유효하지 않은 이메일 형식입니다.')
             );
         });
 
         it('도메인에 . 이 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('test@example')).toThrow(
-                '이메일에는 "."이 필수로 포함되어야 합니다.'
+                new InvalidEmailException(
+                    '이메일에는 "."이 필수로 포함되어야 합니다.'
+                )
             );
         });
 
         it('공백이 포함되면 에러를 던진다', () => {
             // When & Then
             expect(() => Email.create('test @example.com')).toThrow(
-                '유효하지 않은 이메일 형식입니다.'
+                new InvalidEmailException('유효하지 않은 이메일 형식입니다.')
             );
             expect(() => Email.create('test@ example.com')).toThrow(
-                '유효하지 않은 이메일 형식입니다.'
+                new InvalidEmailException('유효하지 않은 이메일 형식입니다.')
             );
         });
 
