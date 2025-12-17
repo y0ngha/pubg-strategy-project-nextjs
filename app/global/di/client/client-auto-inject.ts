@@ -9,7 +9,7 @@ export function injectClientEnvironmentClassAutomaticDependencies(
         container
             .bind(classDefinition.abstract ?? classDefinition.class)
             .to(classDefinition.class)
-            .inRequestScope();
+            .inSingletonScope();
     }
 }
 
