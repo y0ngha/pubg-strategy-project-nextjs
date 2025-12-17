@@ -1,23 +1,26 @@
 import { User } from '@/domain/user/entities/user.entity';
-import { UserRepository } from '@/domain/user/port/user.repository';
-import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
-import { inject } from 'inversify';
-import {
-    RegisterWithEmailRequestObject,
-    RegisterWithEmailRequestSchema,
-    RegisterWithEmailResponseObject,
-} from '../dto/register-with-email.dto';
 import {
     EmailAlreadyExistsException,
     InvalidPasswordException,
 } from '@/domain/user/exceptions/user.exceptions';
+import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
+import { UserRepository } from '@/domain/user/port/user.repository';
+import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
+import { Password } from '@/domain/user/value-objects/password';
+import { inject } from 'inversify';
+import {
+    RegisterWithEmailRequestObject,
+    RegisterWithEmailResponseObject,
+} from '../dto/register-with-email.dto';
 
 export class RegisterWithEmailUseCase {
     constructor(
         @inject(UserRepository)
         private readonly userRepository: UserRepository,
         @inject(PasswordValidatorService)
-        private readonly passwordValidatorService: PasswordValidatorService
+        private readonly passwordValidatorService: PasswordValidatorService,
+        @inject(PasswordCipherPort)
+        private readonly passwordCipher: PasswordCipherPort
     ) {}
 
     async execute(
@@ -37,7 +40,11 @@ export class RegisterWithEmailUseCase {
             );
         }
 
-        const user = User.createWithEmail(email, password);
+        const encryptedPassword = Password.reconstruct(
+            this.passwordCipher.encrypt(password.toString())
+        );
+
+        const user = User.createWithEmail(email, encryptedPassword);
 
         const savedUser = await this.userRepository.save(user);
 
