@@ -12,6 +12,16 @@ import {
 describe('InversifyJS Dependency Injection Setup', () => {
     let container: Container;
 
+    abstract class TestPort {
+        abstract test(): void;
+    }
+
+    class TestAdapter extends TestPort {
+        test(): void {
+            console.log('Hi');
+        }
+    }
+
     class TestService {
         isService: boolean = true;
     }
@@ -21,7 +31,6 @@ describe('InversifyJS Dependency Injection Setup', () => {
     const configValue = 'test_config_value';
 
     const dependencyInjectionSymbols: DependencyInjectionSymbol = {
-        TestService: Symbol.for('TestService'),
         DataSource: Symbol.for('DataSource'),
         Config: Symbol.for('Config'),
     };
@@ -29,6 +38,10 @@ describe('InversifyJS Dependency Injection Setup', () => {
     const dependencyInjectedClasses: ClassDependency[] = [
         {
             class: TestService,
+        },
+        {
+            class: TestAdapter,
+            abstract: TestPort,
         },
     ];
 
@@ -72,6 +85,14 @@ describe('InversifyJS Dependency Injection Setup', () => {
 
             expect(instance).not.toBe(secondInstance);
             expect(instance.isService).toBe(true);
+        });
+
+        it('TestPort를 가져왔을 때 TestAdapter를 사용할 수 있는지 테스트합니다.', () => {
+            const instance = container.get(TestPort);
+
+            expect(instance).toBeDefined();
+            expect(instance).toBeInstanceOf(TestAdapter);
+            expect(instance).toHaveProperty('test');
         });
     });
 
