@@ -3,14 +3,17 @@ import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-
 import { Email } from '@/domain/shared/value-objects/email';
 import { User } from '@/domain/user/entities/user.entity';
 import { InvalidEmailException } from '@/domain/user/exceptions/user.exceptions';
+import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
 import { UserRepository } from '@/domain/user/port/user.repository';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { Password } from '@/domain/user/value-objects/password';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 
 describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
     let mockUserRepository: jest.Mocked<UserRepository>;
     let passwordValidatorService: PasswordValidatorService;
+    let passwordCipher: jest.Mocked<PasswordCipherPort>;
 
     beforeEach(() => {
         mockUserRepository = {
@@ -22,9 +25,15 @@ describe('RegisterWithEmailUseCase', () => {
 
         passwordValidatorService = new PasswordValidatorService();
 
+        passwordCipher = {
+            encrypt: jest.fn(),
+            decrypt: jest.fn(),
+        } as jest.Mocked<PasswordCipherPort>;
+
         useCase = new RegisterWithEmailUseCase(
             mockUserRepository,
-            passwordValidatorService
+            passwordValidatorService,
+            passwordCipher
         );
     });
 
