@@ -1,18 +1,24 @@
-import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 import { Container } from 'inversify';
-import { DependencyInjectionSymbols, SymbolKeys } from '../di-symbol';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 import {
     injectServerEnvironmentClassAutomaticDependencies,
     injectServerEnvironmentValueAutomaticDependencies,
 } from './server-auto-inject';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
+import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
+import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/user.repository.adapter';
+import { UserRepository } from '@/domain/user/port/user.repository';
 
-const dependencyInjectedClasses: ClassDependency = {
-    [SymbolKeys.PasswordCipher]: {
-        symbol: DependencyInjectionSymbols[SymbolKeys.PasswordCipher],
+const dependencyInjectedClasses: ClassDependency[] = [
+    {
         class: PasswordCipherAdapter,
+        abstract: PasswordCipherPort,
     },
-} as const;
+    {
+        class: UserRepositoryAdapter,
+        abstract: UserRepository,
+    },
+];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
 
