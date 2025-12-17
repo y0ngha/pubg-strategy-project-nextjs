@@ -1,9 +1,9 @@
 export type DependencyInjectionSymbol = { [symbolKey: string]: symbol };
 
-export enum SymbolKeys {
-    PasswordCipher = 'PasswordCipher',
-}
+/**
+ * Only used for value injection
+ */
 
-export const DependencyInjectionSymbols: DependencyInjectionSymbol = {
-    [SymbolKeys.PasswordCipher]: Symbol.for('PasswordCipher'),
-};
+export enum SymbolKeys {}
+
+export const DependencyInjectionSymbols: DependencyInjectionSymbol = {};
