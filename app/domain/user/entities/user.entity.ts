@@ -2,10 +2,11 @@ import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { Password } from '../value-objects/password';
 import { AuthProvider } from '../enums/AuthProvider.enum';
+import { ChangePasswordException } from '../exceptions/user.exceptions';
 
 export class User {
     private constructor(
-        public readonly id: UserId | null,
+        public readonly id: UserId,
         public readonly email: Email,
         private _password: Password | null,
         public readonly authProvider: AuthProvider,
@@ -15,7 +16,7 @@ export class User {
 
     static createWithEmail(email: Email, password: Password): User {
         return new User(
-            null,
+            UserId.generate(),
             email,
             password,
             AuthProvider.EMAIL,
@@ -26,7 +27,7 @@ export class User {
 
     static createWithSSO(email: Email): User {
         return new User(
-            null,
+            UserId.generate(),
             email,
             null,
             AuthProvider.GOOGLE,
@@ -59,15 +60,19 @@ export class User {
     ): void {
         if (this.hasPassword()) {
             if (currentPassword === null) {
-                throw new Error('기존 비밀번호를 입력해야 합니다.');
+                throw new ChangePasswordException(
+                    '기존 비밀번호를 입력해야 합니다.'
+                );
             }
 
             if (!this.verifyPassword(currentPassword)) {
-                throw new Error('비밀번호가 일치하지 않습니다.');
+                throw new ChangePasswordException(
+                    '비밀번호가 일치하지 않습니다.'
+                );
             }
 
             if (currentPassword.equals(newPassword)) {
-                throw new Error(
+                throw new ChangePasswordException(
                     '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
                 );
             }
