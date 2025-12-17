@@ -8,18 +8,18 @@ export class EmailAlreadyExistsException extends DomainException {
 
 export class InvalidPasswordException extends DomainException {
     constructor(reason: string) {
-        super(`${reason}`);
+        super(reason);
     }
 }
 
 export class InvalidEmailException extends DomainException {
     constructor(reason: string) {
-        super(`${reason}`);
+        super(reason);
     }
 }
 
 export class ChangePasswordException extends DomainException {
     constructor(reason: string) {
-        super(`${reason}`);
+        super(reason);
     }
 }
