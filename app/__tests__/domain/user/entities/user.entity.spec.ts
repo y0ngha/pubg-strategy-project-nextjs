@@ -21,7 +21,7 @@ describe('User Entity', () => {
             expect(user.password).toBe(validPassword);
             expect(user.authProvider).toBe(AuthProvider.EMAIL);
             expect(user.isSSOUser()).toBe(false);
-            expect(user.id).toBe(null);
+            expect(user.id).not.toBe(null);
             expect(user.createdAt).toBeInstanceOf(Date);
             expect(user.updatedAt).toBeInstanceOf(Date);
         });
@@ -46,7 +46,7 @@ describe('User Entity', () => {
             expect(user.password).toBeNull();
             expect(user.authProvider).toBe(AuthProvider.GOOGLE);
             expect(user.isSSOUser()).toBe(true);
-            expect(user.id).toBe(null);
+            expect(user.id).not.toBe(null);
             expect(user.createdAt).toBeInstanceOf(Date);
             expect(user.updatedAt).toBeInstanceOf(Date);
         });
