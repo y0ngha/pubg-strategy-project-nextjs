@@ -7,7 +7,7 @@ import { ClassDependency, ValueDependency } from '../types/di-types';
 
 let container: Container | null = null;
 
-const dependencyInjectedClasses: ClassDependency = {} as const;
+const dependencyInjectedClasses: ClassDependency[] = [];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
 
