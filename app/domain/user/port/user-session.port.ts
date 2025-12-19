@@ -1,9 +1,9 @@
-import { User } from "../entities/user.entity";
+import { User } from '../entities/user.entity';
 
 export abstract class UserSessionPort {
-    abstract getUser(): User
-    
-    abstract saveUser(user: User): User
+    abstract getUser(): User;
 
-    abstract delete(): void
+    abstract saveUser(user: User): User;
+
+    abstract clearUser(): void;
 }
