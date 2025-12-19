@@ -67,7 +67,7 @@ describe('UserSessionAdapter (Client)', () => {
     });
 
     describe('clear', () => {
-        it('호출시 저장된 User 정보에 상관 없이 삭제처리 되어야 한다.', () => {
+        it('저장된 유저 정보가 없을 때 clearUser를 호출하면 UserNotFoundException이 발생하지 않고, getUser 호출 시 에러를 던진다.', () => {
             // When
             userSessionPort.clearUser();
 
@@ -75,8 +75,10 @@ describe('UserSessionAdapter (Client)', () => {
             expect(() => userSessionPort.getUser()).toThrow(
                 new UserNotFoundException()
             );
+        });
 
-            // Give
+        it('저장된 유저 정보가 있을 때 clearUser를 호출하면 유저 정보가 삭제된다.', () => {
+            // Given
             const user = User.createWithEmail(
                 Email.create('test@test.com'),
                 Password.create('Qwer1234@')
