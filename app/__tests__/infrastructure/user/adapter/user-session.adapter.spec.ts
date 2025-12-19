@@ -6,7 +6,11 @@ import { Password } from '@/domain/user/value-objects/password';
 import { UserSessionAdapter } from '@/infrastructure/user/adapter/user-session.adapter';
 
 describe('UserSessionAdapter (Client)', () => {
-    const userSessionPort: UserSessionPort = new UserSessionAdapter();
+    let userSessionPort: UserSessionPort
+
+    beforeEach(() => {
+        userSessionPort = new UserSessionAdapter();
+    });
 
     describe('get', () => {
         it('유저 정보가 없을 경우 에러를 던진다.', () => {
