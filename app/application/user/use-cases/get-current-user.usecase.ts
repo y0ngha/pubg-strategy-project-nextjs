@@ -1,5 +1,5 @@
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
-import { UserRepository } from '@/domain/user/port/user.repository';
+import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
 import { inject } from 'inversify';
 import {
     GetCurrentUserRequestObject,
@@ -8,8 +8,8 @@ import {
 
 export class GetCurrentUserUseCase {
     constructor(
-        @inject(UserRepository)
-        private readonly userRepository: UserRepository
+        @inject(UserRepositoryPort)
+        private readonly userRepository: UserRepositoryPort
     ) {}
 
     async execute(
@@ -17,19 +17,17 @@ export class GetCurrentUserUseCase {
     ): Promise<GetCurrentUserResponseObject> {
         const { id } = dto;
 
-        // Server Dependency
         const user = await this.userRepository.findByUserId(id);
 
         if (!user) {
             throw new UserNotFoundException(id.toString());
         }
 
-        // Client Dependency
-        // ... UserSessionPort 이용하여 User 저장 ...
-        
         return {
             id: user.id.toString(),
             email: user.email.toString(),
+            password: user.password?.toString() ?? '',
+            authProvider: user.authProvider.toString(),
         };
     }
 }
