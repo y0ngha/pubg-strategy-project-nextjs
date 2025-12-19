@@ -4,7 +4,7 @@ import {
     InvalidPasswordException,
 } from '@/domain/user/exceptions/user.exceptions';
 import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepository } from '@/domain/user/port/user.repository';
+import { UserRepository } from '@/domain/user/port/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { Password } from '@/domain/user/value-objects/password';
 import { inject } from 'inversify';
