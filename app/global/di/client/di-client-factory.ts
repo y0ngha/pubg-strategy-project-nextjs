@@ -4,10 +4,17 @@ import {
     injectClientEnvironmentValueAutomaticDependencies,
 } from './client-auto-inject';
 import { ClassDependency, ValueDependency } from '../types/di-types';
+import { UserSessionAdapter } from '@/infrastructure/user/adapter/user-session.adapter';
+import { UserSessionPort } from '@/domain/user/port/user-session.port';
 
 let container: Container | null = null;
 
-const dependencyInjectedClasses: ClassDependency[] = [];
+const dependencyInjectedClasses: ClassDependency[] = [
+    {
+        class: UserSessionAdapter,
+        abstract: UserSessionPort,
+    },
+];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
 

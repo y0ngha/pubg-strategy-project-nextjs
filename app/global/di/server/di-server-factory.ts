@@ -6,8 +6,8 @@ import {
 } from './server-auto-inject';
 import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/user.repository.adapter';
-import { UserRepository } from '@/domain/user/port/user.repository';
+import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/user-repository.adapter';
+import { UserRepository } from '@/domain/user/port/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 
 const dependencyInjectedClasses: ClassDependency[] = [
