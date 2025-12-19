@@ -35,7 +35,7 @@ describe('UserSessionAdapter (Client)', () => {
     });
 
     describe('save', () => {
-        it('파라미터로 전달된 유저의 정보를 그대로 저장한다.', () => {
+        it('파라미터로 전달 된 유저의 정보를 저장한다.', () => {
             // Give
             const oldUser = User.createWithEmail(
                 Email.create('old@example.com'),
@@ -48,8 +48,17 @@ describe('UserSessionAdapter (Client)', () => {
             // Then
             const oldUserResponse = userSessionPort.getUser();
             expect(oldUserResponse).toBe(oldUser);
+        });
 
+        it('기존 유저 정보가 있어도, 새로 전달 된 유저의 정보를 저장한다.', () => {
             // Give
+            const oldUser = User.createWithEmail(
+                Email.create('old@example.com'),
+                Password.create('Qwer1234@')
+            );
+
+            userSessionPort.saveUser(oldUser);
+
             const newUser = User.createWithEmail(
                 Email.create('update@example.com'),
                 Password.create('Asdf1234@')
