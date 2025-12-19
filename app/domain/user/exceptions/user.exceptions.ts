@@ -26,6 +26,8 @@ export class ChangePasswordException extends DomainException {
 
 export class UserNotFoundException extends DomainException {
     constructor(id?: string) {
-        super(`유저를 찾을 수 없습니다: ${id}`);
+        super(
+            id ? `유저를 찾을 수 없습니다: ${id}` : '유저를 찾을 수 없습니다.'
+        );
     }
 }
