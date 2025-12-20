@@ -13,9 +13,7 @@ export type GetCurrentUserRequestObject = z.infer<
 
 export const GetCurrentUserResponseSchema = z.object({
     id: z.string(),
-    password: z.string(),
     email: z.string(),
-    authProvider: z.string(),
 });
 
 export type GetCurrentUserResponseObject = z.infer<

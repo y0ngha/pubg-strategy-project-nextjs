@@ -26,8 +26,6 @@ export class GetCurrentUserUseCase {
         return {
             id: user.id.toString(),
             email: user.email.toString(),
-            password: user.password?.toString() ?? '',
-            authProvider: user.authProvider.toString(),
         };
     }
 }
