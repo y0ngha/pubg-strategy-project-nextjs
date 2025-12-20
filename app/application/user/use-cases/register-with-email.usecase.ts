@@ -3,8 +3,8 @@ import {
     EmailAlreadyExistsException,
     InvalidPasswordException,
 } from '@/domain/user/exceptions/user.exceptions';
-import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { Password } from '@/domain/user/value-objects/password';
 import { inject } from 'inversify';

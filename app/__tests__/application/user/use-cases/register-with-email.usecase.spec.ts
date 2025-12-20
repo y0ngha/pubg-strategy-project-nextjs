@@ -1,8 +1,8 @@
 import { RegisterWithEmailRequestSchema } from '@/application/user/dto/register-with-email.dto';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { User } from '@/domain/user/entities/user.entity';
-import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 
 describe('RegisterWithEmailUseCase', () => {

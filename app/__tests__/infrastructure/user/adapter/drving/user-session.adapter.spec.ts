@@ -1,9 +1,9 @@
 import { Email } from '@/domain/shared/value-objects/email';
 import { User } from '@/domain/user/entities/user.entity';
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
-import { UserSessionPort } from '@/domain/user/port/user-session.port';
+import { UserSessionPort } from '@/domain/user/port/in/user-session.port';
 import { Password } from '@/domain/user/value-objects/password';
-import { UserSessionAdapter } from '@/infrastructure/user/adapter/user-session.adapter';
+import { UserSessionAdapter } from '@/infrastructure/user/adapter/driving/user-session.adapter';
 
 describe('UserSessionAdapter (Client)', () => {
     let userSessionPort: UserSessionPort;
