@@ -1,17 +1,13 @@
 import { RegisterWithEmailRequestSchema } from '@/application/user/dto/register-with-email.dto';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
-import { Email } from '@/domain/shared/value-objects/email';
 import { User } from '@/domain/user/entities/user.entity';
-import { InvalidEmailException } from '@/domain/user/exceptions/user.exceptions';
 import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepository } from '@/domain/user/port/user-repository.port';
+import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
-import { Password } from '@/domain/user/value-objects/password';
-import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
 
 describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
-    let mockUserRepository: jest.Mocked<UserRepository>;
+    let mockUserRepository: jest.Mocked<UserRepositoryPort>;
     let passwordValidatorService: PasswordValidatorService;
     let passwordCipher: jest.Mocked<PasswordCipherPort>;
 
@@ -21,7 +17,7 @@ describe('RegisterWithEmailUseCase', () => {
             findByUserId: jest.fn(),
             existsByEmail: jest.fn(),
             delete: jest.fn(),
-        } as jest.Mocked<UserRepository>;
+        } as jest.Mocked<UserRepositoryPort>;
 
         passwordValidatorService = new PasswordValidatorService();
 
