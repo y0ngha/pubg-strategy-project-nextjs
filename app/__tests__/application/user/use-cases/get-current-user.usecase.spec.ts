@@ -51,6 +51,7 @@ describe('GetCurrentUserUseCase', () => {
             // Then
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
             expect(result.id).toBe(validateDto.id.toString());
+            expect(result.email).toBe('test@domain.com');
         });
 
         describe('에러 처리', () => {
