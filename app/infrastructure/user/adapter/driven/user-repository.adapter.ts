@@ -1,7 +1,7 @@
 import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 
 export class UserRepositoryAdapter extends UserRepositoryPort {
     async save(user: User): Promise<User> {

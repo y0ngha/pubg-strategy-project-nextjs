@@ -1,5 +1,5 @@
 import { env } from '@/infrastructure/config/environment-variables';
-import { PasswordCipherPort } from '@domain/user/port/password-cipher.port';
+import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import crypto from 'crypto';
 import { injectable } from 'inversify';
 

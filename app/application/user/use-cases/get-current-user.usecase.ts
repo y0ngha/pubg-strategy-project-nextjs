@@ -1,5 +1,5 @@
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { inject } from 'inversify';
 import {
     GetCurrentUserRequestObject,

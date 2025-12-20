@@ -5,7 +5,7 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';
 import { AuthProvider } from '@/domain/user/enums/AuthProvider.enum';
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { Password } from '@/domain/user/value-objects/password';
 
 describe('GetCurrentUserUseCase', () => {

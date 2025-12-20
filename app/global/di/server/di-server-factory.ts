@@ -4,10 +4,10 @@ import {
     injectServerEnvironmentClassAutomaticDependencies,
     injectServerEnvironmentValueAutomaticDependencies,
 } from './server-auto-inject';
-import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/password-cipher.adapter';
-import { PasswordCipherPort } from '@/domain/user/port/password-cipher.port';
-import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/user-repository.adapter';
-import { UserRepositoryPort } from '@/domain/user/port/user-repository.port';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
+import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
+import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/driven/user-repository.adapter';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 
 const dependencyInjectedClasses: ClassDependency[] = [

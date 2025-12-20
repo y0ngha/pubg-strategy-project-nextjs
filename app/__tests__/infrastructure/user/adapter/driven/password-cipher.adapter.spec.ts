@@ -1,4 +1,4 @@
-import { PasswordCipherAdapter } from '@infrastructure/user/adapter/password-cipher.adapter';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
 
 describe('PasswordCipherAdapter (AES-256-GCM)', () => {
     const originalError = console.error;
