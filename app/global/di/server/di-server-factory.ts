@@ -1,16 +1,18 @@
+import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
+import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
+import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
+import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
+import { AuthenticationServiceAdapter } from '@/infrastructure/user/adapter/driven/authentication-service.adapter';
+import { GoogleAuthServiceAdapter } from '@/infrastructure/user/adapter/driven/google-auth-service.adapter';
+import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
+import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/driven/user-repository.adapter';
 import { Container } from 'inversify';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 import {
     injectServerEnvironmentClassAutomaticDependencies,
     injectServerEnvironmentValueAutomaticDependencies,
 } from './server-auto-inject';
-import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
-import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
-import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/driven/user-repository.adapter';
-import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
-import { AuthenticationServiceAdapter } from '@/infrastructure/user/adapter/driven/authentication-service.adapter';
-import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 
 const dependencyInjectedClasses: ClassDependency[] = [
     {
@@ -27,6 +29,10 @@ const dependencyInjectedClasses: ClassDependency[] = [
     {
         class: AuthenticationServiceAdapter,
         abstract: AuthenticationServicePort,
+    },
+    {
+        class: GoogleAuthServiceAdapter,
+        abstract: GoogleAuthServicePort,
     },
 ];
 
