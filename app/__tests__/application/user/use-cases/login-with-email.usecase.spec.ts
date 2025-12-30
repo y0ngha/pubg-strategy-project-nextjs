@@ -12,6 +12,7 @@ describe('LoginWithEmailUseCase', () => {
         mockAuthenticationService = {
             login: jest.fn(),
             logout: jest.fn(),
+            googleLogin: jest.fn(),
         } as jest.Mocked<AuthenticationServicePort>;
 
         mockPasswordCipher = {
@@ -64,6 +65,8 @@ describe('LoginWithEmailUseCase', () => {
             const result = await useCase.execute(validateDto);
 
             // Then
+            expect(mockAuthenticationService.login).toHaveBeenCalledTimes(1);
+
             expect(result).toBeFalsy();
         });
     });
