@@ -11,4 +11,8 @@ export class AuthenticationServiceAdapter extends AuthenticationServicePort {
     async logout(userId: UserId): Promise<boolean> {
         throw new Error('Not Implemented.');
     }
+
+    async googleLogin(email: Email, token: string): Promise<boolean> {
+        throw new Error('Not Implemented.');
+    }
 }
