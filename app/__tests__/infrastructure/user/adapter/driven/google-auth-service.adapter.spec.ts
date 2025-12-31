@@ -1,3 +1,3 @@
-describe('AutheticationServiceAdapter', () => {
+describe('GoogleAuthServiceAdapter', () => {
     it('OK', () => {});
 });
