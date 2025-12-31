@@ -1,0 +1,3 @@
+describe('AuthenticationServiceAdapter', () => {
+    it('OK', () => {});
+});

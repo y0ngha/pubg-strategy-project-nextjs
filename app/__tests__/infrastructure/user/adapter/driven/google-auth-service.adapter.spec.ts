@@ -1,0 +1,3 @@
+describe('GoogleAuthServiceAdapter', () => {
+    it('OK', () => {});
+});
