@@ -65,6 +65,7 @@ describe('LoginWithEmailUseCase', () => {
             const result = await useCase.execute(validateDto);
 
             // Then
+            expect(mockPasswordCipher.encrypt).toHaveBeenCalledTimes(1);
             expect(mockAuthenticationService.login).toHaveBeenCalledTimes(1);
 
             expect(result).toBeFalsy();
