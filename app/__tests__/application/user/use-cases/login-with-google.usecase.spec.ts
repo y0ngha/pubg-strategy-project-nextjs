@@ -57,7 +57,7 @@ describe('LoginWithGoogleUseCase', () => {
                 token: 'test-1234-abcd',
             };
 
-            mockAuthenticationService.login.mockResolvedValue(false);
+            mockAuthenticationService.googleLogin.mockResolvedValue(false);
 
             const validateDto = LoginWithGoogleRequestSchema.parse(dto);
 
