@@ -47,7 +47,7 @@ describe('ChangePasswordUseCase', () => {
                 return User.reconstruct(
                     id,
                     Email.create('test@domain.com'),
-                    Password.create('Abcd1234@'),
+                    Password.reconstruct('encrypted:Abcd1234@'),
                     AuthProvider.EMAIL,
                     new Date(),
                     new Date()
@@ -87,7 +87,9 @@ describe('ChangePasswordUseCase', () => {
 
             const savedUser = mockUserRepository.save.mock.calls[0][0] as User;
 
-            expect(savedUser.password).toEqual(validateDto.newPassword);
+            expect(savedUser.password?.toString()).toEqual(
+                `encrypted:${validateDto.newPassword.toString()}`
+            );
         });
     });
 
