@@ -1,4 +1,3 @@
-import { GetCurrentUserRequestSchema } from '@/application/user/dto/get-current-user.dto';
 import { GetCurrentUserUseCase } from '@/application/user/use-cases/get-current-user.usecase';
 import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
@@ -43,14 +42,12 @@ describe('GetCurrentUserUseCase', () => {
                 }
             );
 
-            const validateDto = GetCurrentUserRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
-            expect(result.id).toBe(validateDto.id.toString());
+            expect(result.id).toBe(dto.id);
             expect(result.email).toBe('test@domain.com');
         });
 
@@ -67,11 +64,9 @@ describe('GetCurrentUserUseCase', () => {
                     }
                 );
 
-                const validateDto = GetCurrentUserRequestSchema.parse(dto);
-
                 // When & Then
-                await expect(useCase.execute(validateDto)).rejects.toThrow(
-                    new UserNotFoundException(validateDto.id.toString())
+                await expect(useCase.execute(dto)).rejects.toThrow(
+                    new UserNotFoundException(dto.id)
                 );
             });
         });

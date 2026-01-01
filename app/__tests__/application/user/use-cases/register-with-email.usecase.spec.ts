@@ -1,4 +1,3 @@
-import { RegisterWithEmailRequestSchema } from '@/application/user/dto/register-with-email.dto';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { User } from '@/domain/user/entities/user.entity';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
@@ -48,24 +47,20 @@ describe('RegisterWithEmailUseCase', () => {
                 }
             );
 
-            const validateDto = RegisterWithEmailRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(result).toEqual({
                 id: expect.any(String),
-                email: validateDto.email.toString(),
+                email: dto.email,
             });
             expect(mockUserRepository.existsByEmail).toHaveBeenCalledTimes(1);
             expect(mockUserRepository.save).toHaveBeenCalledTimes(1);
 
             const savedUser = mockUserRepository.save.mock.calls[0][0] as User;
             expect(savedUser).toBeInstanceOf(User);
-            expect(savedUser.email.toString()).toBe(
-                validateDto.email.toString()
-            );
+            expect(savedUser.email.toString()).toBe(dto.email);
             expect(savedUser.hasPassword()).toBe(true);
         });
 
@@ -77,13 +72,11 @@ describe('RegisterWithEmailUseCase', () => {
                     password: 'Asdf1234!',
                 };
 
-                const validateDto = RegisterWithEmailRequestSchema.parse(dto);
-
                 mockUserRepository.existsByEmail.mockResolvedValue(true);
 
                 // When & Then
-                await expect(useCase.execute(validateDto)).rejects.toThrow(
-                    `이미 사용 중인 이메일입니다: ${validateDto.email.toString()}`
+                await expect(useCase.execute(dto)).rejects.toThrow(
+                    `이미 사용 중인 이메일입니다: ${dto.email}`
                 );
 
                 expect(mockUserRepository.save).not.toHaveBeenCalled();
@@ -105,9 +98,8 @@ describe('RegisterWithEmailUseCase', () => {
                     }
                 );
 
-                const validateDto = RegisterWithEmailRequestSchema.parse(dto);
                 // When
-                await useCase.execute(validateDto);
+                await useCase.execute(dto);
 
                 // Then
                 expect(mockUserRepository.existsByEmail).toHaveBeenCalledWith(
@@ -135,9 +127,8 @@ describe('RegisterWithEmailUseCase', () => {
                     }
                 );
 
-                const validateDto = RegisterWithEmailRequestSchema.parse(dto);
                 // When
-                await useCase.execute(validateDto);
+                await useCase.execute(dto);
 
                 // Then
                 const savedUser = mockUserRepository.save.mock.calls[0][0];
@@ -158,15 +149,13 @@ describe('RegisterWithEmailUseCase', () => {
                     password: 'Asdf1234!',
                 };
 
-                const validateDto = RegisterWithEmailRequestSchema.parse(dto);
-
                 mockUserRepository.existsByEmail.mockResolvedValue(false);
                 mockUserRepository.save.mockRejectedValue(
                     new Error('Internal error')
                 );
 
                 // When & Then
-                await expect(useCase.execute(validateDto)).rejects.toThrow(
+                await expect(useCase.execute(dto)).rejects.toThrow(
                     new Error('Internal error')
                 );
             });
@@ -182,10 +171,8 @@ describe('RegisterWithEmailUseCase', () => {
                     new Error('Internal error')
                 );
 
-                const validateDto = RegisterWithEmailRequestSchema.parse(dto);
-
                 // When & Then
-                await expect(useCase.execute(validateDto)).rejects.toThrow(
+                await expect(useCase.execute(dto)).rejects.toThrow(
                     new Error('Internal error')
                 );
 
