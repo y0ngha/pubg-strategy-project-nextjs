@@ -118,7 +118,7 @@ describe('ChangePasswordUseCase', () => {
             // Give
             const dto = {
                 id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
-                currentPassword: 'Asdf1234@',
+                currentPassword: 'Abcd1234@',
                 newPassword: 'Test1234!',
             };
 
@@ -142,7 +142,7 @@ describe('ChangePasswordUseCase', () => {
             // Give
             const dto = {
                 id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
-                currentPassword: 'Asdf1234@',
+                currentPassword: 'Abcd1234@',
                 newPassword: 'test1234!',
             };
 
