@@ -14,6 +14,14 @@ export class User {
         private _updatedAt: Date
     ) {}
 
+    get password(): Password | null {
+        return this._password;
+    }
+
+    get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
     static createWithEmail(email: Email, password: Password): User {
         return new User(
             UserId.generate(),
@@ -111,14 +119,6 @@ export class User {
 
     hasPassword(): boolean {
         return this._password != null;
-    }
-
-    get password(): Password | null {
-        return this._password;
-    }
-
-    get updatedAt(): Date {
-        return this._updatedAt;
     }
 
     private verifyPassword(inputPassword: Password): boolean {
