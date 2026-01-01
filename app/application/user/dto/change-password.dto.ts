@@ -2,7 +2,7 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { Password } from '@/domain/user/value-objects/password';
 import { z } from 'zod';
 
-export const PasswordChangeRequestSchema = z.object({
+export const ChangePasswordRequestSchema = z.object({
     id: z.string().transform(value => {
         return UserId.create(value);
     }),
@@ -14,6 +14,6 @@ export const PasswordChangeRequestSchema = z.object({
     }),
 });
 
-export type PasswordChangeRequestObject = z.infer<
-    typeof PasswordChangeRequestSchema
+export type ChangePasswordRequestObject = z.infer<
+    typeof ChangePasswordRequestSchema
 >;
