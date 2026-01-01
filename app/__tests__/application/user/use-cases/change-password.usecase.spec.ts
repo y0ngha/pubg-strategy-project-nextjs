@@ -56,7 +56,7 @@ describe('ChangePasswordUseCase', () => {
         );
 
         mockPasswordCipher.encrypt.mockImplementation(value => {
-            return value;
+            return `encrypted:${value}`;
         });
     });
 
