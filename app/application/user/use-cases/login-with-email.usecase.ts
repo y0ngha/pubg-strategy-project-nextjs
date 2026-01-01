@@ -1,4 +1,7 @@
-import { LoginWithEmailRequestObject } from '@/application/user/dto/login-with-email.dto';
+import {
+    LoginWithEmailRequestDto,
+    LoginWithEmailRequestSchema,
+} from '@/application/user/dto/login-with-email.dto';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { Password } from '@/domain/user/value-objects/password';
@@ -12,8 +15,8 @@ export class LoginWithEmailUseCase {
         private readonly authenticationService: AuthenticationServicePort
     ) {}
 
-    async execute(dto: LoginWithEmailRequestObject): Promise<boolean> {
-        const { email, password } = dto;
+    async execute(dto: LoginWithEmailRequestDto): Promise<boolean> {
+        const { email, password } = LoginWithEmailRequestSchema.parse(dto);
 
         const encryptedPassword = Password.reconstruct(
             this.passwordCipher.encrypt(password.toString())

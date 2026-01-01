@@ -1,4 +1,3 @@
-import { LoginWithGoogleRequestSchema } from '@/application/user/dto/login-with-google.dto';
 import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-google.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
@@ -35,10 +34,8 @@ describe('LoginWithGoogleUseCase', () => {
 
             mockAuthenticationService.googleLogin.mockResolvedValue(true);
 
-            const validateDto = LoginWithGoogleRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockAuthenticationService.googleLogin).toHaveBeenCalledTimes(
@@ -59,10 +56,8 @@ describe('LoginWithGoogleUseCase', () => {
 
             mockAuthenticationService.googleLogin.mockResolvedValue(false);
 
-            const validateDto = LoginWithGoogleRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockAuthenticationService.googleLogin).toHaveBeenCalledTimes(

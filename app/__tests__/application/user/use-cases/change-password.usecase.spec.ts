@@ -69,12 +69,10 @@ describe('ChangePasswordUseCase', () => {
                 newPassword: 'Abcd1234!',
             };
 
-            const validateDto = ChangePasswordRequestSchema.parse(dto);
-
             mockPasswordValidatorService.validate.mockReturnValue(true);
 
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockPasswordValidatorService.validate).toHaveBeenCalledTimes(
@@ -88,7 +86,7 @@ describe('ChangePasswordUseCase', () => {
             const savedUser = mockUserRepository.save.mock.calls[0][0] as User;
 
             expect(savedUser.password?.toString()).toEqual(
-                `encrypted:${validateDto.newPassword.toString()}`
+                `encrypted:${dto.newPassword}`
             );
         });
     });
@@ -102,12 +100,10 @@ describe('ChangePasswordUseCase', () => {
                 newPassword: 'Abcd1234!',
             };
 
-            const validateDto = ChangePasswordRequestSchema.parse(dto);
-
             mockPasswordValidatorService.validate.mockReturnValue(true);
 
             // When & Then
-            await expect(useCase.execute(validateDto)).rejects.toThrow(
+            await expect(useCase.execute(dto)).rejects.toThrow(
                 new ChangePasswordException('비밀번호가 일치하지 않습니다.')
             );
             expect(mockPasswordValidatorService.validate).toHaveBeenCalledTimes(
@@ -124,12 +120,10 @@ describe('ChangePasswordUseCase', () => {
                 newPassword: 'Test1234!',
             };
 
-            const validateDto = ChangePasswordRequestSchema.parse(dto);
-
             mockPasswordValidatorService.validate.mockReturnValue(false);
 
             // When & Then
-            await expect(useCase.execute(validateDto)).rejects.toThrow(
+            await expect(useCase.execute(dto)).rejects.toThrow(
                 new InvalidPasswordException(
                     '신규 비밀번호에 이메일이 포함될 수 없습니다.'
                 )

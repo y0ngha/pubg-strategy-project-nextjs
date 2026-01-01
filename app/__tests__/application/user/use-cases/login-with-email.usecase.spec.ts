@@ -1,4 +1,3 @@
-import { LoginWithEmailRequestSchema } from '@/application/user/dto/login-with-email.dto';
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
@@ -36,10 +35,8 @@ describe('LoginWithEmailUseCase', () => {
 
             mockAuthenticationService.login.mockResolvedValue(true);
 
-            const validateDto = LoginWithEmailRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockPasswordCipher.encrypt).toHaveBeenCalledTimes(1);
@@ -59,10 +56,8 @@ describe('LoginWithEmailUseCase', () => {
 
             mockAuthenticationService.login.mockResolvedValue(false);
 
-            const validateDto = LoginWithEmailRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockPasswordCipher.encrypt).toHaveBeenCalledTimes(1);

@@ -1,4 +1,3 @@
-import { LogoutRequestSchema } from '@/application/user/dto/logout.dto';
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 
@@ -25,10 +24,8 @@ describe('LogoutUseCase', () => {
 
             mockAuthenticationService.logout.mockResolvedValue(true);
 
-            const validateDto = LogoutRequestSchema.parse(dto);
-
             // When
-            const result = await useCase.execute(validateDto);
+            const result = await useCase.execute(dto);
 
             // Then
             expect(mockAuthenticationService.logout).toHaveBeenCalledTimes(1);
