@@ -50,7 +50,7 @@ export class ChangePasswordUseCase {
             return true;
         } catch (error: unknown) {
             if (error instanceof Error) {
-                throw new ChangePasswordException(error.toString());
+                throw new ChangePasswordException(error.message);
             }
 
             throw error;
