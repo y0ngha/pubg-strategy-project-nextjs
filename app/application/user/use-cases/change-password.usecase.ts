@@ -1,7 +1,10 @@
 import { inject } from 'inversify';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { Password } from '@domain/user/value-objects/password';
-import { ChangePasswordRequestObject } from '@/application/user/dto/change-password.dto';
+import {
+    ChangePasswordRequestDto,
+    ChangePasswordRequestSchema,
+} from '@/application/user/dto/change-password.dto';
 import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 import {
     ChangePasswordException,
@@ -20,8 +23,9 @@ export class ChangePasswordUseCase {
         private readonly passwordValidatorService: PasswordValidatorService
     ) {}
 
-    async execute(dto: ChangePasswordRequestObject): Promise<boolean> {
-        const { id, currentPassword, newPassword } = dto;
+    async execute(dto: ChangePasswordRequestDto): Promise<boolean> {
+        const { id, currentPassword, newPassword } =
+            ChangePasswordRequestSchema.parse(dto);
 
         const user = await this.userRepository.findByUserId(id);
 

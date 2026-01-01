@@ -9,7 +9,8 @@ import { PasswordValidatorService } from '@/domain/user/services/password-valida
 import { Password } from '@/domain/user/value-objects/password';
 import { inject } from 'inversify';
 import {
-    RegisterWithEmailRequestObject,
+    RegisterWithEmailRequestDto,
+    RegisterWithEmailRequestSchema,
     RegisterWithEmailResponseObject,
 } from '../dto/register-with-email.dto';
 
@@ -24,9 +25,9 @@ export class RegisterWithEmailUseCase {
     ) {}
 
     async execute(
-        dto: RegisterWithEmailRequestObject
+        dto: RegisterWithEmailRequestDto
     ): Promise<RegisterWithEmailResponseObject> {
-        const { email, password } = dto;
+        const { email, password } = RegisterWithEmailRequestSchema.parse(dto);
 
         const existingUser = await this.userRepository.existsByEmail(email);
 
