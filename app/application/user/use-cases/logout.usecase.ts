@@ -10,8 +10,8 @@ export class LogoutUseCase {
     ) {}
 
     async execute(dto: LogoutRequestDto): Promise<boolean> {
-        const { userId } = LogoutRequestSchema.parse(dto);
+        const { id } = LogoutRequestSchema.parse(dto);
 
-        return await this.authenticationService.logout(userId);
+        return await this.authenticationService.logout(id);
     }
 }
