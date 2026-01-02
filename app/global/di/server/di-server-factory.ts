@@ -20,6 +20,7 @@ import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { CheckEmailDupliateUseCase } from '@/application/user/use-cases/check-email-dupliate.usecase';
+import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 
 const dependencyInjectedClasses: ClassDependency[] = [
     {
@@ -48,6 +49,7 @@ const dependencyInjectedClasses: ClassDependency[] = [
     { class: LogoutUseCase },
     { class: RegisterWithEmailUseCase },
     { class: CheckEmailDupliateUseCase },
+    { class: WithdrawalUseCase },
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
