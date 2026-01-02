@@ -1,8 +1,8 @@
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { CheckEmailDupliateUseCase } from '@/application/user/use-cases/check-email-dupliate.usecase';
+import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
 
 describe('CheckEmailDuplicate', () => {
-    let useCase: CheckEmailDupliateUseCase;
+    let useCase: CheckEmailDuplicateUsecase;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
     beforeEach(() => {
@@ -13,7 +13,7 @@ describe('CheckEmailDuplicate', () => {
             delete: jest.fn(),
         } as jest.Mocked<UserRepositoryPort>;
 
-        useCase = new CheckEmailDupliateUseCase(mockUserRepository);
+        useCase = new CheckEmailDuplicateUsecase(mockUserRepository);
     });
 
     it('이메일이 서버에 있을 때 True를 반환한다.', async () => {

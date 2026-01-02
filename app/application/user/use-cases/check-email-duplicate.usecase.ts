@@ -6,7 +6,7 @@ import {
 } from '@/application/user/dto/check-email-duplicate.dto';
 
 @injectable()
-export class CheckEmailDupliateUseCase {
+export class CheckEmailDuplicateUsecase {
     constructor(
         @inject(UserRepositoryPort)
         private readonly userRepository: UserRepositoryPort

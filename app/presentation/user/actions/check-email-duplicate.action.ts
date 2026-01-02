@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { CheckEmailDupliateUseCase } from '@/application/user/use-cases/check-email-dupliate.usecase';
+import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
 
 export async function checkEmailDuplicateAction(
     _: unknown,
@@ -19,8 +19,8 @@ export async function checkEmailDuplicateAction(
         email: email,
     };
 
-    const useCase = getService<CheckEmailDupliateUseCase>(
-        CheckEmailDupliateUseCase
+    const useCase = getService<CheckEmailDuplicateUsecase>(
+        CheckEmailDuplicateUsecase
     );
 
     return await useCase.execute(dto);
