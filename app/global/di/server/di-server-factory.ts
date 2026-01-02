@@ -19,6 +19,7 @@ import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-e
 import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-google.usecase';
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
+import { CheckEmailDupliateUseCase } from '@/application/user/use-cases/check-email-dupliate.usecase';
 
 const dependencyInjectedClasses: ClassDependency[] = [
     {
@@ -46,6 +47,7 @@ const dependencyInjectedClasses: ClassDependency[] = [
     { class: LoginWithGoogleUseCase },
     { class: LogoutUseCase },
     { class: RegisterWithEmailUseCase },
+    { class: CheckEmailDupliateUseCase },
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
