@@ -19,7 +19,7 @@ describe('LogoutUseCase', () => {
         it('어떤 조건이던 로그아웃을 진행한다.', async () => {
             // Given
             const dto = {
-                userId: '550e8400-e29b-41d4-a716-446655440000',
+                id: '550e8400-e29b-41d4-a716-446655440000',
             };
 
             mockAuthenticationService.logout.mockResolvedValue(true);

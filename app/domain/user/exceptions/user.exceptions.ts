@@ -31,3 +31,15 @@ export class UserNotFoundException extends DomainException {
         );
     }
 }
+
+export class WithdrawalException extends DomainException {
+    constructor(reason: string) {
+        super(`회원탈퇴에 실패했습니다: ${reason}`);
+    }
+}
+
+export class LogoutException extends DomainException {
+    constructor(reason: string) {
+        super(`로그아웃에 실패했습니다: ${reason}`);
+    }
+}

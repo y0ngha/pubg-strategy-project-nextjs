@@ -1,12 +1,13 @@
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import {
     GetCurrentUserRequestDto,
     GetCurrentUserRequestSchema,
     GetCurrentUserResponseObject,
 } from '../dto/get-current-user.dto';
 
+@injectable()
 export class GetCurrentUserUseCase {
     constructor(
         @inject(UserRepositoryPort)

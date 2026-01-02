@@ -7,13 +7,14 @@ import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port'
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { Password } from '@/domain/user/value-objects/password';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import {
     RegisterWithEmailRequestDto,
     RegisterWithEmailRequestSchema,
     RegisterWithEmailResponseObject,
 } from '../dto/register-with-email.dto';
 
+@injectable()
 export class RegisterWithEmailUseCase {
     constructor(
         @inject(UserRepositoryPort)

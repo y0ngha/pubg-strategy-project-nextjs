@@ -13,6 +13,14 @@ import {
     injectServerEnvironmentClassAutomaticDependencies,
     injectServerEnvironmentValueAutomaticDependencies,
 } from './server-auto-inject';
+import { ChangePasswordUseCase } from '@/application/user/use-cases/change-password.usecase';
+import { GetCurrentUserUseCase } from '@/application/user/use-cases/get-current-user.usecase';
+import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
+import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-google.usecase';
+import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
+import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
+import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
+import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 
 const dependencyInjectedClasses: ClassDependency[] = [
     {
@@ -34,6 +42,14 @@ const dependencyInjectedClasses: ClassDependency[] = [
         class: GoogleAuthServiceAdapter,
         abstract: GoogleAuthServicePort,
     },
+    { class: ChangePasswordUseCase },
+    { class: GetCurrentUserUseCase },
+    { class: LoginWithEmailUseCase },
+    { class: LoginWithGoogleUseCase },
+    { class: LogoutUseCase },
+    { class: RegisterWithEmailUseCase },
+    { class: CheckEmailDuplicateUsecase },
+    { class: WithdrawalUseCase },
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;

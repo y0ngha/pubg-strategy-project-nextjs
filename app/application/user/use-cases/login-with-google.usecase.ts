@@ -1,11 +1,12 @@
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import {
     LoginWithGoogleRequestDto,
     LoginWithGoogleRequestSchema,
 } from '../dto/login-with-google.dto';
 
+@injectable()
 export class LoginWithGoogleUseCase {
     constructor(
         @inject(GoogleAuthServicePort)

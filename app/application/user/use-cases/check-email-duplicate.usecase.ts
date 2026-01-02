@@ -1,0 +1,20 @@
+import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
+import { inject, injectable } from 'inversify';
+import {
+    CheckEmailDuplicateRequestDto,
+    CheckEmailDuplicateRequestSchema,
+} from '@/application/user/dto/check-email-duplicate.dto';
+
+@injectable()
+export class CheckEmailDuplicateUsecase {
+    constructor(
+        @inject(UserRepositoryPort)
+        private readonly userRepository: UserRepositoryPort
+    ) {}
+
+    async execute(dto: CheckEmailDuplicateRequestDto): Promise<boolean> {
+        const { email } = CheckEmailDuplicateRequestSchema.parse(dto);
+
+        return await this.userRepository.existsByEmail(email);
+    }
+}
