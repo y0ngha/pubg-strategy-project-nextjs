@@ -1,7 +1,8 @@
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { LogoutRequestDto, LogoutRequestSchema } from '../dto/logout.dto';
 
+@injectable()
 export class LogoutUseCase {
     constructor(
         @inject(AuthenticationServicePort)

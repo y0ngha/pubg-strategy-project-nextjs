@@ -5,8 +5,9 @@ import {
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { Password } from '@/domain/user/value-objects/password';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 
+@injectable()
 export class LoginWithEmailUseCase {
     constructor(
         @inject(PasswordCipherPort)

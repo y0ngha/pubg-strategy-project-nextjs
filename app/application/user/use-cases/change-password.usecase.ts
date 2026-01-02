@@ -1,4 +1,4 @@
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { Password } from '@domain/user/value-objects/password';
 import {
@@ -13,6 +13,7 @@ import {
 } from '@domain/user/exceptions/user.exceptions';
 import { PasswordValidatorService } from '@domain/user/services/password-validator.service';
 
+@injectable()
 export class ChangePasswordUseCase {
     constructor(
         @inject(UserRepositoryPort)
