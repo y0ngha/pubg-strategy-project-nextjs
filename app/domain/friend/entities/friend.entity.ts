@@ -16,7 +16,7 @@ export class Friend {
         public readonly requesterUserEmail: Email,
         public readonly recipientUserEmail: Email,
         public readonly requestedAt: Date,
-        public respondedAt: Date
+        public respondedAt: Date | null
     ) {}
 
     static create(
@@ -33,7 +33,7 @@ export class Friend {
             requesterUserEmail,
             recipientUserEmail,
             new Date(),
-            new Date()
+            null
         );
     }
 
