@@ -38,28 +38,32 @@ export class Friend {
     }
 
     accept(userId: UserId) {
-        if (!this.recipientUserId.equals(userId)) {
-            throw new FriendshipUpdateInvalidPermission();
-        }
+        this.verifyFriendshipStatusUpdatePermission(userId);
 
-        if (this.status !== FriendshipStatus.PENDING) {
-            throw new FriendshipUpdateInvalidStatus(this.status);
-        }
+        this.verifyFriendshipStatusUpdateAvailable();
 
         this.status = FriendshipStatus.ACCEPTED;
         this.respondedAt = new Date();
     }
 
     reject(userId: UserId) {
-        if (!this.recipientUserId.equals(userId)) {
-            throw new FriendshipUpdateInvalidPermission();
-        }
+        this.verifyFriendshipStatusUpdatePermission(userId);
 
-        if (this.status !== FriendshipStatus.PENDING) {
-            throw new FriendshipUpdateInvalidStatus(this.status);
-        }
+        this.verifyFriendshipStatusUpdateAvailable();
 
         this.status = FriendshipStatus.REJECTED;
         this.respondedAt = new Date();
+    }
+
+    private verifyFriendshipStatusUpdatePermission(userId: UserId) {
+        if (!this.recipientUserId.equals(userId)) {
+            throw new FriendshipUpdateInvalidPermission();
+        }
+    }
+
+    private verifyFriendshipStatusUpdateAvailable() {
+        if (this.status !== FriendshipStatus.PENDING) {
+            throw new FriendshipUpdateInvalidStatus(this.status);
+        }
     }
 }
