@@ -3,7 +3,7 @@
 import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';
-import { AuthProvider } from '@/domain/user/enums/AuthProvider.enum';
+import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 import { Password } from '@/domain/user/value-objects/password';
 
 describe('User Entity', () => {
