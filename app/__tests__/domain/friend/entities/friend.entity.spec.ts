@@ -35,7 +35,52 @@ describe('FriendEntity', () => {
     });
 
     describe('친구 관계 업데이트', () => {
-        describe('성공', () => {});
+        describe('성공', () => {
+            it('내가 받은 친구 요청이고, PENDING 상태일 때 수락할 수 있다.', () => {
+                // give
+                const requesterUserId = UserId.generate();
+                const requesterUserEmail = Email.create('test@domain.com');
+                const recipientUserId = UserId.generate();
+                const recipientUserEmail = Email.create('now@domain.com');
+
+                const friend = Friend.create(
+                    requesterUserId,
+                    recipientUserId,
+                    requesterUserEmail,
+                    recipientUserEmail
+                );
+
+                // when
+                friend.accept(recipientUserId);
+
+                // then
+                expect(friend.status).toBe(FriendshipStatus.ACCEPTED);
+                expect(friend.respondedAt).not.toBeNull();
+            });
+
+            it('내가 받은 친구 요청이고, PENDING 상태일 때 거절할 수 있다.', () => {
+                // give
+                const requesterUserId = UserId.generate();
+                const requesterUserEmail = Email.create('test@domain.com');
+                const recipientUserId = UserId.generate();
+                const recipientUserEmail = Email.create('now@domain.com');
+
+                const friend = Friend.create(
+                    requesterUserId,
+                    recipientUserId,
+                    requesterUserEmail,
+                    recipientUserEmail
+                );
+
+                // when
+                friend.reject(recipientUserId);
+
+                // then
+                expect(friend.status).toBe(FriendshipStatus.REJECTED);
+                expect(friend.respondedAt).not.toBeNull();
+            });
+        });
+
         describe('실패', () => {
             it('내가 받은 친구 요청이 아닌데, 업데이트 하려 할 경우 에러를 던진다.', () => {
                 // give
