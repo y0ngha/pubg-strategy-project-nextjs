@@ -11,7 +11,7 @@ export class FriendshipUpdateInvalidPermission extends DomainException {
 }
 
 export class FriendshipUpdateInvalidStatus extends DomainException {
-    constructor(firendshipStatus: FriendshipStatus) {
-        super(`이미 ${FriendshipStatusLabels[firendshipStatus]} 상태 입니다.`);
+    constructor(friendshipStatus: FriendshipStatus) {
+        super(`이미 ${FriendshipStatusLabels[friendshipStatus]} 상태 입니다.`);
     }
 }
