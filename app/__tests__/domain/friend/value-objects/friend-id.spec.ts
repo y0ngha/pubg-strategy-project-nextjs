@@ -16,24 +16,24 @@ describe('FriendId', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => FriendId.create('')).toThrow(
-                'Friend ID는 빈 값일 수 없습니다.'
+                'ID는 빈 값일 수 없습니다.'
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => FriendId.create('   ')).toThrow(
-                'Friend ID는 빈 값일 수 없습니다.'
+                'ID는 빈 값일 수 없습니다.'
             );
         });
 
         it('잘못된 UUID 형식은 에러를 던진다', () => {
             // When & Then
             expect(() => FriendId.create('invalid-uuid')).toThrow(
-                'Friend ID는 UUIDv4 형식이어야 합니다.'
+                'ID는 UUIDv4 형식이어야 합니다.'
             );
             expect(() => FriendId.create('123456')).toThrow(
-                'Friend ID는 UUIDv4 형식이어야 합니다.'
+                'ID는 UUIDv4 형식이어야 합니다.'
             );
         });
 
@@ -42,7 +42,7 @@ describe('FriendId', () => {
 
             // When & Then
             expect(() => FriendId.create(uuidV1)).toThrow(
-                'Friend ID는 UUIDv4 형식이어야 합니다.'
+                'ID는 UUIDv4 형식이어야 합니다.'
             );
         });
     });
