@@ -1,7 +1,7 @@
 import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { Password } from '../value-objects/password';
-import { AuthProvider } from '../enums/AuthProvider.enum';
+import { AuthProvider } from '../enums/auth-provider.enum';
 import { ChangePasswordException } from '../exceptions/user.exceptions';
 
 export class User {
