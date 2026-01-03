@@ -1,11 +1,8 @@
 import { EntityId } from '@domain/shared/value-objects/entity-id';
 
 export class FriendId extends EntityId {
-    private readonly _value: string;
-
     private constructor(value: string) {
         super(value);
-        this._value = value;
     }
 
     static create(value: string): FriendId {
@@ -21,6 +18,6 @@ export class FriendId extends EntityId {
             return false;
         }
 
-        return this._value === friendId._value;
+        return this.value === friendId.value;
     }
 }
