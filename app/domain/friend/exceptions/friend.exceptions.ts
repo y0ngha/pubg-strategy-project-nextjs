@@ -25,3 +25,9 @@ export class FriendNotFoundException extends DomainException {
         );
     }
 }
+
+export class AlreadyBecameFriendshipException extends DomainException {
+    constructor() {
+        super('이미 두 분은 친구 관계입니다.');
+    }
+}
