@@ -2,6 +2,7 @@ export const FriendshipStatus = {
     PENDING: 'PENDING',
     ACCEPTED: 'ACCEPTED',
     REJECTED: 'REJECTED',
+    CANCELED: 'CANCELED',
 } as const;
 
 export type FriendshipStatus =
@@ -11,4 +12,5 @@ export const FriendshipStatusLabels: Record<FriendshipStatus, string> = {
     [FriendshipStatus.PENDING]: '대기중',
     [FriendshipStatus.ACCEPTED]: '수락됨',
     [FriendshipStatus.REJECTED]: '거절됨',
+    [FriendshipStatus.CANCELED]: '요청 취소됨',
 };
