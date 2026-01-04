@@ -15,3 +15,13 @@ export class FriendshipUpdateInvalidStatus extends DomainException {
         super(`이미 ${FriendshipStatusLabels[friendshipStatus]} 상태 입니다.`);
     }
 }
+
+export class FriendNotFoundException extends DomainException {
+    constructor(id?: string) {
+        super(
+            id
+                ? `친구 관계를 찾을 수 없습니다: ${id}`
+                : '친구 관계를 찾을 수 없습니다.'
+        );
+    }
+}
