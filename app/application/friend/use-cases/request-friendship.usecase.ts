@@ -22,15 +22,14 @@ export class RequestFriendshipUseCase {
         const { requesterUserId, recipientUserId } =
             RequestFriendshipRequestSchema.parse(dto);
 
-        const requester =
-            await this.userRepository.findByUserId(requesterUserId);
+        const [requester, recipient] = await Promise.all([
+            this.userRepository.findByUserId(requesterUserId),
+            this.userRepository.findByUserId(recipientUserId),
+        ]);
 
         if (!requester) {
             throw new UserNotFoundException(requesterUserId.toString());
         }
-
-        const recipient =
-            await this.userRepository.findByUserId(recipientUserId);
 
         if (!recipient) {
             throw new UserNotFoundException(recipientUserId.toString());
