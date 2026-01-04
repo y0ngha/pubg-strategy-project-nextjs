@@ -21,18 +21,16 @@ export class GetFriendshipListUseCase {
     ): Promise<GetFriendshipListResponseDto> {
         const { id } = GetFriendshipListRequestSchema.parse(dto);
 
-        const friends =
-            await this.friendRepository.findAcceptedFriendsByUserId(id);
-
-        const receivedFriendshipRequests =
-            await this.friendRepository.findReceivedFriendshipRequestsByRecipientUserId(
-                id
-            );
-
-        const sentFriendshipRequests =
-            await this.friendRepository.findSentFriendshipRequestsByRequesterUserId(
-                id
-            );
+        const [friends, receivedFriendshipRequests, sentFriendshipRequests] =
+            await Promise.all([
+                this.friendRepository.findAcceptedFriendsByUserId(id),
+                this.friendRepository.findReceivedFriendshipRequestsByRecipientUserId(
+                    id
+                ),
+                this.friendRepository.findSentFriendshipRequestsByRequesterUserId(
+                    id
+                ),
+            ]);
 
         return {
             friends: friends.map(friend => this.entityToDisplayableDto(friend)),
