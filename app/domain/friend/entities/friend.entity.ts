@@ -12,12 +12,20 @@ export class Friend {
         public readonly id: FriendId,
         public readonly requesterUserId: UserId,
         public readonly recipientUserId: UserId,
-        public status: FriendshipStatus,
+        private _status: FriendshipStatus,
         public readonly requesterUserEmail: Email,
         public readonly recipientUserEmail: Email,
         public readonly requestedAt: Date,
-        public respondedAt: Date | null
+        private _respondedAt: Date | null
     ) {}
+
+    get status() {
+        return this._status;
+    }
+
+    get respondedAt() {
+        return this._respondedAt;
+    }
 
     static create(
         requesterUserId: UserId,
@@ -42,8 +50,8 @@ export class Friend {
 
         this.verifyFriendshipStatusUpdateAvailable();
 
-        this.status = FriendshipStatus.ACCEPTED;
-        this.respondedAt = new Date();
+        this._status = FriendshipStatus.ACCEPTED;
+        this._respondedAt = new Date();
     }
 
     reject(userId: UserId) {
@@ -51,8 +59,8 @@ export class Friend {
 
         this.verifyFriendshipStatusUpdateAvailable();
 
-        this.status = FriendshipStatus.REJECTED;
-        this.respondedAt = new Date();
+        this._status = FriendshipStatus.REJECTED;
+        this._respondedAt = new Date();
     }
 
     private verifyFriendshipStatusUpdatePermission(userId: UserId) {
@@ -62,8 +70,8 @@ export class Friend {
     }
 
     private verifyFriendshipStatusUpdateAvailable() {
-        if (this.status !== FriendshipStatus.PENDING) {
-            throw new FriendshipUpdateInvalidStatus(this.status);
+        if (this._status !== FriendshipStatus.PENDING) {
+            throw new FriendshipUpdateInvalidStatus(this._status);
         }
     }
 }
