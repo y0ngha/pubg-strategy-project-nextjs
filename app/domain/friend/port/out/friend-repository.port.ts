@@ -5,7 +5,7 @@ import { FriendId } from '@domain/friend/value-objects/friend-id';
 export abstract class FriendRepositoryPort {
     abstract save(friend: Friend): Promise<void>;
 
-    abstract delete(id: UserId): Promise<void>;
+    abstract delete(id: FriendId): Promise<void>;
 
     abstract findById(id: FriendId): Promise<Friend | null>;
 
