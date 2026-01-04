@@ -3,7 +3,7 @@ import { FriendId } from '@domain/friend/value-objects/friend-id';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Friend } from '@domain/friend/entities/friend.entity';
 
-export class FriendRepositoryAdatper extends FriendRepositoryPort {
+export class FriendRepositoryAdapter extends FriendRepositoryPort {
     delete(id: FriendId): Promise<void> {
         throw new Error('Not Implemented.');
     }

@@ -22,7 +22,7 @@ import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-
 import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { FriendRepositoryAdatper } from '@infrastructure/friend/adapter/driven/friend-repository.adatper';
+import { FriendRepositoryAdapter } from '@infrastructure/friend/adapter/driven/friend-repository.adapter';
 import { CancelSentFriendshipUseCase } from '@/application/friend/use-cases/cancel-sent-friendship.usecase';
 import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
 import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-friendship-list.usecase';
@@ -71,7 +71,7 @@ const userUseCases: ClassDependency[] = [
  */
 const friendRepositories: ClassDependency[] = [
     {
-        class: FriendRepositoryAdatper,
+        class: FriendRepositoryAdapter,
         abstract: FriendRepositoryPort,
     },
 ];
