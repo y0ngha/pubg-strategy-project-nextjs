@@ -21,15 +21,27 @@ import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
+import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
+import { FriendRepositoryAdatper } from '@infrastructure/friend/adapter/driven/friend-repository.adatper';
+import { CancelSentFriendshipUseCase } from '@/application/friend/use-cases/cancel-sent-friendship.usecase';
+import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
+import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-friendship-list.usecase';
+import { RejectReceivedFriendshipUseCase } from '@/application/friend/use-cases/reject-received-friendship.usecase';
+import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
 
-const dependencyInjectedClasses: ClassDependency[] = [
-    {
-        class: PasswordCipherAdapter,
-        abstract: PasswordCipherPort,
-    },
+/**
+ * User
+ */
+const userRepositories: ClassDependency[] = [
     {
         class: UserRepositoryAdapter,
         abstract: UserRepositoryPort,
+    },
+];
+const userServices: ClassDependency[] = [
+    {
+        class: PasswordCipherAdapter,
+        abstract: PasswordCipherPort,
     },
     {
         class: PasswordValidatorService,
@@ -42,6 +54,8 @@ const dependencyInjectedClasses: ClassDependency[] = [
         class: GoogleAuthServiceAdapter,
         abstract: GoogleAuthServicePort,
     },
+];
+const userUseCases: ClassDependency[] = [
     { class: ChangePasswordUseCase },
     { class: GetCurrentUserUseCase },
     { class: LoginWithEmailUseCase },
@@ -50,6 +64,31 @@ const dependencyInjectedClasses: ClassDependency[] = [
     { class: RegisterWithEmailUseCase },
     { class: CheckEmailDuplicateUsecase },
     { class: WithdrawalUseCase },
+];
+
+/**
+ * Friend
+ */
+const friendRepositories: ClassDependency[] = [
+    {
+        class: FriendRepositoryAdatper,
+        abstract: FriendRepositoryPort,
+    },
+];
+const friendUseCases: ClassDependency[] = [
+    { class: AcceptReceivedFriendshipUseCase },
+    { class: CancelSentFriendshipUseCase },
+    { class: GetFriendshipListUseCase },
+    { class: RejectReceivedFriendshipUseCase },
+    { class: RequestFriendshipUseCase },
+];
+
+const dependencyInjectedClasses: ClassDependency[] = [
+    ...userRepositories,
+    ...userServices,
+    ...userUseCases,
+    ...friendRepositories,
+    ...friendUseCases,
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
