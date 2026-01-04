@@ -15,11 +15,7 @@ export type GetCurrentUserRequestObject = z.infer<
     typeof GetCurrentUserRequestSchema
 >;
 
-export const GetCurrentUserResponseSchema = z.object({
-    id: z.string(),
-    email: z.string(),
-});
-
-export type GetCurrentUserResponseObject = z.infer<
-    typeof GetCurrentUserResponseSchema
->;
+export interface GetCurrentUserResponseDto {
+    id: string;
+    email: string;
+}

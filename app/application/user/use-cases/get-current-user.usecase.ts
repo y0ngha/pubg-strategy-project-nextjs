@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import {
     GetCurrentUserRequestDto,
     GetCurrentUserRequestSchema,
-    GetCurrentUserResponseObject,
+    GetCurrentUserResponseDto,
 } from '../dto/get-current-user.dto';
 
 @injectable()
@@ -16,7 +16,7 @@ export class GetCurrentUserUseCase {
 
     async execute(
         dto: GetCurrentUserRequestDto
-    ): Promise<GetCurrentUserResponseObject> {
+    ): Promise<GetCurrentUserResponseDto> {
         const { id } = GetCurrentUserRequestSchema.parse(dto);
 
         const user = await this.userRepository.findByUserId(id);
