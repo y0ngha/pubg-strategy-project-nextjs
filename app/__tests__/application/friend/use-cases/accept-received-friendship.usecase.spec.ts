@@ -14,6 +14,12 @@ describe('AcceptReceivedFriendshipUseCase', () => {
     let useCase: AcceptReceivedFriendshipUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
 
+    const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
+    const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
+
+    const requesterUserEmail = 'requester@domain.com';
+    const recipientUserEmail = 'recipient@domain.com';
+
     beforeEach(() => {
         mockFriendRepository = {
             save: jest.fn(),
@@ -31,12 +37,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
     describe('성공 테스트', () => {
         it('친구 관계가 존재하고, 받은 사람이 본인이며, 친구 상태가 PENDING일 때 성공한다.', async () => {
             // give
-            const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
-            const requesterUserEmail = 'requester@domain.com';
-            const recipientUserEmail = 'recipient@domain.com';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     return Friend.create(
@@ -70,8 +70,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
     describe('실패 테스트', () => {
         it('친구 관계가 없을 때 에러를 던진다.', async () => {
             // give
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     return null;
@@ -93,12 +91,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
         it('본인이 받은 요청이 아닌 경우 에러를 던진다.', async () => {
             // give
-            const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
-            const requesterUserEmail = 'requester@domain.com';
-            const recipientUserEmail = 'recipient@domain.com';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     return Friend.create(
@@ -126,12 +118,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 수락된 상태인 경우 에러를 던진다.', async () => {
             // give
-            const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
-            const requesterUserEmail = 'requester@domain.com';
-            const recipientUserEmail = 'recipient@domain.com';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     const friend = Friend.create(
@@ -163,12 +149,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 거절된 상태인 경우 에러를 던진다.', async () => {
             // give
-            const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
-            const requesterUserEmail = 'requester@domain.com';
-            const recipientUserEmail = 'recipient@domain.com';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     const friend = Friend.create(
@@ -199,12 +179,6 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 취소된 상태인 경우 에러를 던진다.', async () => {
             // give
-            const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
-            const recipientUserId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
-
-            const requesterUserEmail = 'requester@domain.com';
-            const recipientUserEmail = 'recipient@domain.com';
-
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
                     const friend = Friend.create(
