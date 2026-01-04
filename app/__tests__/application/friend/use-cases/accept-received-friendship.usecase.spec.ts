@@ -1,4 +1,4 @@
-import { AcceptFriendshipUseCase } from '@/application/friend/use-cases/accept-friendship.usecase';
+import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
 import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
@@ -10,8 +10,8 @@ import {
     FriendshipUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
 
-describe('AcceptFriendshipUseCase', () => {
-    let useCase: AcceptFriendshipUseCase;
+describe('AcceptReceivedFriendshipUseCase', () => {
+    let useCase: AcceptReceivedFriendshipUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
 
     beforeEach(() => {
@@ -24,7 +24,7 @@ describe('AcceptFriendshipUseCase', () => {
             findSentFriendshipRequestsByRequesterUserId: jest.fn(),
         } as jest.Mocked<FriendRepositoryPort>;
 
-        useCase = new AcceptFriendshipUseCase(mockFriendRepository);
+        useCase = new AcceptReceivedFriendshipUseCase(mockFriendRepository);
     });
 
     describe('성공 테스트', () => {
