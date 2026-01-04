@@ -9,9 +9,13 @@ export abstract class FriendRepositoryPort {
 
     abstract findById(id: FriendId): Promise<Friend | null>;
 
-    abstract findFriendsByUserId(userId: UserId): Promise<Friend[]>;
+    abstract findAcceptedFriendsByUserId(userId: UserId): Promise<Friend[]>;
 
-    abstract findReceivedRequests(userId: UserId): Promise<Friend[]>;
+    abstract findReceivedFriendshipRequestsByRecipientUserId(
+        userId: UserId
+    ): Promise<Friend[]>;
 
-    abstract findSentRequests(userId: UserId): Promise<Friend[]>;
+    abstract findSentFriendshipRequestsByRequesterUserId(
+        userId: UserId
+    ): Promise<Friend[]>;
 }
