@@ -46,7 +46,7 @@ export class Friend {
     }
 
     accept(userId: UserId) {
-        this.verifyFriendshipStatusUpdatePermission(userId);
+        this.verifyRecipientAuthority(userId);
 
         this.verifyFriendshipStatusUpdateAvailable();
 
@@ -55,7 +55,7 @@ export class Friend {
     }
 
     reject(userId: UserId) {
-        this.verifyFriendshipStatusUpdatePermission(userId);
+        this.verifyRecipientAuthority(userId);
 
         this.verifyFriendshipStatusUpdateAvailable();
 
@@ -63,7 +63,21 @@ export class Friend {
         this._respondedAt = new Date();
     }
 
-    private verifyFriendshipStatusUpdatePermission(userId: UserId) {
+    cancel(userId: UserId) {
+        this.verifyRequesterAuthority(userId);
+
+        this.verifyFriendshipStatusUpdateAvailable();
+
+        this._status = FriendshipStatus.CANCELED;
+    }
+
+    private verifyRequesterAuthority(userId: UserId) {
+        if (!this.requesterUserId.equals(userId)) {
+            throw new FriendshipUpdateInvalidPermission();
+        }
+    }
+
+    private verifyRecipientAuthority(userId: UserId) {
         if (!this.recipientUserId.equals(userId)) {
             throw new FriendshipUpdateInvalidPermission();
         }

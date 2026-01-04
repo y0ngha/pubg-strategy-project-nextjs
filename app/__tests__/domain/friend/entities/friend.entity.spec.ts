@@ -79,6 +79,28 @@ describe('FriendEntity', () => {
                 expect(friend.status).toBe(FriendshipStatus.REJECTED);
                 expect(friend.respondedAt).not.toBeNull();
             });
+
+            it('내가 보낸 친구 요청이고, PENDING 상태일 때 취소할 수 있다.', () => {
+                // give
+                const requesterUserId = UserId.generate();
+                const requesterUserEmail = Email.create('test@domain.com');
+                const recipientUserId = UserId.generate();
+                const recipientUserEmail = Email.create('now@domain.com');
+
+                const friend = Friend.create(
+                    requesterUserId,
+                    recipientUserId,
+                    requesterUserEmail,
+                    recipientUserEmail
+                );
+
+                // when
+                friend.cancel(requesterUserId);
+
+                // then
+                expect(friend.status).toBe(FriendshipStatus.CANCELED);
+                expect(friend.respondedAt).toBeNull();
+            });
         });
 
         describe('실패', () => {
@@ -106,6 +128,26 @@ describe('FriendEntity', () => {
                 }).toThrow(new FriendshipUpdateInvalidPermission());
             });
 
+            it('내가 보낸 친구 요청이 아닌데, 취소 하려 할 경우 에러를 던진다.', () => {
+                // give
+                const requesterUserId = UserId.generate();
+                const requesterUserEmail = Email.create('test@domain.com');
+                const recipientUserId = UserId.generate();
+                const recipientUserEmail = Email.create('now@domain.com');
+
+                const friend = Friend.create(
+                    requesterUserId,
+                    recipientUserId,
+                    requesterUserEmail,
+                    recipientUserEmail
+                );
+
+                // when & then
+                expect(() => {
+                    friend.cancel(recipientUserId);
+                }).toThrow(new FriendshipUpdateInvalidPermission());
+            });
+
             it('이미 수락/거절한 상태의 친구 관계를 또 업데이트 하려 할 경우 에러를 던진다.', () => {
                 // give
                 const requesterUserId = UserId.generate();
@@ -129,6 +171,10 @@ describe('FriendEntity', () => {
 
                 expect(() => {
                     friend.reject(recipientUserId);
+                }).toThrow(new FriendshipUpdateInvalidStatus(friend.status));
+
+                expect(() => {
+                    friend.cancel(requesterUserId);
                 }).toThrow(new FriendshipUpdateInvalidStatus(friend.status));
             });
         });
