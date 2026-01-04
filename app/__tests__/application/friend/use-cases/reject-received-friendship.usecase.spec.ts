@@ -18,6 +18,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
         mockFriendRepository = {
             save: jest.fn(),
             delete: jest.fn(),
+            existsFriendshipBetween: jest.fn(),
             findById: jest.fn(),
             findAcceptedFriendsByUserId: jest.fn(),
             findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
