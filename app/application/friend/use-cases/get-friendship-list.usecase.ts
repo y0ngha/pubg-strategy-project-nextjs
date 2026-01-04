@@ -19,16 +19,16 @@ export class GetFriendshipListUseCase {
     async execute(
         dto: GetFriendshipListRequestDto
     ): Promise<GetFriendshipListResponseDto> {
-        const { id } = GetFriendshipListRequestSchema.parse(dto);
+        const { userId } = GetFriendshipListRequestSchema.parse(dto);
 
         const [friends, receivedFriendshipRequests, sentFriendshipRequests] =
             await Promise.all([
-                this.friendRepository.findAcceptedFriendsByUserId(id),
+                this.friendRepository.findAcceptedFriendsByUserId(userId),
                 this.friendRepository.findReceivedFriendshipRequestsByRecipientUserId(
-                    id
+                    userId
                 ),
                 this.friendRepository.findSentFriendshipRequestsByRequesterUserId(
-                    id
+                    userId
                 ),
             ]);
 

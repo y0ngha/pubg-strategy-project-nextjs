@@ -70,7 +70,7 @@ describe('GetFriendshipListUseCase', () => {
                 }
             );
             const dto = {
-                id: userId.toString(),
+                userId: userId.toString(),
             };
 
             // when
@@ -104,10 +104,10 @@ describe('GetFriendshipListUseCase', () => {
             mockFriendRepository.findSentFriendshipRequestsByRequesterUserId.mockResolvedValue(
                 []
             );
-            const dto = {
-                id: 'a0f01e35-f96b-4dee-a75b-89cea500ce50',
-            };
 
+            const dto = {
+                userId: 'a0f01e35-f96b-4dee-a75b-89cea500ce50',
+            };
             // when
             const result = await useCase.execute(dto);
 
