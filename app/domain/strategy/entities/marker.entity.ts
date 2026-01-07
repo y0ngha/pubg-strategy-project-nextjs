@@ -15,7 +15,7 @@ export class Marker {
         return this._position;
     }
 
-    get updateAt(): Date {
+    get updatedAt(): Date {
         return this._updatedAt;
     }
 
