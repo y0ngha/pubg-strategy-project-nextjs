@@ -10,7 +10,7 @@ export class AirplanePath {
         private _isDeleted: boolean,
         public readonly createdAt: Date
     ) {
-        this.validateAirplanePath(startPosition, endPosition);
+        this.validate(startPosition, endPosition);
     }
 
     get isDeleted(): boolean {
@@ -32,17 +32,7 @@ export class AirplanePath {
         this._isDeleted = true;
     }
 
-    private validateAirplanePath(
-        startPosition: Position,
-        endPosition: Position
-    ) {
-        this.ensureDifferentPosition(startPosition, endPosition);
-    }
-
-    private ensureDifferentPosition(
-        startPosition: Position,
-        endPosition: Position
-    ) {
+    private validate(startPosition: Position, endPosition: Position) {
         if (startPosition.equals(endPosition)) {
             throw new AirplanePathCreateDuplicatePositionException();
         }
