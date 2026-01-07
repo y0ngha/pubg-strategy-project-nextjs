@@ -36,10 +36,10 @@ export class AirplanePath {
         startPosition: Position,
         endPosition: Position
     ) {
-        this.ensureDiffrentPosition(startPosition, endPosition);
+        this.ensureDifferentPosition(startPosition, endPosition);
     }
 
-    private ensureDiffrentPosition(
+    private ensureDifferentPosition(
         startPosition: Position,
         endPosition: Position
     ) {
