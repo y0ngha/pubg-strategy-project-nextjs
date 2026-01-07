@@ -1,8 +1,8 @@
 export class Position {
-    public readonly x: number;
-    public readonly y: number;
-
-    private constructor(x: number, y: number) {
+    private constructor(
+        public readonly x: number,
+        public readonly y: number
+    ) {
         this.x = x;
         this.y = y;
     }
