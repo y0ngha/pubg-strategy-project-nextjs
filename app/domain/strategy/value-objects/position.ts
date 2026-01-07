@@ -2,10 +2,7 @@ export class Position {
     private constructor(
         public readonly x: number,
         public readonly y: number
-    ) {
-        this.x = x;
-        this.y = y;
-    }
+    ) {}
 
     static create(x: number, y: number) {
         return new Position(x, y);
