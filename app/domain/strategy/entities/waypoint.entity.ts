@@ -18,7 +18,7 @@ export class Waypoint {
     }
 
     get positions(): Position[] {
-        return this._positions;
+        return [...this._positions];
     }
 
     get isDeleted(): boolean {
@@ -36,7 +36,7 @@ export class Waypoint {
     static create(positions: Position[]) {
         return new Waypoint(
             WaypointId.generate(),
-            positions,
+            [...positions],
             false,
             new Date(),
             new Date(),
