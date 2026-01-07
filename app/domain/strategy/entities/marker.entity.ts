@@ -32,25 +32,33 @@ export class Marker {
         );
     }
 
-    update(position: Position) {
-        if (!this.isDeleted) {
-            if (this.position.equals(position)) {
-                this.delete();
-                return;
-            }
-        } else {
-            this._isDeleted = false;
-            this._deletedAt = null;
+    update(newPosition: Position) {
+        if (this._isDeleted) {
+            this.restore(newPosition);
+            return;
         }
 
-        this._position = position;
-        this._updatedAt = new Date();
+        if (this._position.equals(newPosition)) {
+            this.delete();
+            return;
+        }
+
+        this.changePosition(newPosition);
     }
 
     delete() {
-        if (this.isDeleted) return;
+        if (this._isDeleted) return;
 
         this._isDeleted = true;
-        this._deletedAt = new Date();
+    }
+
+    private restore(position: Position) {
+        this._isDeleted = false;
+        this.changePosition(position);
+    }
+
+    private changePosition(position: Position) {
+        this._position = position;
+        this._updatedAt = new Date();
     }
 }
