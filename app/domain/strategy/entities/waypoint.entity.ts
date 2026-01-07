@@ -34,6 +34,11 @@ export class Waypoint {
         );
     }
 
+    delete() {
+        if (this._isDeleted) return;
+        this._isDeleted = true;
+    }
+
     private validatePositions(positions: Position[]): void {
         if (this.isExceedingMaxLimit(positions)) {
             throw new WaypointCreateTooManyPositionException();
