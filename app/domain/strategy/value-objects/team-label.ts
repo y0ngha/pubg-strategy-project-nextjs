@@ -1,9 +1,7 @@
 import { InvalidTeamLabelException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamLabel {
-    private readonly label: string;
-
-    private constructor(label: string) {
+    private constructor(private readonly label: string) {
         const trimLabel = label.trim();
         const labelRegex = /^([a-zA-Z])$/;
 
