@@ -28,7 +28,6 @@ describe('Marker', () => {
 
             // then
             expect(marker.isDeleted).toBeTruthy();
-            expect(marker.deletedAt).not.toBeNull();
         });
 
         it('포지션을 업데이트 하려 하고, 삭제된 상태라면 업데이트 된다.', () => {
@@ -43,7 +42,6 @@ describe('Marker', () => {
 
             // then
             expect(marker.isDeleted).toBeFalsy();
-            expect(marker.deletedAt).toBeNull();
             expect(marker.position).toEqual(newPosition);
         });
 
@@ -73,7 +71,6 @@ describe('Marker', () => {
 
             // then
             expect(marker.isDeleted).toBeTruthy();
-            expect(marker.deletedAt).not.toBeNull();
         });
 
         it('마커가 삭제 상태일 때 다시 삭제하면 변화되지 않는다.', () => {
@@ -81,14 +78,12 @@ describe('Marker', () => {
             const position = Position.create(10, 20);
             const marker = Marker.create(position);
             marker.delete();
-            const oldDeletedAt = marker.deletedAt;
 
             // when
             marker.delete();
 
             // then
             expect(marker.isDeleted).toBeTruthy();
-            expect(marker.deletedAt).toBe(oldDeletedAt);
         });
     });
 });

@@ -7,8 +7,7 @@ export class Marker {
         private _position: Position,
         private _isDeleted: boolean,
         public readonly createdAt: Date,
-        private _updatedAt: Date,
-        private _deletedAt: Date | null
+        private _updatedAt: Date
     ) {}
 
     get position(): Position {
@@ -23,18 +22,13 @@ export class Marker {
         return this._isDeleted;
     }
 
-    get deletedAt(): Date | null {
-        return this._deletedAt;
-    }
-
     static create(position: Position) {
         return new Marker(
             MarkerId.generate(),
             position,
             false,
             new Date(),
-            new Date(),
-            null
+            new Date()
         );
     }
 
