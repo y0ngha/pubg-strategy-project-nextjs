@@ -1,18 +1,12 @@
 import { InvalidTeamLabelException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamLabel {
-    private readonly label: string;
-
-    private constructor(label: string) {
-        const trimLabel = label.trim();
-
-        this.validateTeamLabel(trimLabel);
-
-        this.label = trimLabel;
+    private constructor(private readonly label: string) {
+        this.validateTeamLabel(label);
     }
 
     static create(label: string) {
-        return new TeamLabel(label);
+        return new TeamLabel(label.trim());
     }
 
     equals(teamLabel: TeamLabel) {
