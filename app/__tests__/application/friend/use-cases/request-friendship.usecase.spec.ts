@@ -101,7 +101,7 @@ describe('RequestFriendshipUseCase', () => {
                 new UserNotFoundException(dto.requesterUserId)
             );
 
-            expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
+            expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(2);
         });
 
         it('이미 친구 관계일 때 에러를 던진다.', async () => {
