@@ -6,6 +6,8 @@ import {
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class Waypoint {
+    private static readonly MAX_POSITIONS: number = 6;
+
     private constructor(
         public readonly id: WaypointId,
         private _positions: Position[],
@@ -55,7 +57,7 @@ export class Waypoint {
     }
 
     private isExceedingMaxLimit(positions: Position[]): boolean {
-        return positions.length > 6;
+        return positions.length > Waypoint.MAX_POSITIONS;
     }
 
     private hasDuplicatePosition(positions: Position[]): boolean {
