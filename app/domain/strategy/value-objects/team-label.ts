@@ -1,16 +1,16 @@
 import { InvalidTeamLabelException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamLabel {
-    private readonly label;
+    private readonly label: string;
 
     private constructor(label: string) {
         const trimLabel = label.trim();
 
-        if (trimLabel.trim().length === 0) {
+        if (trimLabel.length === 0) {
             throw new InvalidTeamLabelException(label);
         }
 
-        if (trimLabel.trim().length > 1) {
+        if (trimLabel.length > 1) {
             throw new InvalidTeamLabelException(trimLabel);
         }
 
@@ -20,7 +20,7 @@ export class TeamLabel {
             throw new InvalidTeamLabelException(label);
         }
 
-        this.label = label;
+        this.label = trimLabel;
     }
 
     static create(label: string) {
