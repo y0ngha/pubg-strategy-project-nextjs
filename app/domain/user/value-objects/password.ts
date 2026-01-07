@@ -1,15 +1,15 @@
-import { InvalidPasswordException } from "../exceptions/user.exceptions";
+import { InvalidPasswordException } from '../exceptions/user.exceptions';
 
 export class Password {
-    private readonly value: string;
-
-    private constructor(value: string) {
+    private constructor(private readonly value: string) {
         this.value = value;
     }
 
     static create(value: string): Password {
         if (!value || value.trim().length === 0) {
-            throw new InvalidPasswordException('비밀번호는 빈 값일 수 없습니다.');
+            throw new InvalidPasswordException(
+                '비밀번호는 빈 값일 수 없습니다.'
+            );
         }
 
         if (value.length < 8) {
