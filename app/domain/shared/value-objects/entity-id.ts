@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 export abstract class EntityId {
-    protected constructor(private readonly value: string) {
+    protected constructor(protected readonly value: string) {
         this.validateEntityId(value);
     }
 
