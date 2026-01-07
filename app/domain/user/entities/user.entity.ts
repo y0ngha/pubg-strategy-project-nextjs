@@ -66,25 +66,7 @@ export class User {
         currentPassword: Password | null,
         newPassword: Password
     ): void {
-        if (this.hasPassword()) {
-            if (currentPassword === null) {
-                throw new ChangePasswordException(
-                    '기존 비밀번호를 입력해야 합니다.'
-                );
-            }
-
-            if (!this.verifyPassword(currentPassword)) {
-                throw new ChangePasswordException(
-                    '비밀번호가 일치하지 않습니다.'
-                );
-            }
-
-            if (currentPassword.equals(newPassword)) {
-                throw new ChangePasswordException(
-                    '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
-                );
-            }
-        }
+        this.validatePasswordChange(currentPassword, newPassword);
 
         this._password = newPassword;
         this._updatedAt = new Date();
@@ -119,6 +101,44 @@ export class User {
 
     hasPassword(): boolean {
         return this._password != null;
+    }
+
+    private validatePasswordChange(
+        currentPassword: Password | null,
+        newPassword: Password
+    ): void {
+        if (!this.hasPassword()) return;
+
+        this.ensureCurrentPasswordProvided(currentPassword);
+        this.ensurePasswordMatches(currentPassword!);
+        this.ensurePasswordIsDifferent(currentPassword!, newPassword);
+    }
+
+    private ensureCurrentPasswordProvided(
+        currentPassword: Password | null
+    ): void {
+        if (currentPassword === null) {
+            throw new ChangePasswordException(
+                '기존 비밀번호를 입력해야 합니다.'
+            );
+        }
+    }
+
+    private ensurePasswordMatches(currentPassword: Password): void {
+        if (!this.verifyPassword(currentPassword)) {
+            throw new ChangePasswordException('비밀번호가 일치하지 않습니다.');
+        }
+    }
+
+    private ensurePasswordIsDifferent(
+        currentPassword: Password,
+        newPassword: Password
+    ): void {
+        if (currentPassword.equals(newPassword)) {
+            throw new ChangePasswordException(
+                '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
+            );
+        }
     }
 
     private verifyPassword(inputPassword: Password): boolean {
