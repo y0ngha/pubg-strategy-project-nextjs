@@ -5,15 +5,6 @@ export class TeamLabel {
 
     private constructor(label: string) {
         const trimLabel = label.trim();
-
-        if (trimLabel.length === 0) {
-            throw new InvalidTeamLabelException(label);
-        }
-
-        if (trimLabel.length > 1) {
-            throw new InvalidTeamLabelException(trimLabel);
-        }
-
         const labelRegex = /^([a-zA-Z])$/;
 
         if (!labelRegex.test(trimLabel)) {
