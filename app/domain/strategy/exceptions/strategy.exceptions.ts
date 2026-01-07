@@ -17,3 +17,9 @@ export class WaypointCreateDuplicatePositionException extends DomainException {
         super('웨이포인트 마커가 중복된 것이 있습니다.');
     }
 }
+
+export class AirplanePathCreateDuplicatePositionException extends DomainException {
+    constructor() {
+        super('비행기의 시작과 끝이 동일합니다.');
+    }
+}

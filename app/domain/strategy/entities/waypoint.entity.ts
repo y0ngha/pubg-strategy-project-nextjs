@@ -10,11 +10,9 @@ export class Waypoint {
 
     private constructor(
         public readonly id: WaypointId,
-        private _positions: Position[],
+        private readonly _positions: Position[],
         private _isDeleted: boolean,
-        public readonly createdAt: Date,
-        private _updatedAt: Date,
-        private _deletedAt: Date | null
+        public readonly createdAt: Date
     ) {
         this.validatePositions(_positions);
     }
@@ -27,23 +25,18 @@ export class Waypoint {
         return this._isDeleted;
     }
 
-    get updatedAt(): Date {
-        return this._updatedAt;
-    }
-
-    get deletedAt(): Date | null {
-        return this._deletedAt;
-    }
-
     static create(positions: Position[]) {
         return new Waypoint(
             WaypointId.generate(),
             [...positions],
             false,
-            new Date(),
-            new Date(),
-            null
+            new Date()
         );
+    }
+
+    delete() {
+        if (this._isDeleted) return;
+        this._isDeleted = true;
     }
 
     private validatePositions(positions: Position[]): void {
