@@ -23,6 +23,8 @@ describe('Waypoint', () => {
 
             // then
             expect(waypoint.positions).toHaveLength(positions.length);
+            expect(waypoint.positions).not.toBe(positions);
+            expect(waypoint.positions).toEqual(positions);
         });
 
         it('Waypoint가 7개 이상이면 에러를 던진다.', () => {
