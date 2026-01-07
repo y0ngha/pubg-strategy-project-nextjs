@@ -1,11 +1,8 @@
 export class Position {
-    public readonly x: number;
-    public readonly y: number;
-
-    private constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
+    private constructor(
+        public readonly x: number,
+        public readonly y: number
+    ) {}
 
     static create(x: number, y: number) {
         return new Position(x, y);

@@ -1,21 +1,12 @@
 import { InvalidTeamLabelException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamLabel {
-    private readonly label: string;
-
-    private constructor(label: string) {
-        const trimLabel = label.trim();
-        const labelRegex = /^([a-zA-Z])$/;
-
-        if (!labelRegex.test(trimLabel)) {
-            throw new InvalidTeamLabelException(label);
-        }
-
-        this.label = trimLabel;
+    private constructor(private readonly label: string) {
+        this.validateTeamLabel(label);
     }
 
     static create(label: string) {
-        return new TeamLabel(label);
+        return new TeamLabel(label.trim());
     }
 
     equals(teamLabel: TeamLabel) {
@@ -32,5 +23,17 @@ export class TeamLabel {
 
     toJSON() {
         return this.label;
+    }
+
+    private validateTeamLabel(label: string) {
+        if (!this.checkOnlyEnglish(label)) {
+            throw new InvalidTeamLabelException(label);
+        }
+    }
+
+    private checkOnlyEnglish(label: string): boolean {
+        const labelRegex = /^([a-zA-Z])$/;
+
+        return labelRegex.test(label);
     }
 }
