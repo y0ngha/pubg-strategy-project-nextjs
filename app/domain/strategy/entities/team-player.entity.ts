@@ -52,7 +52,7 @@ export class TeamPlayer {
             3: PlayerColor.YELLOW,
             4: PlayerColor.GREEN,
         };
-        return colorMap[this.priority] ?? PlayerColor.RED;
+        return colorMap[this.priority];
     }
 
     static create(
