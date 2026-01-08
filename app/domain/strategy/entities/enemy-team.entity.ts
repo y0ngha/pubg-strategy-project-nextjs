@@ -1,0 +1,103 @@
+import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
+import { TeamLabel } from '@domain/strategy/value-objects/team-label';
+import { Position } from '@domain/strategy/value-objects/position';
+import {
+    DeletedEnemyTeamException,
+    SamePositionException,
+    SameTeamLabelException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
+
+export class EnemyTeam {
+    private constructor(
+        public readonly id: EnemyTeamId,
+        private _teamLabel: TeamLabel,
+        private _position: Position,
+        private _isDeleted: boolean,
+        public readonly createdAt: Date,
+        private _updatedAt: Date
+    ) {}
+
+    get teamLabel(): TeamLabel {
+        return this._teamLabel;
+    }
+
+    get position(): Position {
+        return this._position;
+    }
+
+    get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
+    get isDeleted(): boolean {
+        return this._isDeleted;
+    }
+
+    static create(teamLabel: TeamLabel, position: Position) {
+        return new EnemyTeam(
+            EnemyTeamId.generate(),
+            teamLabel,
+            position,
+            false,
+            new Date(),
+            new Date()
+        );
+    }
+
+    static reconstruct(
+        id: EnemyTeamId,
+        teamLabel: TeamLabel,
+        position: Position,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        return new EnemyTeam(
+            id,
+            teamLabel,
+            position,
+            false,
+            createdAt,
+            updatedAt
+        );
+    }
+
+    updateTeamLabel(teamLabel: TeamLabel) {
+        this.ensureNotDeleted();
+        this.ensureDifferentTeamLabel(teamLabel);
+
+        this._teamLabel = teamLabel;
+        this._updatedAt = new Date();
+    }
+
+    updatePosition(position: Position) {
+        this.ensureNotDeleted();
+        this.ensureDifferentPosition(position);
+
+        this._position = position;
+        this._updatedAt = new Date();
+    }
+
+    delete() {
+        this.ensureNotDeleted();
+
+        this._isDeleted = true;
+    }
+
+    private ensureDifferentPosition(position: Position) {
+        if (this._position.equals(position)) {
+            throw new SamePositionException();
+        }
+    }
+
+    private ensureDifferentTeamLabel(teamLabel: TeamLabel) {
+        if (this._teamLabel.equals(teamLabel)) {
+            throw new SameTeamLabelException();
+        }
+    }
+
+    private ensureNotDeleted() {
+        if (this._isDeleted) {
+            throw new DeletedEnemyTeamException();
+        }
+    }
+}
