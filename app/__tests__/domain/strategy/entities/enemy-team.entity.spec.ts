@@ -122,7 +122,7 @@ describe('EnemyTeam', () => {
     });
 
     describe('Delete', () => {
-        it('적 팀 객체가 삭제되어 있지 않다면, 포지션 업데이트시 업데이트 된다.', () => {
+        it('적 팀 객체가 삭제되어 있지 않다면, 삭제시 삭제 된다.', () => {
             //given
             const enemyTeam = EnemyTeam.create(teamLabel, position);
 
