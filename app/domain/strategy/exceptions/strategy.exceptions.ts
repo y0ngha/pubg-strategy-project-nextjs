@@ -23,3 +23,21 @@ export class AirplanePathCreateDuplicatePositionException extends DomainExceptio
         super('비행기의 시작과 끝이 동일합니다.');
     }
 }
+
+export class DeletedEnemyTeamException extends DomainException {
+    constructor() {
+        super('삭제된 적 팀에게는 할 수 없습니다.');
+    }
+}
+
+export class SameTeamLabelException extends DomainException {
+    constructor() {
+        super('현재 사용중인 팀 라벨입니다.');
+    }
+}
+
+export class SamePositionException extends DomainException {
+    constructor() {
+        super('현재 위치한 포지션입니다.');
+    }
+}
