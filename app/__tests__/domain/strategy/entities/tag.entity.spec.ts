@@ -122,7 +122,7 @@ describe('Tag', () => {
 
     describe('UpdatePosition', () => {
         const newPosition = Position.create(200, 200);
-        it('팀 플레이어가 삭제된 객체가 아니라면, 포지션 업데이트시 업데이트 된다.', () => {
+        it('태그가 삭제된 객체가 아니라면, 포지션 업데이트시 업데이트 된다.', () => {
             // given
             const tag = Tag.create(position, '태그');
             const oldUpdatedAt = tag.updatedAt;
@@ -144,7 +144,7 @@ describe('Tag', () => {
             );
         });
 
-        it('팀 플레이어가 삭제된 객체라면, 포지션 업데이트시 에러를 던진다.', () => {
+        it('태그가 삭제된 객체라면, 포지션 업데이트시 에러를 던진다.', () => {
             // given
             const tag = Tag.create(position, '태그');
             tag.delete();
