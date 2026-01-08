@@ -6,6 +6,7 @@ import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
+    SamePositionTeamPlayerException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamPlayer {
@@ -97,6 +98,8 @@ export class TeamPlayer {
     updatePosition(position: Position) {
         this.ensureNotDeleted();
 
+        this.ensureDifferentPosition(position);
+
         this._position = position;
         this._updatedAt = new Date();
     }
@@ -183,6 +186,12 @@ export class TeamPlayer {
 
         if (priority < TeamPlayer.MIN_PRIORITY) {
             throw new InvalidTeamPlayerPriorityException();
+        }
+    }
+
+    private ensureDifferentPosition(position: Position) {
+        if (this._position.equals(position)) {
+            throw new SamePositionTeamPlayerException();
         }
     }
 }

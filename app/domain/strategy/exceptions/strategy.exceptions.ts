@@ -35,3 +35,9 @@ export class InvalidTeamPlayerPriorityException extends DomainException {
         super('유효하지 않은 팀 플레이어 순번입니다.');
     }
 }
+
+export class SamePositionTeamPlayerException extends DomainException {
+    constructor() {
+        super('이미 현재 위치한 포지션입니다.');
+    }
+}
