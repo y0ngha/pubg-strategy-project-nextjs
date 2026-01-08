@@ -5,7 +5,7 @@ import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
-    SamePositionTeamPlayerException,
+    SamePositionException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
@@ -201,7 +201,7 @@ describe('TeamPlayer', () => {
 
             // when & then
             expect(() => teamPlayer.updatePosition(position)).toThrow(
-                SamePositionTeamPlayerException
+                SamePositionException
             );
         });
 
@@ -343,7 +343,7 @@ describe('TeamPlayer', () => {
             expect(teamPlayer.isDeleted).toBeTruthy();
         });
 
-        it('팀 플레이어가 삭제된 객체라면, 웨이포인트 삭제시 에러를 던진다.', () => {
+        it('팀 플레이어가 삭제된 객체라면, 삭제시 에러를 던진다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, marker, waypoint);
             teamPlayer.delete();

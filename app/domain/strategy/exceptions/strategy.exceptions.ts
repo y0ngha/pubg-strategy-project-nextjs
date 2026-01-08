@@ -38,7 +38,7 @@ export class SameTeamLabelException extends DomainException {
 
 export class SamePositionException extends DomainException {
     constructor() {
-        super('현재 위치한 포지션입니다.');
+        super('이미 현재 위치한 포지션입니다.');
     }
 }
 
@@ -54,8 +54,14 @@ export class InvalidTeamPlayerPriorityException extends DomainException {
     }
 }
 
-export class SamePositionTeamPlayerException extends DomainException {
+export class DeletedTagException extends DomainException {
     constructor() {
-        super('이미 현재 위치한 포지션입니다.');
+        super('삭제된 태그에는 할 수 없습니다.');
+    }
+}
+
+export class TagContentBlankException extends DomainException {
+    constructor() {
+        super('태그의 내용은 빈 값일 수 없습니다.');
     }
 }

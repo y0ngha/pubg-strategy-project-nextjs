@@ -6,7 +6,7 @@ import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
-    SamePositionTeamPlayerException,
+    SamePositionException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamPlayer {
@@ -191,7 +191,7 @@ export class TeamPlayer {
 
     private ensureDifferentPosition(position: Position) {
         if (this._position.equals(position)) {
-            throw new SamePositionTeamPlayerException();
+            throw new SamePositionException();
         }
     }
 }
