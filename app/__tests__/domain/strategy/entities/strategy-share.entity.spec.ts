@@ -108,25 +108,27 @@ describe('StrategyShareEntity', () => {
     describe('UpdatePermission', () => {
         it('전략에 대한 권한 변경은 이전 권한이 어떤 권한이든 업데이트 된다.', () => {
             // given
-            const permission = StrategySharePermission.READ_ONLY;
+            const initialPermission = StrategySharePermission.READ_ONLY;
             const strategyShare = StrategyShare.create(
                 userId,
                 userEmail,
-                permission
+                initialPermission
             );
             strategyShare.updatePermission(
                 StrategySharePermission.ACCESS_DENIED
             );
             const oldUpdatedAt = strategyShare.updatedAt;
+            const newPermission = StrategySharePermission.EDITABLE;
+            jest.advanceTimersByTime(1000);
 
             // when
-            strategyShare.updatePermission(StrategySharePermission.EDITABLE);
+            strategyShare.updatePermission(newPermission);
 
             // then
-            expect(strategyShare.permission).toBe(
-                StrategySharePermission.EDITABLE
+            expect(strategyShare.permission).toBe(newPermission);
+            expect(strategyShare.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
             );
-            expect(strategyShare.updatedAt).not.toBe(oldUpdatedAt);
         });
     });
 });
