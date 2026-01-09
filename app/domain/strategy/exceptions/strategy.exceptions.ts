@@ -66,6 +66,12 @@ export class TagContentBlankException extends DomainException {
     }
 }
 
+export class StrategyShareAccessDeniedException extends DomainException {
+    constructor() {
+        super('해당 전략은 접근 권한이 거부된 전략입니다.');
+    }
+}
+
 export class InvalidCirclePhaseException extends DomainException {
     constructor() {
         super('잘못된 자기장 페이즈입니다.');
