@@ -98,7 +98,7 @@ export class Circle {
 
     updateCenterPosition(position: Position) {
         this.ensureNotDeleted();
-        this.ensureDiffrentCenterPosition(position);
+        this.ensureDifferentCenterPosition(position);
 
         this._centerPosition = position;
         this._updatedAt = new Date();
@@ -140,7 +140,7 @@ export class Circle {
         this.ensurePhaseGreaterThanZero(phase);
     }
 
-    private ensureDiffrentCenterPosition(centerPosition: Position) {
+    private ensureDifferentCenterPosition(centerPosition: Position) {
         if (this._centerPosition.equals(centerPosition)) {
             throw new SamePositionException();
         }
