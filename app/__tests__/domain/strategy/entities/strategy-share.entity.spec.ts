@@ -119,6 +119,8 @@ describe('StrategyShareEntity', () => {
             );
             const oldUpdatedAt = strategyShare.updatedAt;
             const newPermission = StrategySharePermission.EDITABLE;
+
+            jest.useFakeTimers();
             jest.advanceTimersByTime(1000);
 
             // when
