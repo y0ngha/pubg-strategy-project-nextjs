@@ -10,7 +10,7 @@ import {
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 
-describe('Comemnt', () => {
+describe('Comment', () => {
     const position = Position.create(10, 10);
     const authorId = UserId.generate();
     const authorEmail = Email.create('test@domain.com');
