@@ -71,3 +71,15 @@ export class StrategyShareAccessDeniedException extends DomainException {
         super('해당 전략은 접근 권한이 거부된 전략입니다.');
     }
 }
+
+export class InvalidCirclePhaseException extends DomainException {
+    constructor() {
+        super('잘못된 자기장 페이즈입니다.');
+    }
+}
+
+export class DeletedCircleException extends DomainException {
+    constructor() {
+        super('삭제된 자기장에는 할 수 없습니다.');
+    }
+}
