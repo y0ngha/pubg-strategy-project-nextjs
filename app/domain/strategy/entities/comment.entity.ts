@@ -3,11 +3,11 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
 import {
-    CommentContentBlankException,
     DeletedCommentException,
     InvalidAuthorException,
     SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
+import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 
 export class Comment {
     private constructor(
@@ -15,21 +15,14 @@ export class Comment {
         public readonly position: Position,
         public readonly authorId: UserId,
         public readonly authorEmail: Email,
-        content: string,
+        private _content: CommentContent,
         public readonly parentCommentId: CommentId | null,
         private _isDeleted: boolean,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        const trimmed = content.trim();
-        this.ensureContentNotBlank(trimmed);
+    ) {}
 
-        this._content = trimmed;
-    }
-
-    private _content: string;
-
-    get content(): string {
+    get content(): CommentContent {
         return this._content;
     }
 
@@ -53,7 +46,7 @@ export class Comment {
         position: Position,
         authorId: UserId,
         authorEmail: Email,
-        content: string,
+        content: CommentContent,
         parentCommentId: CommentId | null
     ) {
         return new Comment(
@@ -74,7 +67,7 @@ export class Comment {
         position: Position,
         authorId: UserId,
         authorEmail: Email,
-        content: string,
+        content: CommentContent,
         parentCommentId: CommentId | null,
         createdAt: Date,
         updatedAt: Date
@@ -92,15 +85,12 @@ export class Comment {
         );
     }
 
-    updateContent(userId: UserId, content: string) {
+    updateContent(userId: UserId, content: CommentContent) {
         this.validateAuthor(userId);
         this.ensureNotDeleted();
+        this.ensureDifferentContent(content);
 
-        const trimmed = content.trim();
-        this.ensureContentNotBlank(trimmed);
-        this.ensureDifferentContent(trimmed);
-
-        this._content = trimmed;
+        this._content = content;
         this._updatedAt = new Date();
     }
 
@@ -123,14 +113,8 @@ export class Comment {
         }
     }
 
-    private ensureContentNotBlank(content: string) {
-        if (!content || content.length === 0) {
-            throw new CommentContentBlankException();
-        }
-    }
-
-    private ensureDifferentContent(content: string) {
-        if (this._content === content) {
+    private ensureDifferentContent(content: CommentContent) {
+        if (this._content.equals(content)) {
             throw new SameContentException();
         }
     }

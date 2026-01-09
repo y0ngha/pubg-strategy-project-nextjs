@@ -3,12 +3,12 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
 import {
-    CommentContentBlankException,
     DeletedCommentException,
     InvalidAuthorException,
     SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 
 describe('Comment', () => {
     const position = Position.create(10, 10);
@@ -26,7 +26,7 @@ describe('Comment', () => {
     describe('Create', () => {
         it('내용이 비어있지 않으면 생성된다.', () => {
             // given
-            const content = '댓글';
+            const content = CommentContent.create('댓글');
 
             // when
             const comment = Comment.create(
@@ -47,7 +47,7 @@ describe('Comment', () => {
 
         it('내용의 양 옆 공백은 삭제된 채 생성된다.', () => {
             // given
-            const content = ' 댓글 ';
+            const content = CommentContent.create(' 댓글 ');
 
             // when
             const comment = Comment.create(
@@ -62,28 +62,8 @@ describe('Comment', () => {
             expect(comment.position).toBe(position);
             expect(comment.authorId).toBe(authorId);
             expect(comment.authorEmail).toBe(authorEmail);
-            expect(comment.content).toBe(content.trim());
+            expect(comment.content.toString()).toBe('댓글');
             expect(comment.parentCommentId).toBeNull();
-        });
-
-        it('내용이 비어있으면 에러를 던진다.', () => {
-            // given
-            const content = '';
-
-            // when & then
-            expect(() =>
-                Comment.create(position, authorId, authorEmail, content, null)
-            ).toThrow(CommentContentBlankException);
-        });
-
-        it('내용이 공백(스페이스바)으로 채워져 있으면 에러를 던진다.', () => {
-            // given
-            const content = '   ';
-
-            // when & then
-            expect(() =>
-                Comment.create(position, authorId, authorEmail, content, null)
-            ).toThrow(CommentContentBlankException);
         });
     });
     describe('Reconstruct', () => {
@@ -93,7 +73,7 @@ describe('Comment', () => {
         const updatedAt = new Date();
         it('내용이 비어있지 않으면 재생성된다.', () => {
             // given
-            const content = '댓글';
+            const content = CommentContent.create('댓글');
 
             // when
             const comment = Comment.reconstruct(
@@ -117,7 +97,7 @@ describe('Comment', () => {
 
         it('내용의 양 옆 공백은 삭제된 채 재생성된다.', () => {
             // given
-            const content = ' 댓글 ';
+            const content = CommentContent.create(' 댓글 ');
 
             // when
             const comment = Comment.reconstruct(
@@ -136,53 +116,16 @@ describe('Comment', () => {
             expect(comment.position).toBe(position);
             expect(comment.authorId).toBe(authorId);
             expect(comment.authorEmail).toBe(authorEmail);
-            expect(comment.content).toBe(content.trim());
+            expect(comment.content.toString()).toBe('댓글');
             expect(comment.parentCommentId).toBe(parentCommentId);
-        });
-
-        it('내용이 비어있으면 에러를 던진다.', () => {
-            // given
-            const content = '';
-
-            // when & then
-            expect(() =>
-                Comment.reconstruct(
-                    commentId,
-                    position,
-                    authorId,
-                    authorEmail,
-                    content,
-                    null,
-                    createdAt,
-                    updatedAt
-                )
-            ).toThrow(CommentContentBlankException);
-        });
-
-        it('내용이 공백(스페이스바)으로 채워져 있으면 에러를 던진다.', () => {
-            // given
-            const content = '   ';
-
-            // when & then
-            expect(() =>
-                Comment.reconstruct(
-                    commentId,
-                    position,
-                    authorId,
-                    authorEmail,
-                    content,
-                    null,
-                    createdAt,
-                    updatedAt
-                )
-            ).toThrow(CommentContentBlankException);
         });
     });
 
     describe('IsChild', () => {
+        const content = CommentContent.create('댓글');
+
         it('ParentCommentId가 채워져있으면 자식 댓글이다.', () => {
             // given
-            const content = '댓글';
             const parentCommentId = CommentId.generate();
             const comment = Comment.create(
                 position,
@@ -201,7 +144,6 @@ describe('Comment', () => {
 
         it('ParentCommentId가 Null이면 자식 댓글이 아니다.', () => {
             // given
-            const content = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -218,9 +160,10 @@ describe('Comment', () => {
         });
     });
     describe('IsParent', () => {
+        const content = CommentContent.create('댓글');
+
         it('ParentCommentId가 Null이면 부모 댓글이다.', () => {
             // given
-            const content = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -238,7 +181,6 @@ describe('Comment', () => {
 
         it('ParentCommentId가 채워져있으면 부모 댓글이 아니다.', () => {
             // given
-            const content = '댓글';
             const parentCommentId = CommentId.generate();
             const comment = Comment.create(
                 position,
@@ -257,9 +199,10 @@ describe('Comment', () => {
     });
 
     describe('UpdateContent', () => {
+        const oldContent = CommentContent.create('댓글');
+
         it('삭제되지 않은 댓글이고, 내용의 비어있지 않으며 이전 내용과 틀리고, 작성자 본인이 업데이트한다면 양 옆 공백은 삭제되고 업데이트 된다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -267,7 +210,7 @@ describe('Comment', () => {
                 oldContent,
                 null
             );
-            const newContent = '새로운 댓글';
+            const newContent = CommentContent.create('새로운 댓글');
             const tryingToUpdateUserId = authorId;
             const oldUpdateAt = comment.updatedAt;
 
@@ -285,7 +228,6 @@ describe('Comment', () => {
 
         it('작성자 본인이 업데이트하는게 아니라면 에러를 던진다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -293,7 +235,7 @@ describe('Comment', () => {
                 oldContent,
                 null
             );
-            const newContent = '새로운 댓글';
+            const newContent = CommentContent.create('새로운 댓글');
             const tryingToUpdateUserId = UserId.generate();
 
             // when & then
@@ -304,7 +246,6 @@ describe('Comment', () => {
 
         it('삭제되지 않은 댓글이고, 내용이 비어있지 않으나 이전 내용과 같다면 에러를 던진다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -312,7 +253,7 @@ describe('Comment', () => {
                 oldContent,
                 null
             );
-            const newContent = '댓글';
+            const newContent = CommentContent.create('댓글');
             const tryingToUpdateUserId = authorId;
 
             // when & then
@@ -321,47 +262,8 @@ describe('Comment', () => {
             ).toThrow(SameContentException);
         });
 
-        it('삭제되지 않은 댓글이고, 내용이 비어있으면 에러를 던진다.', () => {
-            // given
-            const oldContent = '댓글';
-            const comment = Comment.create(
-                position,
-                authorId,
-                authorEmail,
-                oldContent,
-                null
-            );
-            const newContent = '';
-            const tryingToUpdateUserId = authorId;
-
-            // when & then
-            expect(() =>
-                comment.updateContent(tryingToUpdateUserId, newContent)
-            ).toThrow(CommentContentBlankException);
-        });
-
-        it('삭제되지 않은 댓글이고, 내용이 공백(스페이스바)으로 채워져 있으면 에러를 던진다.', () => {
-            // given
-            const oldContent = '댓글';
-            const comment = Comment.create(
-                position,
-                authorId,
-                authorEmail,
-                oldContent,
-                null
-            );
-            const newContent = '     ';
-            const tryingToUpdateUserId = authorId;
-
-            // when & then
-            expect(() =>
-                comment.updateContent(tryingToUpdateUserId, newContent)
-            ).toThrow(CommentContentBlankException);
-        });
-
         it('삭제된 댓글이라면, 에러를 던진다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
@@ -370,7 +272,7 @@ describe('Comment', () => {
                 null
             );
             comment.delete(authorId);
-            const newContent = '새로운 댓글';
+            const newContent = CommentContent.create('새로운 댓글');
             const tryingToUpdateUserId = authorId;
 
             // when & then
@@ -381,14 +283,14 @@ describe('Comment', () => {
     });
 
     describe('Delete', () => {
+        const content = CommentContent.create('댓글');
         it('삭제되어 있지 않은 댓글이고, 작성자 본인이 삭제한 것이라면 삭제된다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
                 authorEmail,
-                oldContent,
+                content,
                 null
             );
             const tryingToDeleteUserId = authorId;
@@ -402,12 +304,11 @@ describe('Comment', () => {
 
         it('삭제되어 있지 않은 댓글이고, 작성자 본인이 삭제한 것이 아니라면 에러를 던진다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
                 authorEmail,
-                oldContent,
+                content,
                 null
             );
             const tryingToDeleteUserId = UserId.generate();
@@ -420,12 +321,11 @@ describe('Comment', () => {
 
         it('삭제된 댓글이라면, 에러를 던진다.', () => {
             // given
-            const oldContent = '댓글';
             const comment = Comment.create(
                 position,
                 authorId,
                 authorEmail,
-                oldContent,
+                content,
                 null
             );
             comment.delete(authorId);
