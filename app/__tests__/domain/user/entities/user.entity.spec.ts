@@ -10,6 +10,14 @@ describe('User Entity', () => {
     const validEmail = Email.create('test@example.com');
     const validPassword = Password.create('Test1234!');
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('createWithEmail', () => {
         it('이메일과 비밀번호로 사용자를 생성한다', () => {
             // When
@@ -112,8 +120,6 @@ describe('User Entity', () => {
             const newPassword = Password.create('NewPass1234!');
             const oldUpdatedAt = user.updatedAt;
 
-            // 시간 차이를 두기 위해 약간 대기
-            jest.useFakeTimers();
             jest.advanceTimersByTime(1000);
 
             // When
@@ -134,8 +140,6 @@ describe('User Entity', () => {
             const newPassword = Password.create('NewPass1234!');
             const oldUpdatedAt = user.updatedAt;
 
-            // 시간 차이를 두기 위해 약간 대기
-            jest.useFakeTimers();
             jest.advanceTimersByTime(1000);
 
             // When

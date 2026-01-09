@@ -15,6 +15,14 @@ describe('Comment', () => {
     const authorId = UserId.generate();
     const authorEmail = Email.create('test@domain.com');
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('내용이 비어있지 않으면 생성된다.', () => {
             // given
@@ -264,7 +272,6 @@ describe('Comment', () => {
             const oldUpdateAt = comment.updatedAt;
 
             // when
-            jest.useFakeTimers();
             jest.advanceTimersByTime(1000);
 
             comment.updateContent(tryingToUpdateUserId, newContent);
