@@ -65,3 +65,9 @@ export class TagContentBlankException extends DomainException {
         super('태그의 내용은 빈 값일 수 없습니다.');
     }
 }
+
+export class StrategyShareAccessDeniedException extends DomainException {
+    constructor() {
+        super('해당 전략은 접근 권한이 거부된 전략입니다.');
+    }
+}
