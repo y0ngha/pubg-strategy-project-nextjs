@@ -9,6 +9,15 @@ import { CircleId } from '@domain/strategy/value-objects/circle-id';
 
 describe('Circle', () => {
     const centerPosition = Position.create(100, 100);
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('자기장 Phase가 1 - 8사이인 경우 생성된다.', () => {
             // given
@@ -110,9 +119,11 @@ describe('Circle', () => {
     describe('UpdateCenterPosition', () => {
         it('삭제되지 않은 자기장 객체라면, 포지션은 업데이트 된다.', () => {
             // given
+
             const circle = Circle.create(centerPosition, 1);
             const newCenterPosition = Position.create(300, 300);
             const oldUpdatedAt = circle.updatedAt;
+
             jest.advanceTimersByTime(1000);
 
             // when
@@ -154,6 +165,7 @@ describe('Circle', () => {
             const circle = Circle.create(centerPosition, 1);
             const newPhase = 8;
             const oldUpdatedAt = circle.updatedAt;
+
             jest.advanceTimersByTime(1000);
 
             // when

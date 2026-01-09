@@ -10,6 +10,14 @@ describe('StrategyShareEntity', () => {
     const userEmail = Email.create('domain@test.com');
     const strategyShareId = StrategyShareId.generate();
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('전략 공유 생성시 권한이 "접근 제한"이 아니라면 생성된다.', () => {
             // given
@@ -119,6 +127,7 @@ describe('StrategyShareEntity', () => {
             );
             const oldUpdatedAt = strategyShare.updatedAt;
             const newPermission = StrategySharePermission.EDITABLE;
+
             jest.advanceTimersByTime(1000);
 
             // when
