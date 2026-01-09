@@ -113,13 +113,16 @@ describe('Circle', () => {
             const circle = Circle.create(centerPosition, 1);
             const newCenterPosition = Position.create(300, 300);
             const oldUpdatedAt = circle.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             circle.updateCenterPosition(newCenterPosition);
 
             // then
             expect(circle.centerPosition).toEqual(newCenterPosition);
-            expect(circle.updatedAt).not.toBe(oldUpdatedAt);
+            expect(circle.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('삭제된 자기장 객체라면, 포지션 업데이트시 에러를 던진다.', () => {
@@ -151,13 +154,16 @@ describe('Circle', () => {
             const circle = Circle.create(centerPosition, 1);
             const newPhase = 8;
             const oldUpdatedAt = circle.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             circle.updatePhase(newPhase);
 
             // then
             expect(circle.phase).toBe(newPhase);
-            expect(circle.updatedAt).not.toBe(oldUpdatedAt);
+            expect(circle.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('삭제된 자기장 객체라면, 페이즈 업데이트시 에러를 던진다.', () => {
