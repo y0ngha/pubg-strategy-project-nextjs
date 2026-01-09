@@ -83,3 +83,27 @@ export class DeletedCircleException extends DomainException {
         super('삭제된 자기장에는 할 수 없습니다.');
     }
 }
+
+export class InvalidAuthorException extends DomainException {
+    constructor() {
+        super('작성자만 할 수 있습니다.');
+    }
+}
+
+export class DeletedCommentException extends DomainException {
+    constructor() {
+        super('삭제된 댓글에는 할 수 없습니다.');
+    }
+}
+
+export class CommentContentBlankException extends DomainException {
+    constructor() {
+        super('댓글의 내용은 빈 값일 수 없습니다.');
+    }
+}
+
+export class SameContentException extends DomainException {
+    constructor() {
+        super('수정하는 내용이 현재 내용과 일치합니다.');
+    }
+}
