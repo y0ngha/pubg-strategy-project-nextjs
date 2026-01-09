@@ -138,7 +138,16 @@ describe('Comemnt', () => {
 
             // when & then
             expect(() =>
-                Comment.create(position, authorId, authorEmail, content, null)
+                Comment.reconstruct(
+                    commentId,
+                    position,
+                    authorId,
+                    authorEmail,
+                    content,
+                    null,
+                    createdAt,
+                    updatedAt
+                )
             ).toThrow(CommentContentBlankException);
         });
 
@@ -148,7 +157,16 @@ describe('Comemnt', () => {
 
             // when & then
             expect(() =>
-                Comment.create(position, authorId, authorEmail, content, null)
+                Comment.reconstruct(
+                    commentId,
+                    position,
+                    authorId,
+                    authorEmail,
+                    content,
+                    null,
+                    createdAt,
+                    updatedAt
+                )
             ).toThrow(CommentContentBlankException);
         });
     });
