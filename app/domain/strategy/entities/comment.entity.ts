@@ -86,8 +86,8 @@ export class Comment {
     }
 
     updateContent(userId: UserId, content: CommentContent) {
-        this.validateAuthor(userId);
         this.ensureNotDeleted();
+        this.ensureAuthor(userId);
         this.ensureDifferentContent(content);
 
         this._content = content;
@@ -95,13 +95,13 @@ export class Comment {
     }
 
     delete(userId: UserId) {
-        this.validateAuthor(userId);
         this.ensureNotDeleted();
+        this.ensureAuthor(userId);
 
         this._isDeleted = true;
     }
 
-    private validateAuthor(userId: UserId) {
+    private ensureAuthor(userId: UserId) {
         if (!this.authorId.equals(userId)) {
             throw new InvalidAuthorException();
         }
