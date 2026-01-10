@@ -3,6 +3,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
 import {
+    ChildCommentException,
     DeletedCommentException,
     InvalidAuthorException,
     SameContentException,
@@ -211,13 +212,13 @@ describe('Comment', () => {
                 null
             );
             const newContent = CommentContent.create('새로운 댓글');
-            const tryingToUpdateUserId = authorId;
+            const actorId = authorId;
             const oldUpdateAt = comment.updatedAt;
 
             // when
             jest.advanceTimersByTime(1000);
 
-            comment.updateContent(tryingToUpdateUserId, newContent);
+            comment.updateContent(actorId, newContent);
 
             // then
             expect(comment.content).toBe(newContent);
@@ -236,12 +237,12 @@ describe('Comment', () => {
                 null
             );
             const newContent = CommentContent.create('새로운 댓글');
-            const tryingToUpdateUserId = UserId.generate();
+            const actorId = UserId.generate();
 
             // when & then
-            expect(() =>
-                comment.updateContent(tryingToUpdateUserId, newContent)
-            ).toThrow(InvalidAuthorException);
+            expect(() => comment.updateContent(actorId, newContent)).toThrow(
+                InvalidAuthorException
+            );
         });
 
         it('삭제되지 않은 댓글이고, 내용이 비어있지 않으나 이전 내용과 같다면 에러를 던진다.', () => {
@@ -254,12 +255,12 @@ describe('Comment', () => {
                 null
             );
             const newContent = CommentContent.create('댓글');
-            const tryingToUpdateUserId = authorId;
+            const actorId = authorId;
 
             // when & then
-            expect(() =>
-                comment.updateContent(tryingToUpdateUserId, newContent)
-            ).toThrow(SameContentException);
+            expect(() => comment.updateContent(actorId, newContent)).toThrow(
+                SameContentException
+            );
         });
 
         it('삭제된 댓글이라면, 에러를 던진다.', () => {
@@ -273,12 +274,98 @@ describe('Comment', () => {
             );
             comment.delete(authorId);
             const newContent = CommentContent.create('새로운 댓글');
-            const tryingToUpdateUserId = authorId;
+            const actorId = authorId;
+
+            // when & then
+            expect(() => comment.updateContent(actorId, newContent)).toThrow(
+                DeletedCommentException
+            );
+        });
+    });
+
+    describe('UpdatePosition', () => {
+        const position = Position.create(10, 10);
+        const authorId = UserId.generate();
+        const parentComment = Comment.create(
+            position,
+            authorId,
+            Email.create('test@domain.com'),
+            CommentContent.create('테스트'),
+            null
+        );
+        const childComment = Comment.create(
+            position,
+            authorId,
+            Email.create('test@domain.com'),
+            CommentContent.create('테스트'),
+            CommentId.generate()
+        );
+        const newPoisiton = Position.create(10, 20);
+
+        it('삭제되지 않은 댓글이고, 최상위(부모)댓글이며, 작성자 본인이 포지션을 업데이트한다면 업데이트 된다.', () => {
+            // given
+            const oldUpdateAt = parentComment.updatedAt;
+
+            // when
+            jest.advanceTimersByTime(1000);
+
+            parentComment.updatePosition(authorId, newPoisiton);
+
+            // then
+            expect(parentComment.position).toEqual(newPoisiton);
+            expect(parentComment.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdateAt.getTime()
+            );
+        });
+
+        it('삭제되지 않은 댓글이고, 최상위(부모)댓글이며, 작성자 본인이 포지션을 업데이트하는데 같은 포지션으로 업데이트하면 무시된다.', () => {
+            // given
+            const oldUpdateAt = parentComment.updatedAt;
+
+            // when
+            jest.advanceTimersByTime(1000);
+
+            parentComment.updatePosition(authorId, position);
+
+            // then
+            expect(parentComment.position).toEqual(position);
+            expect(parentComment.updatedAt.getTime()).toBe(
+                oldUpdateAt.getTime()
+            );
+        });
+
+        it('작성자 본인이 업데이트하는게 아니라면 에러를 던진다.', () => {
+            // given
+            const strangerId = UserId.generate();
 
             // when & then
             expect(() =>
-                comment.updateContent(tryingToUpdateUserId, newContent)
-            ).toThrow(DeletedCommentException);
+                parentComment.updatePosition(strangerId, newPoisiton)
+            ).toThrow(InvalidAuthorException);
+        });
+
+        it('부모 댓글이 아니라면 에러를 던진다.', () => {
+            // when & then
+            expect(() =>
+                childComment.updatePosition(authorId, newPoisiton)
+            ).toThrow(ChildCommentException);
+        });
+
+        it('삭제된 댓글이라면, 에러를 던진다.', () => {
+            // given
+            const comment = Comment.create(
+                position,
+                authorId,
+                Email.create('test@domain.com'),
+                CommentContent.create('테스트'),
+                null
+            );
+            comment.delete(authorId);
+
+            // when & then
+            expect(() => comment.updatePosition(authorId, newPoisiton)).toThrow(
+                DeletedCommentException
+            );
         });
     });
 
@@ -293,10 +380,10 @@ describe('Comment', () => {
                 content,
                 null
             );
-            const tryingToDeleteUserId = authorId;
+            const actorId = authorId;
 
             // when
-            comment.delete(tryingToDeleteUserId);
+            comment.delete(actorId);
 
             // then
             expect(comment.isDeleted).toBeTruthy();
@@ -311,10 +398,10 @@ describe('Comment', () => {
                 content,
                 null
             );
-            const tryingToDeleteUserId = UserId.generate();
+            const actorId = UserId.generate();
 
             // when & then
-            expect(() => comment.delete(tryingToDeleteUserId)).toThrow(
+            expect(() => comment.delete(actorId)).toThrow(
                 InvalidAuthorException
             );
         });
@@ -329,10 +416,10 @@ describe('Comment', () => {
                 null
             );
             comment.delete(authorId);
-            const tryingToDeleteUserId = authorId;
+            const actorId = authorId;
 
             // when & then
-            expect(() => comment.delete(tryingToDeleteUserId)).toThrow(
+            expect(() => comment.delete(actorId)).toThrow(
                 DeletedCommentException
             );
         });
