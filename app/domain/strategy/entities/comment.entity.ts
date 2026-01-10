@@ -12,7 +12,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 export class Comment {
     private constructor(
         public readonly id: CommentId,
-        public readonly position: Position,
+        private _position: Position,
         public readonly authorId: UserId,
         public readonly authorEmail: Email,
         private _content: CommentContent,
@@ -21,6 +21,10 @@ export class Comment {
         public readonly createdAt: Date,
         private _updatedAt: Date
     ) {}
+
+    get position(): Position {
+        return this._position;
+    }
 
     get content(): CommentContent {
         return this._content;
