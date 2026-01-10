@@ -128,11 +128,13 @@ export class TeamPlayer {
 
     clearMarker() {
         this.ensureNotDeleted();
+        this.deleteMarker();
         this.unassignMarker();
     }
 
     clearWaypoint() {
         this.ensureNotDeleted();
+        this.deleteWaypoint();
         this.unassignWaypoint();
     }
 
