@@ -3,6 +3,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
 import {
+    ChildCommentException,
     DeletedCommentException,
     InvalidAuthorException,
     SameContentException,
@@ -98,6 +99,17 @@ export class Comment {
         this._updatedAt = new Date();
     }
 
+    updatePosition(userId: UserId, position: Position) {
+        this.ensureNotDeleted();
+        this.ensureParentComment();
+        this.ensureAuthor(userId);
+
+        if (this._position.equals(position)) return;
+
+        this._position = position;
+        this._updatedAt = new Date();
+    }
+
     delete(userId: UserId) {
         this.ensureNotDeleted();
         this.ensureAuthor(userId);
@@ -108,6 +120,12 @@ export class Comment {
     private ensureAuthor(userId: UserId) {
         if (!this.authorId.equals(userId)) {
             throw new InvalidAuthorException();
+        }
+    }
+
+    private ensureParentComment() {
+        if (!this.isParent) {
+            throw new ChildCommentException();
         }
     }
 
