@@ -24,6 +24,10 @@ export class StrategyShare {
         return this._updatedAt;
     }
 
+    get isEditable(): boolean {
+        return this._permission === 'EDITABLE';
+    }
+
     static create(
         sharedUserId: UserId,
         sharedEmail: Email,
