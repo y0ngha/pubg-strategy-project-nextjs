@@ -58,6 +58,8 @@ export class StrategyShare {
     }
 
     updatePermission(permission: StrategySharePermission) {
+        if (this._permission === permission) return;
+
         this._permission = permission;
         this._updatedAt = new Date();
     }
