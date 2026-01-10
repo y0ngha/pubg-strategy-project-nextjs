@@ -68,6 +68,10 @@ export class StrategyShare {
         this._updatedAt = new Date();
     }
 
+    delete() {
+        this.updatePermission(StrategySharePermission.ACCESS_DENIED);
+    }
+
     private ensureNotDeniedPermission(permission: StrategySharePermission) {
         if (permission === StrategySharePermission.ACCESS_DENIED) {
             throw new StrategyShareAccessDeniedException();
