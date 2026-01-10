@@ -56,6 +56,14 @@ export class TeamPlayer {
         return colorMap[this.priority];
     }
 
+    get hasMarker(): boolean {
+        return this._marker != null;
+    }
+
+    get hasWaypoint(): boolean {
+        return this._waypoint != null;
+    }
+
     static create(
         priority: number,
         position: Position,
