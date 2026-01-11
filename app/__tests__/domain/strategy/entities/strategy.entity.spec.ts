@@ -1730,7 +1730,7 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateMap(editorId, newMap)
+                    strategyFixture.updateMap(ownerId, newMap)
                 ).toThrow(DeletedStrategyException);
             });
         });
