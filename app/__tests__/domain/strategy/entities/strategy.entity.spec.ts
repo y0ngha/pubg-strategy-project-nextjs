@@ -129,8 +129,8 @@ describe('Strategy', () => {
             StrategySharePermission.EDITABLE
         );
         strategyShareViewerFixture = StrategyShare.create(
-            editorId,
-            editorEmail,
+            viewerId,
+            viewerEmail,
             StrategySharePermission.READ_ONLY
         );
 
