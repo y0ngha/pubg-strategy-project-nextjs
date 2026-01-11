@@ -371,8 +371,8 @@ describe('Strategy', () => {
         describe('RemoveTeamPlayer', () => {
             it('전략에 대한 편집 권한이 있으면 삭제된다.', () => {
                 // give
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
 
                 // when
                 strategyFixture.removeTeamPlayer(editorId, teamPlayerId1);
@@ -405,7 +405,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -419,7 +419,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -433,13 +433,11 @@ describe('Strategy', () => {
             const newPosition = Position.create(1500, 1500);
             it('전략에 대한 편집 권한이 있으면, 업데이트 된다.', () => {
                 // given
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
 
-                const oldTeamPlayer1Position =
-                    strategyFixture.teamPlayers[0].position;
-                const oldTeamPlayer2Position =
-                    strategyFixture.teamPlayers[1].position;
+                const oldTeamPlayer1Position = teamPlayer1Fixture.position;
+                const oldTeamPlayer2Position = teamPlayer2Fixture.position;
 
                 // when
                 strategyFixture.updateTeamPlayerPosition(
@@ -454,23 +452,19 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.teamPlayers[0].position).not.toEqual(
+                expect(teamPlayer1Fixture.position).not.toEqual(
                     oldTeamPlayer1Position
                 );
-                expect(strategyFixture.teamPlayers[0].position).toEqual(
-                    newPosition
-                );
-                expect(strategyFixture.teamPlayers[1].position).not.toEqual(
+                expect(teamPlayer1Fixture.position).toEqual(newPosition);
+                expect(teamPlayer2Fixture.position).not.toEqual(
                     oldTeamPlayer2Position
                 );
-                expect(strategyFixture.teamPlayers[1].position).toEqual(
-                    newPosition
-                );
+                expect(teamPlayer2Fixture.position).toEqual(newPosition);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -492,7 +486,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -510,8 +504,8 @@ describe('Strategy', () => {
             const markerPosition = Position.create(15, 15);
             it('전략에 대한 편집 권한이 있으면, 마커가 추가된다.', () => {
                 // given
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
 
                 // when
                 strategyFixture.addTeamPlayerMarker(
@@ -526,20 +520,20 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.teamPlayers[0].marker).not.toBeNull();
-                expect(strategyFixture.teamPlayers[0].marker?.position).toEqual(
+                expect(teamPlayer1Fixture.marker).not.toBeNull();
+                expect(teamPlayer1Fixture.marker?.position).toEqual(
                     markerPosition
                 );
 
-                expect(strategyFixture.teamPlayers[1].marker).not.toBeNull();
-                expect(strategyFixture.teamPlayers[1].marker?.position).toEqual(
+                expect(teamPlayer2Fixture.marker).not.toBeNull();
+                expect(teamPlayer2Fixture.marker?.position).toEqual(
                     markerPosition
                 );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -561,7 +555,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -579,8 +573,8 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 마커가 삭제된다.', () => {
                 // given
                 const markerPosition = Position.create(15, 15);
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
                 strategyFixture.addTeamPlayerMarker(
                     ownerId,
                     teamPlayerId1,
@@ -597,13 +591,13 @@ describe('Strategy', () => {
                 strategyFixture.removeTeamPlayerMarker(editorId, teamPlayerId2);
 
                 // then
-                expect(strategyFixture.teamPlayers[0].marker).toBeNull();
-                expect(strategyFixture.teamPlayers[1].marker).toBeNull();
+                expect(teamPlayer1Fixture.marker).toBeNull();
+                expect(teamPlayer2Fixture.marker).toBeNull();
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -622,7 +616,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -644,8 +638,8 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 있으면, 웨이포인트가 추가된다.', () => {
                 // given
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
 
                 // when
                 strategyFixture.addTeamPlayerWaypoint(
@@ -660,20 +654,20 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.teamPlayers[0].waypoint).not.toBeNull();
-                expect(
-                    strategyFixture.teamPlayers[0].waypoint?.positions
-                ).toEqual(waypointPositions);
+                expect(teamPlayer1Fixture.waypoint).not.toBeNull();
+                expect(teamPlayer1Fixture.waypoint?.positions).toEqual(
+                    waypointPositions
+                );
 
-                expect(strategyFixture.teamPlayers[1].waypoint).not.toBeNull();
-                expect(
-                    strategyFixture.teamPlayers[1].waypoint?.positions
-                ).toEqual(waypointPositions);
+                expect(teamPlayer2Fixture.waypoint).not.toBeNull();
+                expect(teamPlayer2Fixture.waypoint?.positions).toEqual(
+                    waypointPositions
+                );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -695,7 +689,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -716,8 +710,8 @@ describe('Strategy', () => {
                     Position.create(1, 2),
                     Position.create(1, 3),
                 ];
-                const teamPlayerId1 = strategyFixture.teamPlayers[0].id;
-                const teamPlayerId2 = strategyFixture.teamPlayers[1].id;
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const teamPlayerId2 = teamPlayer2Fixture.id;
                 strategyFixture.addTeamPlayerWaypoint(
                     ownerId,
                     teamPlayerId1,
@@ -740,13 +734,13 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.teamPlayers[0].waypoint).toBeNull();
-                expect(strategyFixture.teamPlayers[1].waypoint).toBeNull();
+                expect(teamPlayer1Fixture.waypoint).toBeNull();
+                expect(teamPlayer2Fixture.waypoint).toBeNull();
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -765,7 +759,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const teamPlayerId = strategyFixture.teamPlayers[0].id;
+                const teamPlayerId = teamPlayer1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -838,8 +832,8 @@ describe('Strategy', () => {
         describe('RemoveEnemyTeam', () => {
             it('전략에 대한 편집 권한이 있으면, 적 팀은 삭제된다.', () => {
                 // given
-                const enemyTeamId1 = strategyFixture.enemyTeams[0].id;
-                const enemyTeamId2 = strategyFixture.enemyTeams[1].id;
+                const enemyTeamId1 = enemyTeam1Fixture.id;
+                const enemyTeamId2 = enemyTeam2Fixture.id;
 
                 // when
                 strategyFixture.removeEnemyTeam(ownerId, enemyTeamId1);
@@ -855,7 +849,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const enemyTeamId = strategyFixture.enemyTeams[0].id;
+                const enemyTeamId = enemyTeam1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -869,7 +863,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const enemyTeamId = strategyFixture.enemyTeams[0].id;
+                const enemyTeamId = enemyTeam1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -886,9 +880,9 @@ describe('Strategy', () => {
                 const newTeamLabel1 = TeamLabel.create('Y');
                 const newTeamLabel2 = TeamLabel.create('Z');
                 const { id: enemyTeamId1, teamLabel: oldEnemyTeamLabel1 } =
-                    strategyFixture.enemyTeams[0];
+                    enemyTeam1Fixture;
                 const { id: enemyTeamId2, teamLabel: oldEnemyTeamLabel2 } =
-                    strategyFixture.enemyTeams[1];
+                    enemyTeam2Fixture;
 
                 // when
                 strategyFixture.updateEnemyTeamLabel(
@@ -903,23 +897,19 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.enemyTeams[0].teamLabel).not.toEqual(
+                expect(enemyTeam1Fixture.teamLabel).not.toEqual(
                     oldEnemyTeamLabel1
                 );
-                expect(strategyFixture.enemyTeams[0].teamLabel).toEqual(
-                    newTeamLabel1
-                );
-                expect(strategyFixture.enemyTeams[1].teamLabel).not.toEqual(
+                expect(enemyTeam1Fixture.teamLabel).toEqual(newTeamLabel1);
+                expect(enemyTeam2Fixture.teamLabel).not.toEqual(
                     oldEnemyTeamLabel2
                 );
-                expect(strategyFixture.enemyTeams[1].teamLabel).toEqual(
-                    newTeamLabel2
-                );
+                expect(enemyTeam2Fixture.teamLabel).toEqual(newTeamLabel2);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const enemyTeamId = strategyFixture.enemyTeams[0].id;
+                const enemyTeamId = enemyTeam1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -940,7 +930,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const enemyTeamId = strategyFixture.enemyTeams[0].id;
+                const enemyTeamId = enemyTeam1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1046,8 +1036,8 @@ describe('Strategy', () => {
         describe('RemoveCircle', () => {
             it('전략에 대한 편집 권한이 있으면, Circle은 삭제된다.', () => {
                 // given
-                const circleId1 = strategyFixture.circles[0].id;
-                const circleId2 = strategyFixture.circles[1].id;
+                const circleId1 = circle1Fixture.id;
+                const circleId2 = circle2Fixture.id;
 
                 // when
                 strategyFixture.removeCircle(ownerId, circleId1);
@@ -1063,7 +1053,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -1076,7 +1066,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1097,11 +1087,11 @@ describe('Strategy', () => {
                 const {
                     id: circleId1,
                     centerPosition: oldCircle1centerPosition,
-                } = strategyFixture.circles[0];
+                } = circle1Fixture;
                 const {
                     id: circleId2,
                     centerPosition: oldCircle2centerPosition,
-                } = strategyFixture.circles[1];
+                } = circle2Fixture;
 
                 // when
                 strategyFixture.updateCircleCeneterPosition(
@@ -1116,23 +1106,23 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.circles[0].centerPosition).not.toEqual(
+                expect(circle1Fixture.centerPosition).not.toEqual(
                     oldCircle1centerPosition
                 );
-                expect(strategyFixture.circles[0].centerPosition).toEqual(
+                expect(circle1Fixture.centerPosition).toEqual(
                     newCenterPosition1
                 );
-                expect(strategyFixture.circles[1].centerPosition).not.toEqual(
+                expect(circle2Fixture.centerPosition).not.toEqual(
                     oldCircle2centerPosition
                 );
-                expect(strategyFixture.circles[1].centerPosition).toEqual(
+                expect(circle2Fixture.centerPosition).toEqual(
                     newCenterPosition2
                 );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -1154,7 +1144,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1176,9 +1166,9 @@ describe('Strategy', () => {
                 const newPhase2 = 5;
 
                 const { id: circleId1, phase: oldCircle1Phase } =
-                    strategyFixture.circles[0];
+                    circle1Fixture;
                 const { id: circleId2, phase: oldCircle2Phase } =
-                    strategyFixture.circles[1];
+                    circle2Fixture;
 
                 // when
                 strategyFixture.updateCirclePhase(
@@ -1193,22 +1183,18 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.circles[0].phase).not.toEqual(
-                    oldCircle1Phase
-                );
-                expect(strategyFixture.circles[0].phase).toEqual(newPhase1);
-                expect(strategyFixture.circles[1].phase).not.toEqual(
-                    oldCircle2Phase
-                );
-                expect(strategyFixture.circles[1].phase).toEqual(newPhase2);
+                expect(circle1Fixture.phase).not.toEqual(oldCircle1Phase);
+                expect(circle1Fixture.phase).toEqual(newPhase1);
+                expect(circle2Fixture.phase).not.toEqual(oldCircle2Phase);
+                expect(circle2Fixture.phase).toEqual(newPhase2);
             });
 
             it('이미 있는 Phase로 업데이트 하면, 에러를 던진다.', () => {
                 // give
                 const newPhase = 7;
 
-                const { id: circleId1 } = strategyFixture.circles[0];
-                const { id: circleId2 } = strategyFixture.circles[1];
+                const { id: circleId1 } = circle1Fixture;
+                const { id: circleId2 } = circle2Fixture;
 
                 strategyFixture.updateCirclePhase(ownerId, circleId1, newPhase);
 
@@ -1224,7 +1210,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
 
                 // when & then
                 expect(() =>
@@ -1245,7 +1231,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const circleId = strategyFixture.circles[0].id;
+                const circleId = circle1Fixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1312,7 +1298,7 @@ describe('Strategy', () => {
 
                 strategyFixture.addTag(ownerId, content);
 
-                const tagId1 = strategyFixture.tags[0].id;
+                const tagId1 = tagFixture.id;
                 const tagId2 = strategyFixture.tags[1].id;
 
                 // when
@@ -1328,7 +1314,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
 
                 // when & then
                 expect(() =>
@@ -1342,7 +1328,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1361,8 +1347,7 @@ describe('Strategy', () => {
                 const newTagPosition1 = Position.create(300, 300);
                 const newTagPosition2 = Position.create(500, 500);
 
-                const { id: tagId1, position: oldTagPosition1 } =
-                    strategyFixture.tags[0];
+                const { id: tagId1, position: oldTagPosition1 } = tagFixture;
                 const { id: tagId2, position: oldTagPosition2 } =
                     strategyFixture.tags[1];
 
@@ -1379,12 +1364,8 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.tags[0].position).not.toEqual(
-                    oldTagPosition1
-                );
-                expect(strategyFixture.tags[0].position).toEqual(
-                    newTagPosition1
-                );
+                expect(tagFixture.position).not.toEqual(oldTagPosition1);
+                expect(tagFixture.position).toEqual(newTagPosition1);
                 expect(strategyFixture.tags[1].position).not.toEqual(
                     oldTagPosition2
                 );
@@ -1395,7 +1376,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
 
                 // when & then
                 expect(() =>
@@ -1417,7 +1398,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1441,8 +1422,7 @@ describe('Strategy', () => {
                 const newTagContent1 = '2026';
                 const newTagContent2 = '2027';
 
-                const { id: tagId1, content: oldTagContent1 } =
-                    strategyFixture.tags[0];
+                const { id: tagId1, content: oldTagContent1 } = tagFixture;
                 const { id: tagId2, content: oldTagContent2 } =
                     strategyFixture.tags[1];
 
@@ -1459,10 +1439,8 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.tags[0].content).not.toEqual(
-                    oldTagContent1
-                );
-                expect(strategyFixture.tags[0].content).toEqual(newTagContent1);
+                expect(tagFixture.content).not.toEqual(oldTagContent1);
+                expect(tagFixture.content).toEqual(newTagContent1);
                 expect(strategyFixture.tags[1].content).not.toEqual(
                     oldTagContent2
                 );
@@ -1471,7 +1449,7 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
 
                 // when & then
                 expect(() =>
@@ -1493,7 +1471,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const tagId = strategyFixture.tags[0].id;
+                const tagId = tagFixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1626,7 +1604,7 @@ describe('Strategy', () => {
             it('전략에 대한 소유주라면, 권한 업데이트가 된다.', () => {
                 // given
                 const { id: strategyShareId, permission: oldPermission } =
-                    strategyFixture.shares[0];
+                    strategyShareEditorFixture;
 
                 // when
                 strategyFixture.updateStrategySharePermission(
@@ -1636,17 +1614,17 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.shares[0].permission).not.toEqual(
+                expect(strategyShareEditorFixture.permission).not.toEqual(
                     oldPermission
                 );
-                expect(strategyFixture.shares[0].permission).toEqual(
+                expect(strategyShareEditorFixture.permission).toEqual(
                     newPermission
                 );
             });
 
             it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
                 // give
-                const shareId = strategyFixture.shares[0].id;
+                const shareId = strategyShareEditorFixture.id;
 
                 // when & then
                 expect(() =>
@@ -1676,7 +1654,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const shareId = strategyFixture.shares[0].id;
+                const shareId = strategyShareEditorFixture.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1923,7 +1901,7 @@ describe('Strategy', () => {
 
             it('댓글 작성자가 아니라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
 
                 // when & then
                 expect(() =>
@@ -1941,7 +1919,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -1957,7 +1935,7 @@ describe('Strategy', () => {
             it('댓글 작성자라면, 내용이 업데이트된다.', () => {
                 // given
                 const { id: commentId, content: oldCommentContent } =
-                    strategyFixture.comments[0];
+                    parentCommentFixutre;
 
                 // when
                 strategyFixture.updateCommentContent(
@@ -1967,15 +1945,15 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.comments[0].content).not.toEqual(
+                expect(parentCommentFixutre.content).not.toEqual(
                     oldCommentContent
                 );
-                expect(strategyFixture.comments[0].content).toEqual(newContent);
+                expect(parentCommentFixutre.content).toEqual(newContent);
             });
 
             it('댓글 작성자가 아니라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
 
                 // when & then
                 expect(() =>
@@ -2005,7 +1983,7 @@ describe('Strategy', () => {
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
@@ -2023,7 +2001,7 @@ describe('Strategy', () => {
             const newPosition = Position.create(300, 300);
             it('댓글 작성자가 아니라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
 
                 // when & then
                 expect(() =>
@@ -2036,7 +2014,7 @@ describe('Strategy', () => {
             });
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
-                const commentId = strategyFixture.comments[0].id;
+                const commentId = parentCommentFixutre.id;
                 strategyFixture.delete(ownerId);
 
                 // when & then
