@@ -107,3 +107,99 @@ export class SameContentException extends DomainException {
         super('수정하는 내용이 현재 내용과 일치합니다.');
     }
 }
+
+export class DeletedStrategyException extends DomainException {
+    constructor() {
+        super('삭제된 전략에는 할 수 없습니다.');
+    }
+}
+
+export class TeamPlayerLimitExceededException extends DomainException {
+    constructor() {
+        super('팀 플레이어는 최대 4명까지 허용됩니다.');
+    }
+}
+
+export class TeamPlayerBelowMinimumException extends DomainException {
+    constructor() {
+        super('팀 플레이어는 최소 1명 이상 있어야 합니다.');
+    }
+}
+
+export class TeamPlayerNotFoundException extends DomainException {
+    constructor() {
+        super('팀 플레이어를 찾을 수 없습니다.');
+    }
+}
+
+export class EnemyTeamNotFoundException extends DomainException {
+    constructor() {
+        super('적 팀을 찾을 수 없습니다.');
+    }
+}
+
+export class CircleLimitExceededException extends DomainException {
+    constructor() {
+        super('자기장은 최대 8개까지 허용됩니다.');
+    }
+}
+
+export class CircleNotFoundException extends DomainException {
+    constructor() {
+        super('자기장을 찾을 수 없습니다.');
+    }
+}
+
+export class TagNotFoundException extends DomainException {
+    constructor() {
+        super('태그를 찾을 수 없습니다.');
+    }
+}
+
+export class CirclePhaseDuplicateException extends DomainException {
+    constructor() {
+        super('자기장 페이즈가 중복되었습니다.');
+    }
+}
+
+export class StrategyEditPermissionDeniedException extends DomainException {
+    constructor() {
+        super('전략을 수정할 권한이 없습니다.');
+    }
+}
+
+export class StrategyShareNotFoundException extends DomainException {
+    constructor() {
+        super('전략 공유를 찾을 수 없습니다.');
+    }
+}
+
+export class StrategyShareDuplicateException extends DomainException {
+    constructor() {
+        super('이미 전략 공유를 받은 사용자입니다.');
+    }
+}
+
+export class StrategyPermissionDeniedException extends DomainException {
+    constructor() {
+        super('전략 소유자만 할 수 있습니다.');
+    }
+}
+
+export class CommentNotFoundException extends DomainException {
+    constructor() {
+        super('댓글을 찾을 수 없습니다.');
+    }
+}
+
+export class ChildCommentException extends DomainException {
+    constructor() {
+        super('최상위 댓글에만 가능합니다.');
+    }
+}
+
+export class StrategyShareSelfDeniedException extends DomainException {
+    constructor() {
+        super('자기 자신에게는 할 수 없습니다.');
+    }
+}
