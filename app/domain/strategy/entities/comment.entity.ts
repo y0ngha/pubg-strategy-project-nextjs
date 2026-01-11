@@ -6,6 +6,7 @@ import {
     ChildCommentException,
     DeletedCommentException,
     InvalidAuthorException,
+    ParentCommentPositionRequiredException,
     SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
@@ -13,7 +14,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 export class Comment {
     private constructor(
         public readonly id: CommentId,
-        private _position: Position,
+        private _position: Position | null,
         public readonly authorId: UserId,
         public readonly authorEmail: Email,
         private _content: CommentContent,
@@ -23,7 +24,7 @@ export class Comment {
         private _updatedAt: Date
     ) {}
 
-    get position(): Position {
+    get position(): Position | null {
         return this._position;
     }
 
@@ -48,12 +49,18 @@ export class Comment {
     }
 
     static create(
-        position: Position,
+        _position: Position | null,
         authorId: UserId,
         authorEmail: Email,
         content: CommentContent,
         parentCommentId: CommentId | null
     ) {
+        if (parentCommentId === null && _position === null) {
+            throw new ParentCommentPositionRequiredException();
+        }
+
+        const position = parentCommentId === null ? _position : null;
+
         return new Comment(
             CommentId.generate(),
             position,
@@ -104,7 +111,7 @@ export class Comment {
         this.ensureParentComment();
         this.ensureAuthor(userId);
 
-        if (this._position.equals(position)) return;
+        if (this._position?.equals(position)) return;
 
         this._position = position;
         this._updatedAt = new Date();

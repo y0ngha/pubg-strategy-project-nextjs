@@ -203,3 +203,9 @@ export class StrategyShareSelfDeniedException extends DomainException {
         super('자기 자신에게는 할 수 없습니다.');
     }
 }
+
+export class ParentCommentPositionRequiredException extends DomainException {
+    constructor() {
+        super('최상위 댓글에는 위치가 반드시 필요합니다.');
+    }
+}

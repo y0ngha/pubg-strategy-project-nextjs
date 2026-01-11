@@ -6,6 +6,7 @@ import {
     ChildCommentException,
     DeletedCommentException,
     InvalidAuthorException,
+    ParentCommentPositionRequiredException,
     SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
@@ -44,6 +45,44 @@ describe('Comment', () => {
             expect(comment.authorEmail).toBe(authorEmail);
             expect(comment.content).toBe(content);
             expect(comment.parentCommentId).toBeNull();
+        });
+
+        it('부모로 생성된 경우 포지션은 반드시 필요하다. 없으면 에러를 던진다.', () => {
+            // given
+            const content = CommentContent.create('댓글');
+
+            // when & then
+            expect(() =>
+                Comment.create(null, authorId, authorEmail, content, null)
+            ).toThrow(ParentCommentPositionRequiredException);
+        });
+
+        it('자식으로 생성된 경우 포지션은 NULL이 허용된다.', () => {
+            // given
+            const content = CommentContent.create('댓글');
+            const parentCommemnt = Comment.create(
+                position,
+                authorId,
+                authorEmail,
+                content,
+                null
+            );
+
+            // when
+            const childComment = Comment.create(
+                null,
+                authorId,
+                authorEmail,
+                content,
+                parentCommemnt.id
+            );
+
+            // then
+            expect(childComment.position).toBeNull();
+            expect(childComment.authorId).toBe(authorId);
+            expect(childComment.authorEmail).toBe(authorEmail);
+            expect(childComment.content).toBe(content);
+            expect(childComment.parentCommentId).not.toBeNull();
         });
 
         it('내용의 양 옆 공백은 삭제된 채 생성된다.', () => {
@@ -286,24 +325,18 @@ describe('Comment', () => {
     describe('UpdatePosition', () => {
         const position = Position.create(10, 10);
         const authorId = UserId.generate();
-        const parentComment = Comment.create(
-            position,
-            authorId,
-            Email.create('test@domain.com'),
-            CommentContent.create('테스트'),
-            null
-        );
-        const childComment = Comment.create(
-            position,
-            authorId,
-            Email.create('test@domain.com'),
-            CommentContent.create('테스트'),
-            CommentId.generate()
-        );
         const newPoisiton = Position.create(10, 20);
 
         it('삭제되지 않은 댓글이고, 최상위(부모)댓글이며, 작성자 본인이 포지션을 업데이트한다면 업데이트 된다.', () => {
             // given
+            const parentComment = Comment.create(
+                position,
+                authorId,
+                Email.create('test@domain.com'),
+                CommentContent.create('테스트'),
+                null
+            );
+
             const oldUpdateAt = parentComment.updatedAt;
 
             // when
@@ -320,15 +353,25 @@ describe('Comment', () => {
 
         it('삭제되지 않은 댓글이고, 최상위(부모)댓글이며, 작성자 본인이 포지션을 업데이트하는데 같은 포지션으로 업데이트하면 무시된다.', () => {
             // given
+            const parentComment = Comment.create(
+                position,
+                authorId,
+                Email.create('test@domain.com'),
+                CommentContent.create('테스트'),
+                null
+            );
+
+            const oldPosition = position;
+            const newPosition = position;
             const oldUpdateAt = parentComment.updatedAt;
 
             // when
             jest.advanceTimersByTime(1000);
 
-            parentComment.updatePosition(authorId, position);
+            parentComment.updatePosition(authorId, newPosition);
 
             // then
-            expect(parentComment.position).toEqual(position);
+            expect(parentComment.position).toEqual(oldPosition);
             expect(parentComment.updatedAt.getTime()).toBe(
                 oldUpdateAt.getTime()
             );
@@ -336,6 +379,13 @@ describe('Comment', () => {
 
         it('작성자 본인이 업데이트하는게 아니라면 에러를 던진다.', () => {
             // given
+            const parentComment = Comment.create(
+                position,
+                authorId,
+                Email.create('test@domain.com'),
+                CommentContent.create('테스트'),
+                null
+            );
             const strangerId = UserId.generate();
 
             // when & then
@@ -345,6 +395,15 @@ describe('Comment', () => {
         });
 
         it('부모 댓글이 아니라면 에러를 던진다.', () => {
+            // given
+            const childComment = Comment.create(
+                position,
+                authorId,
+                Email.create('test@domain.com'),
+                CommentContent.create('테스트'),
+                CommentId.generate()
+            );
+
             // when & then
             expect(() =>
                 childComment.updatePosition(authorId, newPoisiton)
