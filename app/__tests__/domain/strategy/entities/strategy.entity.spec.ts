@@ -1999,6 +1999,27 @@ describe('Strategy', () => {
 
         describe('UpdateCommentPosition', () => {
             const newPosition = Position.create(300, 300);
+            it('댓글 작성자라면, 위치가 업데이트된다.', () => {
+                // given
+                const commentId = parentCommentFixutre.id;
+                const oldPosistion = parentCommentFixutre.position;
+
+                // when
+                strategyFixture.updateCommentPosition(
+                    ownerId,
+                    commentId,
+                    newPosition
+                );
+
+                // then
+                const updatedComment = strategyFixture.comments.find(comment =>
+                    comment.id.equals(commentId)
+                );
+
+                expect(updatedComment?.position).not.toEqual(oldPosistion);
+                expect(updatedComment?.position).toEqual(newPosition);
+            });
+
             it('댓글 작성자가 아니라면, 에러를 던진다.', () => {
                 // give
                 const commentId = parentCommentFixutre.id;
