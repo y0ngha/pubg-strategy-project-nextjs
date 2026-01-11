@@ -6,9 +6,9 @@ export class InvalidTeamLabelException extends DomainException {
     }
 }
 
-export class WaypointCreateTooManyPositionException extends DomainException {
+export class WaypointPositionLimitExceededException extends DomainException {
     constructor() {
-        super('웨이포인트 마커가 너무 많습니다.');
+        super('웨이포인트가 너무 많습니다.');
     }
 }
 
