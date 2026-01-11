@@ -114,6 +114,7 @@ export class TeamPlayer {
 
     assignMarker(marker: Marker) {
         this.ensureNotDeleted();
+        this.clearMarker();
 
         this._marker = marker;
         this._updatedAt = new Date();
@@ -121,6 +122,7 @@ export class TeamPlayer {
 
     assignWaypoint(waypoint: Waypoint) {
         this.ensureNotDeleted();
+        this.clearWaypoint();
 
         this._waypoint = waypoint;
         this._updatedAt = new Date();
