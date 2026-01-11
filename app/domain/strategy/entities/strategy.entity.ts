@@ -298,22 +298,6 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    hasTeamPlayerMarker(teamPlayerId: TeamPlayerId): boolean {
-        this.ensureNotDeleted();
-
-        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
-
-        return teamPlayer.hasMarker;
-    }
-
-    hasTeamPlayerWaypoint(teamPlayerId: TeamPlayerId): boolean {
-        this.ensureNotDeleted();
-
-        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
-
-        return teamPlayer.hasWaypoint;
-    }
-
     /**
      * Enemy Teams
      */
