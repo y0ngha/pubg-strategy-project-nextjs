@@ -2,7 +2,7 @@ import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import {
     WaypointCreateDuplicatePositionException,
-    WaypointCreateTooManyPositionException,
+    WaypointPositionLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class Waypoint {
@@ -41,7 +41,7 @@ export class Waypoint {
 
     private validatePositions(positions: Position[]): void {
         if (this.isExceedingMaxLimit(positions)) {
-            throw new WaypointCreateTooManyPositionException();
+            throw new WaypointPositionLimitExceededException();
         }
 
         if (this.hasDuplicatePosition(positions)) {

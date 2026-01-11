@@ -56,6 +56,14 @@ export class TeamPlayer {
         return colorMap[this.priority];
     }
 
+    get hasMarker(): boolean {
+        return this._marker != null;
+    }
+
+    get hasWaypoint(): boolean {
+        return this._waypoint != null;
+    }
+
     static create(
         priority: number,
         position: Position,
@@ -106,6 +114,7 @@ export class TeamPlayer {
 
     assignMarker(marker: Marker) {
         this.ensureNotDeleted();
+        this.clearMarker();
 
         this._marker = marker;
         this._updatedAt = new Date();
@@ -113,6 +122,7 @@ export class TeamPlayer {
 
     assignWaypoint(waypoint: Waypoint) {
         this.ensureNotDeleted();
+        this.clearWaypoint();
 
         this._waypoint = waypoint;
         this._updatedAt = new Date();
@@ -120,11 +130,13 @@ export class TeamPlayer {
 
     clearMarker() {
         this.ensureNotDeleted();
+        this.deleteMarker();
         this.unassignMarker();
     }
 
     clearWaypoint() {
         this.ensureNotDeleted();
+        this.deleteWaypoint();
         this.unassignWaypoint();
     }
 

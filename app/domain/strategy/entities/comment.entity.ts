@@ -3,8 +3,10 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
 import {
+    ChildCommentException,
     DeletedCommentException,
     InvalidAuthorException,
+    ParentCommentPositionRequiredException,
     SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
@@ -12,7 +14,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 export class Comment {
     private constructor(
         public readonly id: CommentId,
-        public readonly position: Position,
+        private _position: Position | null,
         public readonly authorId: UserId,
         public readonly authorEmail: Email,
         private _content: CommentContent,
@@ -21,6 +23,10 @@ export class Comment {
         public readonly createdAt: Date,
         private _updatedAt: Date
     ) {}
+
+    get position(): Position | null {
+        return this._position;
+    }
 
     get content(): CommentContent {
         return this._content;
@@ -43,12 +49,18 @@ export class Comment {
     }
 
     static create(
-        position: Position,
+        _position: Position | null,
         authorId: UserId,
         authorEmail: Email,
         content: CommentContent,
         parentCommentId: CommentId | null
     ) {
+        if (parentCommentId === null && _position === null) {
+            throw new ParentCommentPositionRequiredException();
+        }
+
+        const position = parentCommentId === null ? _position : null;
+
         return new Comment(
             CommentId.generate(),
             position,
@@ -86,24 +98,41 @@ export class Comment {
     }
 
     updateContent(userId: UserId, content: CommentContent) {
-        this.validateAuthor(userId);
         this.ensureNotDeleted();
+        this.ensureAuthor(userId);
         this.ensureDifferentContent(content);
 
         this._content = content;
         this._updatedAt = new Date();
     }
 
-    delete(userId: UserId) {
-        this.validateAuthor(userId);
+    updatePosition(userId: UserId, position: Position) {
         this.ensureNotDeleted();
+        this.ensureParentComment();
+        this.ensureAuthor(userId);
+
+        if (this._position?.equals(position)) return;
+
+        this._position = position;
+        this._updatedAt = new Date();
+    }
+
+    delete(userId: UserId) {
+        this.ensureNotDeleted();
+        this.ensureAuthor(userId);
 
         this._isDeleted = true;
     }
 
-    private validateAuthor(userId: UserId) {
+    private ensureAuthor(userId: UserId) {
         if (!this.authorId.equals(userId)) {
             throw new InvalidAuthorException();
+        }
+    }
+
+    private ensureParentComment() {
+        if (!this.isParent) {
+            throw new ChildCommentException();
         }
     }
 

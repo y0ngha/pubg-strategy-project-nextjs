@@ -2,7 +2,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
 import {
     WaypointCreateDuplicatePositionException,
-    WaypointCreateTooManyPositionException,
+    WaypointPositionLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 describe('Waypoint', () => {
@@ -42,7 +42,7 @@ describe('Waypoint', () => {
 
             // when & then
             expect(() => Waypoint.create(positions)).toThrow(
-                new WaypointCreateTooManyPositionException()
+                new WaypointPositionLimitExceededException()
             );
         });
 

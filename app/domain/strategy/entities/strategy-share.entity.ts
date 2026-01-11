@@ -24,6 +24,10 @@ export class StrategyShare {
         return this._updatedAt;
     }
 
+    get isEditable(): boolean {
+        return this._permission === 'EDITABLE';
+    }
+
     static create(
         sharedUserId: UserId,
         sharedEmail: Email,
@@ -58,8 +62,14 @@ export class StrategyShare {
     }
 
     updatePermission(permission: StrategySharePermission) {
+        if (this._permission === permission) return;
+
         this._permission = permission;
         this._updatedAt = new Date();
+    }
+
+    delete() {
+        this.updatePermission(StrategySharePermission.ACCESS_DENIED);
     }
 
     private ensureNotDeniedPermission(permission: StrategySharePermission) {

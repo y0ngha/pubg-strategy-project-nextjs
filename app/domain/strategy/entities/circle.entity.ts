@@ -106,6 +106,8 @@ export class Circle {
         this.ensureNotDeleted();
         this.validatePhase(phase);
 
+        if (this._phase === phase) return;
+
         this._phase = phase;
         this._updatedAt = new Date();
     }
