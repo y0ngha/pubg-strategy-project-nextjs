@@ -142,14 +142,14 @@ describe('Strategy', () => {
             null
         );
         childCommentFixutre1 = Comment.create(
-            Position.create(10, 10),
+            null,
             editorId,
             editorEmail,
             CommentContent.create('자식1'),
             parentCommentFixutre.id
         );
         childCommentFixutre2 = Comment.create(
-            Position.create(10, 10),
+            null,
             viewerId,
             viewerEmail,
             CommentContent.create('자식2'),
