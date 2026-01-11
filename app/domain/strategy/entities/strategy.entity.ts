@@ -385,12 +385,14 @@ export class Strategy {
     updateCirclePhase(actorId: UserId, circleId: CircleId, phase: number) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
-        this.ensureNoDuplicatePhase(phase);
 
         const { value: circle } = this.findCircle(circleId);
 
-        circle.updatePhase(phase);
+        if (circle.phase !== phase) {
+            this.ensureNoDuplicatePhase(phase);
+        }
 
+        circle.updatePhase(phase);
         this._updatedAt = new Date();
     }
 
