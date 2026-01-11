@@ -1989,7 +1989,7 @@ describe('Strategy', () => {
                 // when & then
                 expect(() =>
                     strategyFixture.updateCommentContent(
-                        editorId,
+                        ownerId,
                         commentId,
                         newContent
                     )
