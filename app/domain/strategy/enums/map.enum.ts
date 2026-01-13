@@ -1,13 +1,13 @@
-export const PubgMap: Record<string, number> = {
-    ERANGEL: 1,
-    MIRAMAR: 2,
-    TAEGO: 3,
-    RONDO: 4,
-    SANHOK: 5,
-    VIKENDI: 6,
-    KARAKIN: 7,
-    HAVEN: 8,
-    DESTON: 9,
+export const PubgMap: Record<string, string> = {
+    ERANGEL: 'ERANGEL',
+    MIRAMAR: 'MIRAMAR',
+    TAEGO: 'TAEGO',
+    RONDO: 'RONDO',
+    SANHOK: 'SANHOK',
+    VIKENDI: 'VIKENDI',
+    KARAKIN: 'KARAKIN',
+    HAVEN: 'HAVEN',
+    DESTON: 'DESTON',
 } as const;
 
 export type PubgMap = (typeof PubgMap)[keyof typeof PubgMap];
