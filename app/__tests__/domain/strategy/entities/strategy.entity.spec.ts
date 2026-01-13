@@ -1316,6 +1316,112 @@ describe('Strategy', () => {
         });
     });
 
+    describe('AirplanePath', () => {
+        describe('UpdateAirplanePath', () => {
+            const finalStartPosition = Position.create(500, 500);
+            const finalEndPosition = Position.create(2500, 2500);
+
+            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 업데이트된다.', () => {
+                // given
+                const initalStartPosition = Position.create(10, 10);
+                const initalEndPosition = Position.create(1000, 1000);
+
+                // when
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+                strategyFixture.updateAirplanePath(
+                    editorId,
+                    finalStartPosition,
+                    finalEndPosition
+                );
+
+                // then
+                expect(strategyFixture.airplanePath).not.toBeNull();
+                expect(strategyFixture.airplanePath?.startPosition).toEqual(
+                    finalStartPosition
+                );
+                expect(strategyFixture.airplanePath?.endPosition).toEqual(
+                    finalEndPosition
+                );
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.updateAirplanePath(
+                        viewerId,
+                        finalStartPosition,
+                        finalEndPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.updateAirplanePath(
+                        strangerId,
+                        finalStartPosition,
+                        finalEndPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateAirplanePath(
+                        ownerId,
+                        finalStartPosition,
+                        finalEndPosition
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+        describe('DeleteAirplanePath', () => {
+            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 삭제된다..', () => {
+                // given
+                const initalStartPosition = Position.create(10, 10);
+                const initalEndPosition = Position.create(1000, 1000);
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+
+                // when
+                strategyFixture.deleteAirplanePath(editorId);
+
+                // then
+                expect(strategyFixture.airplanePath).toBeNull();
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.deleteAirplanePath(viewerId)
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.deleteAirplanePath(strangerId)
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.deleteAirplanePath(ownerId)
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+    });
+
     describe('Tag', () => {
         describe('AddTag', () => {
             const content = '태그';

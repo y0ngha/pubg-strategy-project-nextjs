@@ -411,6 +411,29 @@ export class Strategy {
     }
 
     /**
+     * Airplane
+     */
+    updateAirplanePath(
+        actorId: UserId,
+        startPosition: Position,
+        endPosition: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        this._airplanePath = AirplanePath.create(startPosition, endPosition);
+        this._updatedAt = new Date();
+    }
+
+    deleteAirplanePath(actorId: UserId) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        this._airplanePath = null;
+        this._updatedAt = new Date();
+    }
+
+    /**
      * Tags
      */
     addTag(actorId: UserId, content: string) {
