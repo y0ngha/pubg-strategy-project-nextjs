@@ -1,6 +1,6 @@
 # Bounded Context & Aggregate Root / Domain Model & Function
 
-![Domain Model](Domain_Design.png)
+![Domain Model](images/Domain_Design.png)
 
 ---
 
@@ -9,15 +9,15 @@
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
-> 
+>
 
 [UserId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 유저 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 유저 고유 식별자 |
 
 ---
 
@@ -39,7 +39,7 @@
 [Map]
 
 > PUBG 맵
-> 
+>
 
 ---
 
@@ -51,7 +51,6 @@
 - Taego (태이고)
 - Rondo (론도)
 
-
 # **User Context**
 
 ## 📌 책임 (Responsibility)
@@ -62,11 +61,11 @@
 
 ## 🔠 유비쿼터스 언어 (Ubiquitous Language)
 
-| 용어 | 설명 |
-| --- | --- |
-| 유저 (User) | 시스템 사용자를 의미한다. |
-| 이메일 (Email) | 사용자의 이메일 주소를 의미한다. |
-| 패스워드 (Password) | 암호화된 비밀번호를 의미한다. |
+| 용어                  | 설명                         |
+|---------------------|----------------------------|
+| 유저 (User)           | 시스템 사용자를 의미한다.             |
+| 이메일 (Email)         | 사용자의 이메일 주소를 의미한다.         |
+| 패스워드 (Password)     | 암호화된 비밀번호를 의미한다.           |
 | 마지막 수정 일자(UpdateAt) | 유저 정보가 마지막으로 수정된 일자를 의미한다. |
 
 ## 🚴‍♂️ 주요 Use Case (Use Cases)
@@ -84,12 +83,12 @@
 
 ## 👍 루트 애그리거트 (Aggregate Root) - **User**
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | UserId (ValueObject) | 유저 고유 식별자 |
-| email | Email (ValueObject) | 유저 이메일 |
-| password | Password? (ValueObject) | 유저 비밀번호 
-| 회원 로그인 후 객체에서는 Null을 허용한다.
+| 필드명                                    | 타입                      | 설명        |
+|----------------------------------------|-------------------------|-----------|
+| id                                     | UserId (ValueObject)    | 유저 고유 식별자 |
+| email                                  | Email (ValueObject)     | 유저 이메일    |
+| password                               | Password? (ValueObject) | 유저 비밀번호   
+| 회원 로그인 후 객체에서는 Null을 허용한다.             
 | SSO의 경우 회원가입시에도 비밀번호가 없으므로 Null을 허용한다. |
 
 ### ⚙️ Domain Entity
@@ -97,7 +96,7 @@
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
-> 
+>
 
 [Password]
 
@@ -114,19 +113,19 @@
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
-> 
+>
 
 [PasswordValidator]
 
 ---
 
 1. 비밀번호가 이메일 문자열을 포함하는지 검증한다. (비밀번호 변경, 회원가입시 사용)
-    
-    > `Email`, `Password` 만 있으면 되어서 순수 도메인 로직(Entity)의 책임으로 돌릴 수 있으나, 비밀번호 정책이 User Entity와 강결합을 원하지 않아 Service로 분리한다.
-    > 
+
+   > `Email`, `Password` 만 있으면 되어서 순수 도메인 로직(Entity)의 책임으로 돌릴 수 있으나, 비밀번호 정책이 User Entity와 강결합을 원하지 않아 Service로 분리한다.
+
+>
 
 ### 📑 Enum
-
 
 # Friend Context
 
@@ -138,12 +137,12 @@
 
 ## 🔠 유비쿼터스 언어 (Ubiquitous Language)
 
-| 용어 | 설명 |
-| --- | --- |
-| Friendship | 두 사용자 간의 친구 관계 |
+| 용어               | 설명                                      |
+|------------------|-----------------------------------------|
+| Friendship       | 두 사용자 간의 친구 관계                          |
 | FriendshipStatus | PENDING(대기), ACCEPTED(수락), REJECTED(거절) |
-| Requester | 친구 요청을 보낸 사용자 |
-| Accepter | 친구 요청을 받은 사용자 |
+| Requester        | 친구 요청을 보낸 사용자                           |
+| Accepter         | 친구 요청을 받은 사용자                           |
 
 ## 🚴‍♂️ 주요 Use Case (Use Cases)
 
@@ -158,32 +157,32 @@
 
 ## 👍 루트 애그리거트 (Aggregate Root) - Friend
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | FriendshipId? | 친구 관계 고유 식별자
+| 필드명                  | 타입               | 설명                     |
+|----------------------|------------------|------------------------|
+| id                   | FriendshipId?    | 친구 관계 고유 식별자           
 | 최초 생성시에는 Null을 허용한다. |
-| requesterId | UserId | 친구 관계 요청자 유저 고유 식별자 |
-| accepterId | UserId | 친구 관계 요청을 받은 유저 고유 식별자 |
-| status | FriendshipStatus | 친구 관계 상태 |
-| requesterEmail | string | 요청자 이메일 |
-| accepterEmail | string | 요청을 받은 자 이메일 |
-| requestedAt | Date | 요청 일시 |
-| respondedAt | Date? | 응답 일시 |
+| requesterId          | UserId           | 친구 관계 요청자 유저 고유 식별자    |
+| accepterId           | UserId           | 친구 관계 요청을 받은 유저 고유 식별자 |
+| status               | FriendshipStatus | 친구 관계 상태               |
+| requesterEmail       | string           | 요청자 이메일                |
+| accepterEmail        | string           | 요청을 받은 자 이메일           |
+| requestedAt          | Date             | 요청 일시                  |
+| respondedAt          | Date?            | 응답 일시                  |
 
 ### ⚙️ Domain Entity
 
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
-> 
+>
 
 [FriendshipId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 친구 관계 고유 식별자 |
+| 필드명 | 타입     | 설명           |
+|-----|--------|--------------|
+| id  | string | 친구 관계 고유 식별자 |
 
 ---
 
@@ -197,14 +196,13 @@
 [FriendshipStatus]
 
 > 친구 관계에 대한 Enum Class.
-> 
+>
 
 ---
 
 - PENDING(대기)
 - ACCEPTED(수락)
 - REJECTED(거절)
-
 
 # Strategy
 
@@ -218,19 +216,19 @@
 
 ## 🔠 유비쿼터스 언어 (Ubiquitous Language)
 
-| 용어 | 설명 |
-| --- | --- |
-| Strategy | 전략 |
-| StrategyShare | 전략 공유 |
-| StrategySharePermission | 전략 공유시 부여된 권한 |
-| Comment | 전략에 달린 댓글 |
-| Map | 맵 종류 |
-| Markers | 전략에 생성된 마커 |
-| Waypoints | 전략에 생성된 웨이포인트 |
-| TeamPlayers | 전략에 참여한 팀 플레이어 (최대 4명) |
-| EnemyTeams | 전략에 생성된 상대 팀 (최대 4명) |
-| Circle | 자기장 |
-| Author | 댓글 작성자 |
+| 용어                      | 설명                     |
+|-------------------------|------------------------|
+| Strategy                | 전략                     |
+| StrategyShare           | 전략 공유                  |
+| StrategySharePermission | 전략 공유시 부여된 권한          |
+| Comment                 | 전략에 달린 댓글              |
+| Map                     | 맵 종류                   |
+| Markers                 | 전략에 생성된 마커             |
+| Waypoints               | 전략에 생성된 웨이포인트          |
+| TeamPlayers             | 전략에 참여한 팀 플레이어 (최대 4명) |
+| EnemyTeams              | 전략에 생성된 상대 팀 (최대 4명)   |
+| Circle                  | 자기장                    |
+| Author                  | 댓글 작성자                 |
 
 ## 🚴‍♂️ 주요 Use Case (Use Cases)
 
@@ -268,26 +266,26 @@
 
 ## 👍 루트 애그리거트 (Aggregate Root) - Strategy
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | StrategyId? | 전략 고유 식별자
+| 필드명                  | 타입                  | 설명                      |
+|----------------------|---------------------|-------------------------|
+| id                   | StrategyId?         | 전략 고유 식별자               
 | 최초 생성시에는 Null을 허용한다. |
-| ownerId | UserId | 전략 생성 유저 고유 식별자 |
-| title | string | 전략 제목 |
-| map | Map | 맵 종류 |
-| teamPlayers | List<TeamPlayer> | 전략에 속한 팀 플레이어
-| 최대 4명이 생성될 수 있다. |
-| enemyTeams | List<EnemyTeam> | 전략에 속한 상대 팀
+| ownerId              | UserId              | 전략 생성 유저 고유 식별자         |
+| title                | string              | 전략 제목                   |
+| map                  | Map                 | 맵 종류                    |
+| teamPlayers          | List<TeamPlayer>    | 전략에 속한 팀 플레이어           
+| 최대 4명이 생성될 수 있다.     |
+| enemyTeams           | List<EnemyTeam>     | 전략에 속한 상대 팀             
 | 최대 10개의 팀이 생성될 수 있다. |
-| circles | List<Circle> | 전략의 자기장
-| 최대 8개까지 생성될 수 있다. |
-| airplanePath | AirplanePath | 비행기 동선 좌표 |
-| tags | List<Tag> | 지도 내 태그 목록 |
-| shares | List<StrategyShare> | 공유된 전략 정보 |
-| comments | List<Comment> | 댓글 |
-| isEditing | boolean | 전략 편집 여부 → 애매함. 더 고민 필요 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| circles              | List<Circle>        | 전략의 자기장                 
+| 최대 8개까지 생성될 수 있다.    |
+| airplanePath         | AirplanePath        | 비행기 동선 좌표               |
+| tags                 | List<Tag>           | 지도 내 태그 목록              |
+| shares               | List<StrategyShare> | 공유된 전략 정보               |
+| comments             | List<Comment>       | 댓글                      |
+| isEditing            | boolean             | 전략 편집 여부 → 애매함. 더 고민 필요 |
+| createdAt            | Date                | 생성일시                    |
+| updatedAt            | Date                | 수정일시                    |
 
 ### ⚙️ Domain Entity
 
@@ -304,15 +302,15 @@ TeamPlayer
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | TeamPlayerId? | 팀 플레이어 고유 식별자
+| 필드명                  | 타입             | 설명            |
+|----------------------|----------------|---------------|
+| id                   | TeamPlayerId?  | 팀 플레이어 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| marker | Marker | 팀 플레이어의 마커 |
-| waypoints | List<Waypoint> | 팀 플레이어의 웨이포인트 |
-| position | Position | 팀 플레이어 위치 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| marker               | Marker         | 팀 플레이어의 마커    |
+| waypoints            | List<Waypoint> | 팀 플레이어의 웨이포인트 |
+| position             | Position       | 팀 플레이어 위치     |
+| createdAt            | Date           | 생성일시          |
+| updatedAt            | Date           | 수정일시          |
 
 ---
 
@@ -338,14 +336,14 @@ EnemyTeam
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | EnemyTeamId? | 상대 팀 플레이어 고유 식별자
+| 필드명                  | 타입           | 설명               |
+|----------------------|--------------|------------------|
+| id                   | EnemyTeamId? | 상대 팀 플레이어 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| label | TeamLabel | 팀 레이블 (팀명) |
-| position | Position | 팀 플레이어 위치 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| label                | TeamLabel    | 팀 레이블 (팀명)       |
+| position             | Position     | 팀 플레이어 위치        |
+| createdAt            | Date         | 생성일시             |
+| updatedAt            | Date         | 수정일시             |
 
 ---
 
@@ -367,14 +365,14 @@ StrategyShare
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | StrategyShareId? | 전략 공유 고유 식별자
+| 필드명                  | 타입               | 설명                  |
+|----------------------|------------------|---------------------|
+| id                   | StrategyShareId? | 전략 공유 고유 식별자        
 | 최초 생성시에는 Null을 허용한다. |
-| sharedWithUserId | UserId | 전략을 공유 받을 유저 고유 식별자 |
-| sharedWithEmail | string | 전략을 공유 받을 유저 고유 이메일 |
-| permission | SharePermission | 공유 받을 유저의 권한 |
-| sharedAt | Date | 공유 일시 |
+| sharedWithUserId     | UserId           | 전략을 공유 받을 유저 고유 식별자 |
+| sharedWithEmail      | string           | 전략을 공유 받을 유저 고유 이메일 |
+| permission           | SharePermission  | 공유 받을 유저의 권한        |
+| sharedAt             | Date             | 공유 일시               |
 
 ---
 
@@ -396,17 +394,17 @@ Comment
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | CommentId? | 댓글 고유 식별자
+| 필드명                  | 타입         | 설명              |
+|----------------------|------------|-----------------|
+| id                   | CommentId? | 댓글 고유 식별자       
 | 최초 생성시에는 Null을 허용한다. |
-| position | Position | 맵 위 댓글 위치 |
-| authorId | UserId | 댓글 작성 유저 고유 식별자 |
-| authorEmail | string | 댓글 작성 유저 이메일 |
-| content | string | 내용 |
-| parentCommentId | CommentId? | 부모 댓글 고유 식별자 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| position             | Position   | 맵 위 댓글 위치       |
+| authorId             | UserId     | 댓글 작성 유저 고유 식별자 |
+| authorEmail          | string     | 댓글 작성 유저 이메일    |
+| content              | string     | 내용              |
+| parentCommentId      | CommentId? | 부모 댓글 고유 식별자    |
+| createdAt            | Date       | 생성일시            |
+| updatedAt            | Date       | 수정일시            |
 
 ---
 
@@ -430,15 +428,15 @@ Circle
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | CircleId? | 자기장 고유 식별자
+| 필드명                  | 타입        | 설명         |
+|----------------------|-----------|------------|
+| id                   | CircleId? | 자기장 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| centerPosition | Position | 가운데 위치값 |
-| radius | number | 반지름 |
-| phase | number | 페이즈 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| centerPosition       | Position  | 가운데 위치값    |
+| radius               | number    | 반지름        |
+| phase                | number    | 페이즈        |
+| createdAt            | Date      | 생성일시       |
+| updatedAt            | Date      | 수정일시       |
 
 ---
 
@@ -463,14 +461,14 @@ AirplanePath
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | AirplanePathId? | 비행기 동선 고유 식별자
+| 필드명                  | 타입              | 설명            |
+|----------------------|-----------------|---------------|
+| id                   | AirplanePathId? | 비행기 동선 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| startPosition | Position | 맵 위 비행기 시작 위치 |
-| endPosition | Position | 맵 위 비행기 종료 위치 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| startPosition        | Position        | 맵 위 비행기 시작 위치 |
+| endPosition          | Position        | 맵 위 비행기 종료 위치 |
+| createdAt            | Date            | 생성일시          |
+| updatedAt            | Date            | 수정일시          |
 
 ---
 
@@ -492,13 +490,13 @@ Waypoint
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | WaypointId? | 댓글 고유 식별자
+| 필드명                  | 타입          | 설명           |
+|----------------------|-------------|--------------|
+| id                   | WaypointId? | 댓글 고유 식별자    
 | 최초 생성시에는 Null을 허용한다. |
-| position | Position | 맵 위 웨이포인트 위치 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| position             | Position    | 맵 위 웨이포인트 위치 |
+| createdAt            | Date        | 생성일시         |
+| updatedAt            | Date        | 수정일시         |
 
 ---
 
@@ -520,13 +518,13 @@ Marker
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | MarkerId? | 마커 고유 식별자
+| 필드명                  | 타입        | 설명        |
+|----------------------|-----------|-----------|
+| id                   | MarkerId? | 마커 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| position | Position | 맵 위 마커 위치 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| position             | Position  | 맵 위 마커 위치 |
+| createdAt            | Date      | 생성일시      |
+| updatedAt            | Date      | 수정일시      |
 
 ---
 
@@ -548,14 +546,14 @@ Tag
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | TagId? | 태그 고유 식별자
+| 필드명                  | 타입       | 설명        |
+|----------------------|----------|-----------|
+| id                   | TagId?   | 태그 고유 식별자 
 | 최초 생성시에는 Null을 허용한다. |
-| position | Position | 맵 위 태그 위치 |
-| content | string | 내용 |
-| createdAt | Date | 생성일시 |
-| updatedAt | Date | 수정일시 |
+| position             | Position | 맵 위 태그 위치 |
+| content              | string   | 내용        |
+| createdAt            | Date     | 생성일시      |
+| updatedAt            | Date     | 수정일시      |
 
 ---
 
@@ -568,15 +566,15 @@ Tag
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
-> 
+>
 
 [StrategyId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 전략 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 전략 고유 식별자 |
 
 ---
 
@@ -584,14 +582,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 StrategyId로 돌려주는 함수도 있다.
 
-
 [TeamPlayerId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 팀 플레이어 고유 식별자 |
+| 필드명 | 타입     | 설명            |
+|-----|--------|---------------|
+| id  | string | 팀 플레이어 고유 식별자 |
 
 ---
 
@@ -599,14 +596,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 TeamPlayerId로 돌려주는 함수도 있다.
 
-
 [EnemyTeamId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 적 팀 고유 식별자 |
+| 필드명 | 타입     | 설명         |
+|-----|--------|------------|
+| id  | string | 적 팀 고유 식별자 |
 
 ---
 
@@ -614,14 +610,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 EnemyTeamId로 돌려주는 함수도 있다.
 
-
 [StrategyShareId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 전략 공유 고유 식별자 |
+| 필드명 | 타입     | 설명           |
+|-----|--------|--------------|
+| id  | string | 전략 공유 고유 식별자 |
 
 ---
 
@@ -629,14 +624,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 StrategyShareId로 돌려주는 함수도 있다.
 
-
 [CommentId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 댓글 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 댓글 고유 식별자 |
 
 ---
 
@@ -644,14 +638,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CommentId로 돌려주는 함수도 있다.
 
-
 [CircleId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 자기장 고유 식별자 |
+| 필드명 | 타입     | 설명         |
+|-----|--------|------------|
+| id  | string | 자기장 고유 식별자 |
 
 ---
 
@@ -659,14 +652,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 CircleId로 돌려주는 함수도 있다.
 
-
 [AirplanePathId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 비행기 동선 고유 식별자 |
+| 필드명 | 타입     | 설명            |
+|-----|--------|---------------|
+| id  | string | 비행기 동선 고유 식별자 |
 
 ---
 
@@ -674,14 +666,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 AirplanePathId로 돌려주는 함수도 있다.
 
-
 [WaypointId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 웨이포인트 고유 식별자 |
+| 필드명 | 타입     | 설명           |
+|-----|--------|--------------|
+| id  | string | 웨이포인트 고유 식별자 |
 
 ---
 
@@ -689,14 +680,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 WaypointId로 돌려주는 함수도 있다.
 
-
 [MarkerId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 마커 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 마커 고유 식별자 |
 
 ---
 
@@ -704,14 +694,13 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 Marker로 돌려주는 함수도 있다.
 
-
 [TagId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 태그 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 태그 고유 식별자 |
 
 ---
 
@@ -719,13 +708,12 @@ Tag
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 TagId로 돌려주는 함수도 있다.
 
-
 [TeamLabel]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
+| 필드명   | 타입     | 설명   |
+|-------|--------|------|
 | label | string | 레이블명 |
 
 ---
@@ -734,25 +722,23 @@ Tag
 
 한 글자 이상 제약조건, A - Z까지만 가능한 제약 조건을 관리한다.
 
-
 [Position]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| x | number | x좌표 값 |
-| y | number | y좌표 값 |
+| 필드명 | 타입     | 설명    |
+|-----|--------|-------|
+| x   | number | x좌표 값 |
+| y   | number | y좌표 값 |
 
 ---
 
 x, y 값을 관리한다.
 
-
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
-> 
+>
 
 [Service Name]
 
@@ -760,13 +746,12 @@ x, y 값을 관리한다.
 
 역할
 
-
 ### 📑 Enum
 
 [PlayerColor]
 
 > 팀 플레이어 색상
-> 
+>
 
 ---
 
@@ -778,13 +763,12 @@ x, y 값을 관리한다.
 [SharePermission]
 
 > 팀 플레이어 색상
-> 
+>
 
 ---
 
 - READ_ONLY
 - EDIT
-
 
 # Player Statistics
 
@@ -799,19 +783,19 @@ x, y 값을 관리한다.
 
 ## 🔠 유비쿼터스 언어 (Ubiquitous Language)
 
-| 용어 | 설명 |
-| --- | --- |
-| Player | PUBG 게임 내 사용자 |
-| Platform | PUBG 게임 플랫폼 (Steam, Kakao) |
-| Profile | 특정 플랫폼의 플레이어 정보 |
-| Match | 한 게임의 플레이 기록 (순위, 킬, 데미지 등 포함) |
-| Season | PUBG의 특정 기간 단위 (시즌별로 통계, 전적이 분리됨) |
-| GameMode | Solo, Duo, Squad, Rank/일반 등 모드별 통계 분리 |
-| Weapon | 게임 내 무기(무기별 사용 통계) |
-| Map | 맵 종류 (Erangel, Miramar 등) |
-| Tier | 랭크 등급 (Bronze, Silver, Gold 등) |
-| RankPoint | 랭크 포인트 |
-| SubTier | 랭크 등급 수치 (1, 2, 3, 4) |
+| 용어        | 설명                                    |
+|-----------|---------------------------------------|
+| Player    | PUBG 게임 내 사용자                         |
+| Platform  | PUBG 게임 플랫폼 (Steam, Kakao)            |
+| Profile   | 특정 플랫폼의 플레이어 정보                       |
+| Match     | 한 게임의 플레이 기록 (순위, 킬, 데미지 등 포함)        |
+| Season    | PUBG의 특정 기간 단위 (시즌별로 통계, 전적이 분리됨)     |
+| GameMode  | Solo, Duo, Squad, Rank/일반 등 모드별 통계 분리 |
+| Weapon    | 게임 내 무기(무기별 사용 통계)                    |
+| Map       | 맵 종류 (Erangel, Miramar 등)             |
+| Tier      | 랭크 등급 (Bronze, Silver, Gold 등)        |
+| RankPoint | 랭크 포인트                                |
+| SubTier   | 랭크 등급 수치 (1, 2, 3, 4)                 |
 
 ## 🚴‍♂️ 주요 Use Case (Use Cases)
 
@@ -826,15 +810,15 @@ x, y 값을 관리한다.
 
 ## 👍 루트 애그리거트 (Aggregate Root) - Player
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | PlayerId | 플레이어 고유 식별자 |
-| platform | Platform | 플레이어 플랫폼 |
-| nickname | string | 플레이어 닉네임 |
-| matchHistories | List<MatchHistory> | 특정 시즌 내 플레이어 매치 히스토리 |
-| seasonStats | List<SeasonStat> | 특정 시즌 내 게임모드별 플레이어 분석 데이터 |
-| weaponStats | WeaponStat | 특정 시즌 내 플레이어 무기 분석 데이터 |
-| lastUpdatedAt | Date | 마지막 전적 갱신 일시 |
+| 필드명            | 타입                 | 설명                        |
+|----------------|--------------------|---------------------------|
+| id             | PlayerId           | 플레이어 고유 식별자               |
+| platform       | Platform           | 플레이어 플랫폼                  |
+| nickname       | string             | 플레이어 닉네임                  |
+| matchHistories | List<MatchHistory> | 특정 시즌 내 플레이어 매치 히스토리      |
+| seasonStats    | List<SeasonStat>   | 특정 시즌 내 게임모드별 플레이어 분석 데이터 |
+| weaponStats    | WeaponStat         | 특정 시즌 내 플레이어 무기 분석 데이터    |
+| lastUpdatedAt  | Date               | 마지막 전적 갱신 일시              |
 
 ### ⚙️ Domain Entity
 
@@ -851,12 +835,12 @@ MatchHistory
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | MatchId | 매치 고유 식별자 |
-| gameMode | GameMode | 게임 모드 (솔로, 듀오, 스쿼드) |
-| map | Map | 맵 종류 |
-| rank | number | 매치 순위 |
+| 필드명              | 타입                | 설명                               |
+|------------------|-------------------|----------------------------------|
+| id               | MatchId           | 매치 고유 식별자                        |
+| gameMode         | GameMode          | 게임 모드 (솔로, 듀오, 스쿼드)              |
+| map              | Map               | 맵 종류                             |
+| rank             | number            | 매치 순위                            |
 | teamLeaderboards | List<Leaderboard> | 전적 조회된 플레이어와, 플레이어 팀 내 멤버들의 리더보드 |
 
 ---
@@ -877,33 +861,33 @@ SeasonStat
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | SeasonStatId | 시즌 종합 정보 고유 식별자 |
-| playerId | PlayerId | 플레이어 고유 식별자 |
-| season | string | 시즌 정보 |
-| gameMode | GameMode | 게임 모드 |
-| matchCount | number | 시즌 플레이 수 |
-| longestKill | number | 시즌 내 최장거리 킬 |
-| headshotKills | number | 시즌 내 헤드샷 킬 수 |
-| averageDamage | number | 시즌 내 평균 데미지 |
-| maxDamage | number | 시즌 내 최고 데미지 |
-| averageRank | number | 시즌 내 평균 순위 |
-| averageSurvivalTimeSecond | number | 시즌 내 평균 생존 시간 |
-| top10Rate | number | 시즌 내 탑10 진입 비율 |
-| winRate | number | 승리 비율(치킨) |
-| maxKillsPerMatch | number | 한 경기당 최고 킬 수 |
-| maxKnockDownsPerMatch | number | 한 경기당 최고 다운 시킨 수 |
-| currentTier | string | 현재 티어
-| 예: 플래티넘 |
-| currentSubTier | number | 현재 티어 수치
-| 예: 4 |
-| currentRankPoint | number | 현재 랭크 포인트 |
-| seasonMaxTier | string | 시즌 최고 티어
-| 예: 플래티넘 |
-| seasonMaxSubTier | number | 시즌 최고 티어 수치
-| 예: 3 |
-| seasonMaxRankPoint | number | 시즌 최고 랭크 포인트 |
+| 필드명                       | 타입           | 설명               |
+|---------------------------|--------------|------------------|
+| id                        | SeasonStatId | 시즌 종합 정보 고유 식별자  |
+| playerId                  | PlayerId     | 플레이어 고유 식별자      |
+| season                    | string       | 시즌 정보            |
+| gameMode                  | GameMode     | 게임 모드            |
+| matchCount                | number       | 시즌 플레이 수         |
+| longestKill               | number       | 시즌 내 최장거리 킬      |
+| headshotKills             | number       | 시즌 내 헤드샷 킬 수     |
+| averageDamage             | number       | 시즌 내 평균 데미지      |
+| maxDamage                 | number       | 시즌 내 최고 데미지      |
+| averageRank               | number       | 시즌 내 평균 순위       |
+| averageSurvivalTimeSecond | number       | 시즌 내 평균 생존 시간    |
+| top10Rate                 | number       | 시즌 내 탑10 진입 비율   |
+| winRate                   | number       | 승리 비율(치킨)        |
+| maxKillsPerMatch          | number       | 한 경기당 최고 킬 수     |
+| maxKnockDownsPerMatch     | number       | 한 경기당 최고 다운 시킨 수 |
+| currentTier               | string       | 현재 티어            
+| 예: 플래티넘                   |
+| currentSubTier            | number       | 현재 티어 수치         
+| 예: 4                      |
+| currentRankPoint          | number       | 현재 랭크 포인트        |
+| seasonMaxTier             | string       | 시즌 최고 티어         
+| 예: 플래티넘                   |
+| seasonMaxSubTier          | number       | 시즌 최고 티어 수치      
+| 예: 3                      |
+| seasonMaxRankPoint        | number       | 시즌 최고 랭크 포인트     |
 
 ---
 
@@ -920,42 +904,41 @@ SeasonWeaponStat
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | SeasonWeaponStatId | 시즌 무기 사용 정보 고유 식별자 |
-| playerId | PlayerId | 플레이어 고유 식별자 |
-| season | string | 시즌 정보 |
-| weaponId | WeaponId | 무기 식별자 |
-| weaponName | string | 무기명 |
-| damage | number | 무기로 입힌 데미지 |
-| averageDamage | number | 무기로 입힌 평균 데미지 |
-| headshotKills | number | 무기로 헤드샷 킬 한 수 |
-| knockDowns | number | 무기로 다운시킨 수 |
-| kills | number | 무기로 킬 한 수 |
-| assists | number | 무기로 어시스트 한 수 |
-| maxKillsPerMatch | number | 한 매치당 최고 킬 수 |
-| maxDamagePerMatch | number | 한 매치당 최고 데미지 |
-| maxKnockDownsPerMatch | number | 한 매치당 최고 다운시킨 수 |
-| longestKillMeter | number | 무기로 최장거리 킬 미터 |
-| totalNumberOfBulletsFired | number | 총 발사 수 |
-| totalNumberOfBulletsHits | number | 총 명중 수 |
-| accuracyRate | number | 명중률 |
+| 필드명                       | 타입                 | 설명                 |
+|---------------------------|--------------------|--------------------|
+| id                        | SeasonWeaponStatId | 시즌 무기 사용 정보 고유 식별자 |
+| playerId                  | PlayerId           | 플레이어 고유 식별자        |
+| season                    | string             | 시즌 정보              |
+| weaponId                  | WeaponId           | 무기 식별자             |
+| weaponName                | string             | 무기명                |
+| damage                    | number             | 무기로 입힌 데미지         |
+| averageDamage             | number             | 무기로 입힌 평균 데미지      |
+| headshotKills             | number             | 무기로 헤드샷 킬 한 수      |
+| knockDowns                | number             | 무기로 다운시킨 수         |
+| kills                     | number             | 무기로 킬 한 수          |
+| assists                   | number             | 무기로 어시스트 한 수       |
+| maxKillsPerMatch          | number             | 한 매치당 최고 킬 수       |
+| maxDamagePerMatch         | number             | 한 매치당 최고 데미지       |
+| maxKnockDownsPerMatch     | number             | 한 매치당 최고 다운시킨 수    |
+| longestKillMeter          | number             | 무기로 최장거리 킬 미터      |
+| totalNumberOfBulletsFired | number             | 총 발사 수             |
+| totalNumberOfBulletsHits  | number             | 총 명중 수             |
+| accuracyRate              | number             | 명중률                |
 
 ---
-
 
 ### 〒 Value Object
 
 > 불변 객체, 동등성 비교로 관리
-> 
+>
 
 [PlayerId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 플레이어 고유 식별자 |
+| 필드명 | 타입     | 설명          |
+|-----|--------|-------------|
+| id  | string | 플레이어 고유 식별자 |
 
 ---
 
@@ -963,14 +946,13 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 PlayerId로 돌려주는 함수도 있다.
 
-
 [MatchId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 매치 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 매치 고유 식별자 |
 
 ---
 
@@ -978,14 +960,13 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 MatchId로 돌려주는 함수도 있다.
 
-
 [SeasonStatId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 시즌 종합 정보 고유 식별자 |
+| 필드명 | 타입     | 설명              |
+|-----|--------|-----------------|
+| id  | string | 시즌 종합 정보 고유 식별자 |
 
 ---
 
@@ -993,14 +974,13 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 SeasonStatId로 돌려주는 함수도 있다.
 
-
 [SeasonWeaponStatId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 시즌 무기 사용 정보 고유 식별자 |
+| 필드명 | 타입     | 설명                 |
+|-----|--------|--------------------|
+| id  | string | 시즌 무기 사용 정보 고유 식별자 |
 
 ---
 
@@ -1008,14 +988,13 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 SeasonWeaponStatId로 돌려주는 함수도 있다.
 
-
 [WeaponId]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| id | string | 무기 고유 식별자 |
+| 필드명 | 타입     | 설명        |
+|-----|--------|-----------|
+| id  | string | 무기 고유 식별자 |
 
 ---
 
@@ -1023,35 +1002,33 @@ SeasonWeaponStat
 
 원시값을 내뱉거나, UUID 형식인지 등에 대한 검사가 진행되고 string을 받아 WeaponId로 돌려주는 함수도 있다.
 
-
 [Leaderboard]
 
 ---
 
-| 필드명 | 타입 | 설명 |
-| --- | --- | --- |
-| playerId | PlayerId | 플레이어 ID |
-| nickname | string | 플레이어 닉네임 |
-| kills | number | 매치 내 플레이어가 낸 킬 수 |
-| assists | number | 매치 내 플레이어가 낸 어시스트 수 |
-| knockDowns | number | 매치 내 플레이어가 상대를 다운시킨 수 |
-| downs | number | 매치 내 플레이어가 다운된 수 |
-| revives | number | 매치 내 플레이어가 살아난 수 (다운됐다가 살아난 것) |
-| saves | number | 매치 내 플레이어가 팀원 소생시킨 수 |
-| deaths | number | 매치 내 플레이어가 죽은 수 |
-| damage | number | 매치 내 플레이어가 입힌 데미지 |
-| survivalTimeSecond | number | 매치 내 플레이어의 생존 시간 |
-| longestKillMeter | number | 매치 내 플레이어의 최장거리 킬 |
+| 필드명                | 타입       | 설명                             |
+|--------------------|----------|--------------------------------|
+| playerId           | PlayerId | 플레이어 ID                        |
+| nickname           | string   | 플레이어 닉네임                       |
+| kills              | number   | 매치 내 플레이어가 낸 킬 수               |
+| assists            | number   | 매치 내 플레이어가 낸 어시스트 수            |
+| knockDowns         | number   | 매치 내 플레이어가 상대를 다운시킨 수          |
+| downs              | number   | 매치 내 플레이어가 다운된 수               |
+| revives            | number   | 매치 내 플레이어가 살아난 수 (다운됐다가 살아난 것) |
+| saves              | number   | 매치 내 플레이어가 팀원 소생시킨 수           |
+| deaths             | number   | 매치 내 플레이어가 죽은 수                |
+| damage             | number   | 매치 내 플레이어가 입힌 데미지              |
+| survivalTimeSecond | number   | 매치 내 플레이어의 생존 시간               |
+| longestKillMeter   | number   | 매치 내 플레이어의 최장거리 킬              |
 
 ---
 
 플레이어의 성과에 대해 관리한다.
 
-
 ### ⛓️ Service
 
 > 도메인 로직이 개별 Entity에 속하지 않을 때 사용
-> 
+>
 
 [Service Name]
 
@@ -1059,13 +1036,12 @@ SeasonWeaponStat
 
 역할
 
-
 ### 📑 Enum
 
 [GameMode]
 
 > PUBG 게임 모드
-> 
+>
 
 ---
 
