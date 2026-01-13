@@ -23,11 +23,7 @@ export const UpdateCircleRequestSchema = z
         circleId: z.string().transform(value => {
             return CircleId.create(value);
         }),
-        phase: z
-            .number()
-            .min(1, { error: '페이즈는 1이상 이어야 합니다.' })
-            .max(8, { error: '페이즈는 8이하 이어야 합니다.' })
-            .optional(),
+        phase: z.number().optional(),
         centerPosition: z
             .object({
                 x: z.number(),
