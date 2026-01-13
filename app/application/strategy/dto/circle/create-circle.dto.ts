@@ -15,8 +15,5 @@ export const CreateCircleRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    phase: z
-        .number()
-        .min(1, { error: '페이즈는 1이상 이어야 합니다.' })
-        .max(8, { error: '페이즈는 8이하 이어야 합니다.' }),
+    phase: z.number(),
 });
