@@ -340,6 +340,20 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    updateEnemyTeamPosition(
+        actorId: UserId,
+        enemyTeamId: EnemyTeamId,
+        position: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
+
+        enemyTeam.updatePosition(position);
+        this._updatedAt = new Date();
+    }
+
     /**
      * Circles
      */

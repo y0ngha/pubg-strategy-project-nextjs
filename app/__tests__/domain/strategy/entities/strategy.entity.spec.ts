@@ -943,6 +943,76 @@ describe('Strategy', () => {
                 ).toThrow(DeletedStrategyException);
             });
         });
+
+        describe('UpdateEnemyTeamPosition', () => {
+            const newPosition1 = Position.create(10, 20);
+            const newPosition2 = Position.create(10, 30);
+            it('전략에 대한 편집 권한이 있으면, 적 팀 라벨이 업데이트된다.', () => {
+                // given
+                const { id: enemyTeamId1, position: oldEnemyTeamPosition1 } =
+                    enemyTeam1Fixture;
+                const { id: enemyTeamId2, position: oldEnemyTeamPosition2 } =
+                    enemyTeam2Fixture;
+
+                // when
+                strategyFixture.updateEnemyTeamPosition(
+                    ownerId,
+                    enemyTeamId1,
+                    newPosition1
+                );
+                strategyFixture.updateEnemyTeamPosition(
+                    editorId,
+                    enemyTeamId2,
+                    newPosition2
+                );
+
+                // then
+                expect(enemyTeam1Fixture.position).not.toEqual(
+                    oldEnemyTeamPosition1
+                );
+                expect(enemyTeam1Fixture.position).toEqual(newPosition1);
+                expect(enemyTeam2Fixture.position).not.toEqual(
+                    oldEnemyTeamPosition2
+                );
+                expect(enemyTeam2Fixture.position).toEqual(newPosition2);
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // give
+                const enemyTeamId = enemyTeam1Fixture.id;
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateEnemyTeamPosition(
+                        viewerId,
+                        enemyTeamId,
+                        newPosition1
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.updateEnemyTeamPosition(
+                        strangerId,
+                        enemyTeamId,
+                        newPosition1
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                const enemyTeamId = enemyTeam1Fixture.id;
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateEnemyTeamPosition(
+                        ownerId,
+                        enemyTeamId,
+                        newPosition1
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
     });
 
     describe('Circle', () => {
