@@ -11,26 +11,36 @@ export interface UpdateEnemyTeamRequestDto {
     position?: { x: number; y: number };
 }
 
-export const UpdateEnemyTeamRequestSchema = z.object({
-    actorId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
-    strategyId: z.string().transform(value => {
-        return StrategyId.create(value);
-    }),
-    teamLabel: z
-        .string()
-        .transform(value => {
-            return TeamLabel.create(value);
-        })
-        .optional(),
-    position: z
-        .object({
-            x: z.number(),
-            y: z.number(),
-        })
-        .transform(({ x, y }) => {
-            return Position.create(x, y);
-        })
-        .optional(),
-});
+export const UpdateEnemyTeamRequestSchema = z
+    .object({
+        actorId: z.string().transform(value => {
+            return UserId.create(value);
+        }),
+        strategyId: z.string().transform(value => {
+            return StrategyId.create(value);
+        }),
+        teamLabel: z
+            .string()
+            .transform(value => {
+                return TeamLabel.create(value);
+            })
+            .optional(),
+        position: z
+            .object({
+                x: z.number(),
+                y: z.number(),
+            })
+            .transform(({ x, y }) => {
+                return Position.create(x, y);
+            })
+            .optional(),
+    })
+    .refine(
+        ({ position, teamLabel }) => {
+            return position !== undefined || teamLabel !== undefined;
+        },
+        {
+            error: '업데이트 할 속성이 없습니다.',
+            path: ['position', 'teamLabel'],
+        }
+    );
