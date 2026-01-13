@@ -518,7 +518,7 @@ export class Strategy {
         actorId: UserId,
         actorEmail: Email,
         content: CommentContent,
-        position: Position,
+        position: Position | null,
         parentCommentId: CommentId | null
     ) {
         this.ensureNotDeleted();
