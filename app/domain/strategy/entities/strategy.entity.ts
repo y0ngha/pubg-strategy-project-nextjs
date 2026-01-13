@@ -340,6 +340,20 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    updateEnemyTeamPosition(
+        actorId: UserId,
+        enemyTeamId: EnemyTeamId,
+        position: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
+
+        enemyTeam.updatePosition(position);
+        this._updatedAt = new Date();
+    }
+
     /**
      * Circles
      */
@@ -393,6 +407,29 @@ export class Strategy {
         }
 
         circle.updatePhase(phase);
+        this._updatedAt = new Date();
+    }
+
+    /**
+     * Airplane
+     */
+    updateAirplanePath(
+        actorId: UserId,
+        startPosition: Position,
+        endPosition: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        this._airplanePath = AirplanePath.create(startPosition, endPosition);
+        this._updatedAt = new Date();
+    }
+
+    deleteAirplanePath(actorId: UserId) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        this._airplanePath = null;
         this._updatedAt = new Date();
     }
 
@@ -504,7 +541,7 @@ export class Strategy {
         actorId: UserId,
         actorEmail: Email,
         content: CommentContent,
-        position: Position,
+        position: Position | null,
         parentCommentId: CommentId | null
     ) {
         this.ensureNotDeleted();
