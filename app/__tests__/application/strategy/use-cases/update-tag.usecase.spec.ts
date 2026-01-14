@@ -48,6 +48,11 @@ describe('UpdateTagUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             tagId: tagId.toString(),
+            content: '새로운 내용',
+            position: {
+                x: 10,
+                y: 200,
+            },
         };
 
         // when & then
@@ -66,6 +71,11 @@ describe('UpdateTagUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             tagId: randomId.toString(),
+            content: '새로운 내용',
+            position: {
+                x: 10,
+                y: 200,
+            },
         };
 
         // when & then
