@@ -16,7 +16,7 @@ describe('AddMarkerUseCase', () => {
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     let strategyFixture: Strategy;
 
-    const ownerId = UserId.create('8b71b213-bec5-40ad-b24e-04eb656774b5');
+    const ownerId = UserId.generate();
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
@@ -106,8 +106,7 @@ describe('AddMarkerUseCase', () => {
 
         expect(teamPlayer?.marker).not.toBeNull();
         expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position.x).toEqual(position.x);
-        expect(teamPlayer?.marker?.position.y).toEqual(position.y);
+        expect(teamPlayer?.marker?.position).toEqual(position);
     });
 
     it('마커가 있을 때 기존 마커가 교체된다.', async () => {
@@ -137,9 +136,7 @@ describe('AddMarkerUseCase', () => {
 
         expect(teamPlayer?.marker).not.toBeNull();
         expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position.x).not.toEqual(oldPosition.x);
-        expect(teamPlayer?.marker?.position.y).not.toEqual(oldPosition.y);
-        expect(teamPlayer?.marker?.position.x).toEqual(position.x);
-        expect(teamPlayer?.marker?.position.y).toEqual(position.y);
+        expect(teamPlayer?.marker?.position).not.toEqual(oldPosition);
+        expect(teamPlayer?.marker?.position).toEqual(position);
     });
 });
