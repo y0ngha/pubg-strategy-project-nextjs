@@ -327,31 +327,25 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateEnemyTeamLabel(
+    updateEnemyTeam(
         actorId: UserId,
         enemyTeamId: EnemyTeamId,
-        teamLabel: TeamLabel
+        teamLabel?: TeamLabel,
+        position?: Position
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
 
-        enemyTeam.updateTeamLabel(teamLabel);
-        this._updatedAt = new Date();
-    }
+        if (teamLabel) {
+            enemyTeam.updateTeamLabel(teamLabel);
+        }
 
-    updateEnemyTeamPosition(
-        actorId: UserId,
-        enemyTeamId: EnemyTeamId,
-        position: Position
-    ) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
+        if (position) {
+            enemyTeam.updatePosition(position);
+        }
 
-        const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
-
-        enemyTeam.updatePosition(position);
         this._updatedAt = new Date();
     }
 
