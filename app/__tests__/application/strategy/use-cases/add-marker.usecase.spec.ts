@@ -138,7 +138,7 @@ describe('AddMarkerUseCase', () => {
         expect(teamPlayer?.marker).not.toBeNull();
         expect(teamPlayer?.marker).not.toBeUndefined();
         expect(teamPlayer?.marker?.position.x).not.toEqual(oldPosition.x);
-        expect(teamPlayer?.marker?.position.x).not.toEqual(oldPosition.y);
+        expect(teamPlayer?.marker?.position.y).not.toEqual(oldPosition.y);
         expect(teamPlayer?.marker?.position.x).toEqual(position.x);
         expect(teamPlayer?.marker?.position.y).toEqual(position.y);
     });
