@@ -23,13 +23,7 @@ export class UpdateTagUseCase {
             throw new StrategyNotFoundException();
         }
 
-        if (content) {
-            strategy.updateTagContent(actorId, tagId, content);
-        }
-
-        if (position) {
-            strategy.updateTagPosition(actorId, tagId, position);
-        }
+        strategy.updateTag(actorId, tagId, content, position);
 
         await this.strategyRepository.save(strategy);
 
