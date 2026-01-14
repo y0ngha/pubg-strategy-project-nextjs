@@ -98,6 +98,7 @@ describe('AddMarkerUseCase', () => {
 
         // then
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
         const teamPlayer = strategyFixture.teamPlayers.find(teamPlayer =>
             teamPlayer.id.equals(teamPlayerId)
@@ -128,6 +129,7 @@ describe('AddMarkerUseCase', () => {
 
         // then
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
         const teamPlayer = strategyFixture.teamPlayers.find(
             teamPlayer => teamPlayer.id === teamPlayerId

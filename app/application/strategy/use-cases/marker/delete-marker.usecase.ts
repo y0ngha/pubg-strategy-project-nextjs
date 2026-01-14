@@ -25,6 +25,8 @@ export class DeleteMarkerUseCase {
 
         strategy.removeTeamPlayerMarker(actorId, teamPlayerId);
 
+        await this.strategyRepository.save(strategy);
+
         return true;
     }
 }

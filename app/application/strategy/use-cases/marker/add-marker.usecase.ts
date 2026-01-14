@@ -25,6 +25,8 @@ export class AddMarkerUseCase {
 
         strategy.addTeamPlayerMarker(actorId, teamPlayerId, position);
 
+        await this.strategyRepository.save(strategy);
+
         return true;
     }
 }
