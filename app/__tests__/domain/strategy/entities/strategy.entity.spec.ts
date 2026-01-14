@@ -29,6 +29,7 @@ import {
     TeamPlayerLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -121,7 +122,10 @@ describe('Strategy', () => {
             Position.create(100, 100)
         );
 
-        tagFixture = Tag.create(Position.create(10, 10), '태그');
+        tagFixture = Tag.create(
+            Position.create(10, 10),
+            TagContent.create('태그')
+        );
 
         strategyShareEditorFixture = StrategyShare.create(
             editorId,
@@ -1424,11 +1428,11 @@ describe('Strategy', () => {
 
     describe('Tag', () => {
         describe('AddTag', () => {
-            const content = '태그';
+            const content = TagContent.create('태그');
             it('전략에 대한 편집 권한이 있으면, 태그가 추가된다.', () => {
                 // given
-                const content1 = '첫 번째 태그';
-                const content2 = '두 번째 태그';
+                const content1 = TagContent.create('첫 번째 태그');
+                const content2 = TagContent.create('두 번째 태그');
                 const oldTagLength = strategyFixture.tags.length;
 
                 // when
@@ -1470,7 +1474,7 @@ describe('Strategy', () => {
         describe('RemoveTag', () => {
             it('전략에 대한 편집 권한이 있으면, 태그가 삭제된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
 
                 strategyFixture.addTag(ownerId, content);
 
@@ -1514,11 +1518,12 @@ describe('Strategy', () => {
             });
         });
 
-        describe('UpdateTagPosition', () => {
+        describe('UpdateTag', () => {
+            const newContent = TagContent.create('내용편집');
             const newPosition = Position.create(30, 30);
             it('전략에 대한 편집 권한이 있으면, 태그 위치가 업데이트된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
                 strategyFixture.addTag(ownerId, content);
                 const newTagPosition1 = Position.create(300, 300);
                 const newTagPosition2 = Position.create(500, 500);
@@ -1528,14 +1533,16 @@ describe('Strategy', () => {
                     strategyFixture.tags[1];
 
                 // when
-                strategyFixture.updateTagPosition(
+                strategyFixture.updateTag(
                     ownerId,
                     tagId1,
+                    undefined,
                     newTagPosition1
                 );
-                strategyFixture.updateTagPosition(
+                strategyFixture.updateTag(
                     editorId,
                     tagId2,
+                    undefined,
                     newTagPosition2
                 );
 
@@ -1550,68 +1557,30 @@ describe('Strategy', () => {
                 );
             });
 
-            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
-                // give
-                const tagId = tagFixture.id;
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateTagPosition(
-                        viewerId,
-                        tagId,
-                        newPosition
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-
-                expect(() =>
-                    strategyFixture.updateTagPosition(
-                        strangerId,
-                        tagId,
-                        newPosition
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-            });
-
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                const tagId = tagFixture.id;
-                strategyFixture.delete(ownerId);
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateTagPosition(
-                        ownerId,
-                        tagId,
-                        newPosition
-                    )
-                ).toThrow(DeletedStrategyException);
-            });
-        });
-
-        describe('UpdateTagContent', () => {
-            const newContent = '내용편집';
-            it('전략에 대한 편집 권한이 있으면, 태그 위치가 업데이트된다.', () => {
+            it('전략에 대한 편집 권한이 있으면, 태그 내용이 업데이트된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
                 strategyFixture.addTag(ownerId, content);
 
-                const newTagContent1 = '2026';
-                const newTagContent2 = '2027';
+                const newTagContent1 = TagContent.create('2026');
+                const newTagContent2 = TagContent.create('2027');
 
                 const { id: tagId1, content: oldTagContent1 } = tagFixture;
                 const { id: tagId2, content: oldTagContent2 } =
                     strategyFixture.tags[1];
 
                 // when
-                strategyFixture.updateTagContent(
+                strategyFixture.updateTag(
                     ownerId,
                     tagId1,
-                    newTagContent1
+                    newTagContent1,
+                    undefined
                 );
-                strategyFixture.updateTagContent(
+                strategyFixture.updateTag(
                     editorId,
                     tagId2,
-                    newTagContent2
+                    newTagContent2,
+                    undefined
                 );
 
                 // then
@@ -1629,18 +1598,20 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateTagContent(
+                    strategyFixture.updateTag(
                         viewerId,
                         tagId,
-                        newContent
+                        newContent,
+                        newPosition
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.updateTagContent(
+                    strategyFixture.updateTag(
                         strangerId,
                         tagId,
-                        newContent
+                        newContent,
+                        newPosition
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
@@ -1652,7 +1623,12 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateTagContent(ownerId, tagId, newContent)
+                    strategyFixture.updateTag(
+                        ownerId,
+                        tagId,
+                        newContent,
+                        newPosition
+                    )
                 ).toThrow(DeletedStrategyException);
             });
         });

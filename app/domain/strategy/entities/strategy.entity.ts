@@ -39,6 +39,7 @@ import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-i
 import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 interface FindEntity<T> {
     value: T;
@@ -436,7 +437,7 @@ export class Strategy {
     /**
      * Tags
      */
-    addTag(actorId: UserId, content: string) {
+    addTag(actorId: UserId, content: TagContent) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
@@ -458,24 +459,24 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateTagPosition(actorId: UserId, tagId: TagId, position: Position) {
+    updateTag(
+        actorId: UserId,
+        tagId: TagId,
+        content?: TagContent,
+        position?: Position
+    ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: tag } = this.findTag(tagId);
 
-        tag.updatePosition(position);
+        if (content) {
+            tag.updateContent(content);
+        }
 
-        this._updatedAt = new Date();
-    }
-
-    updateTagContent(actorId: UserId, tagId: TagId, content: string) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: tag } = this.findTag(tagId);
-
-        tag.updateContent(content);
+        if (position) {
+            tag.updatePosition(position);
+        }
 
         this._updatedAt = new Date();
     }

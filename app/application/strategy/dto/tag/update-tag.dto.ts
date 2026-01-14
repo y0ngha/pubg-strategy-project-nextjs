@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
-import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { Position } from '@domain/strategy/value-objects/position';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 export interface UpdateTagRequestDto {
     actorId: string;
@@ -27,7 +27,7 @@ export const UpdateTagRequestSchema = z
         content: z
             .string()
             .transform(value => {
-                return CommentContent.create(value);
+                return TagContent.create(value);
             })
             .optional(),
         position: z
