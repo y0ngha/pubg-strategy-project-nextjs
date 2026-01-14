@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
 import { ZodError } from 'zod';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 describe('UpdateTagUseCase', () => {
     let useCase: UpdateTagUseCase;
@@ -38,7 +39,7 @@ describe('UpdateTagUseCase', () => {
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTag(ownerId, '업데이트 될 내용');
+        strategyFixture.addTag(ownerId, TagContent.create('업데이트 될 내용'));
         tagId = strategyFixture.tags[0].id;
     });
 
@@ -110,7 +111,7 @@ describe('UpdateTagUseCase', () => {
 
         const tag = strategyFixture.tags.find(tag => tag.id.equals(tagId));
 
-        expect(tag?.content).toEqual(dto.content);
+        expect(tag?.content.toString()).toEqual(dto.content);
         expect(tag?.position).toEqual(dto.position);
     });
 
@@ -137,8 +138,8 @@ describe('UpdateTagUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
-        expect(tag?.content).not.toEqual(oldConetnt);
-        expect(tag?.content).toEqual(dto.content);
+        expect(tag?.content.toString()).not.toEqual(oldConetnt);
+        expect(tag?.content.toString()).toEqual(dto.content);
         expect(tag?.position).toEqual(oldPosition);
     });
 
@@ -170,7 +171,7 @@ describe('UpdateTagUseCase', () => {
 
         expect(tag?.position).not.toEqual(oldPosition);
         expect(tag?.position).toEqual(dto.position);
-        expect(tag?.content).toEqual(oldContent);
+        expect(tag?.content.toString()).toEqual(oldContent?.toString());
     });
 
     it('태그 업데이트시 업데이트할 속성을 보내지 않으면, 에러를 던진다.', async () => {

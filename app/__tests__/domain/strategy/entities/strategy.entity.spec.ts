@@ -29,6 +29,7 @@ import {
     TeamPlayerLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -121,7 +122,10 @@ describe('Strategy', () => {
             Position.create(100, 100)
         );
 
-        tagFixture = Tag.create(Position.create(10, 10), '태그');
+        tagFixture = Tag.create(
+            Position.create(10, 10),
+            TagContent.create('태그')
+        );
 
         strategyShareEditorFixture = StrategyShare.create(
             editorId,
@@ -1424,11 +1428,11 @@ describe('Strategy', () => {
 
     describe('Tag', () => {
         describe('AddTag', () => {
-            const content = '태그';
+            const content = TagContent.create('태그');
             it('전략에 대한 편집 권한이 있으면, 태그가 추가된다.', () => {
                 // given
-                const content1 = '첫 번째 태그';
-                const content2 = '두 번째 태그';
+                const content1 = TagContent.create('첫 번째 태그');
+                const content2 = TagContent.create('두 번째 태그');
                 const oldTagLength = strategyFixture.tags.length;
 
                 // when
@@ -1470,7 +1474,7 @@ describe('Strategy', () => {
         describe('RemoveTag', () => {
             it('전략에 대한 편집 권한이 있으면, 태그가 삭제된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
 
                 strategyFixture.addTag(ownerId, content);
 
@@ -1515,11 +1519,11 @@ describe('Strategy', () => {
         });
 
         describe('UpdateTag', () => {
-            const newContent = '내용편집';
+            const newContent = TagContent.create('내용편집');
             const newPosition = Position.create(30, 30);
             it('전략에 대한 편집 권한이 있으면, 태그 위치가 업데이트된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
                 strategyFixture.addTag(ownerId, content);
                 const newTagPosition1 = Position.create(300, 300);
                 const newTagPosition2 = Position.create(500, 500);
@@ -1555,11 +1559,11 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 있으면, 태그 내용이 업데이트된다.', () => {
                 // given
-                const content = '태그입니다.';
+                const content = TagContent.create('태그입니다.');
                 strategyFixture.addTag(ownerId, content);
 
-                const newTagContent1 = '2026';
-                const newTagContent2 = '2027';
+                const newTagContent1 = TagContent.create('2026');
+                const newTagContent2 = TagContent.create('2027');
 
                 const { id: tagId1, content: oldTagContent1 } = tagFixture;
                 const { id: tagId2, content: oldTagContent2 } =

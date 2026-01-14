@@ -9,6 +9,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 describe('DeleteTagUseCase', () => {
     let useCase: DeleteTagUseCase;
@@ -37,7 +38,7 @@ describe('DeleteTagUseCase', () => {
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTag(ownerId, '삭제될 내용');
+        strategyFixture.addTag(ownerId, TagContent.create('삭제될 내용'));
         tagId = strategyFixture.tags[0].id;
     });
 
