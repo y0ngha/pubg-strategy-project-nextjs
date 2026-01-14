@@ -1150,8 +1150,9 @@ describe('Strategy', () => {
             });
         });
 
-        describe('UpdateCircleCeneterPosition', () => {
+        describe('UpdateCircle', () => {
             const newPosition = Position.create(20, 200);
+            const updatePhase = 2;
 
             it('전략에 대한 편집 권한이 있으면, Circle CenterPosition이 업데이트된다.', () => {
                 // give
@@ -1168,15 +1169,17 @@ describe('Strategy', () => {
                 } = circle2Fixture;
 
                 // when
-                strategyFixture.updateCircleCeneterPosition(
+                strategyFixture.updateCircle(
                     ownerId,
                     circleId1,
-                    newCenterPosition1
+                    newCenterPosition1,
+                    undefined
                 );
-                strategyFixture.updateCircleCeneterPosition(
+                strategyFixture.updateCircle(
                     editorId,
                     circleId2,
-                    newCenterPosition2
+                    newCenterPosition2,
+                    undefined
                 );
 
                 // then
@@ -1194,46 +1197,6 @@ describe('Strategy', () => {
                 );
             });
 
-            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
-                // give
-                const circleId = circle1Fixture.id;
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateCircleCeneterPosition(
-                        viewerId,
-                        circleId,
-                        newPosition
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-
-                expect(() =>
-                    strategyFixture.updateCircleCeneterPosition(
-                        strangerId,
-                        circleId,
-                        newPosition
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-            });
-
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                const circleId = circle1Fixture.id;
-                strategyFixture.delete(ownerId);
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateCircleCeneterPosition(
-                        ownerId,
-                        circleId,
-                        newPosition
-                    )
-                ).toThrow(DeletedStrategyException);
-            });
-        });
-
-        describe('UpdateCirclePhase', () => {
-            const updatePhase = 2;
             it('전략에 대한 편집 권한이 있으면, Circle Phase가 업데이트된다.', () => {
                 // give
                 const newPhase1 = 7;
@@ -1245,14 +1208,16 @@ describe('Strategy', () => {
                     circle2Fixture;
 
                 // when
-                strategyFixture.updateCirclePhase(
+                strategyFixture.updateCircle(
                     ownerId,
                     circleId1,
+                    undefined,
                     newPhase1
                 );
-                strategyFixture.updateCirclePhase(
+                strategyFixture.updateCircle(
                     editorId,
                     circleId2,
+                    undefined,
                     newPhase2
                 );
 
@@ -1270,13 +1235,19 @@ describe('Strategy', () => {
                 const { id: circleId1 } = circle1Fixture;
                 const { id: circleId2 } = circle2Fixture;
 
-                strategyFixture.updateCirclePhase(ownerId, circleId1, newPhase);
+                strategyFixture.updateCircle(
+                    ownerId,
+                    circleId1,
+                    undefined,
+                    newPhase
+                );
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateCirclePhase(
+                    strategyFixture.updateCircle(
                         editorId,
                         circleId2,
+                        undefined,
                         newPhase
                     )
                 ).toThrow(CirclePhaseDuplicateException);
@@ -1288,21 +1259,24 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateCirclePhase(
+                    strategyFixture.updateCircle(
                         viewerId,
                         circleId,
+                        newPosition,
                         updatePhase
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.updateCirclePhase(
+                    strategyFixture.updateCircle(
                         strangerId,
                         circleId,
+                        newPosition,
                         updatePhase
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
+
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
                 const circleId = circle1Fixture.id;
@@ -1310,11 +1284,7 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateCirclePhase(
-                        ownerId,
-                        circleId,
-                        updatePhase
-                    )
+                    strategyFixture.updateCircle(ownerId, circleId, newPosition)
                 ).toThrow(DeletedStrategyException);
             });
         });
