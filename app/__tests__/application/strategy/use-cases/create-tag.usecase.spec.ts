@@ -67,10 +67,10 @@ describe('CreateTagUseCase', () => {
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
         const tag = strategyFixture.tags.find(
-            tag => tag?.content === dto.content
+            tag => tag?.content.toString() === dto.content
         );
 
         expect(strategyFixture.tags).toHaveLength(1);
-        expect(tag?.content).toEqual(dto.content);
+        expect(tag?.content.toString()).toEqual(dto.content);
     });
 });
