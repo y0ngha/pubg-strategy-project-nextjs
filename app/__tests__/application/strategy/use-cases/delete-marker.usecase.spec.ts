@@ -16,7 +16,7 @@ describe('DeleteMarkerUseCase', () => {
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     let strategyFixture: Strategy;
 
-    const ownerId = UserId.create('8b71b213-bec5-40ad-b24e-04eb656774b5');
+    const ownerId = UserId.generate();
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
