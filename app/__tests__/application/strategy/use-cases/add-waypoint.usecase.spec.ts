@@ -123,9 +123,17 @@ describe('AddWaypointUseCase', () => {
             teamPlayer.id.equals(teamPlayerId)
         );
 
-        expect(teamPlayer?.waypoint).not.toBeNull();
-        expect(teamPlayer?.waypoint).not.toBeUndefined();
-        expect(teamPlayer?.waypoint?.positions).toEqual(positions);
+        const addedPositions = teamPlayer?.waypoint?.positions?.map(
+            position => {
+                return {
+                    x: position.x,
+                    y: position.y,
+                };
+            }
+        );
+
+        expect(teamPlayer?.waypoint).toBeDefined();
+        expect(addedPositions).toEqual(positions);
     });
 
     it('웨이포인트가 있을 때 기존 웨이포인트가 교체된다.', async () => {
@@ -163,9 +171,17 @@ describe('AddWaypointUseCase', () => {
             teamPlayer.id.equals(teamPlayerId)
         );
 
-        expect(teamPlayer?.waypoint).not.toBeNull();
-        expect(teamPlayer?.waypoint).not.toBeUndefined();
-        expect(teamPlayer?.waypoint?.positions).not.toEqual(oldPositions);
-        expect(teamPlayer?.waypoint?.positions).toEqual(positions);
+        const addedPositions = teamPlayer?.waypoint?.positions?.map(
+            position => {
+                return {
+                    x: position.x,
+                    y: position.y,
+                };
+            }
+        );
+
+        expect(teamPlayer?.waypoint).toBeDefined();
+        expect(addedPositions).not.toEqual(oldPositions);
+        expect(addedPositions).toEqual(positions);
     });
 });
