@@ -3,26 +3,20 @@ import { TagId } from '@domain/strategy/value-objects/tag-id';
 import {
     DeletedTagException,
     SamePositionException,
-    TagContentBlankException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 export class Tag {
     private constructor(
         public readonly id: TagId,
         private _position: Position,
-        content: string,
+        private _content: TagContent,
         private _isDeleted: boolean,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        const trimmed = content.trim();
-        this.ensureNotBlank(trimmed);
-        this._content = trimmed;
-    }
+    ) {}
 
-    private _content: string;
-
-    get content(): string {
+    get content(): TagContent {
         return this._content;
     }
 
@@ -38,7 +32,7 @@ export class Tag {
         return this._isDeleted;
     }
 
-    static create(position: Position, content: string) {
+    static create(position: Position, content: TagContent) {
         return new Tag(
             TagId.generate(),
             position,
@@ -52,7 +46,7 @@ export class Tag {
     static reconstruct(
         id: TagId,
         position: Position,
-        content: string,
+        content: TagContent,
         createdAt: Date,
         updatedAt: Date
     ) {
@@ -67,15 +61,12 @@ export class Tag {
         this._updatedAt = new Date();
     }
 
-    updateContent(content: string) {
-        const trimmed = content.trim();
-
+    updateContent(content: TagContent) {
         this.ensureNotDeleted();
-        this.ensureNotBlank(trimmed);
 
-        if (this._content === trimmed) return;
+        if (this._content.equals(content)) return;
 
-        this._content = trimmed;
+        this._content = content;
         this._updatedAt = new Date();
     }
 
@@ -94,12 +85,6 @@ export class Tag {
     private ensureNotDeleted() {
         if (this._isDeleted) {
             throw new DeletedTagException();
-        }
-    }
-
-    private ensureNotBlank(content: string) {
-        if (!content || content.length === 0) {
-            throw new TagContentBlankException();
         }
     }
 }
