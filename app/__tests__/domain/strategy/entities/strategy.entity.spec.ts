@@ -877,8 +877,12 @@ describe('Strategy', () => {
             });
         });
 
-        describe('UpdateEnemyTeamLabel', () => {
+        describe('UpdateEnemyTeam', () => {
             const newTeamLabel = TeamLabel.create('B');
+
+            const newPosition1 = Position.create(10, 20);
+            const newPosition2 = Position.create(10, 30);
+
             it('전략에 대한 편집 권한이 있으면, 적 팀 라벨이 업데이트된다.', () => {
                 // given
                 const newTeamLabel1 = TeamLabel.create('Y');
@@ -889,15 +893,17 @@ describe('Strategy', () => {
                     enemyTeam2Fixture;
 
                 // when
-                strategyFixture.updateEnemyTeamLabel(
+                strategyFixture.updateEnemyTeam(
                     ownerId,
                     enemyTeamId1,
-                    newTeamLabel1
+                    newTeamLabel1,
+                    undefined
                 );
-                strategyFixture.updateEnemyTeamLabel(
+                strategyFixture.updateEnemyTeam(
                     editorId,
                     enemyTeamId2,
-                    newTeamLabel2
+                    newTeamLabel2,
+                    undefined
                 );
 
                 // then
@@ -911,47 +917,7 @@ describe('Strategy', () => {
                 expect(enemyTeam2Fixture.teamLabel).toEqual(newTeamLabel2);
             });
 
-            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
-                // give
-                const enemyTeamId = enemyTeam1Fixture.id;
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateEnemyTeamLabel(
-                        viewerId,
-                        enemyTeamId,
-                        newTeamLabel
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-
-                expect(() =>
-                    strategyFixture.updateEnemyTeamLabel(
-                        strangerId,
-                        enemyTeamId,
-                        newTeamLabel
-                    )
-                ).toThrow(StrategyEditPermissionDeniedException);
-            });
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                const enemyTeamId = enemyTeam1Fixture.id;
-                strategyFixture.delete(ownerId);
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateEnemyTeamLabel(
-                        ownerId,
-                        enemyTeamId,
-                        newTeamLabel
-                    )
-                ).toThrow(DeletedStrategyException);
-            });
-        });
-
-        describe('UpdateEnemyTeamPosition', () => {
-            const newPosition1 = Position.create(10, 20);
-            const newPosition2 = Position.create(10, 30);
-            it('전략에 대한 편집 권한이 있으면, 적 팀 라벨이 업데이트된다.', () => {
+            it('전략에 대한 편집 권한이 있으면, 적 팀 포지션이 업데이트된다.', () => {
                 // given
                 const { id: enemyTeamId1, position: oldEnemyTeamPosition1 } =
                     enemyTeam1Fixture;
@@ -959,14 +925,16 @@ describe('Strategy', () => {
                     enemyTeam2Fixture;
 
                 // when
-                strategyFixture.updateEnemyTeamPosition(
+                strategyFixture.updateEnemyTeam(
                     ownerId,
                     enemyTeamId1,
+                    undefined,
                     newPosition1
                 );
-                strategyFixture.updateEnemyTeamPosition(
+                strategyFixture.updateEnemyTeam(
                     editorId,
                     enemyTeamId2,
+                    undefined,
                     newPosition2
                 );
 
@@ -987,18 +955,20 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateEnemyTeamPosition(
+                    strategyFixture.updateEnemyTeam(
                         viewerId,
                         enemyTeamId,
-                        newPosition1
+                        newTeamLabel,
+                        undefined
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.updateEnemyTeamPosition(
+                    strategyFixture.updateEnemyTeam(
                         strangerId,
                         enemyTeamId,
-                        newPosition1
+                        newTeamLabel,
+                        undefined
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
@@ -1009,10 +979,11 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateEnemyTeamPosition(
+                    strategyFixture.updateEnemyTeam(
                         ownerId,
                         enemyTeamId,
-                        newPosition1
+                        newTeamLabel,
+                        undefined
                     )
                 ).toThrow(DeletedStrategyException);
             });
