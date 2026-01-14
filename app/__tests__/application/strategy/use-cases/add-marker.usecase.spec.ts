@@ -131,8 +131,8 @@ describe('AddMarkerUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
-        const teamPlayer = strategyFixture.teamPlayers.find(
-            teamPlayer => teamPlayer.id === teamPlayerId
+        const teamPlayer = strategyFixture.teamPlayers.find(teamPlayer =>
+            teamPlayer.id.equals(teamPlayerId)
         );
 
         expect(teamPlayer?.marker).not.toBeNull();
