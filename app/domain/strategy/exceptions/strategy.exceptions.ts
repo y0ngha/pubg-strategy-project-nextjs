@@ -209,3 +209,9 @@ export class ParentCommentPositionRequiredException extends DomainException {
         super('최상위 댓글에는 위치가 반드시 필요합니다.');
     }
 }
+
+export class StrategyNotFoundException extends DomainException {
+    constructor() {
+        super('전략을 찾을 수 없습니다.');
+    }
+}
