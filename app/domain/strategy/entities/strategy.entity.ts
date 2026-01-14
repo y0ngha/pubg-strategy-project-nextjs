@@ -39,6 +39,7 @@ import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-i
 import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 interface FindEntity<T> {
     value: T;
@@ -436,7 +437,7 @@ export class Strategy {
     /**
      * Tags
      */
-    addTag(actorId: UserId, content: string) {
+    addTag(actorId: UserId, content: TagContent) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
@@ -461,7 +462,7 @@ export class Strategy {
     updateTag(
         actorId: UserId,
         tagId: TagId,
-        content?: string,
+        content?: TagContent,
         position?: Position
     ) {
         this.ensureNotDeleted();
