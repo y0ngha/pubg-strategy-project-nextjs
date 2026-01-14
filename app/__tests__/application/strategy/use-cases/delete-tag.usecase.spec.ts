@@ -94,6 +94,6 @@ describe('DeleteTagUseCase', () => {
 
         const tag = strategyFixture.tags.find(tag => tag.id.equals(tagId));
 
-        expect(tag).toBeNull();
+        expect(tag).toBeUndefined();
     });
 });
