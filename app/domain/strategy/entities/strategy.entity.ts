@@ -382,32 +382,27 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateCircleCeneterPosition(
+    updateCircle(
         actorId: UserId,
         circleId: CircleId,
-        position: Position
+        position?: Position,
+        phase?: number
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: circle } = this.findCircle(circleId);
 
-        circle.updateCenterPosition(position);
-
-        this._updatedAt = new Date();
-    }
-
-    updateCirclePhase(actorId: UserId, circleId: CircleId, phase: number) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: circle } = this.findCircle(circleId);
-
-        if (circle.phase !== phase) {
-            this.ensureNoDuplicatePhase(phase);
+        if (position) {
+            circle.updateCenterPosition(position);
         }
 
-        circle.updatePhase(phase);
+        if (phase != null) {
+            this.ensureNoDuplicatePhase(phase);
+
+            circle.updatePhase(phase);
+        }
+
         this._updatedAt = new Date();
     }
 
