@@ -458,24 +458,24 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateTagPosition(actorId: UserId, tagId: TagId, position: Position) {
+    updateTag(
+        actorId: UserId,
+        tagId: TagId,
+        content?: string,
+        position?: Position
+    ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: tag } = this.findTag(tagId);
 
-        tag.updatePosition(position);
+        if (content) {
+            tag.updateContent(content);
+        }
 
-        this._updatedAt = new Date();
-    }
-
-    updateTagContent(actorId: UserId, tagId: TagId, content: string) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: tag } = this.findTag(tagId);
-
-        tag.updateContent(content);
+        if (position) {
+            tag.updatePosition(position);
+        }
 
         this._updatedAt = new Date();
     }
