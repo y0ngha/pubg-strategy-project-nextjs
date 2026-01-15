@@ -89,8 +89,13 @@ export interface CommentResponseDto {
     authorEmail: string;
     position: PositionResponseDto;
     content: string;
-    childComments: Omit<CommentResponseDto, 'position'>;
+    childComments: ChildCommentResponseDto[];
 }
+
+export type ChildCommentResponseDto = Omit<
+    CommentResponseDto,
+    'position' | 'childComments'
+>;
 
 export interface GetStrategyResponseDto {
     id: string;
