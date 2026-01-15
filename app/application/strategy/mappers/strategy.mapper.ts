@@ -51,7 +51,7 @@ export class StrategyMapper {
             comments: this.parseParentComments(entity.comments),
             permission: permission,
             createdAt: entity.createdAt,
-            updatedAt: entity.createdAt,
+            updatedAt: entity.updatedAt,
         };
     }
 
