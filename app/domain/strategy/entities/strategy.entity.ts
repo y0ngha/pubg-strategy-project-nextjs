@@ -205,7 +205,6 @@ export class Strategy {
     isAccessibleByUserId(userId: UserId): boolean {
         this.ensureNotDeleted();
 
-        console.log(userId);
         if (this.ownerId.equals(userId)) {
             return true;
         }
