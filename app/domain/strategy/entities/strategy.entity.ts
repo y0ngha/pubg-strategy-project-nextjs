@@ -561,28 +561,23 @@ export class Strategy {
         this._comments.splice(index, 1);
     }
 
-    updateCommentContent(
+    updateComment(
         actorId: UserId,
         commentId: CommentId,
-        content: CommentContent
+        content?: CommentContent,
+        position?: Position
     ) {
         this.ensureNotDeleted();
 
         const { value: comment } = this.findComment(commentId);
 
-        comment.updateContent(actorId, content);
-    }
+        if (content) {
+            comment.updateContent(actorId, content);
+        }
 
-    updateCommentPosition(
-        actorId: UserId,
-        commentId: CommentId,
-        position: Position
-    ) {
-        this.ensureNotDeleted();
-
-        const { value: comment } = this.findComment(commentId);
-
-        comment.updatePosition(actorId, position);
+        if (position) {
+            comment.updatePosition(actorId, position);
+        }
     }
 
     /**
