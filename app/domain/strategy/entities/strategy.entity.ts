@@ -514,14 +514,22 @@ export class Strategy {
     /**
      * Titles
      */
-    updateTitle(actorId: UserId, title: string) {
+    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
-        const trimmed = title.trim();
-        if (this._title === trimmed) return;
+        if (title) {
+            if (this._title.equals(title)) return;
 
-        this._title = trimmed;
+            this._title = title;
+        }
+
+        if (map) {
+            if (this._map === map) return;
+
+            this._map = map;
+        }
+
         this._updatedAt = new Date();
     }
 
@@ -584,19 +592,6 @@ export class Strategy {
         const { value: comment } = this.findComment(commentId);
 
         comment.updatePosition(actorId, position);
-    }
-
-    /**
-     * Maps
-     */
-    updateMap(actorId: UserId, map: PubgMap) {
-        this.ensureNotDeleted();
-        this.ensureOwner(actorId);
-
-        if (this._map === map) return;
-
-        this._map = map;
-        this._updatedAt = new Date();
     }
 
     /**
