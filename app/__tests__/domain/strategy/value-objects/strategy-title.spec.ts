@@ -29,14 +29,14 @@ describe('StrategyTitle', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => StrategyTitle.create('')).toThrow(
-                new StrategyTitleBlankException()
+                StrategyTitleBlankException
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => StrategyTitle.create('   ')).toThrow(
-                new StrategyTitleBlankException()
+                StrategyTitleBlankException
             );
         });
     });
