@@ -10,7 +10,6 @@ export interface UpdateCommentRequestDto {
     strategyId: string;
     commentId: string;
     content?: string;
-    parentCommentId?: string;
     position?: { x: number; y: number };
 }
 
@@ -29,12 +28,6 @@ export const UpdateCommentRequestSchema = z
             .string()
             .transform(value => {
                 return CommentContent.create(value);
-            })
-            .optional(),
-        parentCommentId: z
-            .string()
-            .transform(value => {
-                return CommentId.create(value);
             })
             .optional(),
         position: z
