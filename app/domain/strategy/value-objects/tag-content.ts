@@ -1,7 +1,7 @@
 import { TagContentBlankException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TagContent {
-    private constructor(public readonly content: string) {}
+    private constructor(public readonly value: string) {}
 
     static create(content: string) {
         const trimmed = content.trim();
@@ -26,14 +26,14 @@ export class TagContent {
             return false;
         }
 
-        return this.content === tagContent.content;
+        return this.value === tagContent.value;
     }
 
     toString() {
-        return this.content;
+        return this.value;
     }
 
     toJSON() {
-        return this.content;
+        return this.value;
     }
 }
