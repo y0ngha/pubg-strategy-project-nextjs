@@ -30,6 +30,7 @@ import {
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -68,7 +69,7 @@ describe('Strategy', () => {
 
     let strategyFixture: Strategy;
 
-    const defaultTitle = '전략';
+    const defaultTitle = StrategyTitle.create('전략');
     const defaultMap = PubgMap.ERANGEL;
 
     beforeEach(() => {
@@ -305,6 +306,36 @@ describe('Strategy', () => {
 
             // when & then
             expect(() => strategy.delete(ownerId)).toThrow(
+                DeletedStrategyException
+            );
+        });
+    });
+
+    describe('isAccessibleByUserId', () => {
+        it('자기 자신의 전략인 경우 접근 가능(True)을 반환한다.', () => {
+            // when & then
+            expect(strategyFixture.isAccessibleByUserId(ownerId)).toBeTruthy();
+        });
+
+        it('공유 받은 전략인 경우 권한에 상관 없이 접근 가능(True)을 반환한다.', () => {
+            // when & then
+            expect(strategyFixture.isAccessibleByUserId(editorId)).toBeTruthy();
+
+            expect(strategyFixture.isAccessibleByUserId(viewerId)).toBeTruthy();
+        });
+
+        it('공유 받은 전략이 아닌 경우 접근 불가(False)를 반환한다.', () => {
+            expect(
+                strategyFixture.isAccessibleByUserId(strangerId)
+            ).toBeFalsy();
+        });
+
+        it('삭제된 전략이라면, 에러를 던진다.', () => {
+            // give
+            strategyFixture.delete(ownerId);
+
+            // when & then
+            expect(() => strategyFixture.isAccessibleByUserId(ownerId)).toThrow(
                 DeletedStrategyException
             );
         });
@@ -1762,70 +1793,53 @@ describe('Strategy', () => {
         });
     });
 
-    describe('Title', () => {
-        describe('UpdateTitle', () => {
-            const newTitle = '새로운 제목';
-            it('전략에 대한 소유주라면, 업데이트 된다.', () => {
-                // given
-                const oldTitle = strategyFixture.title;
+    describe('Update', () => {
+        const newMap = PubgMap.VIKENDI;
+        const newTitle = StrategyTitle.create('새로운 제목');
 
-                // when
-                strategyFixture.updateTitle(ownerId, newTitle);
+        it('전략에 대한 소유주라면, 맵이 업데이트 된다.', () => {
+            // given
+            const oldMap = strategyFixture.map;
+            const oldTitle = strategyFixture.title;
 
-                // then
-                expect(strategyFixture.title).not.toEqual(oldTitle);
-                expect(strategyFixture.title).toEqual(newTitle);
-            });
+            // when
+            strategyFixture.update(ownerId, undefined, newMap);
 
-            it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
-                // when & then
-                expect(() =>
-                    strategyFixture.updateTitle(editorId, newTitle)
-                ).toThrow(StrategyPermissionDeniedException);
-            });
-
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                strategyFixture.delete(ownerId);
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateTitle(ownerId, newTitle)
-                ).toThrow(DeletedStrategyException);
-            });
+            // then
+            expect(strategyFixture.map).not.toEqual(oldMap);
+            expect(strategyFixture.map).toEqual(newMap);
+            expect(strategyFixture.title).toEqual(oldTitle);
         });
-    });
 
-    describe('Map', () => {
-        describe('UpdateMap', () => {
-            const newMap = PubgMap.VIKENDI;
-            it('전략에 대한 소유주라면, 업데이트 된다.', () => {
-                // given
-                const oldMap = strategyFixture.map;
+        it('전략에 대한 소유주라면, 제목이 업데이트 된다.', () => {
+            // given
+            const oldMap = strategyFixture.map;
+            const oldTitle = strategyFixture.title;
 
-                // when
-                strategyFixture.updateMap(ownerId, newMap);
+            // when
+            strategyFixture.update(ownerId, newTitle, undefined);
 
-                // then
-                expect(strategyFixture.map).not.toEqual(oldMap);
-                expect(strategyFixture.map).toEqual(newMap);
-            });
+            // then
+            expect(strategyFixture.title).not.toEqual(oldTitle);
+            expect(strategyFixture.title).toEqual(newTitle);
+            expect(strategyFixture.map).toEqual(oldMap);
+        });
 
-            it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
-                // when & then
-                expect(() =>
-                    strategyFixture.updateMap(editorId, newMap)
-                ).toThrow(StrategyPermissionDeniedException);
-            });
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                strategyFixture.delete(ownerId);
+        it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
+            // when & then
+            expect(() =>
+                strategyFixture.update(editorId, newTitle, undefined)
+            ).toThrow(StrategyPermissionDeniedException);
+        });
 
-                // when & then
-                expect(() =>
-                    strategyFixture.updateMap(ownerId, newMap)
-                ).toThrow(DeletedStrategyException);
-            });
+        it('삭제된 전략이라면, 에러를 던진다.', () => {
+            // give
+            strategyFixture.delete(ownerId);
+
+            // when & then
+            expect(() =>
+                strategyFixture.update(ownerId, newTitle, undefined)
+            ).toThrow(DeletedStrategyException);
         });
     });
 

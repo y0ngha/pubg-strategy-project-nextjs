@@ -11,6 +11,7 @@ import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
 import { User } from '@domain/user/entities/user.entity';
 import { Password } from '@domain/user/value-objects/password';
 import { Email } from '@domain/shared/value-objects/email';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('CreateStrategyShareUseCase', () => {
     let useCase: CreateStrategyShareUseCase;
@@ -25,7 +26,7 @@ describe('CreateStrategyShareUseCase', () => {
     let strategyId: StrategyId;
     let targetUserId: UserId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

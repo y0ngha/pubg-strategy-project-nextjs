@@ -11,6 +11,7 @@ import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-i
 import { Email } from '@domain/shared/value-objects/email';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('RevokeStrategyShareUseCase', () => {
     let useCase: RevokeStrategyShareUseCase;
@@ -24,7 +25,7 @@ describe('RevokeStrategyShareUseCase', () => {
     let strategyId: StrategyId;
     let strategyShareId: StrategyShareId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

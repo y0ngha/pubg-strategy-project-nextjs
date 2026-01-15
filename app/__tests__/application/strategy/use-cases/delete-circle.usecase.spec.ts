@@ -9,6 +9,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteCircleUseCase', () => {
     let useCase: DeleteCircleUseCase;
@@ -20,7 +21,7 @@ describe('DeleteCircleUseCase', () => {
     let strategyId: StrategyId;
     let circleId: CircleId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

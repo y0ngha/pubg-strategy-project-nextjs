@@ -1,29 +1,34 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    DeletedStrategyException,
+    StrategyAccessDeniedException,
     StrategyNotFoundException,
-    StrategyShareNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
-import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-id';
-import { Email } from '@domain/shared/value-objects/email';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
+import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
+import { Email } from '@domain/shared/value-objects/email';
 
-describe('UpdateStrategySharePermissionUseCase', () => {
-    let useCase: UpdateStrategySharePermissionUseCase;
+describe('GetStrategyUseCase', () => {
+    let useCase: GetStrategyUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
+    const strategyMapper = new StrategyMapper();
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
-    const tagetUserId = UserId.generate();
-    const tagetUserEmail = Email.create('test@domain.com');
+    const editorId = UserId.generate();
+    const viewerId = UserId.generate();
+    const strangerId = UserId.generate();
+
+    const editorEmail = Email.create('editor@test.com');
+    const viewerEmail = Email.create('viewer@test.com');
 
     let strategyId: StrategyId;
-    let strategyShareId: StrategyShareId;
 
     const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
@@ -37,8 +42,9 @@ describe('UpdateStrategySharePermissionUseCase', () => {
             findSharedStrategiesByUserID: jest.fn(),
         } as jest.Mocked<StrategyRepositoryPort>;
 
-        useCase = new UpdateStrategySharePermissionUseCase(
-            mockStrategyRepository
+        useCase = new GetStrategyUseCase(
+            mockStrategyRepository,
+            strategyMapper
         );
 
         strategyFixture = Strategy.create(ownerId, title, map);
@@ -46,11 +52,17 @@ describe('UpdateStrategySharePermissionUseCase', () => {
 
         strategyFixture.addStrategyShare(
             ownerId,
-            tagetUserId,
-            tagetUserEmail,
+            editorId,
+            editorEmail,
+            StrategySharePermission.EDITABLE
+        );
+
+        strategyFixture.addStrategyShare(
+            ownerId,
+            viewerId,
+            viewerEmail,
             StrategySharePermission.READ_ONLY
         );
-        strategyShareId = strategyFixture.shares[0].id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -59,8 +71,6 @@ describe('UpdateStrategySharePermissionUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
-            strategyShareId: strategyShareId.toString(),
-            permission: StrategySharePermission.EDITABLE,
         };
 
         // when & then
@@ -70,47 +80,56 @@ describe('UpdateStrategySharePermissionUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('전략 공유를 찾지 못하면, 에러를 던진다.', async () => {
+    it('접근이 불가능한 전략이면(공유 받은 것도 아니고, 본인것도 아니면), 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-        const randomId = StrategyShareId.generate();
 
         const dto = {
-            actorId: ownerId.toString(),
+            actorId: strangerId.toString(),
             strategyId: strategyId.toString(),
-            strategyShareId: randomId.toString(),
-            permission: StrategySharePermission.EDITABLE,
         };
 
         // when & then
         await expect(() => useCase.execute(dto)).rejects.toThrow(
-            StrategyShareNotFoundException
+            StrategyAccessDeniedException
         );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('전략 공유 권한이 업데이트 된다.', async () => {
+    it('전략이 조회된다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
-            strategyShareId: strategyShareId.toString(),
-            permission: StrategySharePermission.EDITABLE,
         };
 
         // when
-        await useCase.execute(dto);
+        const strategy = await useCase.execute(dto);
 
         // then
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
+        expect(strategy.id).toEqual(strategyId.toString());
+    });
 
-        const strategyShare = strategyFixture.shares.find(strategyShare =>
-            strategyShare.id.equals(strategyShareId)
+    it('도메인 엔티티에서 예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
+        // given
+        jest.spyOn(strategyFixture, 'isAccessibleByUserId').mockImplementation(
+            () => {
+                throw new DeletedStrategyException();
+            }
         );
 
-        expect(strategyShare?.permission).toEqual(dto.permission);
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+        };
+
+        //when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            DeletedStrategyException
+        );
     });
 });

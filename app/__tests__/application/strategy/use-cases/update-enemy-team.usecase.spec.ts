@@ -11,6 +11,7 @@ import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-t
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { ZodError } from 'zod';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('UpdateEnemyTeamUseCase', () => {
     let useCase: UpdateEnemyTeamUseCase;
@@ -22,7 +23,7 @@ describe('UpdateEnemyTeamUseCase', () => {
     let strategyId: StrategyId;
     let enemyTeamId: EnemyTeamId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

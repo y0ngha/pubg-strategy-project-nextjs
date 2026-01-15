@@ -40,6 +40,7 @@ import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 interface FindEntity<T> {
     value: T;
@@ -61,7 +62,7 @@ export class Strategy {
     private constructor(
         public readonly id: StrategyId,
         public readonly ownerId: UserId,
-        private _title: string,
+        private _title: StrategyTitle,
         private _map: PubgMap,
         private _teamPlayers: TeamPlayer[],
         private _enemyTeams: EnemyTeam[],
@@ -79,7 +80,7 @@ export class Strategy {
     /**
      * Getters
      */
-    get title(): string {
+    get title(): StrategyTitle {
         return this._title;
     }
 
@@ -130,7 +131,7 @@ export class Strategy {
     /**
      * Factory Methods
      */
-    static create(ownerId: UserId, title: string, map: PubgMap) {
+    static create(ownerId: UserId, title: StrategyTitle, map: PubgMap) {
         return new Strategy(
             StrategyId.generate(),
             ownerId,
@@ -160,7 +161,7 @@ export class Strategy {
     static reconstruct(
         id: StrategyId,
         ownerId: UserId,
-        title: string,
+        title: StrategyTitle,
         map: PubgMap,
         teamPlayers: TeamPlayer[],
         enemyTeams: EnemyTeam[],
@@ -199,6 +200,20 @@ export class Strategy {
         this.cascadeDelete();
 
         this._isDeleted = true;
+    }
+
+    isAccessibleByUserId(userId: UserId): boolean {
+        this.ensureNotDeleted();
+
+        if (this.ownerId.equals(userId)) {
+            return true;
+        }
+
+        return this.shares.some(
+            share =>
+                share.sharedUserId.equals(userId) &&
+                (share.isEditable || share.isReadonly)
+        );
     }
 
     /**
@@ -511,16 +526,24 @@ export class Strategy {
     }
 
     /**
-     * Titles
+     * Strategy
      */
-    updateTitle(actorId: UserId, title: string) {
+    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
-        const trimmed = title.trim();
-        if (this._title === trimmed) return;
+        if (title) {
+            if (this._title.equals(title)) return;
 
-        this._title = trimmed;
+            this._title = title;
+        }
+
+        if (map) {
+            if (this._map === map) return;
+
+            this._map = map;
+        }
+
         this._updatedAt = new Date();
     }
 
@@ -578,19 +601,6 @@ export class Strategy {
         if (position) {
             comment.updatePosition(actorId, position);
         }
-    }
-
-    /**
-     * Maps
-     */
-    updateMap(actorId: UserId, map: PubgMap) {
-        this.ensureNotDeleted();
-        this.ensureOwner(actorId);
-
-        if (this._map === map) return;
-
-        this._map = map;
-        this._updatedAt = new Date();
     }
 
     /**
