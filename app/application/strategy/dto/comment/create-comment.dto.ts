@@ -3,9 +3,11 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { Email } from '@domain/shared/value-objects/email';
 
 export interface CreateCommentRequestDto {
     actorId: string;
+    actorEmail: string;
     strategyId: string;
     content: string;
     parentCommentId?: string;
@@ -15,6 +17,9 @@ export interface CreateCommentRequestDto {
 export const CreateCommentRequestSchema = z.object({
     actorId: z.string().transform(value => {
         return UserId.create(value);
+    }),
+    actorEmail: z.string().transform(value => {
+        return Email.create(value);
     }),
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
