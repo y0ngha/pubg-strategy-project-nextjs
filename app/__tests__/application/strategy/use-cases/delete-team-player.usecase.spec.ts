@@ -10,6 +10,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/delete-team-player.usecase';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteTeamPlayerUseCase', () => {
     let useCase: DeleteTeamPlayerUseCase;
