@@ -6,7 +6,10 @@ import {
     GetStrategyResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    StrategyAccessDeniedException,
+    StrategyNotFoundException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 
 @injectable()
 export class GetStrategyUseCase {
@@ -26,7 +29,9 @@ export class GetStrategyUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.isAccessibleByUserId(actorId);
+        if (!strategy.isAccessibleByUserId(actorId)) {
+            throw new StrategyAccessDeniedException();
+        }
 
         return this.strategyMapper.toResponse(strategy, actorId);
     }

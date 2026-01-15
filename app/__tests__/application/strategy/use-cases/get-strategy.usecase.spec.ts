@@ -1,6 +1,7 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     DeletedStrategyException,
+    StrategyAccessDeniedException,
     StrategyNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
@@ -89,7 +90,9 @@ describe('GetStrategyUseCase', () => {
         };
 
         // when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            StrategyAccessDeniedException
+        );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
