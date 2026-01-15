@@ -5,8 +5,8 @@ import { CommentId } from '@domain/strategy/value-objects/comment-id';
 
 export interface DeleteCommentRequestDto {
     actorId: string;
-    commentId: string;
     strategyId: string;
+    commentId: string;
 }
 
 export const DeleteCommentRequestSchema = z.object({
