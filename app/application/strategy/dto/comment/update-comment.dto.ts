@@ -8,8 +8,8 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 export interface UpdateCommentRequestDto {
     actorId: string;
     strategyId: string;
+    commentId: string;
     content?: string;
-    parentCommentId?: string;
     position?: { x: number; y: number };
 }
 
@@ -21,16 +21,13 @@ export const UpdateCommentRequestSchema = z
         strategyId: z.string().transform(value => {
             return StrategyId.create(value);
         }),
+        commentId: z.string().transform(value => {
+            return CommentId.create(value);
+        }),
         content: z
             .string()
             .transform(value => {
                 return CommentContent.create(value);
-            })
-            .optional(),
-        parentCommentId: z
-            .string()
-            .transform(value => {
-                return CommentId.create(value);
             })
             .optional(),
         position: z
