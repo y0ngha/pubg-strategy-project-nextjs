@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 export interface UpdateStrategyRequestDto {
     actorId: string;
@@ -18,7 +19,12 @@ export const UpdateStrategyRequestSchema = z
         strategyId: z.string().transform(value => {
             return StrategyId.create(value);
         }),
-        title: z.string().optional(),
+        title: z
+            .string()
+            .transform(value => {
+                return StrategyTitle.create(value);
+            })
+            .optional(),
         map: z.enum(PubgMap).optional(),
     })
     .refine(

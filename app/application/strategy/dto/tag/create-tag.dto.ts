@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 export interface CreateTagRequestDto {
     actorId: string;
@@ -15,5 +16,7 @@ export const CreateTagRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    content: z.string(),
+    content: z.string().transform(value => {
+        return TagContent.create(value);
+    }),
 });

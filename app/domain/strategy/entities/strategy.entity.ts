@@ -39,6 +39,8 @@ import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-i
 import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 interface FindEntity<T> {
     value: T;
@@ -60,7 +62,7 @@ export class Strategy {
     private constructor(
         public readonly id: StrategyId,
         public readonly ownerId: UserId,
-        private _title: string,
+        private _title: StrategyTitle,
         private _map: PubgMap,
         private _teamPlayers: TeamPlayer[],
         private _enemyTeams: EnemyTeam[],
@@ -78,7 +80,7 @@ export class Strategy {
     /**
      * Getters
      */
-    get title(): string {
+    get title(): StrategyTitle {
         return this._title;
     }
 
@@ -129,7 +131,7 @@ export class Strategy {
     /**
      * Factory Methods
      */
-    static create(ownerId: UserId, title: string, map: PubgMap) {
+    static create(ownerId: UserId, title: StrategyTitle, map: PubgMap) {
         return new Strategy(
             StrategyId.generate(),
             ownerId,
@@ -159,7 +161,7 @@ export class Strategy {
     static reconstruct(
         id: StrategyId,
         ownerId: UserId,
-        title: string,
+        title: StrategyTitle,
         map: PubgMap,
         teamPlayers: TeamPlayer[],
         enemyTeams: EnemyTeam[],
@@ -198,6 +200,20 @@ export class Strategy {
         this.cascadeDelete();
 
         this._isDeleted = true;
+    }
+
+    isAccessibleByUserId(userId: UserId): boolean {
+        this.ensureNotDeleted();
+
+        if (this.ownerId.equals(userId)) {
+            return true;
+        }
+
+        return this.shares.some(
+            share =>
+                share.sharedUserId.equals(userId) &&
+                (share.isEditable || share.isReadonly)
+        );
     }
 
     /**
@@ -326,31 +342,25 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateEnemyTeamLabel(
+    updateEnemyTeam(
         actorId: UserId,
         enemyTeamId: EnemyTeamId,
-        teamLabel: TeamLabel
+        teamLabel?: TeamLabel,
+        position?: Position
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
 
-        enemyTeam.updateTeamLabel(teamLabel);
-        this._updatedAt = new Date();
-    }
+        if (teamLabel) {
+            enemyTeam.updateTeamLabel(teamLabel);
+        }
 
-    updateEnemyTeamPosition(
-        actorId: UserId,
-        enemyTeamId: EnemyTeamId,
-        position: Position
-    ) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
+        if (position) {
+            enemyTeam.updatePosition(position);
+        }
 
-        const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
-
-        enemyTeam.updatePosition(position);
         this._updatedAt = new Date();
     }
 
@@ -381,32 +391,27 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateCircleCeneterPosition(
+    updateCircle(
         actorId: UserId,
         circleId: CircleId,
-        position: Position
+        position?: Position,
+        phase?: number
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: circle } = this.findCircle(circleId);
 
-        circle.updateCenterPosition(position);
-
-        this._updatedAt = new Date();
-    }
-
-    updateCirclePhase(actorId: UserId, circleId: CircleId, phase: number) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: circle } = this.findCircle(circleId);
-
-        if (circle.phase !== phase) {
-            this.ensureNoDuplicatePhase(phase);
+        if (position) {
+            circle.updateCenterPosition(position);
         }
 
-        circle.updatePhase(phase);
+        if (phase != null) {
+            this.ensureNoDuplicatePhase(phase);
+
+            circle.updatePhase(phase);
+        }
+
         this._updatedAt = new Date();
     }
 
@@ -436,7 +441,7 @@ export class Strategy {
     /**
      * Tags
      */
-    addTag(actorId: UserId, content: string) {
+    addTag(actorId: UserId, content: TagContent) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
@@ -458,24 +463,24 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    updateTagPosition(actorId: UserId, tagId: TagId, position: Position) {
+    updateTag(
+        actorId: UserId,
+        tagId: TagId,
+        content?: TagContent,
+        position?: Position
+    ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: tag } = this.findTag(tagId);
 
-        tag.updatePosition(position);
+        if (content) {
+            tag.updateContent(content);
+        }
 
-        this._updatedAt = new Date();
-    }
-
-    updateTagContent(actorId: UserId, tagId: TagId, content: string) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: tag } = this.findTag(tagId);
-
-        tag.updateContent(content);
+        if (position) {
+            tag.updatePosition(position);
+        }
 
         this._updatedAt = new Date();
     }
@@ -521,16 +526,24 @@ export class Strategy {
     }
 
     /**
-     * Titles
+     * Strategy
      */
-    updateTitle(actorId: UserId, title: string) {
+    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
-        const trimmed = title.trim();
-        if (this._title === trimmed) return;
+        if (title) {
+            if (this._title.equals(title)) return;
 
-        this._title = trimmed;
+            this._title = title;
+        }
+
+        if (map) {
+            if (this._map === map) return;
+
+            this._map = map;
+        }
+
         this._updatedAt = new Date();
     }
 
@@ -571,41 +584,23 @@ export class Strategy {
         this._comments.splice(index, 1);
     }
 
-    updateCommentContent(
+    updateComment(
         actorId: UserId,
         commentId: CommentId,
-        content: CommentContent
+        content?: CommentContent,
+        position?: Position
     ) {
         this.ensureNotDeleted();
 
         const { value: comment } = this.findComment(commentId);
 
-        comment.updateContent(actorId, content);
-    }
+        if (content) {
+            comment.updateContent(actorId, content);
+        }
 
-    updateCommentPosition(
-        actorId: UserId,
-        commentId: CommentId,
-        position: Position
-    ) {
-        this.ensureNotDeleted();
-
-        const { value: comment } = this.findComment(commentId);
-
-        comment.updatePosition(actorId, position);
-    }
-
-    /**
-     * Maps
-     */
-    updateMap(actorId: UserId, map: PubgMap) {
-        this.ensureNotDeleted();
-        this.ensureOwner(actorId);
-
-        if (this._map === map) return;
-
-        this._map = map;
-        this._updatedAt = new Date();
+        if (position) {
+            comment.updatePosition(actorId, position);
+        }
     }
 
     /**

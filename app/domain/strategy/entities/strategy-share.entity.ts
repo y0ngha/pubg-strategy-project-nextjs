@@ -28,6 +28,10 @@ export class StrategyShare {
         return this._permission === 'EDITABLE';
     }
 
+    get isReadonly(): boolean {
+        return this._permission === 'READ_ONLY';
+    }
+
     static create(
         sharedUserId: UserId,
         sharedEmail: Email,

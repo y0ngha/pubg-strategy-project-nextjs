@@ -3,10 +3,12 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { Position } from '@domain/strategy/value-objects/position';
+import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 
 export interface UpdateEnemyTeamRequestDto {
     actorId: string;
     strategyId: string;
+    enemyTeamId: string;
     teamLabel?: string;
     position?: { x: number; y: number };
 }
@@ -18,6 +20,9 @@ export const UpdateEnemyTeamRequestSchema = z
         }),
         strategyId: z.string().transform(value => {
             return StrategyId.create(value);
+        }),
+        enemyTeamId: z.string().transform(value => {
+            return EnemyTeamId.create(value);
         }),
         teamLabel: z
             .string()

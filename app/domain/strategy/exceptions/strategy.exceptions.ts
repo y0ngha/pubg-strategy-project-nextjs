@@ -209,3 +209,21 @@ export class ParentCommentPositionRequiredException extends DomainException {
         super('최상위 댓글에는 위치가 반드시 필요합니다.');
     }
 }
+
+export class StrategyNotFoundException extends DomainException {
+    constructor() {
+        super('전략을 찾을 수 없습니다.');
+    }
+}
+
+export class StrategyTitleBlankException extends DomainException {
+    constructor() {
+        super('전략 제목은 빈 값일 수 없습니다.');
+    }
+}
+
+export class StrategyAccessDeniedException extends DomainException {
+    constructor() {
+        super('전략에 접근할 수 있는 권한이 없습니다.');
+    }
+}
