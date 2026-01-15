@@ -215,3 +215,9 @@ export class StrategyNotFoundException extends DomainException {
         super('전략을 찾을 수 없습니다.');
     }
 }
+
+export class StrategyTitleBlankException extends DomainException {
+    constructor() {
+        super('전략 제목은 빈 값일 수 없습니다.');
+    }
+}
