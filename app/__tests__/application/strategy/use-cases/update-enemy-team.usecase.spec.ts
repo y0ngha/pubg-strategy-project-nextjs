@@ -142,7 +142,7 @@ describe('UpdateEnemyTeamUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
-        expect(enemyTeam?.teamLabel.toString()).not.toEqual(oldTeamLabel);
+        expect(enemyTeam?.teamLabel).not.toEqual(oldTeamLabel);
         expect(enemyTeam?.teamLabel.toString()).toEqual(dto.teamLabel);
         expect(enemyTeam?.position).toEqual(oldPosition);
     });
@@ -177,9 +177,7 @@ describe('UpdateEnemyTeamUseCase', () => {
 
         expect(enemyTeam?.position).not.toEqual(oldPosition);
         expect(enemyTeam?.position).toEqual(dto.position);
-        expect(enemyTeam?.teamLabel.toString()).toEqual(
-            oldTeamLabel?.toString()
-        );
+        expect(enemyTeam?.teamLabel).toEqual(oldTeamLabel);
     });
 
     it('적 팀 업데이트시 업데이트할 속성을 보내지 않으면, 에러를 던진다.', async () => {
