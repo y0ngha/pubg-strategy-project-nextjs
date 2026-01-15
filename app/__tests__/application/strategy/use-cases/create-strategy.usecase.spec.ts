@@ -39,7 +39,7 @@ describe('CreateStrategyUseCase', () => {
 
         const savedStrategy = mockStrategyRepository.save.mock.calls[0][0];
 
-        expect(savedStrategy.title).toEqual(dto.title);
+        expect(savedStrategy.title.toString()).toEqual(dto.title);
         expect(savedStrategy.map).toEqual(dto.map);
         expect(savedStrategy.ownerId.toString()).toEqual(dto.actorId);
     });
