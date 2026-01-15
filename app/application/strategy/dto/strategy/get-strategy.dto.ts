@@ -26,68 +26,68 @@ export const GetStrategiesRequestSchema = z.object({
     }),
 });
 
-interface Position {
+export interface PositionResponseDto {
     x: number;
     y: number;
 }
 
-interface WaypointResponseDto {
+export interface WaypointResponseDto {
     id: string;
-    positions: Position[];
+    positions: PositionResponseDto[];
 }
 
-interface MarkerResponseDto {
+export interface MarkerResponseDto {
     id: string;
-    position: Position;
+    position: PositionResponseDto;
 }
 
-interface TeamPlayerResponseDto {
+export interface TeamPlayerResponseDto {
     id: string;
     priority: number;
-    position: Position;
+    position: PositionResponseDto;
     color: string;
     marker?: MarkerResponseDto;
     waypoint?: WaypointResponseDto;
 }
 
-interface EnemyTeamResponseDto {
+export interface EnemyTeamResponseDto {
     id: string;
     teamLabel: string;
-    position: Position;
+    position: PositionResponseDto;
 }
 
-interface CircleResponseDto {
+export interface CircleResponseDto {
     id: string;
-    centerPosition: Position;
+    centerPosition: PositionResponseDto;
     phase: number;
     radius: number;
     color: string;
 }
 
-interface AirplanePathResponseDto {
+export interface AirplanePathResponseDto {
     id: string;
-    startPosition: Position;
-    endPosition: Position;
+    startPosition: PositionResponseDto;
+    endPosition: PositionResponseDto;
 }
 
-interface TagResponseDto {
+export interface TagResponseDto {
     id: string;
-    position: Position;
+    position: PositionResponseDto;
     content: string;
 }
 
-interface StrategyShareResponseDto {
+export interface StrategyShareResponseDto {
     id: string;
     sharedUserId: string;
     sharedEmail: string;
     permission: string;
 }
 
-interface CommentResponseDto {
+export interface CommentResponseDto {
     id: string;
     authorId: string;
     authorEmail: string;
-    position: Position;
+    position: PositionResponseDto;
     content: string;
     childComments: Omit<CommentResponseDto, 'position'>;
 }
