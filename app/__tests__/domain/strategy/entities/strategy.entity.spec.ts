@@ -2022,8 +2022,9 @@ describe('Strategy', () => {
             });
         });
 
-        describe('UpdateCommentContent', () => {
+        describe('UpdateComment', () => {
             const newContent = CommentContent.create('새로운 내용');
+            const newPosition = Position.create(300, 300);
 
             it('댓글 작성자라면, 내용이 업데이트된다.', () => {
                 // given
@@ -2031,10 +2032,11 @@ describe('Strategy', () => {
                     parentCommentFixutre;
 
                 // when
-                strategyFixture.updateCommentContent(
+                strategyFixture.updateComment(
                     ownerId,
                     commentId,
-                    newContent
+                    newContent,
+                    undefined
                 );
 
                 // then
@@ -2044,63 +2046,16 @@ describe('Strategy', () => {
                 expect(parentCommentFixutre.content).toEqual(newContent);
             });
 
-            it('댓글 작성자가 아니라면, 에러를 던진다.', () => {
-                // give
-                const commentId = parentCommentFixutre.id;
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateCommentContent(
-                        editorId,
-                        commentId,
-                        newContent
-                    )
-                ).toThrow(InvalidAuthorException);
-
-                expect(() =>
-                    strategyFixture.updateCommentContent(
-                        viewerId,
-                        commentId,
-                        newContent
-                    )
-                ).toThrow(InvalidAuthorException);
-
-                expect(() =>
-                    strategyFixture.updateCommentContent(
-                        strangerId,
-                        commentId,
-                        newContent
-                    )
-                ).toThrow(InvalidAuthorException);
-            });
-
-            it('삭제된 전략이라면, 에러를 던진다.', () => {
-                // give
-                const commentId = parentCommentFixutre.id;
-                strategyFixture.delete(ownerId);
-
-                // when & then
-                expect(() =>
-                    strategyFixture.updateCommentContent(
-                        ownerId,
-                        commentId,
-                        newContent
-                    )
-                ).toThrow(DeletedStrategyException);
-            });
-        });
-
-        describe('UpdateCommentPosition', () => {
-            const newPosition = Position.create(300, 300);
             it('댓글 작성자라면, 위치가 업데이트된다.', () => {
                 // given
                 const commentId = parentCommentFixutre.id;
                 const oldPosistion = parentCommentFixutre.position;
 
                 // when
-                strategyFixture.updateCommentPosition(
+                strategyFixture.updateComment(
                     ownerId,
                     commentId,
+                    undefined,
                     newPosition
                 );
 
@@ -2119,13 +2074,33 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateCommentPosition(
+                    strategyFixture.updateComment(
                         editorId,
                         commentId,
-                        newPosition
+                        newContent,
+                        undefined
+                    )
+                ).toThrow(InvalidAuthorException);
+
+                expect(() =>
+                    strategyFixture.updateComment(
+                        viewerId,
+                        commentId,
+                        newContent,
+                        undefined
+                    )
+                ).toThrow(InvalidAuthorException);
+
+                expect(() =>
+                    strategyFixture.updateComment(
+                        strangerId,
+                        commentId,
+                        newContent,
+                        undefined
                     )
                 ).toThrow(InvalidAuthorException);
             });
+
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
                 const commentId = parentCommentFixutre.id;
@@ -2133,10 +2108,11 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.updateCommentPosition(
+                    strategyFixture.updateComment(
                         ownerId,
                         commentId,
-                        newPosition
+                        newContent,
+                        undefined
                     )
                 ).toThrow(DeletedStrategyException);
             });
