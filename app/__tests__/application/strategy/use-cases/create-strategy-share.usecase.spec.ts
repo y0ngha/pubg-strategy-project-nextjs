@@ -75,7 +75,7 @@ describe('CreateStrategyShareUseCase', () => {
             StrategyNotFoundException
         );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
+        expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(0);
     });
 
     it('유저를 찾지 못하면, 에러를 던진다.', async () => {
