@@ -10,6 +10,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { Position } from '@domain/strategy/value-objects/position';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('AddMarkerUseCase', () => {
     let useCase: AddMarkerUseCase;
@@ -24,7 +25,7 @@ describe('AddMarkerUseCase', () => {
     const positionY = 200;
     const position = { x: positionX, y: positionY };
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

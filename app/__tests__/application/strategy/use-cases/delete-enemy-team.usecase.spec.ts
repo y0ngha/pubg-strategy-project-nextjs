@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/delete-enemy-team.usecase';
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteEnemyTeamUseCase', () => {
     let useCase: DeleteEnemyTeamUseCase;
@@ -21,7 +22,7 @@ describe('DeleteEnemyTeamUseCase', () => {
     let strategyId: StrategyId;
     let enemyTeamId: EnemyTeamId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

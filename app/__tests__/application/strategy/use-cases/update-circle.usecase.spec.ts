@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
 import { ZodError } from 'zod';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('UpdateCircleUseCase', () => {
     let useCase: UpdateCircleUseCase;
@@ -21,7 +22,7 @@ describe('UpdateCircleUseCase', () => {
     let strategyId: StrategyId;
     let circleId: CircleId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

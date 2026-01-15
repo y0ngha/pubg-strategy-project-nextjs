@@ -6,6 +6,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { Position } from '@domain/strategy/value-objects/position';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteAirplanePathUseCase', () => {
     let useCase: DeleteAirplanePathUseCase;
@@ -16,7 +17,7 @@ describe('DeleteAirplanePathUseCase', () => {
 
     let strategyId: StrategyId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

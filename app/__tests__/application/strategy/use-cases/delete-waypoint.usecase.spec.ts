@@ -10,6 +10,7 @@ import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { Position } from '@domain/strategy/value-objects/position';
 import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteWaypointUseCase', () => {
     let useCase: DeleteWaypointUseCase;
@@ -21,7 +22,7 @@ describe('DeleteWaypointUseCase', () => {
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

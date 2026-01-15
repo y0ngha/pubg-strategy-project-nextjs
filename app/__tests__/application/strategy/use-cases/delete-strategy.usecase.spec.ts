@@ -8,6 +8,7 @@ import {
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteStrategyUseCase', () => {
     let useCase: DeleteStrategyUseCase;
@@ -17,7 +18,7 @@ describe('DeleteStrategyUseCase', () => {
     let strategyId: StrategyId;
 
     const ownerId = UserId.generate();
-    const title = '전략 생성 테스트';
+    const title = StrategyTitle.create('전략 생성 테스트');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

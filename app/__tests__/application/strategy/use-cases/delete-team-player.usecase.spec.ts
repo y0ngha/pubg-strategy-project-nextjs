@@ -21,7 +21,7 @@ describe('DeleteTeamPlayerUseCase', () => {
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteTagUseCase', () => {
     let useCase: DeleteTagUseCase;
@@ -21,7 +22,7 @@ describe('DeleteTagUseCase', () => {
     let strategyId: StrategyId;
     let tagId: TagId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

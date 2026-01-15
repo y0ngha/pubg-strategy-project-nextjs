@@ -11,6 +11,7 @@ import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
 import { ZodError } from 'zod';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('UpdateTagUseCase', () => {
     let useCase: UpdateTagUseCase;
@@ -22,7 +23,7 @@ describe('UpdateTagUseCase', () => {
     let strategyId: StrategyId;
     let tagId: TagId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
