@@ -21,14 +21,13 @@ export class CreateStrategyShareUseCase {
         const { actorId, strategyId, targetUserId, permission } =
             CreateStrategyShareRequestSchema.parse(dto);
 
-        const [strategy, user] = await Promise.all([
-            await this.strategyRepository.findById(strategyId),
-            await this.userRepository.findByUserId(targetUserId),
-        ]);
+        const strategy = await this.strategyRepository.findById(strategyId);
 
         if (!strategy) {
             throw new StrategyNotFoundException();
         }
+
+        const user = await this.userRepository.findByUserId(targetUserId);
 
         if (!user) {
             throw new UserNotFoundException();
