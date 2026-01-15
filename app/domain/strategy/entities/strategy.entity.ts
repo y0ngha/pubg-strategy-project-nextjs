@@ -512,7 +512,7 @@ export class Strategy {
     }
 
     /**
-     * Titles
+     * Strategy
      */
     update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
