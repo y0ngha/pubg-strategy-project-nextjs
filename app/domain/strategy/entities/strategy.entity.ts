@@ -202,6 +202,21 @@ export class Strategy {
         this._isDeleted = true;
     }
 
+    isAccessibleByUserId(userId: UserId): boolean {
+        this.ensureNotDeleted();
+
+        console.log(userId);
+        if (this.ownerId.equals(userId)) {
+            return true;
+        }
+
+        return this.shares.some(
+            share =>
+                share.sharedUserId.equals(userId) &&
+                (share.isEditable || share.isReadonly)
+        );
+    }
+
     /**
      * Team Players
      */

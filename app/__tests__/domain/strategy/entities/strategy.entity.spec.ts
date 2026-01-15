@@ -311,6 +311,36 @@ describe('Strategy', () => {
         });
     });
 
+    describe('isAccessibleByUserId', () => {
+        it('자기 자신의 전략인 경우 접근 가능(True)을 반환한다.', () => {
+            // when & then
+            expect(strategyFixture.isAccessibleByUserId(ownerId)).toBeTruthy();
+        });
+
+        it('공유 받은 전략인 경우 권한에 상관 없이 접근 가능(True)을 반환한다.', () => {
+            // when & then
+            expect(strategyFixture.isAccessibleByUserId(editorId)).toBeTruthy();
+
+            expect(strategyFixture.isAccessibleByUserId(viewerId)).toBeTruthy();
+        });
+
+        it('공유 받은 전략이 아닌 경우 접근 불가(False)를 반환한다.', () => {
+            expect(
+                strategyFixture.isAccessibleByUserId(strangerId)
+            ).toBeFalsy();
+        });
+
+        it('삭제된 전략이라면, 에러를 던진다.', () => {
+            // give
+            strategyFixture.delete(ownerId);
+
+            // when & then
+            expect(() => strategyFixture.isAccessibleByUserId(ownerId)).toThrow(
+                DeletedStrategyException
+            );
+        });
+    });
+
     describe('TeamPlayer', () => {
         describe('AddTeamPlayer', () => {
             it('팀 플레이어가 4명 이하이고, 편집 권한이 있으면 추가된다.', () => {
