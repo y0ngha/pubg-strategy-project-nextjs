@@ -3,8 +3,8 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
 import {
+    DeletedStrategyException,
     StrategyNotFoundException,
-    StrategyPermissionDeniedException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
@@ -73,8 +73,10 @@ describe('DeleteStrategyUseCase', () => {
 
     it('도메인 엔티티에서 예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
         // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
         jest.spyOn(mockStrategyRepository, 'delete').mockImplementation(() => {
-            throw new StrategyPermissionDeniedException();
+            throw new DeletedStrategyException();
         });
 
         const dto = {
@@ -83,6 +85,8 @@ describe('DeleteStrategyUseCase', () => {
         };
 
         //when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            DeletedStrategyException
+        );
     });
 });
