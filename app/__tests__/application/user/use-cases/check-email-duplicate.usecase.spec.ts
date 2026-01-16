@@ -43,4 +43,16 @@ describe('CheckEmailDuplicate', () => {
         expect(mockUserRepository.existsByEmail).toHaveBeenCalledTimes(1);
         expect(result).toBeFalsy();
     });
+
+    it('Repository에서 에러 발생시 에러를 전파한다', async () => {
+        // Given
+        const dto = {
+            email: 'email@domain.com',
+        };
+
+        mockUserRepository.existsByEmail.mockRejectedValue(new Error());
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(Error);
+    });
 });
