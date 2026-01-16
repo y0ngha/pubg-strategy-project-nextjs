@@ -30,7 +30,7 @@ describe('LogoutUseCase', () => {
             expect(result).toBeTruthy();
         });
 
-        it('로그아웃 실패 시 에러를 전파한다', async () => {
+        it('인증 서비스에서 에러 발생시 에러를 전파한다', async () => {
             // Given
             const dto = {
                 id: '550e8400-e29b-41d4-a716-446655440000',
