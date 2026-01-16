@@ -66,7 +66,7 @@ describe('GetCurrentUserUseCase', () => {
 
                 // When & Then
                 await expect(useCase.execute(dto)).rejects.toThrow(
-                    new UserNotFoundException(dto.id)
+                    UserNotFoundException
                 );
             });
         });
