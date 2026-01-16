@@ -1,5 +1,6 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -179,5 +180,28 @@ describe('AddWaypointUseCase', () => {
         expect(teamPlayer?.waypoint).toBeDefined();
         expect(addedPositions).not.toEqual(oldPositions);
         expect(addedPositions).toEqual(positions);
+    });
+
+    it('에러 발생시 에러를 전파한다', async () => {
+        // Given
+        jest.spyOn(strategyFixture, 'addTeamPlayerWaypoint').mockImplementation(
+            () => {
+                throw new StrategyEditPermissionDeniedException();
+            }
+        );
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            positions: positions,
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyEditPermissionDeniedException
+        );
     });
 });
