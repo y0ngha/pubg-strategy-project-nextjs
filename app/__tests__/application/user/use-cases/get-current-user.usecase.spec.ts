@@ -54,16 +54,24 @@ describe('GetCurrentUserUseCase', () => {
                     id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
                 };
 
-                mockUserRepository.findByUserId.mockImplementation(
-                    async (): Promise<User | null> => {
-                        return null;
-                    }
-                );
+                mockUserRepository.findByUserId.mockResolvedValue(null);
 
                 // When & Then
                 await expect(useCase.execute(dto)).rejects.toThrow(
                     UserNotFoundException
                 );
+            });
+
+            it('Repository에서 에러 발생시 에러를 전파한다', async () => {
+                // Given
+                const dto = {
+                    id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
+                };
+
+                mockUserRepository.findByUserId.mockRejectedValue(new Error());
+
+                // When & Then
+                await expect(useCase.execute(dto)).rejects.toThrow(Error);
             });
         });
     });
