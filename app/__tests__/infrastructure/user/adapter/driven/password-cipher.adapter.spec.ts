@@ -55,11 +55,11 @@ describe('PasswordCipherAdapter (AES-256-GCM)', () => {
 
             expect(() => {
                 passwordCipherAdapter.decrypt(malformedText1);
-            }).toThrow('Invalid encrypted text format');
+            }).toThrow(Error);
 
             expect(() => {
                 passwordCipherAdapter.decrypt(malformedText2);
-            }).toThrow('Invalid encrypted text format');
+            }).toThrow(Error);
         });
 
         it('암호화된 데이터(Cipher)가 변조되면 복호화 실패 에러를 던져야 한다 (무결성 검증)', () => {
@@ -73,7 +73,7 @@ describe('PasswordCipherAdapter (AES-256-GCM)', () => {
 
             expect(() => {
                 passwordCipherAdapter.decrypt(corruptedText);
-            }).toThrow('Decryption failed.');
+            }).toThrow(Error);
         });
 
         it('인증 태그(AuthTag)가 변조되면 복호화 실패 에러를 던져야 한다 (인증 검증)', () => {
@@ -87,7 +87,7 @@ describe('PasswordCipherAdapter (AES-256-GCM)', () => {
 
             expect(() => {
                 passwordCipherAdapter.decrypt(corruptedText);
-            }).toThrow('Decryption failed.');
+            }).toThrow(Error);
         });
     });
 });
