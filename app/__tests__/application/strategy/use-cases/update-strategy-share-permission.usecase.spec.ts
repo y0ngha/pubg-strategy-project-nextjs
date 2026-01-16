@@ -1,6 +1,7 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     StrategyNotFoundException,
+    StrategyPermissionDeniedException,
     StrategyShareNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
@@ -107,5 +108,29 @@ describe('UpdateStrategySharePermissionUseCase', () => {
         );
 
         expect(strategyShare?.permission).toEqual(dto.permission);
+    });
+
+    it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+        // Given
+        jest.spyOn(
+            strategyFixture,
+            'updateStrategySharePermission'
+        ).mockImplementation(() => {
+            throw new StrategyPermissionDeniedException();
+        });
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            strategyShareId: strategyShareId.toString(),
+            permission: StrategySharePermission.EDITABLE,
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyPermissionDeniedException
+        );
     });
 });

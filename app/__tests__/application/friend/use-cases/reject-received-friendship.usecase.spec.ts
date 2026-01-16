@@ -21,8 +21,17 @@ describe('RejectReceivedFriendshipUseCase', () => {
     const requesterUserEmail = 'requester@domain.com';
     const recipientUserEmail = 'recipient@domain.com';
 
+    let friendFixture: Friend;
+
     beforeEach(() => {
         mockFriendRepository = getFriendRepositoryMocking();
+
+        friendFixture = Friend.create(
+            UserId.create(requesterUserId),
+            UserId.create(recipientUserId),
+            Email.create(requesterUserEmail),
+            Email.create(recipientUserEmail)
+        );
 
         useCase = new RejectReceivedFriendshipUseCase(mockFriendRepository);
     });
@@ -30,16 +39,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
     describe('성공 테스트', () => {
         it('친구 관계가 존재하고, 받은 사람이 본인이며, 친구 상태가 PENDING일 때 성공한다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -63,11 +63,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
     describe('실패 테스트', () => {
         it('친구 관계가 없을 때 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return null;
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(null);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -84,16 +80,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('본인이 받은 요청이 아닌 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -111,20 +98,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 수락된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-
-                    friend.accept(UserId.create(recipientUserId));
-
-                    return friend;
-                }
-            );
+            friendFixture.accept(UserId.create(recipientUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -142,19 +117,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 거절된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                    friend.reject(UserId.create(recipientUserId));
-
-                    return friend;
-                }
-            );
+            friendFixture.reject(UserId.create(recipientUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -172,19 +136,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 취소된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                    friend.cancel(UserId.create(requesterUserId));
-
-                    return friend;
-                }
-            );
+            friendFixture.cancel(UserId.create(requesterUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -198,6 +151,25 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
+        });
+
+        it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+            // given
+            jest.spyOn(friendFixture, 'reject').mockImplementation(() => {
+                throw new FriendshipUpdateInvalidPermission();
+            });
+
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
+
+            const dto = {
+                id: '869215ed-3baf-4abb-a511-b164f0cc716e',
+                userId: recipientUserId,
+            };
+
+            //when & then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(
+                FriendshipUpdateInvalidPermission
+            );
         });
     });
 });

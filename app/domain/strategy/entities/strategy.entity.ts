@@ -430,7 +430,7 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
-    deleteAirplanePath(actorId: UserId) {
+    removeAirplanePath(actorId: UserId) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 

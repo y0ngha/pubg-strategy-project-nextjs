@@ -1,5 +1,6 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -104,5 +105,28 @@ describe('DeleteMarkerUseCase', () => {
         );
 
         expect(teamPlayer?.marker).toBeNull();
+    });
+
+    it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+        // Given
+        jest.spyOn(
+            strategyFixture,
+            'removeTeamPlayerMarker'
+        ).mockImplementation(() => {
+            throw new StrategyEditPermissionDeniedException();
+        });
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyEditPermissionDeniedException
+        );
     });
 });

@@ -203,7 +203,7 @@ describe('UpdateCommentUseCase', () => {
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(0);
     });
 
-    it('도메인 엔티티에서 예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
+    it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // given
         jest.spyOn(strategyFixture, 'updateComment').mockImplementation(() => {
             throw new ChildCommentException();

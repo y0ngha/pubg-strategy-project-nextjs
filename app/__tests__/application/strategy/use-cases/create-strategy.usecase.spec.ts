@@ -42,9 +42,9 @@ describe('CreateStrategyUseCase', () => {
 
     it('예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
         // given
-        jest.spyOn(mockStrategyRepository, 'save').mockImplementation(() => {
-            throw new Error();
-        });
+        jest.spyOn(mockStrategyRepository, 'save').mockRejectedValue(
+            new Error()
+        );
 
         const dto = {
             actorId: ownerId.toString(),

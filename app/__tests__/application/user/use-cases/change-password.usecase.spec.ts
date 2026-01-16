@@ -3,11 +3,8 @@ import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 import { ChangePasswordUseCase } from '@/application/user/use-cases/change-password.usecase';
 import { PasswordValidatorService } from '@domain/user/services/password-validator.service';
 import { ChangePasswordRequestSchema } from '@/application/user/dto/change-password.dto';
-import { UserId } from '@domain/shared/value-objects/user-id';
 import { User } from '@domain/user/entities/user.entity';
 import { Email } from '@domain/shared/value-objects/email';
-import { Password } from '@domain/user/value-objects/password';
-import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 import {
     ChangePasswordException,
     InvalidPasswordException,
@@ -17,6 +14,7 @@ import {
     getPasswordCipherMocking,
     getPasswordValidatorServiceMocking,
 } from '@/__tests__/application/helpers/service-mocking.helpers';
+import { Password } from '@domain/user/value-objects/password';
 
 describe('ChangePasswordUseCase', () => {
     let useCase: ChangePasswordUseCase;
@@ -24,11 +22,11 @@ describe('ChangePasswordUseCase', () => {
     let mockPasswordCipher: jest.Mocked<PasswordCipherPort>;
     let mockPasswordValidatorService: jest.Mocked<PasswordValidatorService>;
 
+    let userFixture: User;
+
     beforeEach(() => {
         mockUserRepository = getUserRepositoryMocking();
-
         mockPasswordCipher = getPasswordCipherMocking();
-
         mockPasswordValidatorService = getPasswordValidatorServiceMocking();
 
         useCase = new ChangePasswordUseCase(
@@ -37,18 +35,12 @@ describe('ChangePasswordUseCase', () => {
             mockPasswordValidatorService
         );
 
-        mockUserRepository.findByUserId.mockImplementation(
-            async (id: UserId): Promise<User | null> => {
-                return User.reconstruct(
-                    id,
-                    Email.create('test@domain.com'),
-                    Password.reconstruct('encrypted:Abcd1234@'),
-                    AuthProvider.EMAIL,
-                    new Date(),
-                    new Date()
-                );
-            }
+        userFixture = User.createWithEmail(
+            Email.create('test@domain.com'),
+            Password.reconstruct('encrypted:Abcd1234@')
         );
+
+        mockUserRepository.findByUserId.mockResolvedValue(userFixture);
 
         mockPasswordCipher.encrypt.mockImplementation(value => {
             return `encrypted:${value}`;
@@ -139,6 +131,20 @@ describe('ChangePasswordUseCase', () => {
             expect(() => {
                 ChangePasswordRequestSchema.parse(dto);
             }).toThrow(InvalidPasswordException);
+        });
+
+        it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+            // Given
+            const dto = {
+                id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
+                currentPassword: 'Abcd1234@',
+                newPassword: 'test1234!',
+            };
+
+            mockUserRepository.findByUserId.mockRejectedValue(new Error());
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
         });
     });
 });

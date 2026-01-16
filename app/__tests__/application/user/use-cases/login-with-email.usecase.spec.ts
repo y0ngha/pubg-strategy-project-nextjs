@@ -62,5 +62,18 @@ describe('LoginWithEmailUseCase', () => {
 
             expect(result).toBeFalsy();
         });
+
+        it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+            // Given
+            const dto = {
+                email: 'test@test.com',
+                password: 'Abcd1234!',
+            };
+
+            mockAuthenticationService.login.mockRejectedValue(new Error());
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
+        });
     });
 });

@@ -137,23 +137,7 @@ describe('RegisterWithEmailUseCase', () => {
         });
 
         describe('에러 처리', () => {
-            it('Repository 저장 실패 시 에러를 전파한다', async () => {
-                // Given
-                const dto = {
-                    email: 'test@example.com',
-                    password: 'Asdf1234!',
-                };
-
-                mockUserRepository.existsByEmail.mockResolvedValue(false);
-                mockUserRepository.save.mockRejectedValue(
-                    new Error('Internal error')
-                );
-
-                // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(Error);
-            });
-
-            it('Repository 조회 실패 시 에러를 전파한다', async () => {
+            it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
                 // Given
                 const dto = {
                     email: 'test@example.com',
