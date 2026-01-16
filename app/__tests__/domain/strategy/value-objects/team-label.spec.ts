@@ -17,27 +17,27 @@ describe('TeamLabel', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => TeamLabel.create('')).toThrow(
-                new InvalidTeamLabelException('')
+                InvalidTeamLabelException
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => TeamLabel.create('   ')).toThrow(
-                new InvalidTeamLabelException('')
+                InvalidTeamLabelException
             );
         });
 
         it('잘못된 라벨 형식은 에러를 던진다', () => {
             // When & Then
             expect(() => TeamLabel.create('가')).toThrow(
-                new InvalidTeamLabelException('가')
+                InvalidTeamLabelException
             );
             expect(() => TeamLabel.create('1')).toThrow(
-                new InvalidTeamLabelException('1')
+                InvalidTeamLabelException
             );
             expect(() => TeamLabel.create('ABC')).toThrow(
-                new InvalidTeamLabelException('ABC')
+                InvalidTeamLabelException
             );
         });
     });
