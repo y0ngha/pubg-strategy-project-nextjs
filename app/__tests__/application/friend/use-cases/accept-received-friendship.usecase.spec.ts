@@ -168,4 +168,23 @@ describe('AcceptReceivedFriendshipUseCase', () => {
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
         });
     });
+
+    it('도메인 엔티티에서 예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
+        // given
+        jest.spyOn(friendFixture, 'accept').mockImplementation(() => {
+            throw new FriendshipUpdateInvalidPermission();
+        });
+
+        mockFriendRepository.findById.mockResolvedValue(friendFixture);
+
+        const dto = {
+            id: '869215ed-3baf-4abb-a511-b164f0cc716e',
+            userId: recipientUserId,
+        };
+
+        //when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            FriendshipUpdateInvalidPermission
+        );
+    });
 });
