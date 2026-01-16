@@ -1369,7 +1369,7 @@ describe('Strategy', () => {
                 );
 
                 // when
-                strategyFixture.deleteAirplanePath(editorId);
+                strategyFixture.removeAirplanePath(editorId);
 
                 // then
                 expect(strategyFixture.airplanePath).toBeNull();
@@ -1378,11 +1378,11 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.deleteAirplanePath(viewerId)
+                    strategyFixture.removeAirplanePath(viewerId)
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.deleteAirplanePath(strangerId)
+                    strategyFixture.removeAirplanePath(strangerId)
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1392,7 +1392,7 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.deleteAirplanePath(ownerId)
+                    strategyFixture.removeAirplanePath(ownerId)
                 ).toThrow(DeletedStrategyException);
             });
         });
