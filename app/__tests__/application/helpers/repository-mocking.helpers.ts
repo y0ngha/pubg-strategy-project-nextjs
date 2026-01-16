@@ -11,7 +11,7 @@ export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> 
         findAcceptedFriendsByUserId: jest.fn(),
         findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
         findSentFriendshipRequestsByRequesterUserId: jest.fn(),
-    } as jest.Mocked<FriendRepositoryPort>;
+    };
 }
 
 export function getUserRepositoryMocking(): jest.Mocked<UserRepositoryPort> {
@@ -20,7 +20,7 @@ export function getUserRepositoryMocking(): jest.Mocked<UserRepositoryPort> {
         findByUserId: jest.fn(),
         delete: jest.fn(),
         existsByEmail: jest.fn(),
-    } as jest.Mocked<UserRepositoryPort>;
+    };
 }
 
 export function getStrategyRepositoryMocking(): jest.Mocked<StrategyRepositoryPort> {
@@ -30,5 +30,5 @@ export function getStrategyRepositoryMocking(): jest.Mocked<StrategyRepositoryPo
         findById: jest.fn(),
         findOwnedStrategiesByUserID: jest.fn(),
         findSharedStrategiesByUserID: jest.fn(),
-    } as jest.Mocked<StrategyRepositoryPort>;
+    };
 }

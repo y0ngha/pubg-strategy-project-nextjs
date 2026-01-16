@@ -7,13 +7,13 @@ export function getPasswordCipherMocking(): jest.Mocked<PasswordCipherPort> {
     return {
         encrypt: jest.fn(),
         decrypt: jest.fn(),
-    } as jest.Mocked<PasswordCipherPort>;
+    };
 }
 
 export function getPasswordValidatorServiceMocking(): jest.Mocked<PasswordValidatorService> {
     return {
         validate: jest.fn(),
-    } as jest.Mocked<PasswordValidatorService>;
+    };
 }
 
 export function getAuthenticationServiceMocking(): jest.Mocked<AuthenticationServicePort> {
@@ -21,11 +21,11 @@ export function getAuthenticationServiceMocking(): jest.Mocked<AuthenticationSer
         login: jest.fn(),
         logout: jest.fn(),
         googleLogin: jest.fn(),
-    } as jest.Mocked<AuthenticationServicePort>;
+    };
 }
 
 export function getGoogleAuthServiceMocking(): jest.Mocked<GoogleAuthServicePort> {
     return {
         getToken: jest.fn(),
-    } as jest.Mocked<GoogleAuthServicePort>;
+    };
 }
