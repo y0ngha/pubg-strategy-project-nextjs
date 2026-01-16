@@ -29,5 +29,17 @@ describe('LogoutUseCase', () => {
 
             expect(result).toBeTruthy();
         });
+
+        it('로그아웃 실패 시 에러를 전파한다', async () => {
+            // Given
+            const dto = {
+                id: '550e8400-e29b-41d4-a716-446655440000',
+            };
+
+            mockAuthenticationService.logout.mockRejectedValue(new Error());
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
+        });
     });
 });
