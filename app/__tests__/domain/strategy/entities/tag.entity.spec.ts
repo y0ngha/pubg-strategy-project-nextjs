@@ -126,9 +126,7 @@ describe('Tag', () => {
 
             // then
             expect(tag.content).toEqual(oldContent);
-            expect(tag.updatedAt.getTime()).toBeGreaterThan(
-                oldUpdatedAt.getTime()
-            );
+            expect(tag.updatedAt.getTime()).toEqual(oldUpdatedAt.getTime());
         });
     });
 
