@@ -12,6 +12,7 @@ import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { ZodError } from 'zod';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('UpdateEnemyTeamUseCase', () => {
     let useCase: UpdateEnemyTeamUseCase;
@@ -27,13 +28,7 @@ describe('UpdateEnemyTeamUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new UpdateEnemyTeamUseCase(mockStrategyRepository);
 

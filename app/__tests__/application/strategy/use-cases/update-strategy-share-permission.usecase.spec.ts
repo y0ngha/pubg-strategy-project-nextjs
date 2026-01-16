@@ -12,6 +12,7 @@ import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-i
 import { Email } from '@domain/shared/value-objects/email';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('UpdateStrategySharePermissionUseCase', () => {
     let useCase: UpdateStrategySharePermissionUseCase;
@@ -29,13 +30,7 @@ describe('UpdateStrategySharePermissionUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new UpdateStrategySharePermissionUseCase(
             mockStrategyRepository

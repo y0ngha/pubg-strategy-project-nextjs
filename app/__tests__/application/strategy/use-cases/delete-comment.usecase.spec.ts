@@ -13,6 +13,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { Position } from '@domain/strategy/value-objects/position';
 import { Email } from '@domain/shared/value-objects/email';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('DeleteCommentUseCase', () => {
     let useCase: DeleteCommentUseCase;
@@ -29,13 +30,7 @@ describe('DeleteCommentUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new DeleteCommentUseCase(mockStrategyRepository);
 

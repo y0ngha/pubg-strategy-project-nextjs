@@ -7,6 +7,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { Position } from '@domain/strategy/value-objects/position';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('DeleteAirplanePathUseCase', () => {
     let useCase: DeleteAirplanePathUseCase;
@@ -21,13 +22,7 @@ describe('DeleteAirplanePathUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new DeleteAirplanePathUseCase(mockStrategyRepository);
 

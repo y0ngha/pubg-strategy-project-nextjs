@@ -12,6 +12,10 @@ import { User } from '@domain/user/entities/user.entity';
 import { Password } from '@domain/user/value-objects/password';
 import { Email } from '@domain/shared/value-objects/email';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import {
+    getStrategyRepositoryMocking,
+    getUserRepositoryMocking,
+} from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('CreateStrategyShareUseCase', () => {
     let useCase: CreateStrategyShareUseCase;
@@ -30,20 +34,9 @@ describe('CreateStrategyShareUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            delete: jest.fn(),
-            existsByEmail: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
         useCase = new CreateStrategyShareUseCase(
             mockStrategyRepository,
