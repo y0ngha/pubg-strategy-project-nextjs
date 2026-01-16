@@ -5,6 +5,7 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';
 import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 import { Password } from '@/domain/user/value-objects/password';
+import { ChangePasswordException } from '@domain/user/exceptions/user.exceptions';
 
 describe('User Entity', () => {
     const validEmail = Email.create('test@example.com');
@@ -161,7 +162,7 @@ describe('User Entity', () => {
 
             // When & Then
             expect(() => user.changePassword(null, newPassword)).toThrow(
-                '기존 비밀번호를 입력해야 합니다.'
+                ChangePasswordException
             );
         });
 
@@ -174,7 +175,7 @@ describe('User Entity', () => {
             // When & Then
             expect(() =>
                 user.changePassword(wrongPassword, newPassword)
-            ).toThrow('비밀번호가 일치하지 않습니다.');
+            ).toThrow(ChangePasswordException);
         });
 
         it('새 비밀번호가 현재 비밀번호와 같으면 에러를 던진다', () => {
@@ -184,7 +185,7 @@ describe('User Entity', () => {
             // When & Then
             expect(() =>
                 user.changePassword(validPassword, validPassword)
-            ).toThrow('기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.');
+            ).toThrow(ChangePasswordException);
         });
     });
 

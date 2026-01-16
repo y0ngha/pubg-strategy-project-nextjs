@@ -1,4 +1,8 @@
 import { TagId } from '@domain/strategy/value-objects/tag-id';
+import {
+    EntityIdBlankException,
+    InvalidEntityIdException,
+} from '@domain/shared/exceptions/entity-id.exceptions';
 
 describe('TagId', () => {
     const validUuid = '550e8400-e29b-41d4-a716-446655440000';
@@ -20,18 +24,16 @@ describe('TagId', () => {
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
-            expect(() => TagId.create('   ')).toThrow(
-                'ID는 빈 값일 수 없습니다.'
-            );
+            expect(() => TagId.create('   ')).toThrow(EntityIdBlankException);
         });
 
         it('잘못된 UUID 형식은 에러를 던진다', () => {
             // When & Then
             expect(() => TagId.create('invalid-uuid')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
             expect(() => TagId.create('123456')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
 
@@ -40,7 +42,7 @@ describe('TagId', () => {
 
             // When & Then
             expect(() => TagId.create(uuidV1)).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
     });

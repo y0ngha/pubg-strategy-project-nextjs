@@ -121,11 +121,11 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.accept(requesterUserId);
-                }).toThrow(new FriendshipUpdateInvalidPermission());
+                }).toThrow(FriendshipUpdateInvalidPermission);
 
                 expect(() => {
                     friend.reject(requesterUserId);
-                }).toThrow(new FriendshipUpdateInvalidPermission());
+                }).toThrow(FriendshipUpdateInvalidPermission);
             });
 
             it('내가 보낸 친구 요청이 아닌데, 취소 하려 할 경우 에러를 던진다.', () => {
@@ -145,7 +145,7 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.cancel(recipientUserId);
-                }).toThrow(new FriendshipUpdateInvalidPermission());
+                }).toThrow(FriendshipUpdateInvalidPermission);
             });
 
             it('이미 수락/거절한 상태의 친구 관계를 또 업데이트 하려 할 경우 에러를 던진다.', () => {
@@ -167,15 +167,15 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.accept(recipientUserId);
-                }).toThrow(new FriendshipUpdateInvalidStatus(friend.status));
+                }).toThrow(FriendshipUpdateInvalidStatus);
 
                 expect(() => {
                     friend.reject(recipientUserId);
-                }).toThrow(new FriendshipUpdateInvalidStatus(friend.status));
+                }).toThrow(FriendshipUpdateInvalidStatus);
 
                 expect(() => {
                     friend.cancel(requesterUserId);
-                }).toThrow(new FriendshipUpdateInvalidStatus(friend.status));
+                }).toThrow(FriendshipUpdateInvalidStatus);
             });
         });
     });

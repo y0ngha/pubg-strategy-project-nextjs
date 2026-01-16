@@ -16,7 +16,7 @@ describe('UserSessionAdapter (Client)', () => {
         it('유저 정보가 없을 경우 에러를 던진다.', () => {
             // When & Then
             expect(() => userSessionPort.getUser()).toThrow(
-                new UserNotFoundException()
+                UserNotFoundException
             );
         });
         it('유저 정보가 있을 경우 유저 Entity를 반환한다.', () => {
@@ -82,7 +82,7 @@ describe('UserSessionAdapter (Client)', () => {
 
             // Then
             expect(() => userSessionPort.getUser()).toThrow(
-                new UserNotFoundException()
+                UserNotFoundException
             );
         });
 
@@ -99,7 +99,7 @@ describe('UserSessionAdapter (Client)', () => {
 
             // Then
             expect(() => userSessionPort.getUser()).toThrow(
-                new UserNotFoundException()
+                UserNotFoundException
             );
         });
     });

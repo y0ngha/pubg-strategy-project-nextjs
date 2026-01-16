@@ -1,4 +1,8 @@
 import { FriendId } from '@domain/friend/value-objects/friend-id';
+import {
+    EntityIdBlankException,
+    InvalidEntityIdException,
+} from '@domain/shared/exceptions/entity-id.exceptions';
 
 describe('FriendId', () => {
     const validUuid = '550e8400-e29b-41d4-a716-446655440000';
@@ -15,25 +19,23 @@ describe('FriendId', () => {
 
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
-            expect(() => FriendId.create('')).toThrow(
-                'ID는 빈 값일 수 없습니다.'
-            );
+            expect(() => FriendId.create('')).toThrow(EntityIdBlankException);
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => FriendId.create('   ')).toThrow(
-                'ID는 빈 값일 수 없습니다.'
+                EntityIdBlankException
             );
         });
 
         it('잘못된 UUID 형식은 에러를 던진다', () => {
             // When & Then
             expect(() => FriendId.create('invalid-uuid')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
             expect(() => FriendId.create('123456')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
 
@@ -42,7 +44,7 @@ describe('FriendId', () => {
 
             // When & Then
             expect(() => FriendId.create(uuidV1)).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
     });

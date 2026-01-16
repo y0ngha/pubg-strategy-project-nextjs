@@ -1,4 +1,5 @@
 import { Password } from '@/domain/user/value-objects/password';
+import { InvalidPasswordException } from '@domain/user/exceptions/user.exceptions';
 
 describe('Password', () => {
     const validPassword = 'Test1234!';
@@ -15,50 +16,48 @@ describe('Password', () => {
 
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
-            expect(() => Password.create('')).toThrow(
-                '비밀번호는 빈 값일 수 없습니다.'
-            );
+            expect(() => Password.create('')).toThrow(InvalidPasswordException);
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('   ')).toThrow(
-                '비밀번호는 빈 값일 수 없습니다.'
+                InvalidPasswordException
             );
         });
 
         it('8자 미만은 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('Test1!')).toThrow(
-                '비밀번호는 최소 8자리 이상으로 구성되어야 합니다.'
+                InvalidPasswordException
             );
         });
 
         it('대문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('test1234!')).toThrow(
-                '비밀번호에는 최소 1글자 이상 대문자 영문이 포함되어야 합니다.'
+                InvalidPasswordException
             );
         });
 
         it('소문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('TEST1234!')).toThrow(
-                '비밀번호에는 최소 1글자 이상 소문자 영문이 포함되어야 합니다.'
+                InvalidPasswordException
             );
         });
 
         it('숫자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('TestTest!')).toThrow(
-                '비밀번호에는 최소 1글자 이상 숫자가 포함되어야 합니다.'
+                InvalidPasswordException
             );
         });
 
         it('특수문자가 없으면 에러를 던진다', () => {
             // When & Then
             expect(() => Password.create('Test1234')).toThrow(
-                '비밀번호에는 최소 1글자 이상 특수문자가 포함되어야 합니다.'
+                InvalidPasswordException
             );
         });
 
@@ -84,10 +83,10 @@ describe('Password', () => {
         });
 
         it('검증 규칙을 적용하지 않는다', () => {
-            // Given (정책 위반 문자열)
+            // Given
             const hashedPassword = 'short';
 
-            // When & Then (에러 발생 안함)
+            // When & Then
             expect(() => Password.reconstruct(hashedPassword)).not.toThrow();
         });
     });

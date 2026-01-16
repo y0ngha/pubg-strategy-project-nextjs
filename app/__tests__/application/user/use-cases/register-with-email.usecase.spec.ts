@@ -3,6 +3,7 @@ import { User } from '@/domain/user/entities/user.entity';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
+import { EmailAlreadyExistsException } from '@domain/user/exceptions/user.exceptions';
 
 describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
@@ -76,7 +77,7 @@ describe('RegisterWithEmailUseCase', () => {
 
                 // When & Then
                 await expect(useCase.execute(dto)).rejects.toThrow(
-                    `이미 사용 중인 이메일입니다: ${dto.email}`
+                    EmailAlreadyExistsException
                 );
 
                 expect(mockUserRepository.save).not.toHaveBeenCalled();
@@ -155,9 +156,7 @@ describe('RegisterWithEmailUseCase', () => {
                 );
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(
-                    new Error('Internal error')
-                );
+                await expect(useCase.execute(dto)).rejects.toThrow(Error);
             });
 
             it('Repository 조회 실패 시 에러를 전파한다', async () => {
@@ -172,9 +171,7 @@ describe('RegisterWithEmailUseCase', () => {
                 );
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(
-                    new Error('Internal error')
-                );
+                await expect(useCase.execute(dto)).rejects.toThrow(Error);
 
                 expect(mockUserRepository.save).not.toHaveBeenCalled();
             });

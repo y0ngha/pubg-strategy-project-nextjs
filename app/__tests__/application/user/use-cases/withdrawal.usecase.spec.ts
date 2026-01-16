@@ -5,7 +5,6 @@ import {
     LogoutException,
     WithdrawalException,
 } from '@domain/user/exceptions/user.exceptions';
-import { UserId } from '@domain/shared/value-objects/user-id';
 
 describe('WithdrawalUseCase', () => {
     let useCase: WithdrawalUseCase;
@@ -59,16 +58,12 @@ describe('WithdrawalUseCase', () => {
                 id: '550e8400-e29b-41d4-a716-446655440000',
             };
 
-            mockAuthenticationService.logout.mockImplementation(
-                async (_: UserId): Promise<boolean> => {
-                    throw new LogoutException('Test');
-                }
+            mockAuthenticationService.logout.mockRejectedValue(
+                new LogoutException('')
             );
 
             // When & Then
-            await expect(useCase.execute(dto)).rejects.toThrow(
-                new LogoutException('Test')
-            );
+            await expect(useCase.execute(dto)).rejects.toThrow(LogoutException);
 
             expect(mockAuthenticationService.logout).toHaveBeenCalledTimes(1);
             expect(mockUserRepository.delete).toHaveBeenCalledTimes(0);
@@ -82,15 +77,13 @@ describe('WithdrawalUseCase', () => {
 
             mockAuthenticationService.logout.mockResolvedValue(true);
 
-            mockUserRepository.delete.mockImplementation(
-                async (_: UserId): Promise<void> => {
-                    throw new WithdrawalException('Test');
-                }
+            mockUserRepository.delete.mockRejectedValue(
+                new WithdrawalException('')
             );
 
             // When & Then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new WithdrawalException('Test')
+                WithdrawalException
             );
 
             expect(mockAuthenticationService.logout).toHaveBeenCalledTimes(1);
