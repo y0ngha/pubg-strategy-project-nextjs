@@ -17,10 +17,27 @@ describe('RequestFriendshipUseCase', () => {
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
+    let requester: User;
+    let recipient: User;
+
     beforeEach(() => {
         mockFriendRepository = getFriendRepositoryMocking();
-
         mockUserRepository = getUserRepositoryMocking();
+
+        requester = User.createWithSSO(Email.create('mockA@fixtures.com'));
+        recipient = User.createWithSSO(Email.create('mockB@fixtures.com'));
+
+        mockUserRepository.findByUserId.mockImplementation(
+            async (id: UserId): Promise<User | null> => {
+                if (id.equals(requester.id)) {
+                    return requester;
+                } else if (id.equals(recipient.id)) {
+                    return recipient;
+                }
+
+                return null;
+            }
+        );
 
         useCase = new RequestFriendshipUseCase(
             mockFriendRepository,
@@ -31,25 +48,6 @@ describe('RequestFriendshipUseCase', () => {
     describe('성공 테스트', () => {
         it('친구 관계가 맺어져있지 않고, 두 유저 모두 존재할 때 친구 요청 보내기는 성공한다.', async () => {
             // give
-            const requester = User.createWithSSO(
-                Email.create('mockA@fixtures.com')
-            );
-            const recipient = User.createWithSSO(
-                Email.create('mockB@fixtures.com')
-            );
-
-            mockUserRepository.findByUserId.mockImplementation(
-                async (id: UserId): Promise<User | null> => {
-                    if (id.equals(requester.id)) {
-                        return requester;
-                    } else if (id.equals(recipient.id)) {
-                        return recipient;
-                    }
-
-                    return null;
-                }
-            );
-
             mockFriendRepository.existsFriendshipBetween.mockResolvedValue(
                 false
             );
@@ -97,25 +95,6 @@ describe('RequestFriendshipUseCase', () => {
 
         it('이미 친구 관계일 때 에러를 던진다.', async () => {
             // give
-            const requester = User.createWithSSO(
-                Email.create('mockA@fixtures.com')
-            );
-            const recipient = User.createWithSSO(
-                Email.create('mockB@fixtures.com')
-            );
-
-            mockUserRepository.findByUserId.mockImplementation(
-                async (id: UserId): Promise<User | null> => {
-                    if (id.equals(requester.id)) {
-                        return requester;
-                    } else if (id.equals(recipient.id)) {
-                        return recipient;
-                    }
-
-                    return null;
-                }
-            );
-
             mockFriendRepository.existsFriendshipBetween.mockResolvedValue(
                 true
             );
@@ -134,6 +113,21 @@ describe('RequestFriendshipUseCase', () => {
                 mockFriendRepository.existsFriendshipBetween
             ).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
+        });
+
+        it('도메인 엔티티에서 예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
+            // given
+            mockFriendRepository.existsFriendshipBetween.mockRejectedValue(
+                new Error()
+            );
+
+            const dto = {
+                requesterUserId: requester.id.toString(),
+                recipientUserId: recipient.id.toString(),
+            };
+
+            //when & then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
         });
     });
 });
