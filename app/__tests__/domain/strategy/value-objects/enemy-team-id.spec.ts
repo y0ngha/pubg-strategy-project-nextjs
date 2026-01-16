@@ -1,4 +1,8 @@
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
+import {
+    EntityIdBlankException,
+    InvalidEntityIdException,
+} from '@domain/shared/exceptions/entity-id.exceptions';
 
 describe('EnemyTeamId', () => {
     const validUuid = '550e8400-e29b-41d4-a716-446655440000';
@@ -16,24 +20,24 @@ describe('EnemyTeamId', () => {
         it('빈 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => EnemyTeamId.create('')).toThrow(
-                'ID는 빈 값일 수 없습니다.'
+                EntityIdBlankException
             );
         });
 
         it('공백만 있는 문자열은 에러를 던진다', () => {
             // When & Then
             expect(() => EnemyTeamId.create('   ')).toThrow(
-                'ID는 빈 값일 수 없습니다.'
+                EntityIdBlankException
             );
         });
 
         it('잘못된 UUID 형식은 에러를 던진다', () => {
             // When & Then
             expect(() => EnemyTeamId.create('invalid-uuid')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
             expect(() => EnemyTeamId.create('123456')).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
 
@@ -42,7 +46,7 @@ describe('EnemyTeamId', () => {
 
             // When & Then
             expect(() => EnemyTeamId.create(uuidV1)).toThrow(
-                'ID는 UUIDv4 형식이어야 합니다.'
+                InvalidEntityIdException
             );
         });
     });
