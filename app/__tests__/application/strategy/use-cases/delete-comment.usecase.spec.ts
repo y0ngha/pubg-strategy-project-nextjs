@@ -12,6 +12,7 @@ import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { Position } from '@domain/strategy/value-objects/position';
 import { Email } from '@domain/shared/value-objects/email';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('DeleteCommentUseCase', () => {
     let useCase: DeleteCommentUseCase;
@@ -24,7 +25,7 @@ describe('DeleteCommentUseCase', () => {
     let strategyId: StrategyId;
     let commentId: CommentId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
