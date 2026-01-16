@@ -12,6 +12,14 @@ describe('EnemyTeam', () => {
     const teamLabel = TeamLabel.create('A');
     const position = Position.create(10, 20);
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('정상적인 팀 라벨과, 포지션으로 생성할 수 있다.', () => {
             // when
@@ -51,12 +59,16 @@ describe('EnemyTeam', () => {
             const newTeamLabel = TeamLabel.create('B');
             const oldUpdatedAt = enemyTeam.updatedAt;
 
+            jest.advanceTimersByTime(1000);
+
             // when
             enemyTeam.updateTeamLabel(newTeamLabel);
 
             // then
             expect(enemyTeam.teamLabel).toEqual(newTeamLabel);
-            expect(enemyTeam.updatedAt).not.toBe(oldUpdatedAt);
+            expect(enemyTeam.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('적 팀 객체가 삭제되어 있지 않고, 동일한 팀 라벨로 업데이트시 에러를 던진다.', () => {
@@ -90,12 +102,16 @@ describe('EnemyTeam', () => {
             const newPosition = Position.create(300, 200);
             const oldUpdatedAt = enemyTeam.updatedAt;
 
+            jest.advanceTimersByTime(1000);
+
             // when
             enemyTeam.updatePosition(newPosition);
 
             // then
             expect(enemyTeam.position).toEqual(newPosition);
-            expect(enemyTeam.updatedAt).not.toBe(oldUpdatedAt);
+            expect(enemyTeam.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('적 팀 객체가 삭제되어 있지 않고, 동일한 포지션으로 업데이트시 에러를 던진다.', () => {
