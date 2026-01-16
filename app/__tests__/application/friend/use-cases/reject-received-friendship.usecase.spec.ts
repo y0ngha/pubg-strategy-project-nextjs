@@ -9,6 +9,7 @@ import {
     FriendshipUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
 import { RejectReceivedFriendshipUseCase } from '@/application/friend/use-cases/reject-received-friendship.usecase';
+import { getFriendRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('RejectReceivedFriendshipUseCase', () => {
     let useCase: RejectReceivedFriendshipUseCase;
@@ -21,15 +22,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
     const recipientUserEmail = 'recipient@domain.com';
 
     beforeEach(() => {
-        mockFriendRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            existsFriendshipBetween: jest.fn(),
-            findById: jest.fn(),
-            findAcceptedFriendsByUserId: jest.fn(),
-            findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
-            findSentFriendshipRequestsByRequesterUserId: jest.fn(),
-        } as jest.Mocked<FriendRepositoryPort>;
+        mockFriendRepository = getFriendRepositoryMocking();
 
         useCase = new RejectReceivedFriendshipUseCase(mockFriendRepository);
     });
