@@ -1,5 +1,8 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    StrategyEditPermissionDeniedException,
+    StrategyNotFoundException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
@@ -129,6 +132,35 @@ describe('UpdateAirplanePathUseCase', () => {
         );
         expect(strategyFixture.airplanePath?.endPosition).toEqual(
             dto.endPosition
+        );
+    });
+
+    it('도메인 엔티티에서 에러 발생시 에러를 전파한다', async () => {
+        // Given
+        jest.spyOn(strategyFixture, 'updateAirplanePath').mockImplementation(
+            () => {
+                throw new StrategyEditPermissionDeniedException();
+            }
+        );
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            startPosition: {
+                x: 10,
+                y: 10,
+            },
+            endPosition: {
+                x: 100,
+                y: 100,
+            },
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyEditPermissionDeniedException
         );
     });
 });
