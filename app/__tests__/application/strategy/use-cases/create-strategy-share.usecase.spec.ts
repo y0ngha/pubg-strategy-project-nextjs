@@ -123,4 +123,19 @@ describe('CreateStrategyShareUseCase', () => {
             dto.targetUserId
         );
     });
+
+    it('에러 발생시 에러를 전파한다', async () => {
+        // Given
+        mockStrategyRepository.findById.mockRejectedValue(new Error());
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            targetUserId: targetUserId.toString(),
+            permission: StrategySharePermission.READ_ONLY,
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(Error);
+    });
 });
