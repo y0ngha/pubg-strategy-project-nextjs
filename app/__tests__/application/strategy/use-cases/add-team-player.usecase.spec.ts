@@ -9,6 +9,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { AddTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/add-team-player.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('AddTeamPlayerUseCase', () => {
     let useCase: AddTeamPlayerUseCase;
@@ -23,13 +24,7 @@ describe('AddTeamPlayerUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new AddTeamPlayerUseCase(mockStrategyRepository);
 

@@ -9,6 +9,7 @@ import {
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('DeleteStrategyUseCase', () => {
     let useCase: DeleteStrategyUseCase;
@@ -22,13 +23,7 @@ describe('DeleteStrategyUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;

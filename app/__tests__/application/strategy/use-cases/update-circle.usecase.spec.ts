@@ -11,6 +11,7 @@ import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
 import { ZodError } from 'zod';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('UpdateCircleUseCase', () => {
     let useCase: UpdateCircleUseCase;
@@ -26,13 +27,7 @@ describe('UpdateCircleUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new UpdateCircleUseCase(mockStrategyRepository);
 

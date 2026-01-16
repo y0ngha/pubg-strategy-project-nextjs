@@ -6,18 +6,14 @@ import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { Password } from '@/domain/user/value-objects/password';
+import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('GetCurrentUserUseCase', () => {
     let useCase: GetCurrentUserUseCase;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            existsByEmail: jest.fn(),
-            delete: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
         useCase = new GetCurrentUserUseCase(mockUserRepository);
     });

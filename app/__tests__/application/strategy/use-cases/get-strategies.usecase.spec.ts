@@ -7,6 +7,7 @@ import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
 import { Email } from '@domain/shared/value-objects/email';
 import { GetStrategiesUseCase } from '@/application/strategy/use-cases/get-strategies.usecase';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('GetStrategiesUseCase', () => {
     let useCase: GetStrategiesUseCase;
@@ -30,13 +31,7 @@ describe('GetStrategiesUseCase', () => {
     beforeEach(() => {
         jest.useFakeTimers();
 
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new GetStrategiesUseCase(
             mockStrategyRepository,

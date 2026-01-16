@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { Email } from '@domain/shared/value-objects/email';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('CreateCommentUseCase', () => {
     let useCase: CreateCommentUseCase;
@@ -25,13 +26,7 @@ describe('CreateCommentUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new CreateCommentUseCase(mockStrategyRepository);
 

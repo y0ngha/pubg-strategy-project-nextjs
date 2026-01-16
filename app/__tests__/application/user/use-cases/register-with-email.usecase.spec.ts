@@ -4,6 +4,8 @@ import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port'
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { EmailAlreadyExistsException } from '@domain/user/exceptions/user.exceptions';
+import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { getPasswordCipherMocking } from '@/__tests__/application/helpers/service-mocking.helpers';
 
 describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
@@ -12,19 +14,11 @@ describe('RegisterWithEmailUseCase', () => {
     let passwordCipher: jest.Mocked<PasswordCipherPort>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            existsByEmail: jest.fn(),
-            delete: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
         passwordValidatorService = new PasswordValidatorService();
 
-        passwordCipher = {
-            encrypt: jest.fn(),
-            decrypt: jest.fn(),
-        } as jest.Mocked<PasswordCipherPort>;
+        passwordCipher = getPasswordCipherMocking();
 
         useCase = new RegisterWithEmailUseCase(
             mockUserRepository,

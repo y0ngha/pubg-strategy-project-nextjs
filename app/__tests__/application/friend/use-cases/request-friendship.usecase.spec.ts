@@ -7,6 +7,10 @@ import { Email } from '@domain/shared/value-objects/email';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { AlreadyBecameFriendshipException } from '@domain/friend/exceptions/friend.exceptions';
 import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
+import {
+    getFriendRepositoryMocking,
+    getUserRepositoryMocking,
+} from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('RequestFriendshipUseCase', () => {
     let useCase: RequestFriendshipUseCase;
@@ -14,22 +18,9 @@ describe('RequestFriendshipUseCase', () => {
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
     beforeEach(() => {
-        mockFriendRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            existsFriendshipBetween: jest.fn(),
-            findById: jest.fn(),
-            findAcceptedFriendsByUserId: jest.fn(),
-            findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
-            findSentFriendshipRequestsByRequesterUserId: jest.fn(),
-        } as jest.Mocked<FriendRepositoryPort>;
+        mockFriendRepository = getFriendRepositoryMocking();
 
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            delete: jest.fn(),
-            existsByEmail: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
         useCase = new RequestFriendshipUseCase(
             mockFriendRepository,

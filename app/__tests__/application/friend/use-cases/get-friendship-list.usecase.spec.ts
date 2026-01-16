@@ -3,21 +3,14 @@ import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-fri
 import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
+import { getFriendRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('GetFriendshipListUseCase', () => {
     let useCase: GetFriendshipListUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
 
     beforeEach(() => {
-        mockFriendRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            existsFriendshipBetween: jest.fn(),
-            findById: jest.fn(),
-            findAcceptedFriendsByUserId: jest.fn(),
-            findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
-            findSentFriendshipRequestsByRequesterUserId: jest.fn(),
-        } as jest.Mocked<FriendRepositoryPort>;
+        mockFriendRepository = getFriendRepositoryMocking();
 
         useCase = new GetFriendshipListUseCase(mockFriendRepository);
     });

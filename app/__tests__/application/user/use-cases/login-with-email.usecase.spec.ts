@@ -1,6 +1,10 @@
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
+import {
+    getAuthenticationServiceMocking,
+    getPasswordCipherMocking,
+} from '@/__tests__/application/helpers/service-mocking.helpers';
 
 describe('LoginWithEmailUseCase', () => {
     let useCase: LoginWithEmailUseCase;
@@ -8,16 +12,9 @@ describe('LoginWithEmailUseCase', () => {
     let mockPasswordCipher: jest.Mocked<PasswordCipherPort>;
 
     beforeEach(() => {
-        mockAuthenticationService = {
-            login: jest.fn(),
-            logout: jest.fn(),
-            googleLogin: jest.fn(),
-        } as jest.Mocked<AuthenticationServicePort>;
+        mockAuthenticationService = getAuthenticationServiceMocking();
 
-        mockPasswordCipher = {
-            encrypt: jest.fn(),
-            decrypt: jest.fn(),
-        } as jest.Mocked<PasswordCipherPort>;
+        mockPasswordCipher = getPasswordCipherMocking();
 
         useCase = new LoginWithEmailUseCase(
             mockPasswordCipher,

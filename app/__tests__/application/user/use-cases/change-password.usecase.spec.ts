@@ -12,6 +12,11 @@ import {
     ChangePasswordException,
     InvalidPasswordException,
 } from '@domain/user/exceptions/user.exceptions';
+import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import {
+    getPasswordCipherMocking,
+    getPasswordValidatorServiceMocking,
+} from '@/__tests__/application/helpers/service-mocking.helpers';
 
 describe('ChangePasswordUseCase', () => {
     let useCase: ChangePasswordUseCase;
@@ -20,21 +25,11 @@ describe('ChangePasswordUseCase', () => {
     let mockPasswordValidatorService: jest.Mocked<PasswordValidatorService>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            delete: jest.fn(),
-            existsByEmail: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
-        mockPasswordCipher = {
-            encrypt: jest.fn(),
-            decrypt: jest.fn(),
-        } as jest.Mocked<PasswordCipherPort>;
+        mockPasswordCipher = getPasswordCipherMocking();
 
-        mockPasswordValidatorService = {
-            validate: jest.fn(),
-        } as jest.Mocked<PasswordValidatorService>;
+        mockPasswordValidatorService = getPasswordValidatorServiceMocking();
 
         useCase = new ChangePasswordUseCase(
             mockUserRepository,

@@ -6,6 +6,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('CreateCircleUseCase', () => {
     let useCase: CreateCircleUseCase;
@@ -20,13 +21,7 @@ describe('CreateCircleUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new CreateCircleUseCase(mockStrategyRepository);
 

@@ -11,6 +11,7 @@ import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-ta
 import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('DeleteTagUseCase', () => {
     let useCase: DeleteTagUseCase;
@@ -26,13 +27,7 @@ describe('DeleteTagUseCase', () => {
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
-        mockStrategyRepository = {
-            save: jest.fn(),
-            delete: jest.fn(),
-            findById: jest.fn(),
-            findOwnedStrategiesByUserID: jest.fn(),
-            findSharedStrategiesByUserID: jest.fn(),
-        } as jest.Mocked<StrategyRepositoryPort>;
+        mockStrategyRepository = getStrategyRepositoryMocking();
 
         useCase = new DeleteTagUseCase(mockStrategyRepository);
 
