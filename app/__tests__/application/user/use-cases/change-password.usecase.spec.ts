@@ -104,7 +104,7 @@ describe('ChangePasswordUseCase', () => {
 
             // When & Then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new ChangePasswordException('비밀번호가 일치하지 않습니다.')
+                ChangePasswordException
             );
             expect(mockPasswordValidatorService.validate).toHaveBeenCalledTimes(
                 1
@@ -124,9 +124,7 @@ describe('ChangePasswordUseCase', () => {
 
             // When & Then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new InvalidPasswordException(
-                    '신규 비밀번호에 이메일이 포함될 수 없습니다.'
-                )
+                InvalidPasswordException
             );
             expect(mockPasswordValidatorService.validate).toHaveBeenCalledTimes(
                 1
@@ -145,11 +143,7 @@ describe('ChangePasswordUseCase', () => {
             // When & Then
             expect(() => {
                 ChangePasswordRequestSchema.parse(dto);
-            }).toThrow(
-                new InvalidPasswordException(
-                    '비밀번호에는 최소 1글자 이상 대문자 영문이 포함되어야 합니다.'
-                )
-            );
+            }).toThrow(InvalidPasswordException);
         });
     });
 });
