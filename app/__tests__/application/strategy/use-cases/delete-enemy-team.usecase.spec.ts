@@ -1,6 +1,7 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     EnemyTeamNotFoundException,
+    StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
@@ -94,5 +95,27 @@ describe('DeleteEnemyTeamUseCase', () => {
         );
 
         expect(enemyTeam).toBeUndefined();
+    });
+
+    it('도메인 엔티티에서 에러 발생시 에러를 전파한다', async () => {
+        // Given
+        jest.spyOn(strategyFixture, 'removeEnemyTeam').mockImplementation(
+            () => {
+                throw new StrategyEditPermissionDeniedException();
+            }
+        );
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            enemyTeamId: enemyTeamId.toString(),
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyEditPermissionDeniedException
+        );
     });
 });
