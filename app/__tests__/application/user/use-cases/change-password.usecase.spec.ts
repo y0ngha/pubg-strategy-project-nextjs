@@ -5,7 +5,10 @@ import { PasswordValidatorService } from '@domain/user/services/password-validat
 import { ChangePasswordRequestSchema } from '@/application/user/dto/change-password.dto';
 import { User } from '@domain/user/entities/user.entity';
 import { Email } from '@domain/shared/value-objects/email';
-import { ChangePasswordException, InvalidPasswordException, } from '@domain/user/exceptions/user.exceptions';
+import {
+    ChangePasswordException,
+    InvalidPasswordException,
+} from '@domain/user/exceptions/user.exceptions';
 import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import {
     getPasswordCipherMocking,
@@ -128,6 +131,20 @@ describe('ChangePasswordUseCase', () => {
             expect(() => {
                 ChangePasswordRequestSchema.parse(dto);
             }).toThrow(InvalidPasswordException);
+        });
+
+        it('에러 발생시 에러를 전파한다', async () => {
+            // Given
+            const dto = {
+                id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
+                currentPassword: 'Abcd1234@',
+                newPassword: 'test1234!',
+            };
+
+            mockUserRepository.findByUserId.mockRejectedValue(new Error());
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
         });
     });
 });
