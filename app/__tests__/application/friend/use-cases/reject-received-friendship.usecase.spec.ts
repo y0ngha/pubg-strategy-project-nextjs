@@ -63,11 +63,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
     describe('실패 테스트', () => {
         it('친구 관계가 없을 때 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return null;
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(null);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -102,13 +98,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 수락된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    friendFixture.accept(UserId.create(recipientUserId));
-
-                    return friendFixture;
-                }
-            );
+            friendFixture.accept(UserId.create(recipientUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -126,13 +117,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 이미 거절된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    friendFixture.reject(UserId.create(recipientUserId));
-
-                    return friendFixture;
-                }
-            );
+            friendFixture.reject(UserId.create(recipientUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -150,13 +136,8 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('요청 받은 친구 관계가 취소된 상태인 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    friendFixture.cancel(UserId.create(requesterUserId));
-
-                    return friendFixture;
-                }
-            );
+            friendFixture.cancel(UserId.create(requesterUserId));
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
