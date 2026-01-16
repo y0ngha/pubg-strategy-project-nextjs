@@ -1,6 +1,10 @@
 import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-google.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
+import {
+    getAuthenticationServiceMocking,
+    getGoogleAuthServiceMocking,
+} from '@/__tests__/application/helpers/service-mocking.helpers';
 
 describe('LoginWithGoogleUseCase', () => {
     let useCase: LoginWithGoogleUseCase;
@@ -8,15 +12,9 @@ describe('LoginWithGoogleUseCase', () => {
     let mockGoogleAuthService: jest.Mocked<GoogleAuthServicePort>;
 
     beforeEach(() => {
-        mockAuthenticationService = {
-            login: jest.fn(),
-            logout: jest.fn(),
-            googleLogin: jest.fn(),
-        } as jest.Mocked<AuthenticationServicePort>;
+        mockAuthenticationService = getAuthenticationServiceMocking();
 
-        mockGoogleAuthService = {
-            getToken: jest.fn(),
-        } as jest.Mocked<GoogleAuthServicePort>;
+        mockGoogleAuthService = getGoogleAuthServiceMocking();
 
         useCase = new LoginWithGoogleUseCase(
             mockGoogleAuthService,

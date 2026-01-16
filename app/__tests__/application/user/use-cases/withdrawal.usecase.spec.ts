@@ -5,6 +5,8 @@ import {
     LogoutException,
     WithdrawalException,
 } from '@domain/user/exceptions/user.exceptions';
+import { getAuthenticationServiceMocking } from '@/__tests__/application/helpers/service-mocking.helpers';
+import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('WithdrawalUseCase', () => {
     let useCase: WithdrawalUseCase;
@@ -12,18 +14,9 @@ describe('WithdrawalUseCase', () => {
     let mockAuthenticationService: jest.Mocked<AuthenticationServicePort>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            existsByEmail: jest.fn(),
-            delete: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
-        mockAuthenticationService = {
-            login: jest.fn(),
-            logout: jest.fn(),
-            googleLogin: jest.fn(),
-        } as jest.Mocked<AuthenticationServicePort>;
+        mockAuthenticationService = getAuthenticationServiceMocking();
 
         useCase = new WithdrawalUseCase(
             mockUserRepository,

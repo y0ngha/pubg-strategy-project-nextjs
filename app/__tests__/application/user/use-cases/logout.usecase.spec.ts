@@ -1,16 +1,13 @@
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
+import { getAuthenticationServiceMocking } from '@/__tests__/application/helpers/service-mocking.helpers';
 
 describe('LogoutUseCase', () => {
     let useCase: LogoutUseCase;
     let mockAuthenticationService: jest.Mocked<AuthenticationServicePort>;
 
     beforeEach(() => {
-        mockAuthenticationService = {
-            login: jest.fn(),
-            logout: jest.fn(),
-            googleLogin: jest.fn(),
-        } as jest.Mocked<AuthenticationServicePort>;
+        mockAuthenticationService = getAuthenticationServiceMocking();
 
         useCase = new LogoutUseCase(mockAuthenticationService);
     });

@@ -1,17 +1,13 @@
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
+import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
 describe('CheckEmailDuplicate', () => {
     let useCase: CheckEmailDuplicateUsecase;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
     beforeEach(() => {
-        mockUserRepository = {
-            save: jest.fn(),
-            findByUserId: jest.fn(),
-            existsByEmail: jest.fn(),
-            delete: jest.fn(),
-        } as jest.Mocked<UserRepositoryPort>;
+        mockUserRepository = getUserRepositoryMocking();
 
         useCase = new CheckEmailDuplicateUsecase(mockUserRepository);
     });
