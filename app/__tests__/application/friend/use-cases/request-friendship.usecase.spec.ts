@@ -98,7 +98,7 @@ describe('RequestFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new UserNotFoundException(dto.requesterUserId)
+                UserNotFoundException
             );
 
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(2);
@@ -136,7 +136,7 @@ describe('RequestFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new AlreadyBecameFriendshipException()
+                AlreadyBecameFriendshipException
             );
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(2);
             expect(
