@@ -2,13 +2,14 @@ import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repos
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-strategy.usecase';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('CreateStrategyUseCase', () => {
     let useCase: CreateStrategyUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
 
     const ownerId = UserId.generate();
-    const title = '전략 생성 테스트';
+    const title = StrategyTitle.create('전략 생성 테스트');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
@@ -27,7 +28,7 @@ describe('CreateStrategyUseCase', () => {
         // given
         const dto = {
             actorId: ownerId.toString(),
-            title: title,
+            title: title.toString(),
             map: map,
         };
 
@@ -52,7 +53,7 @@ describe('CreateStrategyUseCase', () => {
 
         const dto = {
             actorId: ownerId.toString(),
-            title: title,
+            title: title.toString(),
             map: map,
         };
 

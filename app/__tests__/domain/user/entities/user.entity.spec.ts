@@ -1,5 +1,3 @@
-// __tests__/domain/user/entities/user.entity.spec.ts
-
 import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';

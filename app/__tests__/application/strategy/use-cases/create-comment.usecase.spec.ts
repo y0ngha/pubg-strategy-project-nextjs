@@ -9,6 +9,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { Email } from '@domain/shared/value-objects/email';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('CreateCommentUseCase', () => {
     let useCase: CreateCommentUseCase;
@@ -20,7 +21,7 @@ describe('CreateCommentUseCase', () => {
 
     let strategyId: StrategyId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {

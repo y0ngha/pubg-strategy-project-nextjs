@@ -252,7 +252,7 @@ describe('Comment', () => {
             );
             const newContent = CommentContent.create('새로운 댓글');
             const actorId = authorId;
-            const oldUpdateAt = comment.updatedAt;
+            const oldUpdatedAt = comment.updatedAt;
 
             // when
             jest.advanceTimersByTime(1000);
@@ -262,7 +262,7 @@ describe('Comment', () => {
             // then
             expect(comment.content).toBe(newContent);
             expect(comment.updatedAt.getTime()).toBeGreaterThan(
-                oldUpdateAt.getTime()
+                oldUpdatedAt.getTime()
             );
         });
 
@@ -337,7 +337,7 @@ describe('Comment', () => {
                 null
             );
 
-            const oldUpdateAt = parentComment.updatedAt;
+            const oldUpdatedAt = parentComment.updatedAt;
 
             // when
             jest.advanceTimersByTime(1000);
@@ -347,7 +347,7 @@ describe('Comment', () => {
             // then
             expect(parentComment.position).toEqual(newPoisiton);
             expect(parentComment.updatedAt.getTime()).toBeGreaterThan(
-                oldUpdateAt.getTime()
+                oldUpdatedAt.getTime()
             );
         });
 
@@ -363,7 +363,7 @@ describe('Comment', () => {
 
             const oldPosition = position;
             const newPosition = position;
-            const oldUpdateAt = parentComment.updatedAt;
+            const oldUpdatedAt = parentComment.updatedAt;
 
             // when
             jest.advanceTimersByTime(1000);
@@ -373,7 +373,7 @@ describe('Comment', () => {
             // then
             expect(parentComment.position).toEqual(oldPosition);
             expect(parentComment.updatedAt.getTime()).toBe(
-                oldUpdateAt.getTime()
+                oldUpdatedAt.getTime()
             );
         });
 

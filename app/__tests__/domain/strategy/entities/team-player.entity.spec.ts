@@ -16,6 +16,14 @@ describe('TeamPlayer', () => {
     const marker = Marker.create(position);
     const waypoint = Waypoint.create([position]);
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('Priority를 1~4 범위 내로 생성하면, 문제 없이 생성 된다.', () => {
             // given
@@ -186,13 +194,16 @@ describe('TeamPlayer', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, marker, waypoint);
             const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             teamPlayer.updatePosition(newPosition);
 
             // then
             expect(teamPlayer.position).toEqual(newPosition);
-            expect(teamPlayer.updatedAt).not.toBe(oldUpdatedAt);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('같은 포지션으로 업데이트시 에러를 던진다.', () => {
@@ -224,13 +235,16 @@ describe('TeamPlayer', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
             const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             teamPlayer.assignMarker(marker);
 
             // then
             expect(teamPlayer.marker).toEqual(marker);
-            expect(teamPlayer.updatedAt).not.toBe(oldUpdatedAt);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('팀 플레이어가 삭제된 객체라면, 마커 연결시 에러를 던진다.', () => {
@@ -250,13 +264,16 @@ describe('TeamPlayer', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, marker, null);
             const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             teamPlayer.clearMarker();
 
             // then
             expect(teamPlayer.marker).toBeNull();
-            expect(teamPlayer.updatedAt).not.toBe(oldUpdatedAt);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('팀 플레이어가 삭제된 객체라면, 마커 삭제시 에러를 던진다.', () => {
@@ -278,13 +295,16 @@ describe('TeamPlayer', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
             const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             teamPlayer.assignWaypoint(waypoint);
 
             // then
             expect(teamPlayer.waypoint).toEqual(waypoint);
-            expect(teamPlayer.updatedAt).not.toBe(oldUpdatedAt);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('팀 플레이어가 삭제된 객체라면, 웨이포인트 연결시 에러를 던진다.', () => {
@@ -304,13 +324,16 @@ describe('TeamPlayer', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, waypoint);
             const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             teamPlayer.clearWaypoint();
 
             // then
             expect(teamPlayer.waypoint).toBeNull();
-            expect(teamPlayer.updatedAt).not.toBe(oldUpdatedAt);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('팀 플레이어가 삭제된 객체라면, 웨이포인트 삭제시 에러를 던진다.', () => {

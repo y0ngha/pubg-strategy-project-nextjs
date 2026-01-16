@@ -14,6 +14,7 @@ import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/u
 import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { Position } from '@domain/strategy/value-objects/position';
+import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 
 describe('UpdateCommentUseCase', () => {
     let useCase: UpdateCommentUseCase;
@@ -26,7 +27,7 @@ describe('UpdateCommentUseCase', () => {
     let strategyId: StrategyId;
     let commentId: CommentId;
 
-    const title = '전략 제목';
+    const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
