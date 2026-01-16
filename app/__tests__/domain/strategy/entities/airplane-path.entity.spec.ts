@@ -29,7 +29,7 @@ describe('AirplanePath', () => {
             // when & then
             expect(() =>
                 AirplanePath.create(startPosition, endPosition)
-            ).toThrow(new AirplanePathCreateDuplicatePositionException());
+            ).toThrow(AirplanePathCreateDuplicatePositionException);
         });
     });
 
