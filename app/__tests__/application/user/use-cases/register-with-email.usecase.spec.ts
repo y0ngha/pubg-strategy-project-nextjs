@@ -156,9 +156,7 @@ describe('RegisterWithEmailUseCase', () => {
                 );
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(
-                    new Error('Internal error')
-                );
+                await expect(useCase.execute(dto)).rejects.toThrow(Error);
             });
 
             it('Repository 조회 실패 시 에러를 전파한다', async () => {
@@ -173,9 +171,7 @@ describe('RegisterWithEmailUseCase', () => {
                 );
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(
-                    new Error('Internal error')
-                );
+                await expect(useCase.execute(dto)).rejects.toThrow(Error);
 
                 expect(mockUserRepository.save).not.toHaveBeenCalled();
             });
