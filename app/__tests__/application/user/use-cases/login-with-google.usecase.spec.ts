@@ -64,5 +64,20 @@ describe('LoginWithGoogleUseCase', () => {
 
             expect(result).toBeFalsy();
         });
+
+        it('인증 서비스에서 구글 로그인 에러 발생시 에러를 전파한다', async () => {
+            // Given
+            const dto = {
+                email: 'test@test.com',
+                token: 'test-1234-abcd',
+            };
+
+            mockAuthenticationService.googleLogin.mockRejectedValue(
+                new Error()
+            );
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
+        });
     });
 });
