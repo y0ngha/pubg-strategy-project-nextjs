@@ -10,6 +10,14 @@ import { TagContent } from '@domain/strategy/value-objects/tag-content';
 describe('Tag', () => {
     const position = Position.create(10, 10);
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('태그가 생성된다.', () => {
             // given
@@ -54,12 +62,16 @@ describe('Tag', () => {
             // given
             const tag = Tag.create(position, TagContent.create('태그'));
             const oldUpdatedAt = tag.updatedAt;
+            jest.advanceTimersByTime(1000);
+
             // when
             tag.updatePosition(newPosition);
 
             // then
             expect(tag.position).toEqual(newPosition);
-            expect(tag.updatedAt).not.toBe(oldUpdatedAt);
+            expect(tag.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('같은 포지션으로 업데이트시 에러를 던진다.', () => {
@@ -91,26 +103,32 @@ describe('Tag', () => {
             const tag = Tag.create(position, oldContent);
             const newContent = TagContent.create('테스트');
             const oldUpdatedAt = tag.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             tag.updateContent(newContent);
 
             // then
             expect(tag.content).toEqual(newContent);
-            expect(tag.updatedAt).not.toBe(oldUpdatedAt);
+            expect(tag.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('업데이트하려는 내용이 이전과 같으면 업데이트는 무시된다.', () => {
             // given
             const tag = Tag.create(position, oldContent);
             const oldUpdatedAt = tag.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             tag.updateContent(oldContent);
 
             // then
             expect(tag.content).toEqual(oldContent);
-            expect(tag.updatedAt).toBe(oldUpdatedAt);
+            expect(tag.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
     });
 
