@@ -69,4 +69,18 @@ describe('CreateTagUseCase', () => {
         expect(strategyFixture.tags).toHaveLength(1);
         expect(tag?.content.toString()).toEqual(dto.content);
     });
+
+    it('에러 발생시 에러를 전파한다', async () => {
+        // Given
+        mockStrategyRepository.findById.mockRejectedValue(new Error());
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            content: '내용입니다.',
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(Error);
+    });
 });
