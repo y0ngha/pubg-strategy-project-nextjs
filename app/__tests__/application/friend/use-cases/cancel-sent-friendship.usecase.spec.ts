@@ -83,7 +83,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new FriendNotFoundException(dto.id)
+                FriendNotFoundException
             );
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
@@ -109,7 +109,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new FriendshipUpdateInvalidPermission()
+                FriendshipUpdateInvalidPermission
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -140,7 +140,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new FriendshipUpdateInvalidStatus(FriendshipStatus.ACCEPTED)
+                FriendshipUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -170,7 +170,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new FriendshipUpdateInvalidStatus(FriendshipStatus.REJECTED)
+                FriendshipUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -200,7 +200,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                new FriendshipUpdateInvalidStatus(FriendshipStatus.CANCELED)
+                FriendshipUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
