@@ -1,5 +1,8 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    StrategyEditPermissionDeniedException,
+    StrategyNotFoundException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
@@ -68,5 +71,25 @@ describe('AddEnemyTeamUseCase', () => {
 
         expect(strategyFixture.enemyTeams).toHaveLength(1);
         expect(enemyTeam?.teamLabel.toString()).toEqual(dto.teamLabel);
+    });
+
+    it('에러 발생시 에러를 전파한다', async () => {
+        // Given
+        jest.spyOn(strategyFixture, 'addEnemyTeam').mockImplementation(() => {
+            throw new StrategyEditPermissionDeniedException();
+        });
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamLabel: 'A',
+        };
+
+        // When & Then
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyEditPermissionDeniedException
+        );
     });
 });
