@@ -1,5 +1,8 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    StrategyNotFoundException,
+    StrategyPermissionDeniedException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
@@ -126,7 +129,14 @@ describe('CreateStrategyShareUseCase', () => {
 
     it('에러 발생시 에러를 전파한다', async () => {
         // Given
-        mockStrategyRepository.findById.mockRejectedValue(new Error());
+        jest.spyOn(strategyFixture, 'addStrategyShare').mockImplementation(
+            () => {
+                throw new StrategyPermissionDeniedException();
+            }
+        );
+
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        mockUserRepository.findByUserId.mockResolvedValue(userFixture);
 
         const dto = {
             actorId: ownerId.toString(),
@@ -136,6 +146,8 @@ describe('CreateStrategyShareUseCase', () => {
         };
 
         // When & Then
-        await expect(useCase.execute(dto)).rejects.toThrow(Error);
+        await expect(useCase.execute(dto)).rejects.toThrow(
+            StrategyPermissionDeniedException
+        );
     });
 });
