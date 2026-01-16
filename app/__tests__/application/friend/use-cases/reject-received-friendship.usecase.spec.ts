@@ -21,8 +21,17 @@ describe('RejectReceivedFriendshipUseCase', () => {
     const requesterUserEmail = 'requester@domain.com';
     const recipientUserEmail = 'recipient@domain.com';
 
+    let friendFixture: Friend;
+
     beforeEach(() => {
         mockFriendRepository = getFriendRepositoryMocking();
+
+        friendFixture = Friend.create(
+            UserId.create(requesterUserId),
+            UserId.create(recipientUserId),
+            Email.create(requesterUserEmail),
+            Email.create(recipientUserEmail)
+        );
 
         useCase = new RejectReceivedFriendshipUseCase(mockFriendRepository);
     });
@@ -30,16 +39,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
     describe('성공 테스트', () => {
         it('친구 관계가 존재하고, 받은 사람이 본인이며, 친구 상태가 PENDING일 때 성공한다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -84,16 +84,7 @@ describe('RejectReceivedFriendshipUseCase', () => {
 
         it('본인이 받은 요청이 아닌 경우 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.findById.mockImplementation(
-                async (): Promise<Friend | null> => {
-                    return Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                }
-            );
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
 
             const dto = {
                 id: '869215ed-3baf-4abb-a511-b164f0cc716e',
@@ -113,16 +104,9 @@ describe('RejectReceivedFriendshipUseCase', () => {
             // give
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
+                    friendFixture.accept(UserId.create(recipientUserId));
 
-                    friend.accept(UserId.create(recipientUserId));
-
-                    return friend;
+                    return friendFixture;
                 }
             );
 
@@ -144,15 +128,9 @@ describe('RejectReceivedFriendshipUseCase', () => {
             // give
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                    friend.reject(UserId.create(recipientUserId));
+                    friendFixture.reject(UserId.create(recipientUserId));
 
-                    return friend;
+                    return friendFixture;
                 }
             );
 
@@ -174,15 +152,9 @@ describe('RejectReceivedFriendshipUseCase', () => {
             // give
             mockFriendRepository.findById.mockImplementation(
                 async (): Promise<Friend | null> => {
-                    const friend = Friend.create(
-                        UserId.create(requesterUserId),
-                        UserId.create(recipientUserId),
-                        Email.create(requesterUserEmail),
-                        Email.create(recipientUserEmail)
-                    );
-                    friend.cancel(UserId.create(requesterUserId));
+                    friendFixture.cancel(UserId.create(requesterUserId));
 
-                    return friend;
+                    return friendFixture;
                 }
             );
 
