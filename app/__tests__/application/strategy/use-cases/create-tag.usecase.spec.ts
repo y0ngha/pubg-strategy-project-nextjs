@@ -70,7 +70,7 @@ describe('CreateTagUseCase', () => {
         expect(tag?.content.toString()).toEqual(dto.content);
     });
 
-    it('에러 발생시 에러를 전파한다', async () => {
+    it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // Given
         mockStrategyRepository.findById.mockRejectedValue(new Error());
 
