@@ -62,5 +62,18 @@ describe('LoginWithEmailUseCase', () => {
 
             expect(result).toBeFalsy();
         });
+
+        it('인증 서비스에서 로그인 에러 발생시 에러를 전파한다', async () => {
+            // Given
+            const dto = {
+                email: 'test@test.com',
+                password: 'Abcd1234!',
+            };
+
+            mockAuthenticationService.login.mockRejectedValue(new Error());
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(Error);
+        });
     });
 });
