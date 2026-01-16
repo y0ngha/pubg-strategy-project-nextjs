@@ -3,20 +3,15 @@ import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 import { ChangePasswordUseCase } from '@/application/user/use-cases/change-password.usecase';
 import { PasswordValidatorService } from '@domain/user/services/password-validator.service';
 import { ChangePasswordRequestSchema } from '@/application/user/dto/change-password.dto';
-import { UserId } from '@domain/shared/value-objects/user-id';
 import { User } from '@domain/user/entities/user.entity';
 import { Email } from '@domain/shared/value-objects/email';
-import { Password } from '@domain/user/value-objects/password';
-import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
-import {
-    ChangePasswordException,
-    InvalidPasswordException,
-} from '@domain/user/exceptions/user.exceptions';
+import { ChangePasswordException, InvalidPasswordException, } from '@domain/user/exceptions/user.exceptions';
 import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import {
     getPasswordCipherMocking,
     getPasswordValidatorServiceMocking,
 } from '@/__tests__/application/helpers/service-mocking.helpers';
+import { Password } from '@domain/user/value-objects/password';
 
 describe('ChangePasswordUseCase', () => {
     let useCase: ChangePasswordUseCase;
@@ -24,11 +19,11 @@ describe('ChangePasswordUseCase', () => {
     let mockPasswordCipher: jest.Mocked<PasswordCipherPort>;
     let mockPasswordValidatorService: jest.Mocked<PasswordValidatorService>;
 
+    let userFixture: User;
+
     beforeEach(() => {
         mockUserRepository = getUserRepositoryMocking();
-
         mockPasswordCipher = getPasswordCipherMocking();
-
         mockPasswordValidatorService = getPasswordValidatorServiceMocking();
 
         useCase = new ChangePasswordUseCase(
@@ -37,18 +32,12 @@ describe('ChangePasswordUseCase', () => {
             mockPasswordValidatorService
         );
 
-        mockUserRepository.findByUserId.mockImplementation(
-            async (id: UserId): Promise<User | null> => {
-                return User.reconstruct(
-                    id,
-                    Email.create('test@domain.com'),
-                    Password.reconstruct('encrypted:Abcd1234@'),
-                    AuthProvider.EMAIL,
-                    new Date(),
-                    new Date()
-                );
-            }
+        userFixture = User.createWithEmail(
+            Email.create('test@domain.com'),
+            Password.reconstruct('encrypted:Abcd1234@')
         );
+
+        mockUserRepository.findByUserId.mockResolvedValue(userFixture);
 
         mockPasswordCipher.encrypt.mockImplementation(value => {
             return `encrypted:${value}`;
