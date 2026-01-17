@@ -8,6 +8,10 @@ export class Position {
         return new Position(x, y);
     }
 
+    static reconstruct(x: number, y: number) {
+        return new Position(x, y);
+    }
+
     equals(position: Position) {
         if (!(position instanceof Position)) {
             return false;

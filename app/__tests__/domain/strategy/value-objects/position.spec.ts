@@ -10,6 +10,15 @@ describe('Position', () => {
         });
     });
 
+    describe('Reconstruct', () => {
+        it('두개의 숫자로 Position을 재생성한다.', () => {
+            const position = Position.reconstruct(10, 20);
+
+            expect(position.x).toBe(10);
+            expect(position.y).toBe(20);
+        });
+    });
+
     describe('equals', () => {
         it('같은 값을 가진 Positio은 동등하다', () => {
             // Given
