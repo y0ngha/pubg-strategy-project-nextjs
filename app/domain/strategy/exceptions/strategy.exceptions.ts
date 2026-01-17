@@ -215,3 +215,9 @@ export class StrategyAccessDeniedException extends DomainException {
         super('전략에 접근할 수 있는 권한이 없습니다.');
     }
 }
+
+export class DeletedAirplanePathException extends DomainException {
+    constructor() {
+        super('삭제된 비행기 동선에는 할 수 없습니다.');
+    }
+}

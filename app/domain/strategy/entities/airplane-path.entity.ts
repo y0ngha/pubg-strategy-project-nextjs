@@ -1,19 +1,35 @@
 import { Position } from '@domain/strategy/value-objects/position';
 import { AirplanePathId } from '@domain/strategy/value-objects/airplane-path-id';
-import { AirplanePathCreateDuplicatePositionException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    AirplanePathCreateDuplicatePositionException,
+    DeletedAirplanePathException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class AirplanePath {
     private constructor(
         public readonly id: AirplanePathId,
-        public readonly startPosition: Position,
-        public readonly endPosition: Position,
+        private _startPosition: Position,
+        private _endPosition: Position,
         private _isDeleted: boolean,
-        public readonly createdAt: Date
+        public readonly createdAt: Date,
+        private _updatedAt: Date
     ) {
         this.ensureDifferentForStartPositionToEndPosition(
-            startPosition,
-            endPosition
+            _startPosition,
+            _endPosition
         );
+    }
+
+    get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
+    get startPosition(): Position {
+        return this._startPosition;
+    }
+
+    get endPosition(): Position {
+        return this._endPosition;
     }
 
     get isDeleted(): boolean {
@@ -26,12 +42,36 @@ export class AirplanePath {
             startPosition,
             endPosition,
             false,
+            new Date(),
             new Date()
         );
     }
 
+    updateStartPosition(position: Position): boolean {
+        this.ensureNotDeleted();
+
+        if (this._startPosition.equals(position)) return false;
+
+        this._startPosition = position;
+        this._updatedAt = new Date();
+
+        return true;
+    }
+
+    updateEndPosition(position: Position): boolean {
+        this.ensureNotDeleted();
+
+        if (this._endPosition.equals(position)) return false;
+
+        this._endPosition = position;
+        this._updatedAt = new Date();
+
+        return true;
+    }
+
     delete() {
-        if (this._isDeleted) return;
+        this.ensureNotDeleted();
+
         this._isDeleted = true;
     }
 
@@ -41,6 +81,12 @@ export class AirplanePath {
     ) {
         if (startPosition.equals(endPosition)) {
             throw new AirplanePathCreateDuplicatePositionException();
+        }
+    }
+
+    private ensureNotDeleted() {
+        if (this._isDeleted) {
+            throw new DeletedAirplanePathException();
         }
     }
 }
