@@ -7,7 +7,7 @@ import {
 export abstract class EntityId {
     protected constructor(protected readonly value: string) {}
 
-    protected static _generateUuid(): string {
+    protected static generateUuid(): string {
         return randomUUID();
     }
 
@@ -28,5 +28,15 @@ export abstract class EntityId {
         if (!uuidV4Regex.test(value)) {
             throw new InvalidEntityIdException();
         }
+    }
+
+    abstract equals(id: EntityId): boolean;
+
+    toString(): string {
+        return this.value;
+    }
+
+    toJSON(): string {
+        return this.value;
     }
 }
