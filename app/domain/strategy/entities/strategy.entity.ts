@@ -43,6 +43,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 interface FindEntity<T> {
     value: T;
@@ -369,7 +370,7 @@ export class Strategy {
     /**
      * Circles
      */
-    addCircle(actorId: UserId, phase: number) {
+    addCircle(actorId: UserId, phase: CirclePhase) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddCircle();
@@ -393,28 +394,40 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     updateCircle(
         actorId: UserId,
         circleId: CircleId,
         position?: Position,
-        phase?: number
+        phase?: CirclePhase
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: circle } = this.findCircle(circleId);
 
-        if (position) {
-            circle.updateCenterPosition(position);
+        const isPositionChanged = position
+            ? circle.updateCenterPosition(position)
+            : false;
+
+        let isPhaseChanged = false;
+
+        if (phase) {
+            this.ensureNoDuplicatePhase(phase, circle.id);
+
+            isPhaseChanged = circle.updatePhase(phase);
         }
 
-        if (phase != null) {
-            this.ensureNoDuplicatePhase(phase);
-
-            circle.updatePhase(phase);
+        if (isPositionChanged || isPhaseChanged) {
+            this._updatedAt = new Date();
         }
-
-        this._updatedAt = new Date();
     }
 
     /**
