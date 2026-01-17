@@ -1251,6 +1251,58 @@ describe('Strategy', () => {
                 expect(circle2Fixture.phase).toEqual(newPhase2);
             });
 
+            it('동일한 CenterPosition로 업데이트하면 무시된다.', () => {
+                // give
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const {
+                    id: circleId1,
+                    centerPosition: oldCircle1centerPosition,
+                } = circle1Fixture;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateCircle(
+                    ownerId,
+                    circleId1,
+                    oldCircle1centerPosition,
+                    undefined
+                );
+
+                // then
+                expect(circle1Fixture.centerPosition).toEqual(
+                    oldCircle1centerPosition
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 Phase로 업데이트하면 무시된다.', () => {
+                // give
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const { id: circleId1, phase: oldCircle1Phase } =
+                    circle1Fixture;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateCircle(
+                    ownerId,
+                    circleId1,
+                    undefined,
+                    oldCircle1Phase
+                );
+
+                // then
+                expect(circle1Fixture.phase).toEqual(oldCircle1Phase);
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
             it('이미 있는 Phase로 업데이트 하면, 에러를 던진다.', () => {
                 // give
                 const newPhase = CirclePhase.create(7);
