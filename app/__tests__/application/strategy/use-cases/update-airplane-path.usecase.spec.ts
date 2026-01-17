@@ -30,6 +30,11 @@ describe('UpdateAirplanePathUseCase', () => {
         useCase = new UpdateAirplanePathUseCase(mockStrategyRepository);
 
         strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture.addAirplanePath(
+            ownerId,
+            Position.create(1000, 1000),
+            Position.create(5000, 5000)
+        );
         strategyId = strategyFixture.id;
     });
 
@@ -83,52 +88,6 @@ describe('UpdateAirplanePathUseCase', () => {
         expect(strategyFixture.airplanePath).not.toBeNull();
         expect(strategyFixture.airplanePath?.startPosition).toEqual(
             dto.startPosition
-        );
-        expect(strategyFixture.airplanePath?.endPosition).toEqual(
-            dto.endPosition
-        );
-    });
-
-    it('비행기 동선이 있을 때, 기존 비행기 동선이 수정된다.', async () => {
-        // given
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-        const oldStartPosition = Position.create(100, 100);
-        const oldEndPosition = Position.create(1000, 1000);
-        strategyFixture.updateAirplanePath(
-            ownerId,
-            oldStartPosition,
-            oldEndPosition
-        );
-
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            startPosition: {
-                x: 10,
-                y: 10,
-            },
-            endPosition: {
-                x: 100,
-                y: 100,
-            },
-        };
-
-        // when
-        await useCase.execute(dto);
-
-        // then
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
-
-        expect(strategyFixture.airplanePath).not.toBeNull();
-        expect(strategyFixture.airplanePath?.startPosition).not.toEqual(
-            oldStartPosition
-        );
-        expect(strategyFixture.airplanePath?.startPosition).toEqual(
-            dto.startPosition
-        );
-        expect(strategyFixture.airplanePath?.endPosition).not.toEqual(
-            oldEndPosition
         );
         expect(strategyFixture.airplanePath?.endPosition).toEqual(
             dto.endPosition

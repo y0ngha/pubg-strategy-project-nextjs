@@ -32,7 +32,7 @@ describe('DeleteAirplanePathUseCase', () => {
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.updateAirplanePath(
+        strategyFixture.addAirplanePath(
             ownerId,
             Position.create(10, 10),
             Position.create(1000, 1000)
