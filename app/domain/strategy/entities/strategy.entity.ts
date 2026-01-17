@@ -778,9 +778,14 @@ export class Strategy {
         }
     }
 
-    private ensureNoDuplicatePhase(phase: number) {
+    private ensureNoDuplicatePhase(
+        phase: CirclePhase,
+        excludeCircleId?: CircleId
+    ) {
         const isDuplicate = this._circles.some(
-            circle => circle.phase === phase
+            circle =>
+                circle.phase.equals(phase) &&
+                (excludeCircleId ? !circle.id.equals(excludeCircleId) : true)
         );
 
         if (isDuplicate) {
