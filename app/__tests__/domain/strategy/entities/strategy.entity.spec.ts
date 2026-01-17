@@ -519,6 +519,31 @@ describe('Strategy', () => {
                 );
             });
 
+            it('동일한 포지션으로 업데이트하면 무시된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const oldTeamPlayer1Position = teamPlayer1Fixture.position;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerPosition(
+                    ownerId,
+                    teamPlayerId1,
+                    oldTeamPlayer1Position
+                );
+
+                // then
+                expect(teamPlayer1Fixture.position).toEqual(
+                    oldTeamPlayer1Position
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
                 const teamPlayerId = teamPlayer1Fixture.id;
