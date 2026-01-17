@@ -102,13 +102,15 @@ export class TeamPlayer {
         );
     }
 
-    updatePosition(position: Position) {
+    updatePosition(position: Position): boolean {
         this.ensureNotDeleted();
 
-        if (this._position.equals(position)) return;
+        if (this._position.equals(position)) return false;
 
         this._position = position;
         this._updatedAt = new Date();
+
+        return true;
     }
 
     assignMarker(marker: Marker) {
