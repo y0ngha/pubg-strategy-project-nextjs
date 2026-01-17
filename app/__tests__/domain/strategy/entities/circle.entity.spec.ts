@@ -3,7 +3,6 @@ import { Circle } from '@domain/strategy/entities/circle.entity';
 import {
     DeletedCircleException,
     InvalidCirclePhaseException,
-    SamePositionException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 
@@ -148,14 +147,18 @@ describe('Circle', () => {
             ).toThrow(DeletedCircleException);
         });
 
-        it('삭제되지 않은 자기장 객체이고, 똑같은 포지션으로 업데이트시 에러를 던진다.', () => {
+        it('삭제되지 않은 자기장 객체이고, 똑같은 포지션으로 업데이트시 업데이트 되지 않는다.', () => {
             // given
             const circle = Circle.create(centerPosition, 1);
+            const oldUpdateAt = circle.updatedAt;
+            const oldCenterPosition = circle.centerPosition;
 
-            // when & then
-            expect(() => circle.updateCenterPosition(centerPosition)).toThrow(
-                SamePositionException
-            );
+            // when
+            circle.updateCenterPosition(centerPosition);
+
+            // then
+            expect(circle.updatedAt.getTime()).toEqual(oldUpdateAt.getTime());
+            expect(circle.centerPosition).toEqual(oldCenterPosition);
         });
     });
 

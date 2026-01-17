@@ -2,7 +2,6 @@ import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import {
     DeletedCircleException,
     InvalidCirclePhaseException,
-    SamePositionException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CircleColor } from '@domain/strategy/enums/circle-color.enum';
 import { Position } from '@domain/strategy/value-objects/position';
@@ -96,7 +95,8 @@ export class Circle {
 
     updateCenterPosition(position: Position) {
         this.ensureNotDeleted();
-        this.ensureDifferentCenterPosition(position);
+
+        if (this._centerPosition.equals(position)) return;
 
         this._centerPosition = position;
         this._updatedAt = new Date();
@@ -138,11 +138,5 @@ export class Circle {
     private validatePhase(phase: number) {
         this.ensurePhaseLessThan8(phase);
         this.ensurePhaseGreaterThanZero(phase);
-    }
-
-    private ensureDifferentCenterPosition(centerPosition: Position) {
-        if (this._centerPosition.equals(centerPosition)) {
-            throw new SamePositionException();
-        }
     }
 }
