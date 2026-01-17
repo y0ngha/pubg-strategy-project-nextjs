@@ -90,12 +90,6 @@ export class CommentContentBlankException extends DomainException {
     }
 }
 
-export class SameContentException extends DomainException {
-    constructor() {
-        super('수정하는 내용이 현재 내용과 일치합니다.');
-    }
-}
-
 export class DeletedStrategyException extends DomainException {
     constructor() {
         super('삭제된 전략에는 할 수 없습니다.');
