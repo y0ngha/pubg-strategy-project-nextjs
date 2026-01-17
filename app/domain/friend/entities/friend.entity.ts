@@ -45,6 +45,28 @@ export class Friend {
         );
     }
 
+    static reconstruct(
+        id: FriendId,
+        requesterUserId: UserId,
+        recipientUserId: UserId,
+        status: FriendshipStatus,
+        requesterUserEmail: Email,
+        recipientUserEmail: Email,
+        requestedAt: Date,
+        respondedAt: Date | null
+    ) {
+        return new Friend(
+            id,
+            requesterUserId,
+            recipientUserId,
+            status,
+            requesterUserEmail,
+            recipientUserEmail,
+            requestedAt,
+            respondedAt
+        );
+    }
+
     accept(userId: UserId) {
         this.ensureRecipientAuthority(userId);
 

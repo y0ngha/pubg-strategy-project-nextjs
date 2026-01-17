@@ -6,11 +6,16 @@ export class StrategyShareId extends EntityId {
     }
 
     static create(value: string): StrategyShareId {
+        EntityId.validateEntityId(value);
+        return new StrategyShareId(value);
+    }
+
+    static reconstruct(value: string): StrategyShareId {
         return new StrategyShareId(value);
     }
 
     static generate(): StrategyShareId {
-        return new StrategyShareId(EntityId._generateUuid());
+        return new StrategyShareId(EntityId.generateUuid());
     }
 
     equals(strategyShareId: StrategyShareId): boolean {

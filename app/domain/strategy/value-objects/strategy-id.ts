@@ -6,11 +6,16 @@ export class StrategyId extends EntityId {
     }
 
     static create(value: string): StrategyId {
+        EntityId.validateEntityId(value);
+        return new StrategyId(value);
+    }
+
+    static reconstruct(value: string): StrategyId {
         return new StrategyId(value);
     }
 
     static generate(): StrategyId {
-        return new StrategyId(EntityId._generateUuid());
+        return new StrategyId(EntityId.generateUuid());
     }
 
     equals(strategyId: StrategyId): boolean {

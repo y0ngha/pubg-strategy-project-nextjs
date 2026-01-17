@@ -25,9 +25,7 @@ export class TeamPlayer {
         private _isDeleted: boolean,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        this.ensureValidPriority(priority);
-    }
+    ) {}
 
     get position(): Position {
         return this._position;
@@ -73,6 +71,8 @@ export class TeamPlayer {
         marker: Marker | null = null,
         waypoint: Waypoint | null = null
     ) {
+        TeamPlayer.ensureValidPriority(priority);
+
         return new TeamPlayer(
             TeamPlayerId.generate(),
             priority,
@@ -104,6 +104,16 @@ export class TeamPlayer {
             createdAt,
             updatedAt
         );
+    }
+
+    private static ensureValidPriority(priority: number) {
+        if (priority > TeamPlayer.MAX_PRIORITY) {
+            throw new InvalidTeamPlayerPriorityException();
+        }
+
+        if (priority < TeamPlayer.MIN_PRIORITY) {
+            throw new InvalidTeamPlayerPriorityException();
+        }
     }
 
     updatePosition(position: Position): boolean {
@@ -198,16 +208,6 @@ export class TeamPlayer {
     private ensureNotDeleted() {
         if (this._isDeleted) {
             throw new DeletedTeamPlayerException();
-        }
-    }
-
-    private ensureValidPriority(priority: number) {
-        if (priority > TeamPlayer.MAX_PRIORITY) {
-            throw new InvalidTeamPlayerPriorityException();
-        }
-
-        if (priority < TeamPlayer.MIN_PRIORITY) {
-            throw new InvalidTeamPlayerPriorityException();
         }
     }
 

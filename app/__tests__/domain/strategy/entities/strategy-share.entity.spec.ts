@@ -60,57 +60,30 @@ describe('StrategyShareEntity', () => {
         });
     });
     describe('Reconstruct', () => {
-        it('전략 공유 재생성시 권한이 "접근 제한"이 아니라면 재생성된다.', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
             // given
-            const permission1 = StrategySharePermission.EDITABLE;
-            const permission2 = StrategySharePermission.READ_ONLY;
+            const wrongPermission = StrategySharePermission.ACCESS_DENIED;
+            const createdAt = new Date('2000-01-01');
+            const updatedAt = new Date('2026-01-01');
 
             // when
-            const strategyShare1 = StrategyShare.reconstruct(
+            const strategyShare = StrategyShare.reconstruct(
                 strategyShareId,
                 userId,
                 userEmail,
-                permission1,
-                new Date(),
-                new Date()
+                wrongPermission,
+                createdAt,
+                updatedAt
             );
-            const strategyShare2 = StrategyShare.reconstruct(
-                strategyShareId,
-                userId,
-                userEmail,
-                permission2,
-                new Date(),
-                new Date()
-            );
+
             // then
-            expect(strategyShare1).toBeInstanceOf(StrategyShare);
-            expect(strategyShare2).toBeInstanceOf(StrategyShare);
-
-            expect(strategyShare1.sharedUserId).toBe(userId);
-            expect(strategyShare2.sharedUserId).toBe(userId);
-
-            expect(strategyShare1.sharedEmail).toBe(userEmail);
-            expect(strategyShare2.sharedEmail).toBe(userEmail);
-
-            expect(strategyShare1.permission).toBe(permission1);
-            expect(strategyShare2.permission).toBe(permission2);
-        });
-
-        it('전략 공유 재생성시 권한이 "접근 제한"이라면 에러를 던진다.', () => {
-            // given
-            const permission = StrategySharePermission.ACCESS_DENIED;
-
-            // when & then
-            expect(() =>
-                StrategyShare.reconstruct(
-                    strategyShareId,
-                    userId,
-                    userEmail,
-                    permission,
-                    new Date(),
-                    new Date()
-                )
-            ).toThrow(StrategyShareAccessDeniedException);
+            expect(strategyShare).toBeInstanceOf(StrategyShare);
+            expect(strategyShare.id).toEqual(strategyShareId);
+            expect(strategyShare.sharedUserId).toEqual(userId);
+            expect(strategyShare.sharedEmail).toEqual(userEmail);
+            expect(strategyShare.permission).toEqual(wrongPermission);
+            expect(strategyShare.createdAt).toEqual(createdAt);
+            expect(strategyShare.updatedAt).toEqual(updatedAt);
         });
     });
     describe('UpdatePermission', () => {

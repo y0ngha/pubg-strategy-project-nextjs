@@ -6,11 +6,16 @@ export class EnemyTeamId extends EntityId {
     }
 
     static create(value: string): EnemyTeamId {
+        EntityId.validateEntityId(value);
+        return new EnemyTeamId(value);
+    }
+
+    static reconstruct(value: string): EnemyTeamId {
         return new EnemyTeamId(value);
     }
 
     static generate(): EnemyTeamId {
-        return new EnemyTeamId(EntityId._generateUuid());
+        return new EnemyTeamId(EntityId.generateUuid());
     }
 
     equals(enemyTeamId: EnemyTeamId): boolean {

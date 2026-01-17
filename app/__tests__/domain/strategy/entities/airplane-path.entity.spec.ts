@@ -4,6 +4,7 @@ import {
     AirplanePathCreateDuplicatePositionException,
     DeletedAirplanePathException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
+import { AirplanePathId } from '@domain/strategy/value-objects/airplane-path-id';
 
 describe('AirplanePath', () => {
     const startPosition = Position.create(10, 20);
@@ -32,6 +33,34 @@ describe('AirplanePath', () => {
             expect(() =>
                 AirplanePath.create(startPosition, endPosition)
             ).toThrow(AirplanePathCreateDuplicatePositionException);
+        });
+    });
+
+    describe('Reconstruct', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
+            // given
+            const id = AirplanePathId.generate();
+            const startPosition = Position.create(10, 10);
+            const endPosition = Position.create(10, 10);
+            const createdAt = new Date('2000-01-01');
+            const updatedAt = new Date('2026-01-01');
+
+            // when
+            const airplanePath = AirplanePath.reconstruct(
+                id,
+                startPosition,
+                endPosition,
+                createdAt,
+                updatedAt
+            );
+
+            // then
+            expect(airplanePath).toBeInstanceOf(AirplanePath);
+            expect(airplanePath.id).toEqual(id);
+            expect(airplanePath.startPosition).toEqual(startPosition);
+            expect(airplanePath.endPosition).toEqual(endPosition);
+            expect(airplanePath.createdAt).toEqual(createdAt);
+            expect(airplanePath.updatedAt).toEqual(updatedAt);
         });
     });
 

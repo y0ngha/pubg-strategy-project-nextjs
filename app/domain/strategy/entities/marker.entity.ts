@@ -33,6 +33,15 @@ export class Marker {
         );
     }
 
+    static reconstruct(
+        id: MarkerId,
+        position: Position,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        return new Marker(id, position, false, createdAt, updatedAt);
+    }
+
     updatePosition(newPosition: Position): boolean {
         this.ensureNotDeleted();
 

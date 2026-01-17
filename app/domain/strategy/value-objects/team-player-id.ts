@@ -6,11 +6,16 @@ export class TeamPlayerId extends EntityId {
     }
 
     static create(value: string): TeamPlayerId {
+        EntityId.validateEntityId(value);
+        return new TeamPlayerId(value);
+    }
+
+    static reconstruct(value: string): TeamPlayerId {
         return new TeamPlayerId(value);
     }
 
     static generate(): TeamPlayerId {
-        return new TeamPlayerId(EntityId._generateUuid());
+        return new TeamPlayerId(EntityId.generateUuid());
     }
 
     equals(teamPlayerId: TeamPlayerId): boolean {

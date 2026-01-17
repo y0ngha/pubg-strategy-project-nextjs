@@ -6,6 +6,7 @@ import {
     FriendshipUpdateInvalidPermission,
     FriendshipUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
+import { FriendId } from '@domain/friend/value-objects/friend-id';
 
 describe('FriendEntity', () => {
     describe('Create', () => {
@@ -31,6 +32,43 @@ describe('FriendEntity', () => {
             expect(friend.recipientUserId).toBe(recipientUserId);
             expect(friend.recipientUserEmail).toBe(recipientUserEmail);
             expect(friend.status).toBe(FriendshipStatus.PENDING);
+        });
+    });
+
+    describe('Reconstruct', () => {
+        it('친구 관계를 재생성한다.', () => {
+            // given
+            const id = FriendId.generate();
+            const requesterUserId = UserId.generate();
+            const requesterUserEmail = Email.create('test@domain.com');
+            const status = FriendshipStatus.REJECTED;
+            const recipientUserId = UserId.generate();
+            const recipientUserEmail = Email.create('now@domain.com');
+            const requestedAt = new Date();
+            const respondedAt = new Date();
+
+            // when
+            const friend = Friend.reconstruct(
+                id,
+                requesterUserId,
+                recipientUserId,
+                status,
+                requesterUserEmail,
+                recipientUserEmail,
+                requestedAt,
+                respondedAt
+            );
+
+            // then
+            expect(friend).toBeInstanceOf(Friend);
+            expect(friend.id).toEqual(id);
+            expect(friend.requesterUserId).toEqual(requesterUserId);
+            expect(friend.requesterUserEmail).toEqual(requesterUserEmail);
+            expect(friend.status).toEqual(status);
+            expect(friend.recipientUserId).toEqual(recipientUserId);
+            expect(friend.recipientUserEmail).toEqual(recipientUserEmail);
+            expect(friend.requestedAt).toEqual(requestedAt);
+            expect(friend.respondedAt).toEqual(respondedAt);
         });
     });
 

@@ -6,11 +6,16 @@ export class CircleId extends EntityId {
     }
 
     static create(value: string): CircleId {
+        EntityId.validateEntityId(value);
+        return new CircleId(value);
+    }
+
+    static reconstruct(value: string): CircleId {
         return new CircleId(value);
     }
 
     static generate(): CircleId {
-        return new CircleId(EntityId._generateUuid());
+        return new CircleId(EntityId.generateUuid());
     }
 
     equals(circleId: CircleId): boolean {

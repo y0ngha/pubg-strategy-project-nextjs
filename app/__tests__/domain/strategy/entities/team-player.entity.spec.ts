@@ -94,9 +94,11 @@ describe('TeamPlayer', () => {
     });
 
     describe('Reconstruct', () => {
-        it('Priority를 1~4 범위 내로 생성하면, 문제 없이 재생성 된다.', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
             // given
-            const priority = 1;
+            const priority = 100;
+            const createdAt = new Date('2000-01-01');
+            const updatedAt = new Date('2026-01-01');
 
             // when
             const teamPlayer = TeamPlayer.reconstruct(
@@ -105,75 +107,19 @@ describe('TeamPlayer', () => {
                 position,
                 marker,
                 waypoint,
-                new Date(),
-                new Date()
+                createdAt,
+                updatedAt
             );
 
             // then
             expect(teamPlayer).toBeInstanceOf(TeamPlayer);
-            expect(teamPlayer.priority).toBe(priority);
+            expect(teamPlayer.id).toEqual(teamPlayerId);
+            expect(teamPlayer.priority).toEqual(priority);
             expect(teamPlayer.position).toEqual(position);
             expect(teamPlayer.marker).toEqual(marker);
             expect(teamPlayer.waypoint).toEqual(waypoint);
-        });
-
-        it('Priority를 1~4 범위 내로 생성하고, Marker와 Waypoint는 NULL이 허용된다.', () => {
-            // given
-            const priority = 2;
-
-            // when
-            const teamPlayer = TeamPlayer.reconstruct(
-                teamPlayerId,
-                priority,
-                position,
-                null,
-                null,
-                new Date(),
-                new Date()
-            );
-
-            // then
-            expect(teamPlayer).toBeInstanceOf(TeamPlayer);
-            expect(teamPlayer.priority).toBe(priority);
-            expect(teamPlayer.position).toEqual(position);
-            expect(teamPlayer.marker).toBeNull();
-            expect(teamPlayer.waypoint).toBeNull();
-        });
-
-        it('Priority를 5로 생성하면, 에러를 던진다.', () => {
-            // given
-            const priority = 5;
-
-            // when & then
-            expect(() =>
-                TeamPlayer.reconstruct(
-                    teamPlayerId,
-                    priority,
-                    position,
-                    null,
-                    null,
-                    new Date(),
-                    new Date()
-                )
-            ).toThrow(InvalidTeamPlayerPriorityException);
-        });
-
-        it('Priority를 0으로 생성하면, 에러를 던진다.', () => {
-            // given
-            const priority = 0;
-
-            // when & then
-            expect(() =>
-                TeamPlayer.reconstruct(
-                    teamPlayerId,
-                    priority,
-                    position,
-                    null,
-                    null,
-                    new Date(),
-                    new Date()
-                )
-            ).toThrow(InvalidTeamPlayerPriorityException);
+            expect(teamPlayer.createdAt).toEqual(createdAt);
+            expect(teamPlayer.updatedAt).toEqual(updatedAt);
         });
     });
 

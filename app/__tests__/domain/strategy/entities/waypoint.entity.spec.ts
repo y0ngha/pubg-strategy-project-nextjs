@@ -5,6 +5,7 @@ import {
     WaypointCreateDuplicatePositionException,
     WaypointPositionLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
+import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
 
 describe('Waypoint', () => {
     beforeEach(() => {
@@ -70,6 +71,39 @@ describe('Waypoint', () => {
             expect(() => Waypoint.create(positions)).toThrow(
                 new WaypointCreateDuplicatePositionException()
             );
+        });
+    });
+
+    describe('Reconstruct', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
+            // given
+            const id = WaypointId.generate();
+            const wrongPositions = [
+                Position.create(1, 3),
+                Position.create(1, 7),
+                Position.create(1, 10),
+                Position.create(1, 20),
+                Position.create(1, 30),
+                Position.create(1, 40),
+                Position.create(1, 50),
+            ];
+            const createdAt = new Date('2000-01-01');
+            const updatedAt = new Date('2026-01-01');
+
+            // when
+            const waypoint = Waypoint.reconstruct(
+                id,
+                wrongPositions,
+                createdAt,
+                updatedAt
+            );
+
+            // then
+            expect(waypoint).toBeInstanceOf(Waypoint);
+            expect(waypoint.id).toEqual(id);
+            expect(waypoint.positions).toEqual(wrongPositions);
+            expect(waypoint.createdAt).toEqual(createdAt);
+            expect(waypoint.updatedAt).toEqual(updatedAt);
         });
     });
 
