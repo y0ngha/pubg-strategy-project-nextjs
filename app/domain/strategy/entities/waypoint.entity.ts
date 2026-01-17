@@ -41,6 +41,15 @@ export class Waypoint {
         );
     }
 
+    static reconstruct(
+        id: WaypointId,
+        positions: Position[],
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        return new Waypoint(id, positions, false, createdAt, updatedAt);
+    }
+
     private static ensureValidPositions(positions: Position[]): void {
         if (Waypoint.isExceedingMaxLimit(positions)) {
             throw new WaypointPositionLimitExceededException();
