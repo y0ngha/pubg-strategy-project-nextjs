@@ -315,10 +315,11 @@ describe('TeamPlayer', () => {
         it('팀 플레이어가 삭제된 객체라면, 마커 수정시 에러를 던진다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
+            const newPosition = Position.create(500, 500);
             teamPlayer.delete();
 
             // when & then
-            expect(() => teamPlayer.addMarker(marker)).toThrow(
+            expect(() => teamPlayer.updateMarkerPosition(newPosition)).toThrow(
                 DeletedTeamPlayerException
             );
         });
