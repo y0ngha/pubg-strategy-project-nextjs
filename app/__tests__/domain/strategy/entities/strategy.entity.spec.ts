@@ -1579,6 +1579,9 @@ describe('Strategy', () => {
                 const { id: tagId2, content: oldTagContent2 } =
                     strategyFixture.tags[1];
 
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
                 // when
                 strategyFixture.updateTag(
                     ownerId,
@@ -1600,6 +1603,10 @@ describe('Strategy', () => {
                     oldTagContent2
                 );
                 expect(strategyFixture.tags[1].content).toEqual(newTagContent2);
+
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('내용을 같은 값으로 업데이트 할 경우 무시된다.', () => {
