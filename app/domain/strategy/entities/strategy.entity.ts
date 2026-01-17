@@ -426,6 +426,12 @@ export class Strategy {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
+        if (
+            this._airplanePath?.startPosition.equals(startPosition) &&
+            this._airplanePath?.endPosition.equals(endPosition)
+        )
+            return;
+
         this._airplanePath = AirplanePath.create(startPosition, endPosition);
         this._updatedAt = new Date();
     }

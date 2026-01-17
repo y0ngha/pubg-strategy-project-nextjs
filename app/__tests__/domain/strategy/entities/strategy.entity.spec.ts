@@ -1324,6 +1324,38 @@ describe('Strategy', () => {
                 );
             });
 
+            it('같은 경로(startPosition, endPosition)로 업데이트시 무시된다.', () => {
+                // given
+                const initalStartPosition = Position.create(10, 10);
+                const initalEndPosition = Position.create(1000, 1000);
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+                expect(strategyFixture.airplanePath?.startPosition).toEqual(
+                    initalStartPosition
+                );
+                expect(strategyFixture.airplanePath?.endPosition).toEqual(
+                    initalEndPosition
+                );
+            });
+
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
