@@ -12,9 +12,7 @@ export class StrategyShare {
         private _permission: StrategySharePermission,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        this.ensureNotDeniedPermission(_permission);
-    }
+    ) {}
 
     get permission(): StrategySharePermission {
         return this._permission;
@@ -37,6 +35,8 @@ export class StrategyShare {
         sharedEmail: Email,
         permission: StrategySharePermission
     ) {
+        StrategyShare.ensureNotDeniedPermission(permission);
+
         return new StrategyShare(
             StrategyShareId.generate(),
             sharedUserId,
@@ -65,6 +65,14 @@ export class StrategyShare {
         );
     }
 
+    private static ensureNotDeniedPermission(
+        permission: StrategySharePermission
+    ) {
+        if (permission === StrategySharePermission.ACCESS_DENIED) {
+            throw new StrategyShareAccessDeniedException();
+        }
+    }
+
     updatePermission(permission: StrategySharePermission): boolean {
         if (this._permission === permission) return false;
 
@@ -76,11 +84,5 @@ export class StrategyShare {
 
     delete() {
         this.updatePermission(StrategySharePermission.ACCESS_DENIED);
-    }
-
-    private ensureNotDeniedPermission(permission: StrategySharePermission) {
-        if (permission === StrategySharePermission.ACCESS_DENIED) {
-            throw new StrategyShareAccessDeniedException();
-        }
     }
 }
