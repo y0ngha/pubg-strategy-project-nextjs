@@ -1,5 +1,6 @@
 import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { DeletedMarkerException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class Marker {
     private constructor(
@@ -32,33 +33,26 @@ export class Marker {
         );
     }
 
-    updatePosition(newPosition: Position) {
-        if (this._isDeleted) {
-            this.restore(newPosition);
-            return;
-        }
+    updatePosition(newPosition: Position): boolean {
+        this.ensureNotDeleted();
 
-        if (this._position.equals(newPosition)) {
-            this.delete();
-            return;
-        }
+        if (this._position.equals(newPosition)) return false;
 
-        this.changePosition(newPosition);
+        this._position = newPosition;
+        this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
-        if (this._isDeleted) return;
+        this.ensureNotDeleted();
 
         this._isDeleted = true;
     }
 
-    private restore(position: Position) {
-        this._isDeleted = false;
-        this.changePosition(position);
-    }
-
-    private changePosition(position: Position) {
-        this._position = position;
-        this._updatedAt = new Date();
+    private ensureNotDeleted() {
+        if (this._isDeleted) {
+            throw new DeletedMarkerException();
+        }
     }
 }
