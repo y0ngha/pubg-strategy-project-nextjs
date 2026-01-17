@@ -8,6 +8,8 @@ import {
     InvalidTeamPlayerPriorityException,
     MarkerExistsException,
     MarkerNotFoundException,
+    WaypointExistsException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamPlayer {
@@ -136,69 +138,40 @@ export class TeamPlayer {
         this._updatedAt = new Date();
     }
 
-    assignWaypoint(waypoint: Waypoint) {
+    addWaypoint(waypoint: Waypoint) {
         this.ensureNotDeleted();
-        this.clearWaypoint();
+        this.ensureNoHaveWaypoint();
 
         this._waypoint = waypoint;
         this._updatedAt = new Date();
     }
 
-    clearMarker() {
+    deleteMarker(): boolean {
         this.ensureNotDeleted();
-        this.deleteMarker();
-        this.unassignMarker();
+        this.ensureHaveMarker(this._marker);
+
+        this._marker.delete();
+        this._marker = null;
+        this._updatedAt = new Date();
+
+        return true;
     }
 
-    clearWaypoint() {
+    deleteWaypoint(): boolean {
         this.ensureNotDeleted();
-        this.deleteWaypoint();
-        this.unassignWaypoint();
+        this.ensureHaveWaypoint(this._waypoint);
+
+        this._waypoint.delete();
+        this._waypoint = null;
+        this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
         this.ensureNotDeleted();
 
         this._isDeleted = true;
-
-        this.cascadeDelete();
-        this.cascadeUnassign();
-    }
-
-    private deleteMarker() {
-        if (this._marker) {
-            this._marker.delete();
-        }
-    }
-
-    private deleteWaypoint() {
-        if (this._waypoint) {
-            this._waypoint.delete();
-        }
-    }
-
-    private unassignWaypoint() {
-        if (this._waypoint) {
-            this._waypoint = null;
-            this._updatedAt = new Date();
-        }
-    }
-
-    private unassignMarker() {
-        if (this._marker) {
-            this._marker = null;
-            this._updatedAt = new Date();
-        }
-    }
-
-    private cascadeDelete() {
-        this.deleteMarker();
-        this.deleteWaypoint();
-    }
-
-    private cascadeUnassign() {
-        this.unassignMarker();
-        this.unassignWaypoint();
     }
 
     private ensureNotDeleted() {
@@ -226,6 +199,20 @@ export class TeamPlayer {
     private ensureNoHaveMarker() {
         if (this._marker) {
             throw new MarkerExistsException();
+        }
+    }
+
+    private ensureHaveWaypoint(
+        waypoint: Waypoint | null
+    ): asserts waypoint is Waypoint {
+        if (!waypoint) {
+            throw new WaypointNotFoundException();
+        }
+    }
+
+    private ensureNoHaveWaypoint() {
+        if (this._waypoint) {
+            throw new WaypointExistsException();
         }
     }
 }

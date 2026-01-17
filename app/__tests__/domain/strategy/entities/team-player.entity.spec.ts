@@ -331,7 +331,7 @@ describe('TeamPlayer', () => {
             jest.advanceTimersByTime(1000);
 
             // when
-            teamPlayer.clearMarker();
+            teamPlayer.deleteMarker();
 
             // then
             expect(teamPlayer.marker).toBeNull();
@@ -346,7 +346,7 @@ describe('TeamPlayer', () => {
             teamPlayer.delete();
 
             // when & then
-            expect(() => teamPlayer.clearMarker()).toThrow(
+            expect(() => teamPlayer.deleteMarker()).toThrow(
                 DeletedTeamPlayerException
             );
         });
@@ -362,7 +362,7 @@ describe('TeamPlayer', () => {
             jest.advanceTimersByTime(1000);
 
             // when
-            teamPlayer.assignWaypoint(waypoint);
+            teamPlayer.addWaypoint(waypoint);
 
             // then
             expect(teamPlayer.waypoint).toEqual(waypoint);
@@ -377,7 +377,7 @@ describe('TeamPlayer', () => {
             teamPlayer.delete();
 
             // when & then
-            expect(() => teamPlayer.assignWaypoint(waypoint)).toThrow(
+            expect(() => teamPlayer.addWaypoint(waypoint)).toThrow(
                 DeletedTeamPlayerException
             );
         });
@@ -391,7 +391,7 @@ describe('TeamPlayer', () => {
             jest.advanceTimersByTime(1000);
 
             // when
-            teamPlayer.clearWaypoint();
+            teamPlayer.deleteWaypoint();
 
             // then
             expect(teamPlayer.waypoint).toBeNull();
@@ -406,7 +406,7 @@ describe('TeamPlayer', () => {
             teamPlayer.delete();
 
             // when & then
-            expect(() => teamPlayer.clearWaypoint()).toThrow(
+            expect(() => teamPlayer.deleteWaypoint()).toThrow(
                 DeletedTeamPlayerException
             );
         });

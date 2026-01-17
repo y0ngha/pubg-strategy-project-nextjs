@@ -307,7 +307,7 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.clearMarker();
+        teamPlayer.deleteMarker();
         this._updatedAt = new Date();
     }
 
@@ -323,7 +323,7 @@ export class Strategy {
 
         const waypoint = Waypoint.create(positions);
 
-        teamPlayer.assignWaypoint(waypoint);
+        teamPlayer.addWaypoint(waypoint);
         this._updatedAt = new Date();
     }
 
@@ -333,7 +333,7 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.clearWaypoint();
+        teamPlayer.deleteWaypoint();
         this._updatedAt = new Date();
     }
 
