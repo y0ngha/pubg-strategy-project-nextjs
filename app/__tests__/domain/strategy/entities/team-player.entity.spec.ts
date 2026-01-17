@@ -12,10 +12,13 @@ import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
 describe('TeamPlayer', () => {
     const teamPlayerId = TeamPlayerId.generate();
     const position = Position.create(10, 20);
-    const marker = Marker.create(position);
-    const waypoint = Waypoint.create([position]);
+    let marker: Marker;
+    let waypoint: Waypoint;
 
     beforeEach(() => {
+        marker = Marker.create(position);
+        waypoint = Waypoint.create([position]);
+
         jest.useFakeTimers();
     });
 
