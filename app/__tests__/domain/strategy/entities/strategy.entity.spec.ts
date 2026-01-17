@@ -651,6 +651,109 @@ describe('Strategy', () => {
             });
         });
 
+        describe('UpdateTeamPlayerMarker', () => {
+            const markerPosition = Position.create(15, 15);
+            it('전략에 대한 편집 권한이 있으면, 마커가 수정된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+                const newMarkerPosition1 = Position.create(20, 20);
+                const newMarkerPosition2 = Position.create(30, 30);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    newMarkerPosition1
+                );
+                strategyFixture.updateTeamPlayerMarker(
+                    editorId,
+                    teamPlayerId1,
+                    newMarkerPosition2
+                );
+
+                // then
+                expect(teamPlayer1Fixture.marker?.position).toEqual(
+                    newMarkerPosition2
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('같은 포지션으로 업데이트하면, 무시된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+
+                // then
+                expect(teamPlayer1Fixture.marker?.position).toEqual(
+                    markerPosition
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
+                        viewerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
+                        strangerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
+                        ownerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+
         describe('RemoveTeamPlayerMarker', () => {
             it('전략에 대한 편집 권한이 있으면, 마커가 삭제된다.', () => {
                 // given

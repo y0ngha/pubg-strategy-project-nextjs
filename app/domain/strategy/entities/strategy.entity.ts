@@ -284,6 +284,23 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    updateTeamPlayerMarker(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        position: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        const isChanged = teamPlayer.updateMarkerPosition(position);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+    }
+
     removeTeamPlayerMarker(actorId: UserId, teamPlayerId: TeamPlayerId) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
