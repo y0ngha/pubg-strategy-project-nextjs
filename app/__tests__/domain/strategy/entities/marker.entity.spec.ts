@@ -1,8 +1,17 @@
 import { Position } from '@domain/strategy/value-objects/position';
 import { Marker } from '@domain/strategy/entities/marker.entity';
 import { DeletedMarkerException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 
 describe('Marker', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('포지션을 부여하면, 마커가 생겨난다.', () => {
             // given
@@ -17,12 +26,29 @@ describe('Marker', () => {
         });
     });
 
-    beforeEach(() => {
-        jest.useFakeTimers();
-    });
+    describe('Reconstruct', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
+            // given
+            const id = MarkerId.generate();
+            const position = Position.create(10, 10);
+            const createdAt = new Date('2000-01-01');
+            const updatedAt = new Date('2026-01-01');
 
-    afterEach(() => {
-        jest.useRealTimers();
+            // when
+            const marker = Marker.reconstruct(
+                id,
+                position,
+                createdAt,
+                updatedAt
+            );
+
+            // then
+            expect(marker).toBeInstanceOf(Marker);
+            expect(marker.id).toEqual(id);
+            expect(marker.position).toEqual(position);
+            expect(marker.createdAt).toEqual(createdAt);
+            expect(marker.updatedAt).toEqual(updatedAt);
+        });
     });
 
     describe('Update', () => {
