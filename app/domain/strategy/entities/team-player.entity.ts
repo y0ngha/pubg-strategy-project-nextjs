@@ -6,6 +6,8 @@ import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
+    MarkerExistsException,
+    MarkerNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamPlayer {
@@ -113,9 +115,22 @@ export class TeamPlayer {
         return true;
     }
 
-    assignMarker(marker: Marker) {
+    updateMarkerPosition(position: Position): boolean {
         this.ensureNotDeleted();
-        this.clearMarker();
+        this.ensureHaveMarker(this._marker);
+
+        const isChanged = this._marker.updatePosition(position);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+
+        return isChanged;
+    }
+
+    addMarker(marker: Marker) {
+        this.ensureNotDeleted();
+        this.ensureNoHaveMarker();
 
         this._marker = marker;
         this._updatedAt = new Date();
@@ -199,6 +214,18 @@ export class TeamPlayer {
 
         if (priority < TeamPlayer.MIN_PRIORITY) {
             throw new InvalidTeamPlayerPriorityException();
+        }
+    }
+
+    private ensureHaveMarker(marker: Marker | null): asserts marker is Marker {
+        if (!marker) {
+            throw new MarkerNotFoundException();
+        }
+    }
+
+    private ensureNoHaveMarker() {
+        if (this._marker) {
+            throw new MarkerExistsException();
         }
     }
 }
