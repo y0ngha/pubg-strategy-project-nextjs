@@ -2,11 +2,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { EnemyTeam } from '@domain/strategy/entities/enemy-team.entity';
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
-import {
-    DeletedEnemyTeamException,
-    SamePositionException,
-    SameTeamLabelException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
+import { DeletedEnemyTeamException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 describe('EnemyTeam', () => {
     const teamLabel = TeamLabel.create('A');
@@ -71,14 +67,18 @@ describe('EnemyTeam', () => {
             );
         });
 
-        it('적 팀 객체가 삭제되어 있지 않고, 동일한 팀 라벨로 업데이트시 에러를 던진다.', () => {
+        it('적 팀 객체가 삭제되어 있지 않고, 동일한 팀 라벨로 업데이트시 무시된다.', () => {
             //given
             const enemyTeam = EnemyTeam.create(teamLabel, position);
-            const newTeamLabel = TeamLabel.create('A');
+            const oldUpdatedAt = enemyTeam.updatedAt;
 
-            // when & then
-            expect(() => enemyTeam.updateTeamLabel(newTeamLabel)).toThrow(
-                SameTeamLabelException
+            // when
+            enemyTeam.updateTeamLabel(teamLabel);
+
+            // then
+            expect(enemyTeam.teamLabel).toEqual(teamLabel);
+            expect(enemyTeam.updatedAt.getTime()).toEqual(
+                oldUpdatedAt.getTime()
             );
         });
 
@@ -114,14 +114,19 @@ describe('EnemyTeam', () => {
             );
         });
 
-        it('적 팀 객체가 삭제되어 있지 않고, 동일한 포지션으로 업데이트시 에러를 던진다.', () => {
+        it('적 팀 객체가 삭제되어 있지 않고, 동일한 포지션으로 업데이트시 무시된다.', () => {
             //given
             const enemyTeam = EnemyTeam.create(teamLabel, position);
+            const oldUpdatedAt = enemyTeam.updatedAt;
 
-            // when & then
-            expect(() => enemyTeam.updatePosition(position)).toThrow(
-                SamePositionException
+            // when
+            enemyTeam.updatePosition(position);
+
+            // then
+            expect(enemyTeam.updatedAt.getTime()).toEqual(
+                oldUpdatedAt.getTime()
             );
+            expect(enemyTeam.position).toEqual(position);
         });
 
         it('적 팀 객체가 삭제되어 있다면, 팀 포지션 업데이트시 에러를 던진다.', () => {

@@ -1,11 +1,7 @@
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { Position } from '@domain/strategy/value-objects/position';
-import {
-    DeletedEnemyTeamException,
-    SamePositionException,
-    SameTeamLabelException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
+import { DeletedEnemyTeamException } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class EnemyTeam {
     private constructor(
@@ -63,7 +59,8 @@ export class EnemyTeam {
 
     updateTeamLabel(teamLabel: TeamLabel) {
         this.ensureNotDeleted();
-        this.ensureDifferentTeamLabel(teamLabel);
+
+        if (this._teamLabel.equals(teamLabel)) return;
 
         this._teamLabel = teamLabel;
         this._updatedAt = new Date();
@@ -71,7 +68,8 @@ export class EnemyTeam {
 
     updatePosition(position: Position) {
         this.ensureNotDeleted();
-        this.ensureDifferentPosition(position);
+
+        if (this._position.equals(position)) return;
 
         this._position = position;
         this._updatedAt = new Date();
@@ -81,18 +79,6 @@ export class EnemyTeam {
         this.ensureNotDeleted();
 
         this._isDeleted = true;
-    }
-
-    private ensureDifferentPosition(position: Position) {
-        if (this._position.equals(position)) {
-            throw new SamePositionException();
-        }
-    }
-
-    private ensureDifferentTeamLabel(teamLabel: TeamLabel) {
-        if (this._teamLabel.equals(teamLabel)) {
-            throw new SameTeamLabelException();
-        }
     }
 
     private ensureNotDeleted() {
