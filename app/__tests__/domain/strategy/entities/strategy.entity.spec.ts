@@ -1602,6 +1602,25 @@ describe('Strategy', () => {
                 expect(strategyFixture.tags[1].content).toEqual(newTagContent2);
             });
 
+            it('내용을 같은 값으로 업데이트 할 경우 무시된다.', () => {
+                // given
+                const content = tagFixture.content;
+
+                jest.advanceTimersByTime(1000);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const { id: tagId } = tagFixture;
+
+                // when
+                strategyFixture.updateTag(ownerId, tagId, content, undefined);
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+                expect(tagFixture.content).toEqual(content);
+            });
+
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
                 const tagId = tagFixture.id;

@@ -488,15 +488,23 @@ export class Strategy {
 
         const { value: tag } = this.findTag(tagId);
 
+        let isChanged = false;
+
         if (content) {
-            tag.updateContent(content);
+            if (tag.updateContent(content)) {
+                isChanged = true;
+            }
         }
 
         if (position) {
-            tag.updatePosition(position);
+            if (tag.updatePosition(position)) {
+                isChanged = true;
+            }
         }
 
-        this._updatedAt = new Date();
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
