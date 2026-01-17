@@ -937,7 +937,9 @@ describe('Strategy', () => {
                     enemyTeam1Fixture;
                 const { id: enemyTeamId2, teamLabel: oldEnemyTeamLabel2 } =
                     enemyTeam2Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
+                jest.advanceTimersByTime(1000);
                 // when
                 strategyFixture.updateEnemyTeam(
                     ownerId,
@@ -961,6 +963,9 @@ describe('Strategy', () => {
                     oldEnemyTeamLabel2
                 );
                 expect(enemyTeam2Fixture.teamLabel).toEqual(newTeamLabel2);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 있으면, 적 팀 포지션이 업데이트된다.', () => {
@@ -969,7 +974,9 @@ describe('Strategy', () => {
                     enemyTeam1Fixture;
                 const { id: enemyTeamId2, position: oldEnemyTeamPosition2 } =
                     enemyTeam2Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
+                jest.advanceTimersByTime(1000);
                 // when
                 strategyFixture.updateEnemyTeam(
                     ownerId,
@@ -993,6 +1000,9 @@ describe('Strategy', () => {
                     oldEnemyTeamPosition2
                 );
                 expect(enemyTeam2Fixture.position).toEqual(newPosition2);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
@@ -1018,6 +1028,7 @@ describe('Strategy', () => {
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
+
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
                 const enemyTeamId = enemyTeam1Fixture.id;
