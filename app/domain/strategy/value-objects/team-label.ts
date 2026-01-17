@@ -11,6 +11,10 @@ export class TeamLabel {
         return new TeamLabel(label.trim());
     }
 
+    static reconstruct(content: string) {
+        return new TeamLabel(content);
+    }
+
     private static ensureValidTeamLabel(label: string) {
         if (!TeamLabel.checkOnlyEnglish(label)) {
             throw new InvalidTeamLabelException(label);

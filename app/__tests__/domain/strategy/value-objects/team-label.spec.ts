@@ -42,6 +42,18 @@ describe('TeamLabel', () => {
         });
     });
 
+    describe('reconstruct', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
+            // When
+            const wrongTeamLabel = '잘못된 값';
+            const teamLabel = TeamLabel.reconstruct(wrongTeamLabel);
+
+            // Then
+            expect(teamLabel).toBeInstanceOf(TeamLabel);
+            expect(teamLabel.toString()).toBe(wrongTeamLabel);
+        });
+    });
+
     describe('equals', () => {
         it('같은 값을 가진 TeamLabel는 동등하다', () => {
             // Given
