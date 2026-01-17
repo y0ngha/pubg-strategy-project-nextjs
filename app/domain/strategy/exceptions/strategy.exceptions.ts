@@ -245,3 +245,21 @@ export class DeletedMarkerException extends DomainException {
         super('삭제된 마커에는 할 수 없습니다.');
     }
 }
+
+export class WaypointNotFoundException extends DomainException {
+    constructor() {
+        super('웨이포인트를 찾을 수 없습니다.');
+    }
+}
+
+export class WaypointExistsException extends DomainException {
+    constructor() {
+        super('웨이포인트를 이미 존재합니다.');
+    }
+}
+
+export class DeletedWaypointException extends DomainException {
+    constructor() {
+        super('삭제된 웨이포인트에는 할 수 없습니다.');
+    }
+}
