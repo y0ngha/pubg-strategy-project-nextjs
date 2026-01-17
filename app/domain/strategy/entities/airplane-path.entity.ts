@@ -13,12 +13,7 @@ export class AirplanePath {
         private _isDeleted: boolean,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        this.ensureDifferentForStartPositionToEndPosition(
-            _startPosition,
-            _endPosition
-        );
-    }
+    ) {}
 
     get updatedAt(): Date {
         return this._updatedAt;
@@ -37,6 +32,11 @@ export class AirplanePath {
     }
 
     static create(startPosition: Position, endPosition: Position) {
+        AirplanePath.ensureDifferentForStartPositionToEndPosition(
+            startPosition,
+            endPosition
+        );
+
         return new AirplanePath(
             AirplanePathId.generate(),
             startPosition,
@@ -45,6 +45,15 @@ export class AirplanePath {
             new Date(),
             new Date()
         );
+    }
+
+    private static ensureDifferentForStartPositionToEndPosition(
+        startPosition: Position,
+        endPosition: Position
+    ) {
+        if (startPosition.equals(endPosition)) {
+            throw new AirplanePathCreateDuplicatePositionException();
+        }
     }
 
     updateStartPosition(position: Position): boolean {
@@ -73,15 +82,6 @@ export class AirplanePath {
         this.ensureNotDeleted();
 
         this._isDeleted = true;
-    }
-
-    private ensureDifferentForStartPositionToEndPosition(
-        startPosition: Position,
-        endPosition: Position
-    ) {
-        if (startPosition.equals(endPosition)) {
-            throw new AirplanePathCreateDuplicatePositionException();
-        }
     }
 
     private ensureNotDeleted() {
