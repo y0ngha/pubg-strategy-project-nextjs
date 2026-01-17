@@ -227,3 +227,21 @@ export class AirplanePathExistsException extends DomainException {
         super('비행기 동선이 이미 존재합니다.');
     }
 }
+
+export class MarkerNotFoundException extends DomainException {
+    constructor() {
+        super('마커를 찾을 수 없습니다.');
+    }
+}
+
+export class MarkerExistsException extends DomainException {
+    constructor() {
+        super('마커가 이미 존재합니다.');
+    }
+}
+
+export class DeletedMarkerException extends DomainException {
+    constructor() {
+        super('삭제된 마커에는 할 수 없습니다.');
+    }
+}
