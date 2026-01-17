@@ -7,6 +7,7 @@ import {
     InvalidTeamPlayerPriorityException,
     MarkerExistsException,
     MarkerNotFoundException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
@@ -383,7 +384,53 @@ describe('TeamPlayer', () => {
         });
     });
 
-    describe('Clear Waypoint', () => {
+    describe('Update Waypoint Positions', () => {
+        const waypoint = Waypoint.create([Position.create(30, 30)]);
+
+        it('팀 플레이어가 삭제된 객체가 아니고, 웨이포인트가 있으면 웨이포인트를 수정할 수 있다.', () => {
+            // given
+            const teamPlayer = TeamPlayer.create(1, position, null, null);
+            teamPlayer.addWaypoint(waypoint);
+            const newPositions = [Position.create(500, 500)];
+            const oldUpdatedAt = teamPlayer.updatedAt;
+
+            jest.advanceTimersByTime(1000);
+
+            // when
+            teamPlayer.updateWaypointPositions(newPositions);
+
+            // then
+            expect(teamPlayer.waypoint?.positions).toEqual(newPositions);
+            expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
+        });
+
+        it('웨이포인트가 없을 경우, 에러를 던진다.', () => {
+            // given
+            const teamPlayer = TeamPlayer.create(1, position, null, null);
+            const newPositions = [Position.create(500, 500)];
+
+            // when & then
+            expect(() =>
+                teamPlayer.updateWaypointPositions(newPositions)
+            ).toThrow(WaypointNotFoundException);
+        });
+
+        it('팀 플레이어가 삭제된 객체라면, 웨이포인트 수정시 에러를 던진다.', () => {
+            // given
+            const teamPlayer = TeamPlayer.create(1, position, null, null);
+            const newPositions = [Position.create(500, 500)];
+            teamPlayer.delete();
+
+            // when & then
+            expect(() =>
+                teamPlayer.updateWaypointPositions(newPositions)
+            ).toThrow(DeletedTeamPlayerException);
+        });
+    });
+
+    describe('Delete Waypoint', () => {
         it('팀 플레이어가 삭제된 객체가 아니라면, 웨이포인트를 삭제할 수 있다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, waypoint);
