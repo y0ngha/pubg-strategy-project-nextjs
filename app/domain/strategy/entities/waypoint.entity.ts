@@ -26,6 +26,8 @@ export class Waypoint {
     }
 
     static create(positions: Position[]) {
+        Waypoint.ensureValidPositions(positions);
+
         return new Waypoint(
             WaypointId.generate(),
             [...positions],
@@ -34,26 +36,21 @@ export class Waypoint {
         );
     }
 
-    delete() {
-        if (this._isDeleted) return;
-        this._isDeleted = true;
-    }
-
-    private validatePositions(positions: Position[]): void {
-        if (this.isExceedingMaxLimit(positions)) {
+    private static ensureValidPositions(positions: Position[]): void {
+        if (Waypoint.isExceedingMaxLimit(positions)) {
             throw new WaypointPositionLimitExceededException();
         }
 
-        if (this.hasDuplicatePosition(positions)) {
+        if (Waypoint.hasDuplicatePosition(positions)) {
             throw new WaypointCreateDuplicatePositionException();
         }
     }
 
-    private isExceedingMaxLimit(positions: Position[]): boolean {
+    private static isExceedingMaxLimit(positions: Position[]): boolean {
         return positions.length > Waypoint.MAX_POSITIONS;
     }
 
-    private hasDuplicatePosition(positions: Position[]): boolean {
+    private static hasDuplicatePosition(positions: Position[]): boolean {
         const keys = positions.map(pos => `${pos.x},${pos.y}`);
         return new Set(keys).size !== positions.length;
     }
