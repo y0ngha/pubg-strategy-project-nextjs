@@ -5,36 +5,24 @@ import {
 } from '@domain/shared/exceptions/entity-id.exceptions';
 
 export abstract class EntityId {
-    protected constructor(protected readonly value: string) {
-        this.validateEntityId(value);
-    }
+    protected constructor(protected readonly value: string) {}
 
     protected static _generateUuid(): string {
         return randomUUID();
     }
 
-    abstract equals(id: EntityId): boolean;
-
-    toString(): string {
-        return this.value;
+    protected static validateEntityId(value: string) {
+        EntityId.ensureNotBlank(value);
+        EntityId.ensureMatchesUUIDv4(value);
     }
 
-    toJSON(): string {
-        return this.value;
-    }
-
-    private validateEntityId(value: string) {
-        this.ensureNotBlank(value);
-        this.ensureMatchesUUIDv4(value);
-    }
-
-    private ensureNotBlank(value: string): void {
+    private static ensureNotBlank(value: string): void {
         if (!value || value.trim().length === 0) {
             throw new EntityIdBlankException();
         }
     }
 
-    private ensureMatchesUUIDv4(value: string): void {
+    private static ensureMatchesUUIDv4(value: string): void {
         const uuidV4Regex =
             /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         if (!uuidV4Regex.test(value)) {
