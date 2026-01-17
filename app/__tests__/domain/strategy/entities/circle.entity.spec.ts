@@ -152,6 +152,7 @@ describe('Circle', () => {
             const circle = Circle.create(centerPosition, 1);
             const oldUpdateAt = circle.updatedAt;
             const oldCenterPosition = circle.centerPosition;
+            jest.advanceTimersByTime(1000);
 
             // when
             circle.updateCenterPosition(centerPosition);

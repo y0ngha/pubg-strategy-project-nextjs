@@ -297,6 +297,8 @@ describe('Comment', () => {
 
             const actorId = authorId;
 
+            jest.advanceTimersByTime(1000);
+
             // when
             comment.updateContent(actorId, sameContent);
 

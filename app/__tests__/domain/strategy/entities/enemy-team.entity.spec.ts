@@ -71,6 +71,7 @@ describe('EnemyTeam', () => {
             //given
             const enemyTeam = EnemyTeam.create(teamLabel, position);
             const oldUpdatedAt = enemyTeam.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             enemyTeam.updateTeamLabel(teamLabel);
