@@ -8,7 +8,7 @@ export class TeamLabel {
 
         TeamLabel.ensureValidTeamLabel(trimmed);
 
-        return new TeamLabel(label.trim());
+        return new TeamLabel(trimmed);
     }
 
     static reconstruct(content: string) {
