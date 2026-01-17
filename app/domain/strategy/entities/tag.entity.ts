@@ -50,22 +50,26 @@ export class Tag {
         return new Tag(id, position, content, false, createdAt, updatedAt);
     }
 
-    updatePosition(position: Position) {
+    updatePosition(position: Position): boolean {
         this.ensureNotDeleted();
 
-        if (this._position.equals(position)) return;
+        if (this._position.equals(position)) return false;
 
         this._position = position;
         this._updatedAt = new Date();
+
+        return true;
     }
 
-    updateContent(content: TagContent) {
+    updateContent(content: TagContent): boolean {
         this.ensureNotDeleted();
 
-        if (this._content.equals(content)) return;
+        if (this._content.equals(content)) return false;
 
         this._content = content;
         this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
