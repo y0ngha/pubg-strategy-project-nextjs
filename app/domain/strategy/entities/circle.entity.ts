@@ -1,51 +1,23 @@
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
-import {
-    DeletedCircleException,
-    InvalidCirclePhaseException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
-import { CircleColor } from '@domain/strategy/enums/circle-color.enum';
+import { DeletedCircleException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Position } from '@domain/strategy/value-objects/position';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 export class Circle {
-    private static readonly MAX_PHASE_NUMBER = 8;
-    private static readonly MIN_PHASE_NUMBER = 1;
-    private static readonly COLOR_MAP: Record<number, CircleColor> = {
-        1: CircleColor.PHASE_1,
-        2: CircleColor.PHASE_2,
-        3: CircleColor.PHASE_3,
-        4: CircleColor.PHASE_4,
-        5: CircleColor.PHASE_5,
-        6: CircleColor.PHASE_6,
-        7: CircleColor.PHASE_7,
-        8: CircleColor.PHASE_8,
-    };
-    private static readonly RADIUS_MAP: Record<number, number> = {
-        1: 1997.05,
-        2: 1198.25,
-        3: 659.05,
-        4: 362.45,
-        5: 181.25,
-        6: 90.6,
-        7: 45.3,
-        8: 22.6,
-    };
-
     private constructor(
         public readonly id: CircleId,
         private _centerPosition: Position,
-        private _phase: number,
+        private _phase: CirclePhase,
         private _isDeleted: boolean,
         public readonly createdAt: Date,
         private _updatedAt: Date
-    ) {
-        this.validatePhase(_phase);
-    }
+    ) {}
 
     get centerPosition(): Position {
         return this._centerPosition;
     }
 
-    get phase(): number {
+    get phase(): CirclePhase {
         return this._phase;
     }
 
@@ -57,15 +29,7 @@ export class Circle {
         return this._updatedAt;
     }
 
-    get radius(): number {
-        return Circle.RADIUS_MAP[this._phase];
-    }
-
-    get color(): CircleColor {
-        return Circle.COLOR_MAP[this._phase];
-    }
-
-    static create(centerPosition: Position, phase: number) {
+    static create(centerPosition: Position, phase: CirclePhase) {
         return new Circle(
             CircleId.generate(),
             centerPosition,
@@ -79,7 +43,7 @@ export class Circle {
     static reconstruct(
         id: CircleId,
         centerPosition: Position,
-        phase: number,
+        phase: CirclePhase,
         createdAt: Date,
         updatedAt: Date
     ) {
@@ -93,23 +57,26 @@ export class Circle {
         );
     }
 
-    updateCenterPosition(position: Position) {
+    updateCenterPosition(position: Position): boolean {
         this.ensureNotDeleted();
 
-        if (this._centerPosition.equals(position)) return;
+        if (this._centerPosition.equals(position)) return false;
 
         this._centerPosition = position;
         this._updatedAt = new Date();
+
+        return true;
     }
 
-    updatePhase(phase: number) {
+    updatePhase(phase: CirclePhase): boolean {
         this.ensureNotDeleted();
-        this.validatePhase(phase);
 
-        if (this._phase === phase) return;
+        if (this._phase.equals(phase)) return false;
 
         this._phase = phase;
         this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
@@ -122,21 +89,5 @@ export class Circle {
         if (this._isDeleted) {
             throw new DeletedCircleException();
         }
-    }
-    private ensurePhaseLessThan8(phase: number) {
-        if (phase > Circle.MAX_PHASE_NUMBER) {
-            throw new InvalidCirclePhaseException();
-        }
-    }
-
-    private ensurePhaseGreaterThanZero(phase: number) {
-        if (phase < Circle.MIN_PHASE_NUMBER) {
-            throw new InvalidCirclePhaseException();
-        }
-    }
-
-    private validatePhase(phase: number) {
-        this.ensurePhaseLessThan8(phase);
-        this.ensurePhaseGreaterThanZero(phase);
     }
 }
