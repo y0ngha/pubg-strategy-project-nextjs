@@ -280,7 +280,7 @@ export class Strategy {
 
         const marker = Marker.create(position);
 
-        teamPlayer.assignMarker(marker);
+        teamPlayer.addMarker(marker);
         this._updatedAt = new Date();
     }
 
