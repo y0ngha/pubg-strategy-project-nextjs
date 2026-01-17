@@ -57,22 +57,26 @@ export class EnemyTeam {
         );
     }
 
-    updateTeamLabel(teamLabel: TeamLabel) {
+    updateTeamLabel(teamLabel: TeamLabel): boolean {
         this.ensureNotDeleted();
 
-        if (this._teamLabel.equals(teamLabel)) return;
+        if (this._teamLabel.equals(teamLabel)) return false;
 
         this._teamLabel = teamLabel;
         this._updatedAt = new Date();
+
+        return true;
     }
 
-    updatePosition(position: Position) {
+    updatePosition(position: Position): boolean {
         this.ensureNotDeleted();
 
-        if (this._position.equals(position)) return;
+        if (this._position.equals(position)) return false;
 
         this._position = position;
         this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
