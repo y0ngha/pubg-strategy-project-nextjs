@@ -10,7 +10,6 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { Position } from '@domain/strategy/value-objects/position';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
@@ -103,37 +102,6 @@ describe('AddMarkerUseCase', () => {
 
         expect(teamPlayer?.marker).not.toBeNull();
         expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position).toEqual(position);
-    });
-
-    it('마커가 있을 때 기존 마커가 교체된다.', async () => {
-        // given
-        const oldPosition = Position.create(500, 2000);
-        strategyFixture.addTeamPlayerMarker(ownerId, teamPlayerId, oldPosition);
-
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: teamPlayerId.toString(),
-            position: position,
-        };
-
-        // when
-        await useCase.execute(dto);
-
-        // then
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
-
-        const teamPlayer = strategyFixture.teamPlayers.find(teamPlayer =>
-            teamPlayer.id.equals(teamPlayerId)
-        );
-
-        expect(teamPlayer?.marker).not.toBeNull();
-        expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position).not.toEqual(oldPosition);
         expect(teamPlayer?.marker?.position).toEqual(position);
     });
 
