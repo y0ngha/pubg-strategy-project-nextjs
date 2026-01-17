@@ -6,11 +6,16 @@ export class CommentId extends EntityId {
     }
 
     static create(value: string): CommentId {
+        EntityId.validateEntityId(value);
+        return new CommentId(value);
+    }
+
+    static reconstruct(value: string): CommentId {
         return new CommentId(value);
     }
 
     static generate(): CommentId {
-        return new CommentId(EntityId._generateUuid());
+        return new CommentId(EntityId.generateUuid());
     }
 
     equals(commentId: CommentId): boolean {

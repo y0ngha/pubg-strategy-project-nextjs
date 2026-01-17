@@ -6,11 +6,16 @@ export class MarkerId extends EntityId {
     }
 
     static create(value: string): MarkerId {
+        EntityId.validateEntityId(value);
+        return new MarkerId(value);
+    }
+
+    static reconstruct(value: string): MarkerId {
         return new MarkerId(value);
     }
 
     static generate(): MarkerId {
-        return new MarkerId(EntityId._generateUuid());
+        return new MarkerId(EntityId.generateUuid());
     }
 
     equals(markerId: MarkerId): boolean {

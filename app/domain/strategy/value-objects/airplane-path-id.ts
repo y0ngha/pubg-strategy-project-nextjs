@@ -6,11 +6,16 @@ export class AirplanePathId extends EntityId {
     }
 
     static create(value: string): AirplanePathId {
+        EntityId.validateEntityId(value);
+        return new AirplanePathId(value);
+    }
+
+    static reconstruct(value: string): AirplanePathId {
         return new AirplanePathId(value);
     }
 
     static generate(): AirplanePathId {
-        return new AirplanePathId(EntityId._generateUuid());
+        return new AirplanePathId(EntityId.generateUuid());
     }
 
     equals(airplanePathId: AirplanePathId): boolean {

@@ -6,11 +6,16 @@ export class FriendId extends EntityId {
     }
 
     static create(value: string): FriendId {
+        EntityId.validateEntityId(value);
+        return new FriendId(value);
+    }
+
+    static reconstruct(value: string): FriendId {
         return new FriendId(value);
     }
 
     static generate(): FriendId {
-        return new FriendId(EntityId._generateUuid());
+        return new FriendId(EntityId.generateUuid());
     }
 
     equals(friendId: FriendId): boolean {

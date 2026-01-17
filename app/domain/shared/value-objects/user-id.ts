@@ -6,11 +6,16 @@ export class UserId extends EntityId {
     }
 
     static create(value: string): UserId {
+        EntityId.validateEntityId(value);
+        return new UserId(value);
+    }
+
+    static reconstruct(value: string): UserId {
         return new UserId(value);
     }
 
     static generate(): UserId {
-        return new UserId(EntityId._generateUuid());
+        return new UserId(EntityId.generateUuid());
     }
 
     equals(userId: UserId): boolean {

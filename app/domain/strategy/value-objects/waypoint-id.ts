@@ -6,11 +6,16 @@ export class WaypointId extends EntityId {
     }
 
     static create(value: string): WaypointId {
+        EntityId.validateEntityId(value);
+        return new WaypointId(value);
+    }
+
+    static reconstruct(value: string): WaypointId {
         return new WaypointId(value);
     }
 
     static generate(): WaypointId {
-        return new WaypointId(EntityId._generateUuid());
+        return new WaypointId(EntityId.generateUuid());
     }
 
     equals(waypointId: WaypointId): boolean {

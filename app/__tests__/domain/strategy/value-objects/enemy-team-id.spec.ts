@@ -51,6 +51,19 @@ describe('EnemyTeamId', () => {
         });
     });
 
+    describe('reconstruct', () => {
+        it('재생성되는 값을 그대로 신뢰하여 유효성 검사 없이 생성된다.', () => {
+            // given
+            const value = '잘못된 값';
+
+            // when
+            const id = EnemyTeamId.reconstruct(value);
+
+            // then
+            expect(id.toString()).toEqual(value);
+        });
+    });
+
     describe('equals', () => {
         it('같은 값을 가진 EnemyTeamId는 동등하다', () => {
             // Given
