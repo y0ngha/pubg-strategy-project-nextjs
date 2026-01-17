@@ -1175,6 +1175,7 @@ describe('Strategy', () => {
                 // give
                 const newCenterPosition1 = Position.create(10, 10);
                 const newCenterPosition2 = Position.create(20, 20);
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
                 const {
                     id: circleId1,
@@ -1184,6 +1185,8 @@ describe('Strategy', () => {
                     id: circleId2,
                     centerPosition: oldCircle2centerPosition,
                 } = circle2Fixture;
+
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateCircle(
@@ -1211,6 +1214,9 @@ describe('Strategy', () => {
                 );
                 expect(circle2Fixture.centerPosition).toEqual(
                     newCenterPosition2
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
                 );
             });
 
