@@ -130,6 +130,19 @@ export class TeamPlayer {
         return isChanged;
     }
 
+    updateWaypointPositions(positions: Position[]): boolean {
+        this.ensureNotDeleted();
+        this.ensureHaveWaypoint(this._waypoint);
+
+        const isChanged = this._waypoint.updatePositions(positions);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+
+        return isChanged;
+    }
+
     addMarker(marker: Marker) {
         this.ensureNotDeleted();
         this.ensureNoHaveMarker();
