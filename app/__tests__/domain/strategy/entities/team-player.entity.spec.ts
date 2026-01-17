@@ -5,7 +5,6 @@ import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
-    SamePositionException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
@@ -206,14 +205,20 @@ describe('TeamPlayer', () => {
             );
         });
 
-        it('같은 포지션으로 업데이트시 에러를 던진다.', () => {
+        it('같은 포지션으로 업데이트시 무시된다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, marker, waypoint);
+            const oldUpdatedAt = teamPlayer.updatedAt;
+            jest.advanceTimersByTime(1000);
 
-            // when & then
-            expect(() => teamPlayer.updatePosition(position)).toThrow(
-                SamePositionException
+            // when
+            teamPlayer.updatePosition(position);
+
+            // then
+            expect(teamPlayer.updatedAt.getTime()).toEqual(
+                oldUpdatedAt.getTime()
             );
+            expect(teamPlayer.position).toEqual(position);
         });
 
         it('팀 플레이어가 삭제된 객체라면, 포지션 업데이트시 에러를 던진다.', () => {
