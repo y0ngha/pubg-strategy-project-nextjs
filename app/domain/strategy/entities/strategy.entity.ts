@@ -9,6 +9,8 @@ import { StrategyShare } from '@domain/strategy/entities/strategy-share.entity';
 import { Comment } from '@domain/strategy/entities/comment.entity';
 import { PubgMap, PubgMapSizes } from '@domain/strategy/enums/map.enum';
 import {
+    AirplanePathExistsException,
+    AirplanePathNotFoundException,
     ChildCommentException,
     CircleLimitExceededException,
     CircleNotFoundException,
@@ -418,6 +420,19 @@ export class Strategy {
     /**
      * Airplane
      */
+    addAirplanePath(
+        actorId: UserId,
+        startPosition: Position,
+        endPosition: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+        this.ensureNoHaveAirplanePath();
+
+        this._airplanePath = AirplanePath.create(startPosition, endPosition);
+        this._updatedAt = new Date();
+    }
+
     updateAirplanePath(
         actorId: UserId,
         startPosition: Position,
@@ -425,17 +440,16 @@ export class Strategy {
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
+        this.ensureHaveAirplanePath(this._airplanePath);
 
-        if (
-            this._airplanePath?.startPosition.equals(startPosition) &&
-            this._airplanePath?.endPosition.equals(endPosition)
-        )
-            return;
+        const isStartChanged =
+            this._airplanePath.updateStartPosition(startPosition);
 
-        this._airplanePath;
+        const isEndChanged = this._airplanePath.updateEndPosition(endPosition);
 
-        this._airplanePath = AirplanePath.create(startPosition, endPosition);
-        this._updatedAt = new Date();
+        if (isStartChanged || isEndChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     removeAirplanePath(actorId: UserId) {
@@ -827,6 +841,20 @@ export class Strategy {
 
         if (!comment.isParent) {
             throw new ChildCommentException();
+        }
+    }
+
+    private ensureHaveAirplanePath(
+        airplanePath: AirplanePath | null
+    ): asserts airplanePath is AirplanePath {
+        if (!airplanePath) {
+            throw new AirplanePathNotFoundException();
+        }
+    }
+
+    private ensureNoHaveAirplanePath() {
+        if (this._airplanePath) {
+            throw new AirplanePathExistsException();
         }
     }
 }

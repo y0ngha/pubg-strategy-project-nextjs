@@ -221,3 +221,15 @@ export class DeletedAirplanePathException extends DomainException {
         super('삭제된 비행기 동선에는 할 수 없습니다.');
     }
 }
+
+export class AirplanePathNotFoundException extends DomainException {
+    constructor() {
+        super('비행기 동선을 찾을 수 없습니다.');
+    }
+}
+
+export class AirplanePathExistsException extends DomainException {
+    constructor() {
+        super('비행기 동선이 이미 존재합니다.');
+    }
+}

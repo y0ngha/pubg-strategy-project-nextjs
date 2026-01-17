@@ -15,6 +15,8 @@ import { AirplanePath } from '@domain/strategy/entities/airplane-path.entity';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import {
+    AirplanePathExistsException,
+    AirplanePathNotFoundException,
     ChildCommentException,
     CircleLimitExceededException,
     CirclePhaseDuplicateException,
@@ -1299,14 +1301,92 @@ describe('Strategy', () => {
     });
 
     describe('AirplanePath', () => {
+        describe('AddAirplanePath', () => {
+            const startPosition = Position.create(10, 10);
+            const endPosition = Position.create(1000, 1000);
+
+            it('전략에 대한 편집 권한이 있고, 비행기 경로가 없다면, 비행기 경로가 추가된다.', () => {
+                // given
+                strategyFixture.removeAirplanePath(ownerId); // 기존에 strategyFixture에 airplanePath가 존재해서 제거 후 시작.
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.addAirplanePath(
+                    ownerId,
+                    startPosition,
+                    endPosition
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+                expect(strategyFixture.airplanePath).toBeDefined();
+                expect(strategyFixture.airplanePath?.startPosition).toEqual(
+                    startPosition
+                );
+                expect(strategyFixture.airplanePath?.endPosition).toEqual(
+                    endPosition
+                );
+            });
+
+            it('비행기 경로가 존재한 상태에서 추가를 요청하면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        ownerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(AirplanePathExistsException);
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        viewerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        strangerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        ownerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+
         describe('UpdateAirplanePath', () => {
             const finalStartPosition = Position.create(500, 500);
             const finalEndPosition = Position.create(2500, 2500);
 
-            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 업데이트된다.', () => {
+            it('전략에 대한 편집 권한이 있고, 비행기 경로가 기존에 존재한다면 비행기 경로가 업데이트된다.', () => {
                 // given
                 const initalStartPosition = Position.create(10, 10);
                 const initalEndPosition = Position.create(1000, 1000);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateAirplanePath(
@@ -1321,7 +1401,9 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.airplanePath).not.toBeNull();
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
                 expect(strategyFixture.airplanePath?.startPosition).toEqual(
                     finalStartPosition
                 );
@@ -1362,6 +1444,20 @@ describe('Strategy', () => {
                 );
             });
 
+            it('비행기 경로가 없는 상태에서 업데이트를 요청하면, 에러를 던진다.', () => {
+                // given
+                strategyFixture.removeAirplanePath(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateAirplanePath(
+                        ownerId,
+                        finalStartPosition,
+                        finalEndPosition
+                    )
+                ).toThrow(AirplanePathNotFoundException);
+            });
+
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
@@ -1395,6 +1491,7 @@ describe('Strategy', () => {
                 ).toThrow(DeletedStrategyException);
             });
         });
+
         describe('DeleteAirplanePath', () => {
             it('전략에 대한 편집 권한이 있으면, 비행기 경로가 삭제된다..', () => {
                 // given
