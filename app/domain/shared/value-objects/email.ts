@@ -15,11 +15,8 @@ export class Email {
         return new Email(trimmed);
     }
 
-    equals(other: Email): boolean {
-        if (!(other instanceof Email)) {
-            return false;
-        }
-        return this.value === other.value;
+    static reconstruct(value: string): Email {
+        return new Email(value);
     }
 
     toString(): string {
