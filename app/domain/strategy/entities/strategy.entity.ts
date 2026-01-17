@@ -432,6 +432,8 @@ export class Strategy {
         )
             return;
 
+        this._airplanePath;
+
         this._airplanePath = AirplanePath.create(startPosition, endPosition);
         this._updatedAt = new Date();
     }
