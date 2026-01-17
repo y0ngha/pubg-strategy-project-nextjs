@@ -47,6 +47,23 @@ export class AirplanePath {
         );
     }
 
+    static reconstruct(
+        id: AirplanePathId,
+        startPosition: Position,
+        endPosition: Position,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        return new AirplanePath(
+            id,
+            startPosition,
+            endPosition,
+            false,
+            createdAt,
+            updatedAt
+        );
+    }
+
     private static ensureDifferentForStartPositionToEndPosition(
         startPosition: Position,
         endPosition: Position
