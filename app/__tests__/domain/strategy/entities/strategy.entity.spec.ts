@@ -1767,6 +1767,8 @@ describe('Strategy', () => {
                 // given
                 const { id: strategyShareId, permission: oldPermission } =
                     strategyShareEditorFixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateStrategySharePermission(
@@ -1781,6 +1783,9 @@ describe('Strategy', () => {
                 );
                 expect(strategyShareEditorFixture.permission).toEqual(
                     newPermission
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
                 );
             });
 
