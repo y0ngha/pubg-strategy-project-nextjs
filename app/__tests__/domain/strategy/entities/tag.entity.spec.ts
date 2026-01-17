@@ -60,7 +60,8 @@ describe('Tag', () => {
         const newPosition = Position.create(200, 200);
         it('태그가 삭제된 객체가 아니라면, 포지션 업데이트시 업데이트 된다.', () => {
             // given
-            const tag = Tag.create(position, TagContent.create('태그'));
+            const tagContent = TagContent.create('태그');
+            const tag = Tag.create(position, tagContent);
             const oldUpdatedAt = tag.updatedAt;
             jest.advanceTimersByTime(1000);
 
@@ -76,7 +77,8 @@ describe('Tag', () => {
 
         it('같은 포지션으로 업데이트시 에러를 던진다.', () => {
             // given
-            const tag = Tag.create(position, TagContent.create('태그'));
+            const tagContent = TagContent.create('태그');
+            const tag = Tag.create(position, tagContent);
 
             // when & then
             expect(() => tag.updatePosition(position)).toThrow(
@@ -86,7 +88,8 @@ describe('Tag', () => {
 
         it('태그가 삭제된 객체라면, 포지션 업데이트시 에러를 던진다.', () => {
             // given
-            const tag = Tag.create(position, TagContent.create('태그'));
+            const tagContent = TagContent.create('태그');
+            const tag = Tag.create(position, tagContent);
             tag.delete();
 
             // when & then
@@ -133,7 +136,8 @@ describe('Tag', () => {
     describe('Delete', () => {
         it('태그가 삭제된 객체가 아니라면, 삭제된다.', () => {
             // given
-            const tag = Tag.create(position, TagContent.create('태그'));
+            const tagContent = TagContent.create('태그');
+            const tag = Tag.create(position, tagContent);
 
             // when
             tag.delete();
@@ -144,7 +148,8 @@ describe('Tag', () => {
 
         it('태그가 이미 삭제된 객체라면, 에러를 던진다.', () => {
             // given
-            const tag = Tag.create(position, TagContent.create('태그'));
+            const tagContent = TagContent.create('태그');
+            const tag = Tag.create(position, tagContent);
             tag.delete();
 
             // when & then
