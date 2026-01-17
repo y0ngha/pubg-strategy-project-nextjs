@@ -356,15 +356,17 @@ export class Strategy {
 
         const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
 
-        if (teamLabel) {
-            enemyTeam.updateTeamLabel(teamLabel);
-        }
+        const isTeamLabelChanged = teamLabel
+            ? enemyTeam.updateTeamLabel(teamLabel)
+            : false;
 
-        if (position) {
-            enemyTeam.updatePosition(position);
-        }
+        const isPositionChanged = position
+            ? enemyTeam.updatePosition(position)
+            : false;
 
-        this._updatedAt = new Date();
+        if (isTeamLabelChanged || isPositionChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
