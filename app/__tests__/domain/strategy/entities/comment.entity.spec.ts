@@ -7,7 +7,6 @@ import {
     DeletedCommentException,
     InvalidAuthorException,
     ParentCommentPositionRequiredException,
-    SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
@@ -284,7 +283,7 @@ describe('Comment', () => {
             );
         });
 
-        it('삭제되지 않은 댓글이고, 내용이 비어있지 않으나 이전 내용과 같다면 에러를 던진다.', () => {
+        it('삭제되지 않은 댓글이고, 내용이 비어있지 않으나 이전 내용과 같다면 무시된다.', () => {
             // given
             const comment = Comment.create(
                 position,
@@ -293,13 +292,17 @@ describe('Comment', () => {
                 oldContent,
                 null
             );
-            const newContent = CommentContent.create('댓글');
+            const sameContent = CommentContent.create('댓글');
+            const oldUpdatedAt = comment.updatedAt;
+
             const actorId = authorId;
 
-            // when & then
-            expect(() => comment.updateContent(actorId, newContent)).toThrow(
-                SameContentException
-            );
+            // when
+            comment.updateContent(actorId, sameContent);
+
+            // then
+            expect(comment.updatedAt.getTime()).toEqual(oldUpdatedAt.getTime());
+            expect(comment.content).toEqual(oldContent);
         });
 
         it('삭제된 댓글이라면, 에러를 던진다.', () => {

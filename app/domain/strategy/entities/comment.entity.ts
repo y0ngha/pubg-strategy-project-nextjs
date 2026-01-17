@@ -7,7 +7,6 @@ import {
     DeletedCommentException,
     InvalidAuthorException,
     ParentCommentPositionRequiredException,
-    SameContentException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 
@@ -100,7 +99,8 @@ export class Comment {
     updateContent(userId: UserId, content: CommentContent) {
         this.ensureNotDeleted();
         this.ensureAuthor(userId);
-        this.ensureDifferentContent(content);
+
+        if (this._content.equals(content)) return;
 
         this._content = content;
         this._updatedAt = new Date();
@@ -139,12 +139,6 @@ export class Comment {
     private ensureNotDeleted() {
         if (this._isDeleted) {
             throw new DeletedCommentException();
-        }
-    }
-
-    private ensureDifferentContent(content: CommentContent) {
-        if (this._content.equals(content)) {
-            throw new SameContentException();
         }
     }
 }
