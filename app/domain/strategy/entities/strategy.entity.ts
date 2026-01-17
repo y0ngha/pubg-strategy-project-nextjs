@@ -534,23 +534,34 @@ export class Strategy {
     /**
      * Strategy
      */
+
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
-        if (title) {
-            if (this._title.equals(title)) return;
+        const isTitleChanged =
+            title !== undefined && !this._title.equals(title);
+        const isMapChange = map !== undefined && !(this._map === map);
 
+        if (isTitleChanged) {
             this._title = title;
         }
 
-        if (map) {
-            if (this._map === map) return;
-
+        if (isMapChange) {
             this._map = map;
         }
 
-        this._updatedAt = new Date();
+        if (isTitleChanged || isMapChange) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**

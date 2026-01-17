@@ -187,6 +187,12 @@ describe('Strategy', () => {
             new Date(),
             new Date()
         );
+
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     describe('Create', () => {
@@ -1833,6 +1839,8 @@ describe('Strategy', () => {
             // given
             const oldMap = strategyFixture.map;
             const oldTitle = strategyFixture.title;
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             strategyFixture.update(ownerId, undefined, newMap);
@@ -1841,12 +1849,17 @@ describe('Strategy', () => {
             expect(strategyFixture.map).not.toEqual(oldMap);
             expect(strategyFixture.map).toEqual(newMap);
             expect(strategyFixture.title).toEqual(oldTitle);
+            expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('전략에 대한 소유주라면, 제목이 업데이트 된다.', () => {
             // given
             const oldMap = strategyFixture.map;
             const oldTitle = strategyFixture.title;
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             strategyFixture.update(ownerId, newTitle, undefined);
@@ -1855,6 +1868,25 @@ describe('Strategy', () => {
             expect(strategyFixture.title).not.toEqual(oldTitle);
             expect(strategyFixture.title).toEqual(newTitle);
             expect(strategyFixture.map).toEqual(oldMap);
+            expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
+        });
+
+        it('같은 값으로 업데이트 할 경우 무시된다.', () => {
+            // given
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
+
+            // when
+            strategyFixture.update(ownerId, defaultTitle, defaultMap);
+
+            // then
+            expect(strategyFixture.title).toEqual(defaultTitle);
+            expect(strategyFixture.map).toEqual(defaultMap);
+            expect(strategyFixture.updatedAt.getTime()).toEqual(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
