@@ -1,9 +1,6 @@
 import { Position } from '@domain/strategy/value-objects/position';
 import { Tag } from '@domain/strategy/entities/tag.entity';
-import {
-    DeletedTagException,
-    SamePositionException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
+import { DeletedTagException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
@@ -75,15 +72,19 @@ describe('Tag', () => {
             );
         });
 
-        it('같은 포지션으로 업데이트시 에러를 던진다.', () => {
+        it('같은 포지션으로 업데이트시 무시된다.', () => {
             // given
             const tagContent = TagContent.create('태그');
             const tag = Tag.create(position, tagContent);
+            const oldUpdatedAt = tag.updatedAt;
+            jest.advanceTimersByTime(1000);
+
+            // when
+            tag.updatePosition(position);
 
             // when & then
-            expect(() => tag.updatePosition(position)).toThrow(
-                SamePositionException
-            );
+            expect(tag.position).toEqual(position);
+            expect(tag.updatedAt.getTime()).toEqual(oldUpdatedAt.getTime());
         });
 
         it('태그가 삭제된 객체라면, 포지션 업데이트시 에러를 던진다.', () => {

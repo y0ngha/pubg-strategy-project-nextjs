@@ -1,9 +1,6 @@
 import { Position } from '@domain/strategy/value-objects/position';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
-import {
-    DeletedTagException,
-    SamePositionException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
+import { DeletedTagException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 
 export class Tag {
@@ -55,7 +52,8 @@ export class Tag {
 
     updatePosition(position: Position) {
         this.ensureNotDeleted();
-        this.ensureDifferentPosition(position);
+
+        if (this._position.equals(position)) return;
 
         this._position = position;
         this._updatedAt = new Date();
@@ -74,12 +72,6 @@ export class Tag {
         this.ensureNotDeleted();
 
         this._isDeleted = true;
-    }
-
-    private ensureDifferentPosition(position: Position) {
-        if (this._position.equals(position)) {
-            throw new SamePositionException();
-        }
     }
 
     private ensureNotDeleted() {
