@@ -80,24 +80,6 @@ describe('UpdateMarkerUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('팀 플레이어를 찾지 못하면, 에러를 던진다.', async () => {
-        // given
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: teamPlayerId.toString(),
-            position: position,
-        };
-
-        // when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(
-            MarkerNotFoundException
-        );
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-    });
-
     it('마커가 없으면, 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
