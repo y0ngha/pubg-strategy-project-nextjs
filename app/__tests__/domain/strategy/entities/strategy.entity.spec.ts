@@ -1005,6 +1005,55 @@ describe('Strategy', () => {
                 );
             });
 
+            it('동일한 라벨로 업데이트하면 무시된다.', () => {
+                // given
+                const { id: enemyTeamId1, teamLabel: oldEnemyTeamLabel1 } =
+                    enemyTeam1Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateEnemyTeam(
+                    ownerId,
+                    enemyTeamId1,
+                    oldEnemyTeamLabel1,
+                    undefined
+                );
+
+                // then
+                expect(enemyTeam1Fixture.teamLabel).toEqual(oldEnemyTeamLabel1);
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 포지션로 업데이트하면 무시된다.', () => {
+                // given
+                const { id: enemyTeamId1, position: oldEnemyTeamPosition1 } =
+                    enemyTeam1Fixture;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateEnemyTeam(
+                    ownerId,
+                    enemyTeamId1,
+                    undefined,
+                    oldEnemyTeamPosition1
+                );
+
+                // then
+                expect(enemyTeam1Fixture.position).toEqual(
+                    oldEnemyTeamPosition1
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // give
                 const enemyTeamId = enemyTeam1Fixture.id;
