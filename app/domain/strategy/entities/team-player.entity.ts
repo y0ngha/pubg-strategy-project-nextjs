@@ -6,7 +6,10 @@ import { PlayerColor } from '@domain/strategy/enums/player-color.enum';
 import {
     DeletedTeamPlayerException,
     InvalidTeamPlayerPriorityException,
-    SamePositionException,
+    MarkerExistsException,
+    MarkerNotFoundException,
+    WaypointExistsException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 
 export class TeamPlayer {
@@ -103,86 +106,93 @@ export class TeamPlayer {
         );
     }
 
-    updatePosition(position: Position) {
+    updatePosition(position: Position): boolean {
         this.ensureNotDeleted();
 
-        this.ensureDifferentPosition(position);
+        if (this._position.equals(position)) return false;
 
         this._position = position;
         this._updatedAt = new Date();
+
+        return true;
     }
 
-    assignMarker(marker: Marker) {
+    updateMarkerPosition(position: Position): boolean {
         this.ensureNotDeleted();
-        this.clearMarker();
+        this.ensureHaveMarker(this._marker);
+
+        const isChanged = this._marker.updatePosition(position);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+
+        return isChanged;
+    }
+
+    updateWaypointPositions(positions: Position[]): boolean {
+        this.ensureNotDeleted();
+        this.ensureHaveWaypoint(this._waypoint);
+
+        const isChanged = this._waypoint.updatePositions(positions);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+
+        return isChanged;
+    }
+
+    addMarker(marker: Marker) {
+        this.ensureNotDeleted();
+        this.ensureNoHaveMarker();
 
         this._marker = marker;
         this._updatedAt = new Date();
     }
 
-    assignWaypoint(waypoint: Waypoint) {
+    addWaypoint(waypoint: Waypoint) {
         this.ensureNotDeleted();
-        this.clearWaypoint();
+        this.ensureNoHaveWaypoint();
 
         this._waypoint = waypoint;
         this._updatedAt = new Date();
     }
 
-    clearMarker() {
+    deleteMarker(): boolean {
         this.ensureNotDeleted();
-        this.deleteMarker();
-        this.unassignMarker();
+        this.ensureHaveMarker(this._marker);
+
+        this._marker.delete();
+        this._marker = null;
+        this._updatedAt = new Date();
+
+        return true;
     }
 
-    clearWaypoint() {
+    deleteWaypoint(): boolean {
         this.ensureNotDeleted();
-        this.deleteWaypoint();
-        this.unassignWaypoint();
+        this.ensureHaveWaypoint(this._waypoint);
+
+        this._waypoint.delete();
+        this._waypoint = null;
+        this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
         this.ensureNotDeleted();
 
+        if (this._marker) {
+            this.deleteMarker();
+        }
+
+        if (this._waypoint) {
+            this.deleteWaypoint();
+        }
+
         this._isDeleted = true;
-
-        this.cascadeDelete();
-        this.cascadeUnassign();
-    }
-
-    private deleteMarker() {
-        if (this._marker) {
-            this._marker.delete();
-        }
-    }
-
-    private deleteWaypoint() {
-        if (this._waypoint) {
-            this._waypoint.delete();
-        }
-    }
-
-    private unassignWaypoint() {
-        if (this._waypoint) {
-            this._waypoint = null;
-            this._updatedAt = new Date();
-        }
-    }
-
-    private unassignMarker() {
-        if (this._marker) {
-            this._marker = null;
-            this._updatedAt = new Date();
-        }
-    }
-
-    private cascadeDelete() {
-        this.deleteMarker();
-        this.deleteWaypoint();
-    }
-
-    private cascadeUnassign() {
-        this.unassignMarker();
-        this.unassignWaypoint();
     }
 
     private ensureNotDeleted() {
@@ -201,9 +211,29 @@ export class TeamPlayer {
         }
     }
 
-    private ensureDifferentPosition(position: Position) {
-        if (this._position.equals(position)) {
-            throw new SamePositionException();
+    private ensureHaveMarker(marker: Marker | null): asserts marker is Marker {
+        if (!marker) {
+            throw new MarkerNotFoundException();
+        }
+    }
+
+    private ensureNoHaveMarker() {
+        if (this._marker) {
+            throw new MarkerExistsException();
+        }
+    }
+
+    private ensureHaveWaypoint(
+        waypoint: Waypoint | null
+    ): asserts waypoint is Waypoint {
+        if (!waypoint) {
+            throw new WaypointNotFoundException();
+        }
+    }
+
+    private ensureNoHaveWaypoint() {
+        if (this._waypoint) {
+            throw new WaypointExistsException();
         }
     }
 }

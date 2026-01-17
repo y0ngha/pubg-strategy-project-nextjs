@@ -30,18 +30,6 @@ export class DeletedEnemyTeamException extends DomainException {
     }
 }
 
-export class SameTeamLabelException extends DomainException {
-    constructor() {
-        super('현재 사용중인 팀 라벨입니다.');
-    }
-}
-
-export class SamePositionException extends DomainException {
-    constructor() {
-        super('이미 현재 위치한 포지션입니다.');
-    }
-}
-
 export class DeletedTeamPlayerException extends DomainException {
     constructor() {
         super('삭제된 플레이어에게는 할 수 없습니다.');
@@ -99,12 +87,6 @@ export class DeletedCommentException extends DomainException {
 export class CommentContentBlankException extends DomainException {
     constructor() {
         super('댓글의 내용은 빈 값일 수 없습니다.');
-    }
-}
-
-export class SameContentException extends DomainException {
-    constructor() {
-        super('수정하는 내용이 현재 내용과 일치합니다.');
     }
 }
 
@@ -225,5 +207,59 @@ export class StrategyTitleBlankException extends DomainException {
 export class StrategyAccessDeniedException extends DomainException {
     constructor() {
         super('전략에 접근할 수 있는 권한이 없습니다.');
+    }
+}
+
+export class DeletedAirplanePathException extends DomainException {
+    constructor() {
+        super('삭제된 비행기 동선에는 할 수 없습니다.');
+    }
+}
+
+export class AirplanePathNotFoundException extends DomainException {
+    constructor() {
+        super('비행기 동선을 찾을 수 없습니다.');
+    }
+}
+
+export class AirplanePathExistsException extends DomainException {
+    constructor() {
+        super('비행기 동선이 이미 존재합니다.');
+    }
+}
+
+export class MarkerNotFoundException extends DomainException {
+    constructor() {
+        super('마커를 찾을 수 없습니다.');
+    }
+}
+
+export class MarkerExistsException extends DomainException {
+    constructor() {
+        super('마커가 이미 존재합니다.');
+    }
+}
+
+export class DeletedMarkerException extends DomainException {
+    constructor() {
+        super('삭제된 마커에는 할 수 없습니다.');
+    }
+}
+
+export class WaypointNotFoundException extends DomainException {
+    constructor() {
+        super('웨이포인트를 찾을 수 없습니다.');
+    }
+}
+
+export class WaypointExistsException extends DomainException {
+    constructor() {
+        super('웨이포인트를 이미 존재합니다.');
+    }
+}
+
+export class DeletedWaypointException extends DomainException {
+    constructor() {
+        super('삭제된 웨이포인트에는 할 수 없습니다.');
     }
 }

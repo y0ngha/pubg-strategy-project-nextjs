@@ -1,20 +1,22 @@
-import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
+import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Position } from '@domain/strategy/value-objects/position';
 
-describe('AddMarkerUseCase', () => {
-    let useCase: AddMarkerUseCase;
+describe('UpdateWaypointUseCase', () => {
+    let useCase: UpdateWaypointUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     let strategyFixture: Strategy;
 
@@ -22,9 +24,28 @@ describe('AddMarkerUseCase', () => {
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
-    const positionX = 10;
-    const positionY = 200;
-    const position = { x: positionX, y: positionY };
+    const positions = [
+        {
+            x: 10,
+            y: 10,
+        },
+        {
+            x: 10,
+            y: 20,
+        },
+        {
+            x: 10,
+            y: 30,
+        },
+        {
+            x: 10,
+            y: 40,
+        },
+        {
+            x: 10,
+            y: 50,
+        },
+    ];
 
     const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
@@ -32,7 +53,7 @@ describe('AddMarkerUseCase', () => {
     beforeEach(() => {
         mockStrategyRepository = getStrategyRepositoryMocking();
 
-        useCase = new AddMarkerUseCase(mockStrategyRepository);
+        useCase = new UpdateWaypointUseCase(mockStrategyRepository);
 
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
@@ -49,7 +70,7 @@ describe('AddMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
-            position: position,
+            positions: positions,
         };
 
         // when & then
@@ -68,7 +89,7 @@ describe('AddMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: randomId.toString(),
-            position: position,
+            positions: positions,
         };
 
         // when & then
@@ -78,7 +99,7 @@ describe('AddMarkerUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('마커가 없을 때 마커가 추가된다.', async () => {
+    it('웨이포인트가 없으면, 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 
@@ -86,8 +107,29 @@ describe('AddMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
-            position: position,
+            positions: positions,
         };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            WaypointNotFoundException
+        );
+    });
+
+    it('웨이포인트가 없을 때 웨이포인트가 추가된다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            positions: positions,
+        };
+
+        strategyFixture.addTeamPlayerWaypoint(ownerId, teamPlayerId, [
+            Position.create(10, 10),
+        ]);
 
         // when
         await useCase.execute(dto);
@@ -100,18 +142,27 @@ describe('AddMarkerUseCase', () => {
             teamPlayer.id.equals(teamPlayerId)
         );
 
-        expect(teamPlayer?.marker).not.toBeNull();
-        expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position).toEqual(position);
+        const updatedPositions = teamPlayer?.waypoint?.positions?.map(
+            position => {
+                return {
+                    x: position.x,
+                    y: position.y,
+                };
+            }
+        );
+
+        expect(teamPlayer?.waypoint).toBeDefined();
+        expect(updatedPositions).toEqual(positions);
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // Given
-        jest.spyOn(strategyFixture, 'addTeamPlayerMarker').mockImplementation(
-            () => {
-                throw new StrategyEditPermissionDeniedException();
-            }
-        );
+        jest.spyOn(
+            strategyFixture,
+            'updateTeamPlayerWaypoint'
+        ).mockImplementation(() => {
+            throw new StrategyEditPermissionDeniedException();
+        });
 
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 
@@ -119,7 +170,7 @@ describe('AddMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
-            position: position,
+            positions: positions,
         };
 
         // When & Then

@@ -1,0 +1,32 @@
+import { inject, injectable } from 'inversify';
+import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import {
+    UpdateMarkerRequestDto,
+    UpdateMarkerRequestSchema,
+} from '@/application/strategy/dto/marker/update-marker.dto';
+import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+
+@injectable()
+export class UpdateMarkerUseCase {
+    constructor(
+        @inject(StrategyRepositoryPort)
+        private readonly strategyRepository: StrategyRepositoryPort
+    ) {}
+
+    async execute(dto: UpdateMarkerRequestDto): Promise<boolean> {
+        const { actorId, strategyId, teamPlayerId, position } =
+            UpdateMarkerRequestSchema.parse(dto);
+
+        const strategy = await this.strategyRepository.findById(strategyId);
+
+        if (!strategy) {
+            throw new StrategyNotFoundException();
+        }
+
+        strategy.updateTeamPlayerMarker(actorId, teamPlayerId, position);
+
+        await this.strategyRepository.save(strategy);
+
+        return true;
+    }
+}
