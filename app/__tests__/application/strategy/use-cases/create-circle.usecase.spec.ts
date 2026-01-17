@@ -66,11 +66,11 @@ describe('CreateCircleUseCase', () => {
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
         const addedCircle = strategyFixture.circles.find(
-            circle => circle.phase === dto.phase
+            circle => circle.phase.value === dto.phase
         );
 
         expect(strategyFixture.circles).toHaveLength(1);
-        expect(addedCircle?.phase).toEqual(dto.phase);
+        expect(addedCircle?.phase.value).toEqual(dto.phase);
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {

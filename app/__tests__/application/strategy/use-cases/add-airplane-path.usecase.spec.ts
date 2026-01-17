@@ -7,13 +7,12 @@ import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { Position } from '@domain/strategy/value-objects/position';
-import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
+import { AddAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/add-airplane-path.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
-describe('DeleteAirplanePathUseCase', () => {
-    let useCase: DeleteAirplanePathUseCase;
+describe('AddAirplanePathUseCase', () => {
+    let useCase: AddAirplanePathUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     let strategyFixture: Strategy;
 
@@ -27,16 +26,10 @@ describe('DeleteAirplanePathUseCase', () => {
     beforeEach(() => {
         mockStrategyRepository = getStrategyRepositoryMocking();
 
-        useCase = new DeleteAirplanePathUseCase(mockStrategyRepository);
+        useCase = new AddAirplanePathUseCase(mockStrategyRepository);
 
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
-
-        strategyFixture.addAirplanePath(
-            ownerId,
-            Position.create(10, 10),
-            Position.create(1000, 1000)
-        );
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -45,6 +38,14 @@ describe('DeleteAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            startPosition: {
+                x: 10,
+                y: 10,
+            },
+            endPosition: {
+                x: 100,
+                y: 100,
+            },
         };
 
         // when & then
@@ -54,13 +55,21 @@ describe('DeleteAirplanePathUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('비행기 동선이 삭제된다.', async () => {
+    it('비행기 동선이 추가된다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            startPosition: {
+                x: 10,
+                y: 10,
+            },
+            endPosition: {
+                x: 100,
+                y: 100,
+            },
         };
 
         // when
@@ -70,12 +79,18 @@ describe('DeleteAirplanePathUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
-        expect(strategyFixture.airplanePath).toBeNull();
+        expect(strategyFixture.airplanePath).not.toBeNull();
+        expect(strategyFixture.airplanePath?.startPosition).toEqual(
+            dto.startPosition
+        );
+        expect(strategyFixture.airplanePath?.endPosition).toEqual(
+            dto.endPosition
+        );
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // Given
-        jest.spyOn(strategyFixture, 'removeAirplanePath').mockImplementation(
+        jest.spyOn(strategyFixture, 'addAirplanePath').mockImplementation(
             () => {
                 throw new StrategyEditPermissionDeniedException();
             }
@@ -86,6 +101,14 @@ describe('DeleteAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            startPosition: {
+                x: 10,
+                y: 10,
+            },
+            endPosition: {
+                x: 100,
+                y: 100,
+            },
         };
 
         // When & Then

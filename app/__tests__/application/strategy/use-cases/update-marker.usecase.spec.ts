@@ -1,6 +1,6 @@
-import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    MarkerNotFoundException,
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
@@ -12,9 +12,11 @@ import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
+import { Position } from '@domain/strategy/value-objects/position';
 
-describe('AddMarkerUseCase', () => {
-    let useCase: AddMarkerUseCase;
+describe('UpdateMarkerUseCase', () => {
+    let useCase: UpdateMarkerUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     let strategyFixture: Strategy;
 
@@ -32,7 +34,7 @@ describe('AddMarkerUseCase', () => {
     beforeEach(() => {
         mockStrategyRepository = getStrategyRepositoryMocking();
 
-        useCase = new AddMarkerUseCase(mockStrategyRepository);
+        useCase = new UpdateMarkerUseCase(mockStrategyRepository);
 
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
@@ -78,9 +80,31 @@ describe('AddMarkerUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('마커가 없을 때 마커가 추가된다.', async () => {
+    it('마커가 없으면, 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            position: position,
+        };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            MarkerNotFoundException
+        );
+    });
+
+    it('마커의 위치가 수정된다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        strategyFixture.addTeamPlayerMarker(
+            ownerId,
+            teamPlayerId,
+            Position.create(5, 5)
+        );
 
         const dto = {
             actorId: ownerId.toString(),
@@ -100,18 +124,17 @@ describe('AddMarkerUseCase', () => {
             teamPlayer.id.equals(teamPlayerId)
         );
 
-        expect(teamPlayer?.marker).not.toBeNull();
-        expect(teamPlayer?.marker).not.toBeUndefined();
         expect(teamPlayer?.marker?.position).toEqual(position);
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // Given
-        jest.spyOn(strategyFixture, 'addTeamPlayerMarker').mockImplementation(
-            () => {
-                throw new StrategyEditPermissionDeniedException();
-            }
-        );
+        jest.spyOn(
+            strategyFixture,
+            'updateTeamPlayerMarker'
+        ).mockImplementation(() => {
+            throw new StrategyEditPermissionDeniedException();
+        });
 
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 

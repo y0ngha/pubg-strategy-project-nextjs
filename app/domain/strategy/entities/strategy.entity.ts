@@ -9,6 +9,8 @@ import { StrategyShare } from '@domain/strategy/entities/strategy-share.entity';
 import { Comment } from '@domain/strategy/entities/comment.entity';
 import { PubgMap, PubgMapSizes } from '@domain/strategy/enums/map.enum';
 import {
+    AirplanePathExistsException,
+    AirplanePathNotFoundException,
     ChildCommentException,
     CircleLimitExceededException,
     CircleNotFoundException,
@@ -41,6 +43,7 @@ import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 interface FindEntity<T> {
     value: T;
@@ -258,8 +261,11 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.updatePosition(position);
-        this._updatedAt = new Date();
+        const isChanged = teamPlayer.updatePosition(position);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     addTeamPlayerMarker(
@@ -274,8 +280,42 @@ export class Strategy {
 
         const marker = Marker.create(position);
 
-        teamPlayer.assignMarker(marker);
+        teamPlayer.addMarker(marker);
         this._updatedAt = new Date();
+    }
+
+    updateTeamPlayerMarker(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        position: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        const isChanged = teamPlayer.updateMarkerPosition(position);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+    }
+
+    updateTeamPlayerWaypoint(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        positions: Position[]
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        const isChanged = teamPlayer.updateWaypointPositions(positions);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     removeTeamPlayerMarker(actorId: UserId, teamPlayerId: TeamPlayerId) {
@@ -284,7 +324,7 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.clearMarker();
+        teamPlayer.deleteMarker();
         this._updatedAt = new Date();
     }
 
@@ -300,7 +340,7 @@ export class Strategy {
 
         const waypoint = Waypoint.create(positions);
 
-        teamPlayer.assignWaypoint(waypoint);
+        teamPlayer.addWaypoint(waypoint);
         this._updatedAt = new Date();
     }
 
@@ -310,7 +350,7 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.clearWaypoint();
+        teamPlayer.deleteWaypoint();
         this._updatedAt = new Date();
     }
 
@@ -353,21 +393,23 @@ export class Strategy {
 
         const { value: enemyTeam } = this.findEnemyTeam(enemyTeamId);
 
-        if (teamLabel) {
-            enemyTeam.updateTeamLabel(teamLabel);
-        }
+        const isTeamLabelChanged = teamLabel
+            ? enemyTeam.updateTeamLabel(teamLabel)
+            : false;
 
-        if (position) {
-            enemyTeam.updatePosition(position);
-        }
+        const isPositionChanged = position
+            ? enemyTeam.updatePosition(position)
+            : false;
 
-        this._updatedAt = new Date();
+        if (isTeamLabelChanged || isPositionChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
      * Circles
      */
-    addCircle(actorId: UserId, phase: number) {
+    addCircle(actorId: UserId, phase: CirclePhase) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddCircle();
@@ -391,33 +433,58 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     updateCircle(
         actorId: UserId,
         circleId: CircleId,
         position?: Position,
-        phase?: number
+        phase?: CirclePhase
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
         const { value: circle } = this.findCircle(circleId);
 
-        if (position) {
-            circle.updateCenterPosition(position);
+        const isPositionChanged = position
+            ? circle.updateCenterPosition(position)
+            : false;
+
+        let isPhaseChanged = false;
+
+        if (phase) {
+            this.ensureNoDuplicatePhase(phase, circle.id);
+
+            isPhaseChanged = circle.updatePhase(phase);
         }
 
-        if (phase != null) {
-            this.ensureNoDuplicatePhase(phase);
-
-            circle.updatePhase(phase);
+        if (isPositionChanged || isPhaseChanged) {
+            this._updatedAt = new Date();
         }
-
-        this._updatedAt = new Date();
     }
 
     /**
      * Airplane
      */
+    addAirplanePath(
+        actorId: UserId,
+        startPosition: Position,
+        endPosition: Position
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+        this.ensureNoHaveAirplanePath();
+
+        this._airplanePath = AirplanePath.create(startPosition, endPosition);
+        this._updatedAt = new Date();
+    }
+
     updateAirplanePath(
         actorId: UserId,
         startPosition: Position,
@@ -425,9 +492,16 @@ export class Strategy {
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
+        this.ensureHaveAirplanePath(this._airplanePath);
 
-        this._airplanePath = AirplanePath.create(startPosition, endPosition);
-        this._updatedAt = new Date();
+        const isStartChanged =
+            this._airplanePath.updateStartPosition(startPosition);
+
+        const isEndChanged = this._airplanePath.updateEndPosition(endPosition);
+
+        if (isStartChanged || isEndChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     removeAirplanePath(actorId: UserId) {
@@ -463,6 +537,14 @@ export class Strategy {
         this._updatedAt = new Date();
     }
 
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     updateTag(
         actorId: UserId,
         tagId: TagId,
@@ -474,15 +556,14 @@ export class Strategy {
 
         const { value: tag } = this.findTag(tagId);
 
-        if (content) {
-            tag.updateContent(content);
-        }
+        const isContentChanged = content ? tag.updateContent(content) : false;
+        const isPoisitonChanged = position
+            ? tag.updatePosition(position)
+            : false;
 
-        if (position) {
-            tag.updatePosition(position);
+        if (isContentChanged || isPoisitonChanged) {
+            this._updatedAt = new Date();
         }
-
-        this._updatedAt = new Date();
     }
 
     /**
@@ -520,31 +601,44 @@ export class Strategy {
         const { value: strategyShare } =
             this.findStrategyShare(strategyShareId);
 
-        strategyShare.updatePermission(permission);
+        const isChanged = strategyShare.updatePermission(permission);
 
-        this._updatedAt = new Date();
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
      * Strategy
      */
+
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
-        if (title) {
-            if (this._title.equals(title)) return;
+        const isTitleChanged =
+            title !== undefined && !this._title.equals(title);
+        const isMapChange = map !== undefined && !(this._map === map);
 
+        if (isTitleChanged) {
             this._title = title;
         }
 
-        if (map) {
-            if (this._map === map) return;
-
+        if (isMapChange) {
             this._map = map;
         }
 
-        this._updatedAt = new Date();
+        if (isTitleChanged || isMapChange) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
@@ -584,6 +678,14 @@ export class Strategy {
         this._comments.splice(index, 1);
     }
 
+    /**
+     * TODO 리팩토링 필요: 2026.01.17
+     * 기존에 메서드 분리되어있던 것을 합쳤는데, 이는 잘못 합친 것 같음.
+     * 수정의 이유가 다르면 메서드도 달라야 하는데, 합쳐버렸음.
+     * 기존에 메서드 분리되어있던 것을 합친 이유는 find...를 이용하여 엔티티를 찾아오는 연산 비용을 아끼고자였는데,
+     * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
+     * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
+     */
     updateComment(
         actorId: UserId,
         commentId: CommentId,
@@ -719,9 +821,14 @@ export class Strategy {
         }
     }
 
-    private ensureNoDuplicatePhase(phase: number) {
+    private ensureNoDuplicatePhase(
+        phase: CirclePhase,
+        excludeCircleId?: CircleId
+    ) {
         const isDuplicate = this._circles.some(
-            circle => circle.phase === phase
+            circle =>
+                circle.phase.equals(phase) &&
+                (excludeCircleId ? !circle.id.equals(excludeCircleId) : true)
         );
 
         if (isDuplicate) {
@@ -782,6 +889,20 @@ export class Strategy {
 
         if (!comment.isParent) {
             throw new ChildCommentException();
+        }
+    }
+
+    private ensureHaveAirplanePath(
+        airplanePath: AirplanePath | null
+    ): asserts airplanePath is AirplanePath {
+        if (!airplanePath) {
+            throw new AirplanePathNotFoundException();
+        }
+    }
+
+    private ensureNoHaveAirplanePath() {
+        if (this._airplanePath) {
+            throw new AirplanePathExistsException();
         }
     }
 }

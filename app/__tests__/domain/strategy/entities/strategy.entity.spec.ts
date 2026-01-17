@@ -15,6 +15,8 @@ import { AirplanePath } from '@domain/strategy/entities/airplane-path.entity';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
 import {
+    AirplanePathExistsException,
+    AirplanePathNotFoundException,
     ChildCommentException,
     CircleLimitExceededException,
     CirclePhaseDuplicateException,
@@ -31,6 +33,7 @@ import {
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -115,8 +118,14 @@ describe('Strategy', () => {
             Position.create(10000, 10)
         );
 
-        circle1Fixture = Circle.create(Position.create(500, 500), 1);
-        circle2Fixture = Circle.create(Position.create(250, 250), 2);
+        circle1Fixture = Circle.create(
+            Position.create(500, 500),
+            CirclePhase.create(1)
+        );
+        circle2Fixture = Circle.create(
+            Position.create(250, 250),
+            CirclePhase.create(2)
+        );
 
         airplanePath = AirplanePath.create(
             Position.create(0, 0),
@@ -187,6 +196,12 @@ describe('Strategy', () => {
             new Date(),
             new Date()
         );
+
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     describe('Create', () => {
@@ -474,6 +489,10 @@ describe('Strategy', () => {
                 const oldTeamPlayer1Position = teamPlayer1Fixture.position;
                 const oldTeamPlayer2Position = teamPlayer2Fixture.position;
 
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
                 // when
                 strategyFixture.updateTeamPlayerPosition(
                     ownerId,
@@ -495,6 +514,34 @@ describe('Strategy', () => {
                     oldTeamPlayer2Position
                 );
                 expect(teamPlayer2Fixture.position).toEqual(newPosition);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 포지션으로 업데이트하면 무시된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                const oldTeamPlayer1Position = teamPlayer1Fixture.position;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerPosition(
+                    ownerId,
+                    teamPlayerId1,
+                    oldTeamPlayer1Position
+                );
+
+                // then
+                expect(teamPlayer1Fixture.position).toEqual(
+                    oldTeamPlayer1Position
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
@@ -596,6 +643,109 @@ describe('Strategy', () => {
                 // when & then
                 expect(() =>
                     strategyFixture.addTeamPlayerMarker(
+                        ownerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+
+        describe('UpdateTeamPlayerMarker', () => {
+            const markerPosition = Position.create(15, 15);
+            it('전략에 대한 편집 권한이 있으면, 마커가 수정된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+                const newMarkerPosition1 = Position.create(20, 20);
+                const newMarkerPosition2 = Position.create(30, 30);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    newMarkerPosition1
+                );
+                strategyFixture.updateTeamPlayerMarker(
+                    editorId,
+                    teamPlayerId1,
+                    newMarkerPosition2
+                );
+
+                // then
+                expect(teamPlayer1Fixture.marker?.position).toEqual(
+                    newMarkerPosition2
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('같은 포지션으로 업데이트하면, 무시된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    markerPosition
+                );
+
+                // then
+                expect(teamPlayer1Fixture.marker?.position).toEqual(
+                    markerPosition
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
+                        viewerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
+                        strangerId,
+                        teamPlayerId,
+                        markerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerMarker(
                         ownerId,
                         teamPlayerId,
                         markerPosition
@@ -737,6 +887,115 @@ describe('Strategy', () => {
                 ).toThrow(DeletedStrategyException);
             });
         });
+
+        describe('UpdateTeamPlayerWaypoint', () => {
+            const waypointPositions = [
+                Position.create(1, 1),
+                Position.create(1, 2),
+                Position.create(1, 3),
+            ];
+
+            it('전략에 대한 편집 권한이 있으면, 웨이포인트가 수정된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId1,
+                    waypointPositions
+                );
+                const newWaypointPositions1 = [Position.create(20, 20)];
+                const newWaypointPositions2 = [Position.create(30, 30)];
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId1,
+                    newWaypointPositions1
+                );
+                strategyFixture.updateTeamPlayerWaypoint(
+                    editorId,
+                    teamPlayerId1,
+                    newWaypointPositions2
+                );
+
+                // then
+                expect(teamPlayer1Fixture.waypoint?.positions).toEqual(
+                    newWaypointPositions2
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('같은 포지션으로 업데이트하면, 무시된다.', () => {
+                // given
+                const teamPlayerId1 = teamPlayer1Fixture.id;
+                strategyFixture.addTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId1,
+                    waypointPositions
+                );
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId1,
+                    waypointPositions
+                );
+
+                // then
+                expect(teamPlayer1Fixture.waypoint?.positions).toEqual(
+                    waypointPositions
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerWaypoint(
+                        viewerId,
+                        teamPlayerId,
+                        waypointPositions
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.updateTeamPlayerWaypoint(
+                        strangerId,
+                        teamPlayerId,
+                        waypointPositions
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                const teamPlayerId = teamPlayer1Fixture.id;
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateTeamPlayerWaypoint(
+                        ownerId,
+                        teamPlayerId,
+                        waypointPositions
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+
         describe('RemoveTeamPlayerWaypoint', () => {
             it('전략에 대한 편집 권한이 있으면, 웨이포인트가 삭제된다.', () => {
                 // given
@@ -922,7 +1181,9 @@ describe('Strategy', () => {
                     enemyTeam1Fixture;
                 const { id: enemyTeamId2, teamLabel: oldEnemyTeamLabel2 } =
                     enemyTeam2Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
+                jest.advanceTimersByTime(1000);
                 // when
                 strategyFixture.updateEnemyTeam(
                     ownerId,
@@ -946,6 +1207,9 @@ describe('Strategy', () => {
                     oldEnemyTeamLabel2
                 );
                 expect(enemyTeam2Fixture.teamLabel).toEqual(newTeamLabel2);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 있으면, 적 팀 포지션이 업데이트된다.', () => {
@@ -954,7 +1218,9 @@ describe('Strategy', () => {
                     enemyTeam1Fixture;
                 const { id: enemyTeamId2, position: oldEnemyTeamPosition2 } =
                     enemyTeam2Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
+                jest.advanceTimersByTime(1000);
                 // when
                 strategyFixture.updateEnemyTeam(
                     ownerId,
@@ -978,6 +1244,58 @@ describe('Strategy', () => {
                     oldEnemyTeamPosition2
                 );
                 expect(enemyTeam2Fixture.position).toEqual(newPosition2);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 라벨로 업데이트하면 무시된다.', () => {
+                // given
+                const { id: enemyTeamId1, teamLabel: oldEnemyTeamLabel1 } =
+                    enemyTeam1Fixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateEnemyTeam(
+                    ownerId,
+                    enemyTeamId1,
+                    oldEnemyTeamLabel1,
+                    undefined
+                );
+
+                // then
+                expect(enemyTeam1Fixture.teamLabel).toEqual(oldEnemyTeamLabel1);
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 포지션로 업데이트하면 무시된다.', () => {
+                // given
+                const { id: enemyTeamId1, position: oldEnemyTeamPosition1 } =
+                    enemyTeam1Fixture;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateEnemyTeam(
+                    ownerId,
+                    enemyTeamId1,
+                    undefined,
+                    oldEnemyTeamPosition1
+                );
+
+                // then
+                expect(enemyTeam1Fixture.position).toEqual(
+                    oldEnemyTeamPosition1
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
@@ -1003,6 +1321,7 @@ describe('Strategy', () => {
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
+
             it('삭제된 전략이라면, 에러를 던진다.', () => {
                 // give
                 const enemyTeamId = enemyTeam1Fixture.id;
@@ -1022,7 +1341,7 @@ describe('Strategy', () => {
     });
 
     describe('Circle', () => {
-        const phase = 8;
+        const phase = CirclePhase.create(8);
         describe('AddCircle', () => {
             it('전략에 대한 편집 권한이 있으면, Circle이 추가된다.', () => {
                 // given
@@ -1037,8 +1356,8 @@ describe('Strategy', () => {
                     editorEmail,
                     StrategySharePermission.EDITABLE
                 );
-                const phase1 = 1;
-                const phase2 = 2;
+                const phase1 = CirclePhase.create(1);
+                const phase2 = CirclePhase.create(2);
 
                 // when
                 strategy.addCircle(ownerId, phase1);
@@ -1062,13 +1381,13 @@ describe('Strategy', () => {
                 );
 
                 for (let i = 1; i <= 8; i++) {
-                    strategy.addCircle(ownerId, i);
+                    strategy.addCircle(ownerId, CirclePhase.create(i));
                 }
 
                 // when & then
-                expect(() => strategy.addCircle(ownerId, 8)).toThrow(
-                    CircleLimitExceededException
-                );
+                expect(() =>
+                    strategy.addCircle(ownerId, CirclePhase.create(8))
+                ).toThrow(CircleLimitExceededException);
             });
 
             it('Phase가 중복되면, 에러를 던진다.', () => {
@@ -1078,7 +1397,7 @@ describe('Strategy', () => {
                     defaultTitle,
                     defaultMap
                 );
-                const phase = 1;
+                const phase = CirclePhase.create(1);
                 strategy.addCircle(ownerId, phase);
 
                 // when & then
@@ -1154,12 +1473,13 @@ describe('Strategy', () => {
 
         describe('UpdateCircle', () => {
             const newPosition = Position.create(20, 200);
-            const updatePhase = 2;
+            const updatePhase = CirclePhase.create(2);
 
             it('전략에 대한 편집 권한이 있으면, Circle CenterPosition이 업데이트된다.', () => {
                 // give
                 const newCenterPosition1 = Position.create(10, 10);
                 const newCenterPosition2 = Position.create(20, 20);
+                const oldUpdatedAt = strategyFixture.updatedAt;
 
                 const {
                     id: circleId1,
@@ -1169,6 +1489,8 @@ describe('Strategy', () => {
                     id: circleId2,
                     centerPosition: oldCircle2centerPosition,
                 } = circle2Fixture;
+
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateCircle(
@@ -1197,12 +1519,15 @@ describe('Strategy', () => {
                 expect(circle2Fixture.centerPosition).toEqual(
                     newCenterPosition2
                 );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 있으면, Circle Phase가 업데이트된다.', () => {
                 // give
-                const newPhase1 = 7;
-                const newPhase2 = 5;
+                const newPhase1 = CirclePhase.create(7);
+                const newPhase2 = CirclePhase.create(5);
 
                 const { id: circleId1, phase: oldCircle1Phase } =
                     circle1Fixture;
@@ -1230,9 +1555,61 @@ describe('Strategy', () => {
                 expect(circle2Fixture.phase).toEqual(newPhase2);
             });
 
+            it('동일한 CenterPosition로 업데이트하면 무시된다.', () => {
+                // give
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const {
+                    id: circleId1,
+                    centerPosition: oldCircle1centerPosition,
+                } = circle1Fixture;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateCircle(
+                    ownerId,
+                    circleId1,
+                    oldCircle1centerPosition,
+                    undefined
+                );
+
+                // then
+                expect(circle1Fixture.centerPosition).toEqual(
+                    oldCircle1centerPosition
+                );
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('동일한 Phase로 업데이트하면 무시된다.', () => {
+                // give
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const { id: circleId1, phase: oldCircle1Phase } =
+                    circle1Fixture;
+
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateCircle(
+                    ownerId,
+                    circleId1,
+                    undefined,
+                    oldCircle1Phase
+                );
+
+                // then
+                expect(circle1Fixture.phase).toEqual(oldCircle1Phase);
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
             it('이미 있는 Phase로 업데이트 하면, 에러를 던진다.', () => {
                 // give
-                const newPhase = 7;
+                const newPhase = CirclePhase.create(7);
 
                 const { id: circleId1 } = circle1Fixture;
                 const { id: circleId2 } = circle2Fixture;
@@ -1293,14 +1670,92 @@ describe('Strategy', () => {
     });
 
     describe('AirplanePath', () => {
+        describe('AddAirplanePath', () => {
+            const startPosition = Position.create(10, 10);
+            const endPosition = Position.create(1000, 1000);
+
+            it('전략에 대한 편집 권한이 있고, 비행기 경로가 없다면, 비행기 경로가 추가된다.', () => {
+                // given
+                strategyFixture.removeAirplanePath(ownerId); // 기존에 strategyFixture에 airplanePath가 존재해서 제거 후 시작.
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.addAirplanePath(
+                    ownerId,
+                    startPosition,
+                    endPosition
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+                expect(strategyFixture.airplanePath).toBeDefined();
+                expect(strategyFixture.airplanePath?.startPosition).toEqual(
+                    startPosition
+                );
+                expect(strategyFixture.airplanePath?.endPosition).toEqual(
+                    endPosition
+                );
+            });
+
+            it('비행기 경로가 존재한 상태에서 추가를 요청하면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        ownerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(AirplanePathExistsException);
+            });
+
+            it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        viewerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        strangerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
+            });
+
+            it('삭제된 전략이라면, 에러를 던진다.', () => {
+                // give
+                strategyFixture.delete(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.addAirplanePath(
+                        ownerId,
+                        startPosition,
+                        endPosition
+                    )
+                ).toThrow(DeletedStrategyException);
+            });
+        });
+
         describe('UpdateAirplanePath', () => {
             const finalStartPosition = Position.create(500, 500);
             const finalEndPosition = Position.create(2500, 2500);
 
-            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 업데이트된다.', () => {
+            it('전략에 대한 편집 권한이 있고, 비행기 경로가 기존에 존재한다면 비행기 경로가 업데이트된다.', () => {
                 // given
                 const initalStartPosition = Position.create(10, 10);
                 const initalEndPosition = Position.create(1000, 1000);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateAirplanePath(
@@ -1315,13 +1770,61 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategyFixture.airplanePath).not.toBeNull();
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
                 expect(strategyFixture.airplanePath?.startPosition).toEqual(
                     finalStartPosition
                 );
                 expect(strategyFixture.airplanePath?.endPosition).toEqual(
                     finalEndPosition
                 );
+            });
+
+            it('같은 경로(startPosition, endPosition)로 업데이트시 무시된다.', () => {
+                // given
+                const initalStartPosition = Position.create(10, 10);
+                const initalEndPosition = Position.create(1000, 1000);
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateAirplanePath(
+                    ownerId,
+                    initalStartPosition,
+                    initalEndPosition
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+                expect(strategyFixture.airplanePath?.startPosition).toEqual(
+                    initalStartPosition
+                );
+                expect(strategyFixture.airplanePath?.endPosition).toEqual(
+                    initalEndPosition
+                );
+            });
+
+            it('비행기 경로가 없는 상태에서 업데이트를 요청하면, 에러를 던진다.', () => {
+                // given
+                strategyFixture.removeAirplanePath(ownerId);
+
+                // when & then
+                expect(() =>
+                    strategyFixture.updateAirplanePath(
+                        ownerId,
+                        finalStartPosition,
+                        finalEndPosition
+                    )
+                ).toThrow(AirplanePathNotFoundException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
@@ -1357,6 +1860,7 @@ describe('Strategy', () => {
                 ).toThrow(DeletedStrategyException);
             });
         });
+
         describe('DeleteAirplanePath', () => {
             it('전략에 대한 편집 권한이 있으면, 비행기 경로가 삭제된다..', () => {
                 // given
@@ -1541,6 +2045,9 @@ describe('Strategy', () => {
                 const { id: tagId2, content: oldTagContent2 } =
                     strategyFixture.tags[1];
 
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
                 // when
                 strategyFixture.updateTag(
                     ownerId,
@@ -1562,6 +2069,48 @@ describe('Strategy', () => {
                     oldTagContent2
                 );
                 expect(strategyFixture.tags[1].content).toEqual(newTagContent2);
+
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('내용을 같은 값으로 업데이트 할 경우 무시된다.', () => {
+                // given
+                const content = tagFixture.content;
+
+                jest.advanceTimersByTime(1000);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const { id: tagId } = tagFixture;
+
+                // when
+                strategyFixture.updateTag(ownerId, tagId, content, undefined);
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+                expect(tagFixture.content).toEqual(content);
+            });
+
+            it('포지션을 같은 값으로 업데이트 할 경우 무시된다.', () => {
+                // given
+                const position = tagFixture.position;
+
+                jest.advanceTimersByTime(1000);
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                const { id: tagId } = tagFixture;
+
+                // when
+                strategyFixture.updateTag(ownerId, tagId, undefined, position);
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+                expect(tagFixture.position).toEqual(position);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
@@ -1729,6 +2278,8 @@ describe('Strategy', () => {
                 // given
                 const { id: strategyShareId, permission: oldPermission } =
                     strategyShareEditorFixture;
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
 
                 // when
                 strategyFixture.updateStrategySharePermission(
@@ -1743,6 +2294,30 @@ describe('Strategy', () => {
                 );
                 expect(strategyShareEditorFixture.permission).toEqual(
                     newPermission
+                );
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
+            it('같은 값으로 업데이트 할 경우 무시된다.', () => {
+                // given
+                const { id: strategyShareId, permission: oldPermission } =
+                    strategyShareEditorFixture;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateStrategySharePermission(
+                    ownerId,
+                    strategyShareId,
+                    oldPermission
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
                 );
             });
 
@@ -1801,6 +2376,8 @@ describe('Strategy', () => {
             // given
             const oldMap = strategyFixture.map;
             const oldTitle = strategyFixture.title;
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             strategyFixture.update(ownerId, undefined, newMap);
@@ -1809,12 +2386,17 @@ describe('Strategy', () => {
             expect(strategyFixture.map).not.toEqual(oldMap);
             expect(strategyFixture.map).toEqual(newMap);
             expect(strategyFixture.title).toEqual(oldTitle);
+            expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('전략에 대한 소유주라면, 제목이 업데이트 된다.', () => {
             // given
             const oldMap = strategyFixture.map;
             const oldTitle = strategyFixture.title;
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
 
             // when
             strategyFixture.update(ownerId, newTitle, undefined);
@@ -1823,6 +2405,25 @@ describe('Strategy', () => {
             expect(strategyFixture.title).not.toEqual(oldTitle);
             expect(strategyFixture.title).toEqual(newTitle);
             expect(strategyFixture.map).toEqual(oldMap);
+            expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                oldUpdatedAt.getTime()
+            );
+        });
+
+        it('같은 값으로 업데이트 할 경우 무시된다.', () => {
+            // given
+            const oldUpdatedAt = strategyFixture.updatedAt;
+            jest.advanceTimersByTime(1000);
+
+            // when
+            strategyFixture.update(ownerId, defaultTitle, defaultMap);
+
+            // then
+            expect(strategyFixture.title).toEqual(defaultTitle);
+            expect(strategyFixture.map).toEqual(defaultMap);
+            expect(strategyFixture.updatedAt.getTime()).toEqual(
+                oldUpdatedAt.getTime()
+            );
         });
 
         it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {

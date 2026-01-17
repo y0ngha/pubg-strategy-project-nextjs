@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 export interface CreateCircleRequestDto {
     actorId: string;
@@ -15,5 +16,7 @@ export const CreateCircleRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    phase: z.number(),
+    phase: z.number().transform(value => {
+        return CirclePhase.create(value);
+    }),
 });

@@ -13,6 +13,7 @@ import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/upd
 import { ZodError } from 'zod';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 describe('UpdateCircleUseCase', () => {
     let useCase: UpdateCircleUseCase;
@@ -35,7 +36,7 @@ describe('UpdateCircleUseCase', () => {
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addCircle(ownerId, 1);
+        strategyFixture.addCircle(ownerId, CirclePhase.create(1));
         circleId = strategyFixture.circles[0].id;
     });
 
@@ -109,7 +110,7 @@ describe('UpdateCircleUseCase', () => {
             circle.id.equals(circleId)
         );
 
-        expect(circle?.phase).toEqual(dto.phase);
+        expect(circle?.phase.value).toEqual(dto.phase);
         expect(circle?.centerPosition).toEqual(dto.centerPosition);
     });
 
@@ -139,7 +140,7 @@ describe('UpdateCircleUseCase', () => {
         expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
 
         expect(circle?.phase).not.toEqual(oldPhase);
-        expect(circle?.phase).toEqual(dto.phase);
+        expect(circle?.phase.value).toEqual(dto.phase);
         expect(circle?.centerPosition).toEqual(oldCenterPosition);
     });
 

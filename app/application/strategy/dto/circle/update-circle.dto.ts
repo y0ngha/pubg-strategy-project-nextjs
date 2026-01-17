@@ -3,6 +3,7 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 export interface UpdateCircleRequestDto {
     actorId: string;
@@ -23,7 +24,12 @@ export const UpdateCircleRequestSchema = z
         circleId: z.string().transform(value => {
             return CircleId.create(value);
         }),
-        phase: z.number().optional(),
+        phase: z
+            .number()
+            .transform(value => {
+                return CirclePhase.create(value);
+            })
+            .optional(),
         centerPosition: z
             .object({
                 x: z.number(),
