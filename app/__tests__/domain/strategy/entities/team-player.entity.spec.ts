@@ -312,7 +312,7 @@ describe('TeamPlayer', () => {
             );
         });
 
-        it('팀 플레이어가 삭제된 객체라면, 마커 추가시 에러를 던진다.', () => {
+        it('팀 플레이어가 삭제된 객체라면, 마커 수정시 에러를 던진다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
             teamPlayer.delete();
@@ -324,7 +324,7 @@ describe('TeamPlayer', () => {
         });
     });
 
-    describe('Clear Marker', () => {
+    describe('Delete Marker', () => {
         it('팀 플레이어가 삭제된 객체가 아니라면, 마커를 삭제할 수 있다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, marker, null);
@@ -353,7 +353,7 @@ describe('TeamPlayer', () => {
         });
     });
 
-    describe('Assign Waypoint', () => {
+    describe('Add Waypoint', () => {
         const waypoint = Waypoint.create([Position.create(30, 30)]);
 
         it('팀 플레이어가 삭제된 객체가 아니라면, 웨이포인트를 연결할 수 있다.', () => {
