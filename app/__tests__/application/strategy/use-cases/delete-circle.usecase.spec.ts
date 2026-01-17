@@ -12,6 +12,7 @@ import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/del
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 describe('DeleteCircleUseCase', () => {
     let useCase: DeleteCircleUseCase;
@@ -34,7 +35,7 @@ describe('DeleteCircleUseCase', () => {
         strategyFixture = Strategy.create(ownerId, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addCircle(ownerId, 1);
+        strategyFixture.addCircle(ownerId, CirclePhase.create(1));
         circleId = strategyFixture.circles[0].id;
     });
 

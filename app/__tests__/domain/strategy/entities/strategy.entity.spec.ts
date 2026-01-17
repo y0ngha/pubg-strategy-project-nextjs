@@ -33,6 +33,7 @@ import {
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
+import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -117,8 +118,14 @@ describe('Strategy', () => {
             Position.create(10000, 10)
         );
 
-        circle1Fixture = Circle.create(Position.create(500, 500), 1);
-        circle2Fixture = Circle.create(Position.create(250, 250), 2);
+        circle1Fixture = Circle.create(
+            Position.create(500, 500),
+            CirclePhase.create(1)
+        );
+        circle2Fixture = Circle.create(
+            Position.create(250, 250),
+            CirclePhase.create(2)
+        );
 
         airplanePath = AirplanePath.create(
             Position.create(0, 0),
@@ -1030,7 +1037,7 @@ describe('Strategy', () => {
     });
 
     describe('Circle', () => {
-        const phase = 8;
+        const phase = CirclePhase.create(8);
         describe('AddCircle', () => {
             it('전략에 대한 편집 권한이 있으면, Circle이 추가된다.', () => {
                 // given
@@ -1045,8 +1052,8 @@ describe('Strategy', () => {
                     editorEmail,
                     StrategySharePermission.EDITABLE
                 );
-                const phase1 = 1;
-                const phase2 = 2;
+                const phase1 = CirclePhase.create(1);
+                const phase2 = CirclePhase.create(2);
 
                 // when
                 strategy.addCircle(ownerId, phase1);
@@ -1070,13 +1077,13 @@ describe('Strategy', () => {
                 );
 
                 for (let i = 1; i <= 8; i++) {
-                    strategy.addCircle(ownerId, i);
+                    strategy.addCircle(ownerId, CirclePhase.create(i));
                 }
 
                 // when & then
-                expect(() => strategy.addCircle(ownerId, 8)).toThrow(
-                    CircleLimitExceededException
-                );
+                expect(() =>
+                    strategy.addCircle(ownerId, CirclePhase.create(8))
+                ).toThrow(CircleLimitExceededException);
             });
 
             it('Phase가 중복되면, 에러를 던진다.', () => {
@@ -1086,7 +1093,7 @@ describe('Strategy', () => {
                     defaultTitle,
                     defaultMap
                 );
-                const phase = 1;
+                const phase = CirclePhase.create(1);
                 strategy.addCircle(ownerId, phase);
 
                 // when & then
@@ -1162,7 +1169,7 @@ describe('Strategy', () => {
 
         describe('UpdateCircle', () => {
             const newPosition = Position.create(20, 200);
-            const updatePhase = 2;
+            const updatePhase = CirclePhase.create(2);
 
             it('전략에 대한 편집 권한이 있으면, Circle CenterPosition이 업데이트된다.', () => {
                 // give
@@ -1209,8 +1216,8 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 있으면, Circle Phase가 업데이트된다.', () => {
                 // give
-                const newPhase1 = 7;
-                const newPhase2 = 5;
+                const newPhase1 = CirclePhase.create(7);
+                const newPhase2 = CirclePhase.create(5);
 
                 const { id: circleId1, phase: oldCircle1Phase } =
                     circle1Fixture;
@@ -1240,7 +1247,7 @@ describe('Strategy', () => {
 
             it('이미 있는 Phase로 업데이트 하면, 에러를 던진다.', () => {
                 // give
-                const newPhase = 7;
+                const newPhase = CirclePhase.create(7);
 
                 const { id: circleId1 } = circle1Fixture;
                 const { id: circleId2 } = circle2Fixture;
