@@ -1784,6 +1784,27 @@ describe('Strategy', () => {
                 );
             });
 
+            it('같은 값으로 업데이트 할 경우 무시된다.', () => {
+                // given
+                const { id: strategyShareId, permission: oldPermission } =
+                    strategyShareEditorFixture;
+
+                const oldUpdatedAt = strategyFixture.updatedAt;
+                jest.advanceTimersByTime(1000);
+
+                // when
+                strategyFixture.updateStrategySharePermission(
+                    ownerId,
+                    strategyShareId,
+                    oldPermission
+                );
+
+                // then
+                expect(strategyFixture.updatedAt.getTime()).toEqual(
+                    oldUpdatedAt.getTime()
+                );
+            });
+
             it('전략에 대한 소유주가 아니라면, 에러를 던진다.', () => {
                 // give
                 const shareId = strategyShareEditorFixture.id;

@@ -526,9 +526,11 @@ export class Strategy {
         const { value: strategyShare } =
             this.findStrategyShare(strategyShareId);
 
-        strategyShare.updatePermission(permission);
+        const isChanged = strategyShare.updatePermission(permission);
 
-        this._updatedAt = new Date();
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
     }
 
     /**
