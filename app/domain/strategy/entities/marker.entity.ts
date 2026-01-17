@@ -32,7 +32,7 @@ export class Marker {
         );
     }
 
-    update(newPosition: Position) {
+    updatePosition(newPosition: Position) {
         if (this._isDeleted) {
             this.restore(newPosition);
             return;

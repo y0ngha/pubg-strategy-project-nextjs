@@ -24,7 +24,7 @@ describe('Marker', () => {
             const marker = Marker.create(oldPosition);
 
             // when
-            marker.update(newPosition);
+            marker.updatePosition(newPosition);
 
             // then
             expect(marker.isDeleted).toBeTruthy();
@@ -38,7 +38,7 @@ describe('Marker', () => {
             marker.delete();
 
             // when
-            marker.update(newPosition);
+            marker.updatePosition(newPosition);
 
             // then
             expect(marker.isDeleted).toBeFalsy();
@@ -52,7 +52,7 @@ describe('Marker', () => {
             const marker = Marker.create(oldPosition);
 
             // when
-            marker.update(newPosition);
+            marker.updatePosition(newPosition);
 
             // then
             expect(marker.isDeleted).toBeFalsy();
