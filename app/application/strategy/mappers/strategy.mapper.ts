@@ -101,9 +101,9 @@ export class StrategyMapper {
         return {
             id: entity.id.toString(),
             centerPosition: this.parsePosition(entity.centerPosition),
-            phase: entity.phase,
-            radius: entity.radius,
-            color: entity.color,
+            phase: entity.phase.value,
+            radius: entity.phase.radius,
+            color: entity.phase.color,
         };
     }
 
