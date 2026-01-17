@@ -489,6 +489,10 @@ describe('Strategy', () => {
                 const oldTeamPlayer1Position = teamPlayer1Fixture.position;
                 const oldTeamPlayer2Position = teamPlayer2Fixture.position;
 
+                const oldUpdatedAt = strategyFixture.updatedAt;
+
+                jest.advanceTimersByTime(1000);
+
                 // when
                 strategyFixture.updateTeamPlayerPosition(
                     ownerId,
@@ -510,6 +514,9 @@ describe('Strategy', () => {
                     oldTeamPlayer2Position
                 );
                 expect(teamPlayer2Fixture.position).toEqual(newPosition);
+                expect(strategyFixture.updatedAt.getTime()).toBeGreaterThan(
+                    oldUpdatedAt.getTime()
+                );
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
