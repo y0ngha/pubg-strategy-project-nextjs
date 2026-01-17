@@ -171,6 +171,14 @@ export class TeamPlayer {
     delete() {
         this.ensureNotDeleted();
 
+        if (this._marker) {
+            this.deleteMarker();
+        }
+
+        if (this._waypoint) {
+            this.deleteWaypoint();
+        }
+
         this._isDeleted = true;
     }
 
