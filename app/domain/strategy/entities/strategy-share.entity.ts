@@ -65,11 +65,13 @@ export class StrategyShare {
         );
     }
 
-    updatePermission(permission: StrategySharePermission) {
-        if (this._permission === permission) return;
+    updatePermission(permission: StrategySharePermission): boolean {
+        if (this._permission === permission) return false;
 
         this._permission = permission;
         this._updatedAt = new Date();
+
+        return true;
     }
 
     delete() {
