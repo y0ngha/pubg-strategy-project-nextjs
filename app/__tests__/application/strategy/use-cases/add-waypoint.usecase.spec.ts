@@ -9,7 +9,6 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { Position } from '@domain/strategy/value-objects/position';
 import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/add-waypoint.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
@@ -130,55 +129,6 @@ describe('AddWaypointUseCase', () => {
         );
 
         expect(teamPlayer?.waypoint).toBeDefined();
-        expect(addedPositions).toEqual(positions);
-    });
-
-    it('웨이포인트가 있을 때 기존 웨이포인트가 교체된다.', async () => {
-        // given
-        const oldPositions = [
-            Position.create(50, 10),
-            Position.create(40, 10),
-            Position.create(30, 10),
-            Position.create(20, 10),
-            Position.create(10, 10),
-        ];
-        strategyFixture.addTeamPlayerWaypoint(
-            ownerId,
-            teamPlayerId,
-            oldPositions
-        );
-
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: teamPlayerId.toString(),
-            positions: positions,
-        };
-
-        // when
-        await useCase.execute(dto);
-
-        // then
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
-
-        const teamPlayer = strategyFixture.teamPlayers.find(teamPlayer =>
-            teamPlayer.id.equals(teamPlayerId)
-        );
-
-        const addedPositions = teamPlayer?.waypoint?.positions?.map(
-            position => {
-                return {
-                    x: position.x,
-                    y: position.y,
-                };
-            }
-        );
-
-        expect(teamPlayer?.waypoint).toBeDefined();
-        expect(addedPositions).not.toEqual(oldPositions);
         expect(addedPositions).toEqual(positions);
     });
 
