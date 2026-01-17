@@ -301,6 +301,23 @@ export class Strategy {
         }
     }
 
+    updateTeamPlayerWaypoint(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        positions: Position[]
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+
+        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        const isChanged = teamPlayer.updateWaypointPositions(positions);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+    }
+
     removeTeamPlayerMarker(actorId: UserId, teamPlayerId: TeamPlayerId) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
