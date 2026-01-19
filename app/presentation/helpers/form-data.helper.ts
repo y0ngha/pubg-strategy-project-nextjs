@@ -5,8 +5,12 @@ interface Field {
     allowUndefined?: boolean;
 }
 
+type BaseType<T> = T extends 'number' ? number : string;
+
 type ParsedFormData<T extends readonly Field[]> = {
-    [K in T[number] as K['key']]: K['type'] extends 'number' ? number : string;
+    [K in T[number] as K['key']]: K['allowUndefined'] extends true
+        ? BaseType<K['type']> | undefined
+        : BaseType<K['type']>;
 };
 
 export function getRequiredFormData<T extends readonly Field[]>(
