@@ -27,6 +27,7 @@ export async function addWaypointAction(_: unknown, formData: FormData) {
             },
             {
                 key: 'positions',
+                error: '웨이포인트 위치를 불러올 수 없습니다.',
                 type: 'position',
                 isArray: true,
             },
