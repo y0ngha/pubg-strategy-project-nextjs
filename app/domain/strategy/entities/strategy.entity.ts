@@ -34,7 +34,6 @@ import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
-import { Marker } from '@domain/strategy/entities/marker.entity';
 import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
 import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { StrategyShareId } from '@domain/strategy/value-objects/strategy-share-id';
@@ -278,9 +277,8 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        const marker = Marker.create(position);
+        teamPlayer.addMarker(position);
 
-        teamPlayer.addMarker(marker);
         this._updatedAt = new Date();
     }
 

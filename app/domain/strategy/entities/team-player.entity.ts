@@ -153,11 +153,11 @@ export class TeamPlayer {
         return isChanged;
     }
 
-    addMarker(marker: Marker) {
+    addMarker(position: Position) {
         this.ensureNotDeleted();
         this.ensureNoHaveMarker();
 
-        this._marker = marker;
+        this._marker = Marker.create(position);
         this._updatedAt = new Date();
     }
 
