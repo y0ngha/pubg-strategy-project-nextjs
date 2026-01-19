@@ -25,12 +25,14 @@ export function parseFormData<T extends readonly Field[]>(
     const data: Record<string, string | number> = {};
 
     for (const { key, error, type, allowUndefined } of fields) {
+        const errorMessage = error ? error : `${key}를 불러올 수 없습니다.`;
+
         const value = formData.get(key);
 
         if (value == null) {
             if (allowUndefined) continue;
 
-            throw new Error(error);
+            throw new Error(errorMessage);
         }
 
         switch (type) {
@@ -38,7 +40,7 @@ export function parseFormData<T extends readonly Field[]>(
                 data[key] = value.toString();
                 break;
             case 'number':
-                data[key] = parseNumber(value, error);
+                data[key] = parseNumber(value, errorMessage);
                 break;
         }
     }
