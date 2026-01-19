@@ -24,10 +24,12 @@ export function getRequiredFormData<T extends readonly Field[]>(
 ) {
     const data: Record<string, string | number> = {};
 
-    for (const { key, error, type } of fields) {
+    for (const { key, error, type, allowUndefined } of fields) {
         const value = formData.get(key);
 
-        if (value === null || value === undefined) {
+        if (value == null) {
+            if (allowUndefined) continue;
+
             throw new Error(error);
         }
 
