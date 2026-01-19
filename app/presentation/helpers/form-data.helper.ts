@@ -2,6 +2,7 @@ interface Field {
     key: string;
     error: string;
     type: 'string' | 'number';
+    allowUndefined?: boolean;
 }
 
 type ParsedFormData<T extends readonly Field[]> = {
