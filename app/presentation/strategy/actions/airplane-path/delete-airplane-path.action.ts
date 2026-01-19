@@ -18,7 +18,7 @@ export async function deleteAirplanePathAction(_: unknown, formData: FormData) {
             error: '전략 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
-    ]);
+    ] as const);
 
     const useCase = getService<DeleteAirplanePathUseCase>(
         DeleteAirplanePathUseCase
