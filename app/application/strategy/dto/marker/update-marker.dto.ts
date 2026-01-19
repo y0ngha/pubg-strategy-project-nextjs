@@ -2,13 +2,14 @@ import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 
 export interface UpdateMarkerRequestDto {
     actorId: string;
     strategyId: string;
     teamPlayerId: string;
-    position: { x: number; y: number };
+    position: PositionInterface;
 }
 
 export const UpdateMarkerRequestSchema = z.object({

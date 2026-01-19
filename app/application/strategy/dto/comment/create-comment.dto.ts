@@ -5,6 +5,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { Email } from '@domain/shared/value-objects/email';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface CreateCommentRequestDto {
     actorId: string;
@@ -12,7 +13,7 @@ export interface CreateCommentRequestDto {
     strategyId: string;
     content: string;
     parentCommentId?: string;
-    position?: { x: number; y: number };
+    position?: PositionInterface;
 }
 
 export const CreateCommentRequestSchema = z.object({

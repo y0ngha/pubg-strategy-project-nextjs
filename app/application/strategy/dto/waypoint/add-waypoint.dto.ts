@@ -3,12 +3,13 @@ import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface AddWaypointRequestDto {
     actorId: string;
     strategyId: string;
     teamPlayerId: string;
-    positions: { x: number; y: number }[];
+    positions: PositionInterface[];
 }
 
 export const AddWaypointRequestSchema = z.object({

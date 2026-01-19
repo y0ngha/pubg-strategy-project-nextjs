@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { Position } from '@/application/strategy/types/position';
 
 export interface GetStrategyRequestDto {
     actorId: string;
@@ -26,25 +27,20 @@ export const GetStrategiesRequestSchema = z.object({
     }),
 });
 
-export interface PositionResponseDto {
-    x: number;
-    y: number;
-}
-
 export interface WaypointResponseDto {
     id: string;
-    positions: PositionResponseDto[];
+    positions: Position[];
 }
 
 export interface MarkerResponseDto {
     id: string;
-    position: PositionResponseDto;
+    position: Position;
 }
 
 export interface TeamPlayerResponseDto {
     id: string;
     priority: number;
-    position: PositionResponseDto;
+    position: Position;
     color: string;
     marker?: MarkerResponseDto;
     waypoint?: WaypointResponseDto;
@@ -53,12 +49,12 @@ export interface TeamPlayerResponseDto {
 export interface EnemyTeamResponseDto {
     id: string;
     teamLabel: string;
-    position: PositionResponseDto;
+    position: Position;
 }
 
 export interface CircleResponseDto {
     id: string;
-    centerPosition: PositionResponseDto;
+    centerPosition: Position;
     phase: number;
     radius: number;
     color: string;
@@ -66,13 +62,13 @@ export interface CircleResponseDto {
 
 export interface AirplanePathResponseDto {
     id: string;
-    startPosition: PositionResponseDto;
-    endPosition: PositionResponseDto;
+    startPosition: Position;
+    endPosition: Position;
 }
 
 export interface TagResponseDto {
     id: string;
-    position: PositionResponseDto;
+    position: Position;
     content: string;
 }
 
@@ -87,7 +83,7 @@ export interface CommentResponseDto {
     id: string;
     authorId: string;
     authorEmail: string;
-    position: PositionResponseDto;
+    position: Position;
     content: string;
     childComments: ChildCommentResponseDto[];
 }

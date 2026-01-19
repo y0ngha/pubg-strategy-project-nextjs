@@ -4,13 +4,14 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamLabel } from '@domain/strategy/value-objects/team-label';
 import { Position } from '@domain/strategy/value-objects/position';
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface UpdateEnemyTeamRequestDto {
     actorId: string;
     strategyId: string;
     enemyTeamId: string;
     teamLabel?: string;
-    position?: { x: number; y: number };
+    position?: PositionInterface;
 }
 
 export const UpdateEnemyTeamRequestSchema = z

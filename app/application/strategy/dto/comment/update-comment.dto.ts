@@ -4,13 +4,14 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { CommentContent } from '@domain/strategy/value-objects/comment-content';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface UpdateCommentRequestDto {
     actorId: string;
     strategyId: string;
     commentId: string;
     content?: string;
-    position?: { x: number; y: number };
+    position?: PositionInterface;
 }
 
 export const UpdateCommentRequestSchema = z

@@ -28,6 +28,35 @@ import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/
 import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-friendship-list.usecase';
 import { RejectReceivedFriendshipUseCase } from '@/application/friend/use-cases/reject-received-friendship.usecase';
 import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
+import { StrategyRepositoryAdapter } from '@infrastructure/strategy/adapter/driven/strategy-repository.adapter';
+import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import { AddAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/add-airplane-path.usecase';
+import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
+import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
+import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
+import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
+import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
+import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
+import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
+import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
+import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
+import { DeleteEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/delete-enemy-team.usecase';
+import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team.usecase';
+import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
+import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/delete-marker.usecase';
+import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
+import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
+import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
+import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
+import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
+import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
+import { AddTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/add-team-player.usecase';
+import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/delete-team-player.usecase';
+import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/move-team-player.usecase';
+import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/add-waypoint.usecase';
+import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
+import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
 
 /**
  * User
@@ -83,12 +112,53 @@ const friendUseCases: ClassDependency[] = [
     { class: RequestFriendshipUseCase },
 ];
 
+/**
+ * Strategy
+ */
+const strategyRepositories: ClassDependency[] = [
+    {
+        class: StrategyRepositoryAdapter,
+        abstract: StrategyRepositoryPort,
+    },
+];
+const strategyUseCases: ClassDependency[] = [
+    { class: AddAirplanePathUseCase },
+    { class: DeleteAirplanePathUseCase },
+    { class: UpdateAirplanePathUseCase },
+    { class: CreateCircleUseCase },
+    { class: DeleteCircleUseCase },
+    { class: UpdateCircleUseCase },
+    { class: CreateCommentUseCase },
+    { class: DeleteCommentUseCase },
+    { class: UpdateCommentUseCase },
+    { class: AddEnemyTeamUseCase },
+    { class: DeleteEnemyTeamUseCase },
+    { class: UpdateEnemyTeamUseCase },
+    { class: AddMarkerUseCase },
+    { class: DeleteMarkerUseCase },
+    { class: UpdateMarkerUseCase },
+    { class: CreateStrategyShareUseCase },
+    { class: RevokeStrategyShareUseCase },
+    { class: UpdateStrategySharePermissionUseCase },
+    { class: CreateTagUseCase },
+    { class: DeleteTagUseCase },
+    { class: UpdateTagUseCase },
+    { class: AddTeamPlayerUseCase },
+    { class: DeleteTeamPlayerUseCase },
+    { class: MoveTeamPlayerUseCase },
+    { class: AddWaypointUseCase },
+    { class: DeleteWaypointUseCase },
+    { class: UpdateWaypointUseCase },
+];
+
 const dependencyInjectedClasses: ClassDependency[] = [
     ...userRepositories,
     ...userServices,
     ...userUseCases,
     ...friendRepositories,
     ...friendUseCases,
+    ...strategyRepositories,
+    ...strategyUseCases,
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;
