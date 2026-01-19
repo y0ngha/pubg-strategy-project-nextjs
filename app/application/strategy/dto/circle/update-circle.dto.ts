@@ -4,13 +4,14 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface UpdateCircleRequestDto {
     actorId: string;
     strategyId: string;
     circleId: string;
     phase?: number;
-    centerPosition?: { x: number; y: number };
+    centerPosition?: PositionInterface;
 }
 
 export const UpdateCircleRequestSchema = z

@@ -2,12 +2,13 @@ import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface UpdateAirplanePathRequestDto {
     actorId: string;
     strategyId: string;
-    startPosition: { x: number; y: number };
-    endPosition: { x: number; y: number };
+    startPosition: PositionInterface;
+    endPosition: PositionInterface;
 }
 
 export const UpdateAirplanePathRequestSchema = z.object({

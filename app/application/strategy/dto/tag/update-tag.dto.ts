@@ -4,13 +4,14 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
 export interface UpdateTagRequestDto {
     actorId: string;
     strategyId: string;
     tagId: string;
     content?: string;
-    position?: { x: number; y: number };
+    position?: PositionInterface;
 }
 
 export const UpdateTagRequestSchema = z
