@@ -10,6 +10,14 @@ describe('AirplanePath', () => {
     const startPosition = Position.create(10, 20);
     const endPosition = Position.create(1000, 2000);
 
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     describe('Create', () => {
         it('Airplane을 생성한다.', () => {
             // when
