@@ -161,11 +161,11 @@ export class TeamPlayer {
         this._updatedAt = new Date();
     }
 
-    addWaypoint(waypoint: Waypoint) {
+    addWaypoint(positions: Position[]) {
         this.ensureNotDeleted();
         this.ensureNoHaveWaypoint();
 
-        this._waypoint = waypoint;
+        this._waypoint = Waypoint.create(positions);
         this._updatedAt = new Date();
     }
 

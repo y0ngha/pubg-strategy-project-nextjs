@@ -301,7 +301,7 @@ describe('TeamPlayer', () => {
     });
 
     describe('Add Waypoint', () => {
-        const waypoint = Waypoint.create([Position.create(30, 30)]);
+        const waypointPositions = [Position.create(30, 30)];
 
         it('팀 플레이어가 삭제된 객체가 아니라면, 웨이포인트를 연결할 수 있다.', () => {
             // given
@@ -310,10 +310,10 @@ describe('TeamPlayer', () => {
             jest.advanceTimersByTime(1000);
 
             // when
-            teamPlayer.addWaypoint(waypoint);
+            teamPlayer.addWaypoint(waypointPositions);
 
             // then
-            expect(teamPlayer.waypoint).toEqual(waypoint);
+            expect(teamPlayer.waypoint?.positions).toEqual(waypointPositions);
             expect(teamPlayer.updatedAt.getTime()).toBeGreaterThan(
                 oldUpdatedAt.getTime()
             );
@@ -325,19 +325,19 @@ describe('TeamPlayer', () => {
             teamPlayer.delete();
 
             // when & then
-            expect(() => teamPlayer.addWaypoint(waypoint)).toThrow(
+            expect(() => teamPlayer.addWaypoint(waypointPositions)).toThrow(
                 DeletedTeamPlayerException
             );
         });
     });
 
     describe('Update Waypoint Positions', () => {
-        const waypoint = Waypoint.create([Position.create(30, 30)]);
+        const oldPositions = [Position.create(30, 30)];
 
         it('팀 플레이어가 삭제된 객체가 아니고, 웨이포인트가 있으면 웨이포인트를 수정할 수 있다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
-            teamPlayer.addWaypoint(waypoint);
+            teamPlayer.addWaypoint(oldPositions);
             const newPositions = [Position.create(500, 500)];
             const oldUpdatedAt = teamPlayer.updatedAt;
 
