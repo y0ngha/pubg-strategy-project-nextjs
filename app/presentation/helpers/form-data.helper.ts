@@ -11,7 +11,12 @@ type ParsedFormData<T extends readonly Field[]> = {
 export function getRequiredFormData<T extends readonly Field[]>(
     formData: FormData,
     fields: T
-): ParsedFormData<T> {
+): ParsedFormData<T>;
+
+export function getRequiredFormData<T extends readonly Field[]>(
+    formData: FormData,
+    fields: T
+) {
     const data: Record<string, string | number> = {};
 
     for (const { key, error, type } of fields) {
@@ -31,7 +36,7 @@ export function getRequiredFormData<T extends readonly Field[]>(
         }
     }
 
-    return data as ParsedFormData<T>;
+    return data;
 }
 
 function parseNumber(value: FormDataEntryValue | null, error: string): number {
