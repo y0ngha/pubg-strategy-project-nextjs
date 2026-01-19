@@ -61,15 +61,16 @@ const parsers: Parsers = {
         safeParseNumber(value, error),
 
     position: (value: FormDataEntryValue, error?: string) => {
-        const json = JSON.parse(value.toString());
+        try {
+            const json = JSON.parse(value.toString());
 
-        const x = safeParseNumber(json.x, error);
-        const y = safeParseNumber(json.y, error);
+            const x = safeParseNumber(json?.x, error);
+            const y = safeParseNumber(json?.y, error);
 
-        return {
-            x: x,
-            y: y,
-        };
+            return { x, y };
+        } catch {
+            throw new Error(error);
+        }
     },
 };
 
