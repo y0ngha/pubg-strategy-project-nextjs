@@ -13,7 +13,12 @@ interface Field {
     allowUndefined?: boolean;
 }
 
-type BaseType<T> = T extends 'number' ? number : string;
+type Parsers = {
+    [K in keyof FieldTypeMap]: (
+        value: FormDataEntryValue,
+        error?: string
+    ) => FieldTypeMap[K];
+};
 
 type ParsedFormData<T extends readonly Field[]> = {
     [K in T[number] as K['key']]: K['allowUndefined'] extends true
@@ -30,7 +35,7 @@ export function parseFormData<T extends readonly Field[]>(
     formData: FormData,
     fields: T
 ) {
-    const data: Record<string, string | number> = {};
+    const data: Record<string, string | number | Position> = {};
 
     for (const { key, error, type, allowUndefined } of fields) {
         const errorMessage = error ? error : `${key}를 불러올 수 없습니다.`;
@@ -43,29 +48,35 @@ export function parseFormData<T extends readonly Field[]>(
             throw new Error(errorMessage);
         }
 
-        switch (type) {
-            case 'string':
-                data[key] = value.toString();
-                break;
-            case 'number':
-                data[key] = parseNumber(value, errorMessage);
-                break;
-        }
+        data[key] = parsers[type](value, errorMessage);
     }
 
     return data;
 }
 
-function parseNumber(value: FormDataEntryValue | null, error?: string): number {
-    if (!value) {
-        throw new Error(error);
-    }
+const parsers: Parsers = {
+    string: (value: FormDataEntryValue) => value.toString(),
 
+    number: (value: FormDataEntryValue, error?: string) =>
+        safeParseNumber(value, error),
+
+    position: (value: FormDataEntryValue, error?: string) => {
+        const json = JSON.parse(value.toString());
+
+        const x = safeParseNumber(json.x, error);
+        const y = safeParseNumber(json.y, error);
+
+        return {
+            x: x,
+            y: y,
+        };
+    },
+};
+
+function safeParseNumber(value: unknown, error?: string): number {
     const parsed = Number(value);
-
-    if (Number.isNaN(parsed) || !Number.isFinite(parsed)) {
+    if (Number.isNaN(parsed) || !Number.isFinite(parsed))
         throw new Error(error);
-    }
 
     return parsed;
 }
