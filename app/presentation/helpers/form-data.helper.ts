@@ -13,12 +13,12 @@ type ParsedFormData<T extends readonly Field[]> = {
         : BaseType<K['type']>;
 };
 
-export function getRequiredFormData<T extends readonly Field[]>(
+export function parseFormData<T extends readonly Field[]>(
     formData: FormData,
     fields: T
 ): ParsedFormData<T>;
 
-export function getRequiredFormData<T extends readonly Field[]>(
+export function parseFormData<T extends readonly Field[]>(
     formData: FormData,
     fields: T
 ) {

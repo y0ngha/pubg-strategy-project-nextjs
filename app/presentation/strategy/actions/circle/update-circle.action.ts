@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
-import { getRequiredFormData } from '@/presentation/helpers/form-data.helper';
+import { parseFormData } from '@/presentation/helpers/form-data.helper';
 
 export async function updateCircleAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
@@ -14,7 +14,7 @@ export async function updateCircleAction(_: unknown, formData: FormData) {
         phase,
         centerPositionX,
         centerPositionY,
-    } = getRequiredFormData(formData, [
+    } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',

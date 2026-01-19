@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
-import { getRequiredFormData } from '@/presentation/helpers/form-data.helper';
+import { parseFormData } from '@/presentation/helpers/form-data.helper';
 
 export async function updateAirplanePathAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
@@ -14,7 +14,7 @@ export async function updateAirplanePathAction(_: unknown, formData: FormData) {
         startPositionY,
         endPositionX,
         endPositionY,
-    } = getRequiredFormData(formData, [
+    } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',

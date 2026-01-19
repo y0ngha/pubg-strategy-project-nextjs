@@ -2,12 +2,12 @@
 
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { getRequiredFormData } from '@/presentation/helpers/form-data.helper';
+import { parseFormData } from '@/presentation/helpers/form-data.helper';
 
 export async function CreateCircleAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, phase } = getRequiredFormData(formData, [
+    const { userId, strategyId, phase } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',

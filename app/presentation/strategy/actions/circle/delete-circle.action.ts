@@ -2,12 +2,12 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
-import { getRequiredFormData } from '@/presentation/helpers/form-data.helper';
+import { parseFormData } from '@/presentation/helpers/form-data.helper';
 
 export async function DeleteCircleAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, circleId } = getRequiredFormData(formData, [
+    const { userId, strategyId, circleId } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
