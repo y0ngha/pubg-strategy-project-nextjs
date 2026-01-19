@@ -1,6 +1,6 @@
 interface Field {
     key: string;
-    error: string;
+    error?: string;
     type: 'string' | 'number';
     allowUndefined?: boolean;
 }
@@ -46,7 +46,7 @@ export function getRequiredFormData<T extends readonly Field[]>(
     return data;
 }
 
-function parseNumber(value: FormDataEntryValue | null, error: string): number {
+function parseNumber(value: FormDataEntryValue | null, error?: string): number {
     if (!value) {
         throw new Error(error);
     }
