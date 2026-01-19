@@ -71,6 +71,9 @@ function parseField(
     return [key, parsedValue];
 }
 
+/**
+ * 만약 파일 객체를 써야한다면, 해당 부분은 수정되어야함.
+ */
 function parseArrayValue(
     value: FormDataEntryValue,
     type: keyof FieldTypeMap,
