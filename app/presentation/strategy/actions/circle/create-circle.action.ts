@@ -4,7 +4,7 @@ import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/cre
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/presentation/helpers/form-data.helper';
 
-export async function CreateCircleAction(_: unknown, formData: FormData) {
+export async function createCircleAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, phase } = parseFormData(formData, [
