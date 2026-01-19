@@ -7,7 +7,7 @@ import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/del
 export async function deleteMarkerAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, markerId } = parseFormData(formData, [
+    const { userId, strategyId, teamPlayerId } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -19,8 +19,8 @@ export async function deleteMarkerAction(_: unknown, formData: FormData) {
             type: 'string',
         },
         {
-            key: 'markerId',
-            error: '마커 고유 식별자를 불러올 수 없습니다.',
+            key: 'teamPlayerId',
+            error: '팀 플레이어 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
     ] as const);
@@ -30,7 +30,7 @@ export async function deleteMarkerAction(_: unknown, formData: FormData) {
     const dto = {
         actorId: userId,
         strategyId: strategyId,
-        teamPlayerId: markerId,
+        teamPlayerId: teamPlayerId,
     };
 
     return await useCase.execute(dto);
