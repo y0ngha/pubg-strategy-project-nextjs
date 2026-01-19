@@ -10,7 +10,11 @@ export function getRequiredFormData(
             throw new Error(error);
         }
 
-        data[key] = value;
+    const parsed = Number(value);
+
+    if (Number.isNaN(parsed) || !Number.isFinite(parsed)) {
+        throw new Error(error);
     }
-    return data;
+
+    return parsed;
 }
