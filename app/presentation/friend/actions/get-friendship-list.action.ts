@@ -8,8 +8,12 @@ export async function getFriendshipListAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId } = getRequiredFormData(formData, [
-        { key: 'userId', error: '유저 고유 식별자를 불러올 수 없습니다.' },
-    ]);
+        {
+            key: 'userId',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const dto = {
         userId: userId,

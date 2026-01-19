@@ -8,10 +8,22 @@ export async function changePasswordAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { id, currentPassword, newPassword } = getRequiredFormData(formData, [
-        { key: 'id', error: '유저 고유 식별자를 불러올 수 없습니다.' },
-        { key: 'currentPassword', error: '현재 비밀번호를 입력해주세요.' },
-        { key: 'newPassword', error: '변경할 비밀번호를 입력해주세요.' },
-    ]);
+        {
+            key: 'id',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'currentPassword',
+            error: '현재 비밀번호를 입력해주세요.',
+            type: 'string',
+        },
+        {
+            key: 'newPassword',
+            error: '변경할 비밀번호를 입력해주세요.',
+            type: 'string',
+        },
+    ] as const);
 
     const dto = {
         id: id,

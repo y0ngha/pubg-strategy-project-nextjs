@@ -15,39 +15,48 @@ export async function addAirplanePathAction(_: unknown, formData: FormData) {
         endPositionX,
         endPositionY,
     } = getRequiredFormData(formData, [
-        { key: 'userId', error: '유저 고유 식별자를 불러올 수 없습니다.' },
+        {
+            key: 'userId',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
         },
         {
             key: 'startPositionX',
             error: '비행기 동선 시작 위치를 불러올 수 없습니다.',
+            type: 'number',
         },
         {
             key: 'startPositionY',
             error: '비행기 동선 시작 위치를 불러올 수 없습니다.',
+            type: 'number',
         },
         {
             key: 'endPositionX',
             error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
+            type: 'number',
         },
         {
             key: 'endPositionY',
             error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
+            type: 'number',
         },
-    ]);
+    ] as const);
 
     const dto = {
         actorId: userId,
         strategyId: strategyId,
         startPosition: {
-            x: Number(startPositionX),
-            y: Number(startPositionY),
+            x: startPositionX,
+            y: startPositionY,
         },
         endPosition: {
-            x: Number(endPositionX),
-            y: Number(endPositionY),
+            x: endPositionX,
+            y: endPositionY,
         },
     };
 

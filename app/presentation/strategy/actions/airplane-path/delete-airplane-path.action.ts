@@ -8,8 +8,16 @@ export async function deleteAirplanePathAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId, strategyId } = getRequiredFormData(formData, [
-        { key: 'userId', error: '유저 고유 식별자를 불러올 수 없습니다.' },
-        { key: 'strategyId', error: '전략 고유 식별자를 불러올 수 없습니다.' },
+        {
+            key: 'userId',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'strategyId',
+            error: '전략 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
     ]);
 
     const useCase = getService<DeleteAirplanePathUseCase>(

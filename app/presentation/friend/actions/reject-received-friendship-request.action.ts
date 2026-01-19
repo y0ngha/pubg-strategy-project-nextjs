@@ -11,9 +11,17 @@ export async function rejectReceivedFriendshipRequestAction(
     const getService = initializeRequestServices();
 
     const { id, userId } = getRequiredFormData(formData, [
-        { key: 'id', error: '친구 고유 식별자를 불러올 수 없습니다.' },
-        { key: 'userId', error: '유저 고유 식별자를 불러올 수 없습니다.' },
-    ]);
+        {
+            key: 'id',
+            error: '친구 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'userId',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const dto = {
         id: id,

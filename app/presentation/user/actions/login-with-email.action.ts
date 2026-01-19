@@ -8,9 +8,17 @@ export async function loginWithEmailAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { email, password } = getRequiredFormData(formData, [
-        { key: 'email', error: '이메일은 필수적으로 입력해야합니다.' },
-        { key: 'password', error: '비밀번호는 필수적으로 입력해야합니다.' },
-    ]);
+        {
+            key: 'email',
+            error: '이메일은 필수적으로 입력해야합니다.',
+            type: 'string',
+        },
+        {
+            key: 'password',
+            error: '비밀번호는 필수적으로 입력해야합니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const dto = {
         email: email,

@@ -8,8 +8,12 @@ export async function logoutAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { id } = getRequiredFormData(formData, [
-        { key: 'id', error: '유저 고유 식별자를 불러올 수 없습니다.' },
-    ]);
+        {
+            key: 'id',
+            error: '유저 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const dto = {
         id: id,

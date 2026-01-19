@@ -11,8 +11,8 @@ export async function checkEmailDuplicateAction(
     const getService = initializeRequestServices();
 
     const { email } = getRequiredFormData(formData, [
-        { key: 'email', error: '이메일을 입력해주세요.' },
-    ]);
+        { key: 'email', error: '이메일을 입력해주세요.', type: 'string' },
+    ] as const);
 
     const dto = {
         email: email,
