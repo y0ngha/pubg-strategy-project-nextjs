@@ -1,7 +1,15 @@
+import { Position } from '@/application/strategy/types/position';
+
+type FieldTypeMap = {
+    string: string;
+    number: number;
+    position: Position;
+};
+
 interface Field {
     key: string;
     error?: string;
-    type: 'string' | 'number';
+    type: keyof FieldTypeMap;
     allowUndefined?: boolean;
 }
 
@@ -9,8 +17,8 @@ type BaseType<T> = T extends 'number' ? number : string;
 
 type ParsedFormData<T extends readonly Field[]> = {
     [K in T[number] as K['key']]: K['allowUndefined'] extends true
-        ? BaseType<K['type']> | undefined
-        : BaseType<K['type']>;
+        ? FieldTypeMap[K['type']] | undefined
+        : FieldTypeMap[K['type']];
 };
 
 export function parseFormData<T extends readonly Field[]>(
