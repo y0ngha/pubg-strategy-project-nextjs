@@ -38,42 +38,55 @@ export function parseFormData<T extends readonly Field[]>(
     formData: FormData,
     fields: T
 ) {
-    const data: Record<
-        string,
-        FieldTypeMap[keyof FieldTypeMap] | FieldTypeMap[keyof FieldTypeMap][]
-    > = {};
+    const entries = fields.map(field => parseField(formData, field));
 
-    for (const { key, error, type, allowUndefined, isArray } of fields) {
-        const errorMessage = error ? error : `${key}를 불러올 수 없습니다.`;
+    return Object.fromEntries(entries);
+}
 
-        const value = formData.get(key);
+function parseField(
+    formData: FormData,
+    field: Field
+): [
+    string,
+    (
+        | FieldTypeMap[keyof FieldTypeMap]
+        | FieldTypeMap[keyof FieldTypeMap][]
+        | undefined
+    ),
+] {
+    const { key, error, type, allowUndefined, isArray } = field;
+    const errorMessage = error ?? `${key}를 불러올 수 없습니다.`;
 
-        if (value == null) {
-            if (allowUndefined) continue;
+    const value = formData.get(key);
 
-            throw new Error(errorMessage);
-        }
-
-        if (isArray) {
-            try {
-                const parsedArray = JSON.parse(value.toString());
-
-                if (!Array.isArray(parsedArray)) {
-                    throw new Error(errorMessage);
-                }
-
-                data[key] = parsedArray.map(item =>
-                    parsers[type](item, errorMessage)
-                );
-            } catch {
-                throw new Error(errorMessage);
-            }
-        } else {
-            data[key] = parsers[type](value, errorMessage);
-        }
+    if (value == null) {
+        if (allowUndefined) return [key, undefined];
+        throw new Error(errorMessage);
     }
 
-    return data;
+    const parsedValue = isArray
+        ? parseArrayValue(value, type, errorMessage)
+        : parsers[type](value, errorMessage);
+
+    return [key, parsedValue];
+}
+
+function parseArrayValue(
+    value: FormDataEntryValue,
+    type: keyof FieldTypeMap,
+    error: string
+) {
+    try {
+        const parsedArray = JSON.parse(value.toString());
+
+        if (!Array.isArray(parsedArray)) {
+            throw new Error(error);
+        }
+
+        return parsedArray.map(item => parsers[type](item, error));
+    } catch {
+        throw new Error(error);
+    }
 }
 
 const parsers: Parsers = {
