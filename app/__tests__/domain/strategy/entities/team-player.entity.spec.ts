@@ -303,7 +303,7 @@ describe('TeamPlayer', () => {
     describe('Add Waypoint', () => {
         const waypointPositions = [Position.create(30, 30)];
 
-        it('팀 플레이어가 삭제된 객체가 아니라면, 웨이포인트를 연결할 수 있다.', () => {
+        it('팀 플레이어가 삭제된 객체가 아니라면, 웨이포인트를 추가할 수 있다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
             const oldUpdatedAt = teamPlayer.updatedAt;
@@ -319,7 +319,7 @@ describe('TeamPlayer', () => {
             );
         });
 
-        it('팀 플레이어가 삭제된 객체라면, 웨이포인트 연결시 에러를 던진다.', () => {
+        it('팀 플레이어가 삭제된 객체라면, 웨이포인트 추가시 에러를 던진다.', () => {
             // given
             const teamPlayer = TeamPlayer.create(1, position, null, null);
             teamPlayer.delete();
@@ -407,7 +407,7 @@ describe('TeamPlayer', () => {
     });
 
     describe('Delete', () => {
-        it('팀 플레이어가 삭제된 객체가 아니라면, 연결된 모든 리소스(마커, 웨이포인트)가 삭제되고 연결 해제된다.', () => {
+        it('팀 플레이어가 삭제된 객체가 아니라면, 추가된 모든 리소스(마커, 웨이포인트)가 삭제되고 추가 해제된다.', () => {
             // given
             const marker = Marker.create(Position.create(10, 10));
             const waypoint = Waypoint.create([Position.create(10, 10)]);
