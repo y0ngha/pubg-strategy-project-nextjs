@@ -99,6 +99,8 @@ const parsers: Parsers = {
 };
 
 function safeParseNumber(value: unknown, error?: string): number {
+    if (value === '') throw new Error(error);
+
     const parsed = Number(value);
     if (Number.isNaN(parsed) || !Number.isFinite(parsed))
         throw new Error(error);
