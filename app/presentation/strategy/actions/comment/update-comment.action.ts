@@ -7,8 +7,9 @@ import { parseFormData } from '@/presentation/helpers/form-data.helper';
 export async function updateCommentAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, commentId, content, positionX, positionY } =
-        parseFormData(formData, [
+    const { userId, strategyId, commentId, content, position } = parseFormData(
+        formData,
+        [
             {
                 key: 'userId',
                 error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -25,25 +26,18 @@ export async function updateCommentAction(_: unknown, formData: FormData) {
                 type: 'string',
             },
             { key: 'content', type: 'string', allowUndefined: true },
-            { key: 'positionX', type: 'number', allowUndefined: true },
-            { key: 'positionY', type: 'number', allowUndefined: true },
-        ] as const);
+            { key: 'position', type: 'position', allowUndefined: true },
+        ] as const
+    );
 
     const useCase = getService(UpdateCommentUseCase);
-
-    const hasPosition = positionX != null && positionY != null;
 
     const dto = {
         actorId: userId,
         strategyId: strategyId,
         commentId: commentId,
         content: content,
-        ...(hasPosition && {
-            position: {
-                x: positionX,
-                y: positionY,
-            },
-        }),
+        position: position,
     };
 
     return await useCase.execute(dto);

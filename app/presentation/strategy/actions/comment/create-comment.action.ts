@@ -13,8 +13,7 @@ export async function createCommentAction(_: unknown, formData: FormData) {
         strategyId,
         content,
         parentCommentId,
-        positionX,
-        positionY,
+        position,
     } = parseFormData(formData, [
         {
             key: 'userId',
@@ -33,13 +32,10 @@ export async function createCommentAction(_: unknown, formData: FormData) {
         },
         { key: 'content', error: '내용을 불러올 수 없습니다.', type: 'string' },
         { key: 'parentCommentId', type: 'string', allowUndefined: true },
-        { key: 'positionX', type: 'number', allowUndefined: true },
-        { key: 'positionY', type: 'number', allowUndefined: true },
+        { key: 'position', type: 'position', allowUndefined: true },
     ] as const);
 
     const useCase = getService(CreateCommentUseCase);
-
-    const hasPosition = positionX != null && positionY != null;
 
     const dto = {
         actorId: userId,
@@ -47,12 +43,7 @@ export async function createCommentAction(_: unknown, formData: FormData) {
         strategyId: strategyId,
         content: content,
         parentCommentId: parentCommentId,
-        ...(hasPosition && {
-            position: {
-                x: positionX,
-                y: positionY,
-            },
-        }),
+        position: position,
     };
 
     return await useCase.execute(dto);

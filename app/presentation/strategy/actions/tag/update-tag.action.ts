@@ -7,8 +7,9 @@ import { parseFormData } from '@/presentation/helpers/form-data.helper';
 export async function updateTagAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, tagId, content, positionX, positionY } =
-        parseFormData(formData, [
+    const { userId, strategyId, tagId, content, position } = parseFormData(
+        formData,
+        [
             {
                 key: 'userId',
                 error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -30,32 +31,21 @@ export async function updateTagAction(_: unknown, formData: FormData) {
                 allowUndefined: true,
             },
             {
-                key: 'positionX',
-                type: 'number',
+                key: 'position',
+                type: 'position',
                 allowUndefined: true,
             },
-            {
-                key: 'positionY',
-                type: 'number',
-                allowUndefined: true,
-            },
-        ] as const);
+        ] as const
+    );
 
     const useCase = getService(UpdateTagUseCase);
-
-    const hasPosition = positionX != null && positionY != null;
 
     const dto = {
         actorId: userId,
         strategyId: strategyId,
         tagId: tagId,
         content: content,
-        ...(hasPosition && {
-            position: {
-                x: positionX,
-                y: positionY,
-            },
-        }),
+        position: position,
     };
 
     return await useCase.execute(dto);

@@ -7,7 +7,7 @@ import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-t
 export async function updateEnemyTeamAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, enemyTeamId, teamLabel, positionX, positionY } =
+    const { userId, strategyId, enemyTeamId, teamLabel, position } =
         parseFormData(formData, [
             {
                 key: 'userId',
@@ -29,25 +29,17 @@ export async function updateEnemyTeamAction(_: unknown, formData: FormData) {
                 type: 'string',
                 allowUndefined: true,
             },
-            { key: 'positionX', type: 'number', allowUndefined: true },
-            { key: 'positionY', type: 'number', allowUndefined: true },
+            { key: 'position', type: 'position', allowUndefined: true },
         ] as const);
 
     const useCase = getService(UpdateEnemyTeamUseCase);
-
-    const hasPosition = positionX != null && positionY != null;
 
     const dto = {
         actorId: userId,
         strategyId: strategyId,
         enemyTeamId: enemyTeamId,
         teamLabel: teamLabel,
-        ...(hasPosition && {
-            position: {
-                x: positionX,
-                y: positionY,
-            },
-        }),
+        position: position,
     };
 
     return await useCase.execute(dto);

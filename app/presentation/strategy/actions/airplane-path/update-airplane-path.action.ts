@@ -7,45 +7,31 @@ import { parseFormData } from '@/presentation/helpers/form-data.helper';
 export async function updateAirplanePathAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const {
-        userId,
-        strategyId,
-        startPositionX,
-        startPositionY,
-        endPositionX,
-        endPositionY,
-    } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'strategyId',
-            error: '전략 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'startPositionX',
-            error: '비행기 동선 시작 위치를 불러올 수 없습니다.',
-            type: 'number',
-        },
-        {
-            key: 'startPositionY',
-            error: '비행기 동선 시작 위치를 불러올 수 없습니다.',
-            type: 'number',
-        },
-        {
-            key: 'endPositionX',
-            error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
-            type: 'number',
-        },
-        {
-            key: 'endPositionY',
-            error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
-            type: 'number',
-        },
-    ] as const);
+    const { userId, strategyId, startPosition, endPosition } = parseFormData(
+        formData,
+        [
+            {
+                key: 'userId',
+                error: '유저 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'strategyId',
+                error: '전략 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'startPosition',
+                error: '비행기 동선 시작 위치를 불러올 수 없습니다.',
+                type: 'position',
+            },
+            {
+                key: 'endPosition',
+                error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
+                type: 'position',
+            },
+        ] as const
+    );
 
     const useCase = getService<UpdateAirplanePathUseCase>(
         UpdateAirplanePathUseCase
@@ -54,14 +40,8 @@ export async function updateAirplanePathAction(_: unknown, formData: FormData) {
     const dto = {
         actorId: userId,
         strategyId: strategyId,
-        startPosition: {
-            x: startPositionX,
-            y: startPositionY,
-        },
-        endPosition: {
-            x: endPositionX,
-            y: endPositionY,
-        },
+        startPosition: startPosition,
+        endPosition: endPosition,
     };
 
     return await useCase.execute(dto);
