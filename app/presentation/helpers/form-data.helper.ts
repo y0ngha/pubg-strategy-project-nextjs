@@ -1,14 +1,43 @@
-export function getRequiredFormData(
-    formData: FormData,
-    fields: { key: string; error: string }[]
-) {
-    const data: Record<string, string> = {};
-    for (const { key, error } of fields) {
-        const value = formData.get(key)?.toString();
+interface Field {
+    key: string;
+    error: string;
+    type: 'string' | 'number';
+}
 
-        if (value === undefined) {
+type ParsedFormData<T extends readonly Field[]> = {
+    [K in T[number] as K['key']]: K['type'] extends 'number' ? number : string;
+};
+
+export function getRequiredFormData<T extends readonly Field[]>(
+    formData: FormData,
+    fields: T
+): ParsedFormData<T> {
+    const data: Record<string, string | number> = {};
+
+    for (const { key, error, type } of fields) {
+        const value = formData.get(key);
+
+        if (value === null || value === undefined) {
             throw new Error(error);
         }
+
+        switch (type) {
+            case 'string':
+                data[key] = value.toString();
+                break;
+            case 'number':
+                data[key] = parseNumber(value, error);
+                break;
+        }
+    }
+
+    return data as ParsedFormData<T>;
+}
+
+function parseNumber(value: FormDataEntryValue | null, error: string): number {
+    if (!value) {
+        throw new Error(error);
+    }
 
     const parsed = Number(value);
 
