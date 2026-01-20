@@ -1,5 +1,6 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
+import { ReactNode } from 'react';
 
 const BadgeVariants = cva(
     'focus:ring-ring inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none',
@@ -24,7 +25,7 @@ const BadgeVariants = cva(
 );
 
 interface BadgeProps extends VariantProps<typeof BadgeVariants> {
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
 }
 
