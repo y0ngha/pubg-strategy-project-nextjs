@@ -33,13 +33,7 @@ interface ButtonProps
         React.ButtonHTMLAttributes<HTMLButtonElement>,
         VariantProps<typeof ButtonVariants> {}
 
-export default function Button({
-    className,
-    children,
-    variant,
-    size,
-    ...props
-}: ButtonProps) {
+function Button({ className, children, variant, size, ...props }: ButtonProps) {
     return (
         <button
             className={cn(ButtonVariants({ variant, size, className }))}
@@ -49,3 +43,7 @@ export default function Button({
         </button>
     );
 }
+
+Button.displayName = 'Button';
+
+export default Button;
