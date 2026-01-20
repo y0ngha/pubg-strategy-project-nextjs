@@ -35,6 +35,7 @@ function Select({
     size,
     className,
     disabled,
+    ...props
 }: SelectProps) {
     const id = useId();
 
@@ -60,6 +61,7 @@ function Select({
                         error && 'border-red-500 focus-visible:ring-red-500',
                         className
                     )}
+                    {...props}
                 >
                     {options.map(option => {
                         return (
