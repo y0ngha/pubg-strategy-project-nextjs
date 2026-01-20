@@ -4,7 +4,7 @@ import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { ChevronDown } from 'lucide-react';
 
 const SelectVariants = cva(
-    'w-full h-10 appearance-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 pr-8',
+    'w-full appearance-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 pr-8',
     {
         variants: {
             size: {
