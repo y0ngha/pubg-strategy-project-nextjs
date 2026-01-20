@@ -33,6 +33,7 @@ function Input({
     error,
     size,
     ref,
+    disabled,
     ...props
 }: InputProps) {
     return (
