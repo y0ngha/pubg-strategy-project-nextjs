@@ -77,6 +77,7 @@ module.exports = {
         '**/.next/**', // Next.js 빌드 결과물
         '**/dist/**',
         '**/node_modules/**',
+        '**/coverage/**',
     ],
 
     overrides: [
