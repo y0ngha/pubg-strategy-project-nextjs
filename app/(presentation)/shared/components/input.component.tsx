@@ -39,11 +39,17 @@ function Input({
     return (
         <div className="w-full space-y-1">
             {label && (
-                <label className="text-muted-foreground text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <label
+                    className={cn(
+                        'text-muted-foreground text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                        disabled && 'cursor-not-allowed opacity-70'
+                    )}
+                >
                     {label}
                 </label>
             )}
             <input
+                disabled={disabled}
                 type={type}
                 className={cn(
                     InputVariants({ size }),
