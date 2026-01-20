@@ -10,8 +10,12 @@ interface CardProps
         React.HTMLAttributes<HTMLDivElement>,
         VariantProps<typeof CardVariants> {}
 
-function Card({ children, className }: CardProps) {
-    return <div className={cn(CardVariants(), className)}>{children}</div>;
+function Card({ children, className, ...props }: CardProps) {
+    return (
+        <div className={cn(CardVariants(), className)} {...props}>
+            {children}
+        </div>
+    );
 }
 
 Card.displayName = 'Card';
