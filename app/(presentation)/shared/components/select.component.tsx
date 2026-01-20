@@ -4,7 +4,7 @@ import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { ChevronDown } from 'lucide-react';
 
 const SelectVariants = cva(
-    'peer w-full h-10 appearance-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 pr-8',
+    'w-full h-10 appearance-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 pr-8',
     {
         variants: {
             size: {
@@ -43,7 +43,10 @@ function Select({
             {label && (
                 <label
                     htmlFor={id}
-                    className="text-muted-foreground text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:text-red-950 peer-disabled:opacity-70"
+                    className={cn(
+                        'text-muted-foreground text-sm leading-none font-medium',
+                        disabled && 'cursor-not-allowed opacity-70'
+                    )}
                 >
                     {label}
                 </label>
