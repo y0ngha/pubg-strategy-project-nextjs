@@ -1,7 +1,11 @@
+'use client';
+
 import { cva, VariantProps } from 'class-variance-authority';
-import { useId } from 'react';
+import React, { ReactNode, useId } from 'react';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { ChevronDown } from 'lucide-react';
+
+type OptionValue = string;
 
 const SelectVariants = cva(
     'w-full appearance-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 pr-8',
@@ -25,20 +29,23 @@ interface SelectProps
         VariantProps<typeof SelectVariants> {
     label?: string;
     error?: string;
-    options: { label: string; value: string | number }[];
+    disabled?: boolean;
+    value?: OptionValue;
+    onValueChange: (value: OptionValue) => void;
 }
 
 function Select({
+    size,
     label,
     error,
-    options,
-    size,
-    className,
     disabled,
+    value,
+    onValueChange,
+    children,
+    className,
     ...props
 }: SelectProps) {
     const id = useId();
-
     return (
         <div className={'w-full space-y-1'}>
             {label && (
@@ -52,10 +59,12 @@ function Select({
                     {label}
                 </label>
             )}
-            <div className={'relative'}>
+            <div className="relative">
                 <select
-                    disabled={disabled}
                     id={id}
+                    disabled={disabled}
+                    value={value}
+                    onChange={e => onValueChange?.(e.target.value)}
                     className={cn(
                         SelectVariants({ size }),
                         error && 'border-red-500 focus-visible:ring-red-500',
@@ -63,15 +72,10 @@ function Select({
                     )}
                     {...props}
                 >
-                    {options.map(option => {
-                        return (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        );
-                    })}
+                    {children}
                 </select>
-                <div className="text-muted pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+
+                <div className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
                     <ChevronDown className="h-4 w-4" />
                 </div>
             </div>
@@ -82,6 +86,16 @@ function Select({
     );
 }
 
+interface OptionProps {
+    value: OptionValue;
+    children: ReactNode;
+}
+
+function Option({ value, children }: OptionProps) {
+    return <option value={value}>{children}</option>;
+}
+
+Select.Option = Option;
 Select.displayName = 'Select';
 
 export default Select;
