@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { X } from 'lucide-react';
@@ -30,7 +30,17 @@ interface ModalProps
     closeableByEsc?: boolean;
 }
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
+    const mounted = useSyncExternalStore(
+        subscribe,
+        getSnapshot,
+        getServerSnapshot
+    );
+
     const escKeydownHandler = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
             onClose();
@@ -60,6 +70,8 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
             };
         }
     }, [modalCleanup, modalSetup, open]);
+
+    if (!mounted) return null;
 
     if (!open) return null;
 
@@ -104,7 +116,7 @@ function Header({
                 <button
                     role={'close'}
                     onClick={context.onClose}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                 >
                     <X className="h-5 w-5" />
                 </button>
