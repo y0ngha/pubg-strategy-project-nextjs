@@ -52,6 +52,7 @@ function List({
     return (
         <div
             className={cn('border-border flex space-x-6 border-b', className)}
+            role="tablist"
             {...props}
         >
             {children}
@@ -89,6 +90,8 @@ function Item({ className, value, children, ...props }: TabsItemProps) {
     return (
         <button
             type="button"
+            role="tab"
+            aria-selected={isActive}
             className={cn(TabsItemVariants({ active: isActive }), className)}
             onClick={() => context.onValueChange(value)}
             {...props}
