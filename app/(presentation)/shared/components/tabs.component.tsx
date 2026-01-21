@@ -13,6 +13,16 @@ const TabsContext = React.createContext<TabsContextValue | undefined>(
     undefined
 );
 
+function useTabsContext() {
+    const context = React.useContext(TabsContext);
+
+    if (!context) {
+        throw new Error('Tabs.* 컴포넌트는 Tabs 컴포넌트 안에 위치해야합니다.');
+    }
+
+    return context;
+}
+
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
     value: string;
     onValueChange: (value: string) => void;
@@ -72,15 +82,15 @@ interface TabsItemProps
 }
 
 function Item({ className, value, children, ...props }: TabsItemProps) {
-    const context = React.useContext(TabsContext);
+    const context = useTabsContext();
 
-    const isActive = context?.value === value;
+    const isActive = context.value === value;
 
     return (
         <button
             type="button"
             className={cn(TabsItemVariants({ active: isActive }), className)}
-            onClick={() => context?.onValueChange(value)}
+            onClick={() => context.onValueChange(value)}
             {...props}
         >
             {children}
