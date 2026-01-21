@@ -8,12 +8,12 @@ import {
     EnemyTeamResponseDto,
     GetStrategyResponseDto,
     MarkerResponseDto,
-    PositionResponseDto,
     StrategyShareResponseDto,
     TagResponseDto,
     TeamPlayerResponseDto,
     WaypointResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 import { PubgMapNames } from '@domain/strategy/enums/map.enum';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyShareNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -55,7 +55,7 @@ export class StrategyMapper {
         };
     }
 
-    private parsePosition(vo: Position): PositionResponseDto {
+    private parsePosition(vo: Position): PositionInterface {
         return {
             x: vo.x,
             y: vo.y,
