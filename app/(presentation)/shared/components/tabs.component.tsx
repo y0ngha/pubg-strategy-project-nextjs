@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import React from 'react';
 
-type TabsContextValue = {
+interface TabsContextValue {
     value: string;
     onValueChange: (value: string) => void;
 };
