@@ -21,14 +21,12 @@ function Table({
     onRowClick,
     clickable = true,
     className,
-    ref,
     ...props
 }: TableProps) {
     return (
         <TableContext.Provider value={{ onRowClick, clickable }}>
             <div className="relative w-full overflow-auto">
                 <table
-                    ref={ref}
                     className={cn('w-full caption-bottom text-sm', className)}
                     {...props}
                 />
@@ -37,30 +35,22 @@ function Table({
     );
 }
 
-function Header({ className, ref, ...props }: React.ComponentProps<'thead'>) {
-    return (
-        <thead
-            ref={ref}
-            className={cn('[&_tr]:border-b', className)}
-            {...props}
-        />
-    );
+function Header({ className, ...props }: React.ComponentProps<'thead'>) {
+    return <thead className={cn('[&_tr]:border-b', className)} {...props} />;
 }
 
-function Body({ className, ref, ...props }: React.ComponentProps<'tbody'>) {
+function Body({ className, ...props }: React.ComponentProps<'tbody'>) {
     return (
         <tbody
-            ref={ref}
             className={cn('[&_tr:last-child]:border-0', className)}
             {...props}
         />
     );
 }
 
-function Footer({ className, ref, ...props }: React.ComponentProps<'tfoot'>) {
+function Footer({ className, ...props }: React.ComponentProps<'tfoot'>) {
     return (
         <tfoot
-            ref={ref}
             className={cn(
                 'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
                 className
@@ -75,7 +65,7 @@ interface RowProps extends React.ComponentProps<'tr'> {
     isHeading?: boolean;
 }
 
-function Row({ id, isHeading = false, className, ref, ...props }: RowProps) {
+function Row({ id, isHeading = false, className, ...props }: RowProps) {
     const context = useSafetyContext(
         TableContext,
         'Table.* 컴포넌트는 Table 컴포넌트 안에 위치해야합니다.'
@@ -89,7 +79,6 @@ function Row({ id, isHeading = false, className, ref, ...props }: RowProps) {
 
     return (
         <tr
-            ref={ref}
             className={cn(
                 !isHeading &&
                     'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
@@ -106,10 +95,9 @@ function Row({ id, isHeading = false, className, ref, ...props }: RowProps) {
     );
 }
 
-function Head({ className, ref, ...props }: React.ComponentProps<'th'>) {
+function Head({ className, ...props }: React.ComponentProps<'th'>) {
     return (
         <th
-            ref={ref}
             className={cn(
                 'text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0',
                 className
@@ -119,10 +107,9 @@ function Head({ className, ref, ...props }: React.ComponentProps<'th'>) {
     );
 }
 
-function Cell({ className, ref, ...props }: React.ComponentProps<'td'>) {
+function Cell({ className, ...props }: React.ComponentProps<'td'>) {
     return (
         <td
-            ref={ref}
             className={cn(
                 'p-4 align-middle [&:has([role=checkbox])]:pr-0',
                 className
@@ -132,14 +119,9 @@ function Cell({ className, ref, ...props }: React.ComponentProps<'td'>) {
     );
 }
 
-function Caption({
-    className,
-    ref,
-    ...props
-}: React.ComponentProps<'caption'>) {
+function Caption({ className, ...props }: React.ComponentProps<'caption'>) {
     return (
         <caption
-            ref={ref}
             className={cn('text-muted-foreground mt-4 text-sm', className)}
             {...props}
         />
