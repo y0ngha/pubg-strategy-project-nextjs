@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useContext, useEffect, useSyncExternalStore } from 'react';
+import React, { useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { X } from 'lucide-react';
+import { useSafetyContext } from '@/(presentation)/shared/hooks/useSafetyContext';
 
 interface ModalContextValue {
     open: boolean;
@@ -13,17 +14,6 @@ interface ModalContextValue {
 const ModalContext = React.createContext<ModalContextValue | undefined>(
     undefined
 );
-
-function useModalContext() {
-    const context = useContext(ModalContext);
-
-    if (!context)
-        throw new Error(
-            'Modal.* 컴포넌트는 Modal 컴포넌트 안에 위치해야합니다.'
-        );
-
-    return context;
-}
 
 interface ModalProps
     extends ModalContextValue, React.HTMLAttributes<HTMLDivElement> {
@@ -101,7 +91,10 @@ function Header({
     className,
     ...props
 }: HeaderProps) {
-    const context = useModalContext();
+    const context = useSafetyContext(
+        ModalContext,
+        'Modal.* 컴포넌트는 Modal 컴포넌트 안에 위치해야합니다.'
+    );
 
     return (
         <div
