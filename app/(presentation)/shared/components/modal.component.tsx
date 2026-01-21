@@ -38,16 +38,12 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
     };
 
     const modalSetup = () => {
-        document.body.style.overflow = 'hidden';
-
         if (closeableByEsc) {
             window.addEventListener('keydown', escKeydownHandler);
         }
     };
 
     const modalCleanup = () => {
-        document.body.style.overflow = 'unset';
-
         if (closeableByEsc) {
             window.removeEventListener('keydown', escKeydownHandler);
         }
@@ -55,9 +51,13 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
 
     useEffect(() => {
         if (open) {
+            document.body.style.overflow = 'hidden';
             modalSetup();
 
-            return modalCleanup;
+            return () => {
+                document.body.style.overflow = 'unset';
+                modalCleanup();
+            };
         }
     }, [modalCleanup, modalSetup, open]);
 
