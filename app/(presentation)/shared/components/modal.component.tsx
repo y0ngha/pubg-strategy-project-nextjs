@@ -114,7 +114,7 @@ function Header({
             {children}
             {!closeIconHide && (
                 <button
-                    role={'close'}
+                    aria-label="닫기"
                     onClick={context.onClose}
                     className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                 >
