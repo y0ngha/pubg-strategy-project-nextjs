@@ -46,7 +46,7 @@ export function useEmailLogin() {
                 }
             );
         }
-    }, [data, isSuccess]);
+    }, [data, isSuccess, queryClient]);
 
     return {
         formAction,
