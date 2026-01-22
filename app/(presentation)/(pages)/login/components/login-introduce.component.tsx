@@ -35,7 +35,7 @@ function LoginIntroduce() {
 
                 <div
                     className={
-                        't-8 flex flex-col text-lg font-light opacity-90'
+                        'mt-8 flex flex-col text-lg font-light opacity-90'
                     }
                 >
                     <span className={'text-left'}>
