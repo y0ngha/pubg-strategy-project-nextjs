@@ -1,11 +1,7 @@
 import { UserNotFoundException } from '@/domain/user/exceptions/user.exceptions';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
 import { inject, injectable } from 'inversify';
-import {
-    GetCurrentUserRequestDto,
-    GetCurrentUserRequestSchema,
-    GetCurrentUserResponseDto,
-} from '../dto/get-current-user.dto';
+import { GetCurrentUserResponseDto } from '@/application/user/dto/get-current-user.dto';
 
 @injectable()
 export class GetCurrentUserUseCase {
@@ -14,15 +10,11 @@ export class GetCurrentUserUseCase {
         private readonly userRepository: UserRepositoryPort
     ) {}
 
-    async execute(
-        dto: GetCurrentUserRequestDto
-    ): Promise<GetCurrentUserResponseDto> {
-        const { id } = GetCurrentUserRequestSchema.parse(dto);
-
-        const user = await this.userRepository.findByUserId(id);
+    async execute(): Promise<GetCurrentUserResponseDto> {
+        const user = await this.userRepository.findByAccessToken();
 
         if (!user) {
-            throw new UserNotFoundException(id.toString());
+            throw new UserNotFoundException();
         }
 
         return {

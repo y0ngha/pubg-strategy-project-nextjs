@@ -21,14 +21,10 @@ describe('GetCurrentUserUseCase', () => {
     describe('정상 조회', () => {
         it('존재하는 유저를 조회한다.', async () => {
             // Given
-            const dto = {
-                id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
-            };
-
-            mockUserRepository.findByUserId.mockImplementation(
-                async (id: UserId): Promise<User | null> => {
+            mockUserRepository.findByAccessToken.mockImplementation(
+                async (): Promise<User | null> => {
                     return User.reconstruct(
-                        id,
+                        UserId.generate(),
                         Email.create('test@domain.com'),
                         Password.create('Asdf1234@'),
                         AuthProvider.EMAIL,
@@ -39,39 +35,34 @@ describe('GetCurrentUserUseCase', () => {
             );
 
             // When
-            const result = await useCase.execute(dto);
+            const result = await useCase.execute();
 
             // Then
-            expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
-            expect(result.id).toBe(dto.id);
+            expect(mockUserRepository.findByAccessToken).toHaveBeenCalledTimes(
+                1
+            );
             expect(result.email).toBe('test@domain.com');
         });
 
         describe('에러 처리', () => {
-            it('존재하지 않는 유저를 조회했을 때 에러를 던진다.', async () => {
+            it('불러올 유저가 없을 때 없을 때 에러를 던진다.', async () => {
                 // Given
-                const dto = {
-                    id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
-                };
-
-                mockUserRepository.findByUserId.mockResolvedValue(null);
+                mockUserRepository.findByAccessToken.mockResolvedValue(null);
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(
+                await expect(useCase.execute()).rejects.toThrow(
                     UserNotFoundException
                 );
             });
 
             it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
                 // Given
-                const dto = {
-                    id: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
-                };
-
-                mockUserRepository.findByUserId.mockRejectedValue(new Error());
+                mockUserRepository.findByAccessToken.mockRejectedValue(
+                    new Error()
+                );
 
                 // When & Then
-                await expect(useCase.execute(dto)).rejects.toThrow(Error);
+                await expect(useCase.execute()).rejects.toThrow(Error);
             });
         });
     });
