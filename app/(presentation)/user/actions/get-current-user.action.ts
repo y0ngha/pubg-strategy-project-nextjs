@@ -13,7 +13,16 @@ export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
 
     try {
         await ensureAuthentication();
+    } catch (e) {
+        return {
+            isSuccess: false,
+            isError: false,
+            errorMessage: undefined,
+            data: undefined,
+        };
+    }
 
+    try {
         const useCase = getService<GetCurrentUserUseCase>(
             GetCurrentUserUseCase
         );
@@ -28,15 +37,6 @@ export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
             },
         };
     } catch (e) {
-        if (e instanceof Error) {
-            return {
-                isSuccess: false,
-                isError: true,
-                errorMessage: e.message,
-                data: undefined,
-            };
-        }
-
         throw e;
     }
 }
