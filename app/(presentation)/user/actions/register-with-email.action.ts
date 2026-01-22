@@ -56,6 +56,9 @@ export async function registerWithEmailAction(
             isError: true,
             errorMessage: '비밀번호가 일치하지 않습니다.',
             data: undefined,
+            inputs: {
+                email: email,
+            },
         };
     }
 
@@ -65,6 +68,9 @@ export async function registerWithEmailAction(
             isError: true,
             errorMessage: '약관 동의가 필요합니다.',
             data: undefined,
+            inputs: {
+                email: email,
+            },
         };
     }
 
@@ -93,6 +99,9 @@ export async function registerWithEmailAction(
                 isError: true,
                 errorMessage: e.message,
                 data: undefined,
+                inputs: {
+                    email: email,
+                },
             };
         }
 

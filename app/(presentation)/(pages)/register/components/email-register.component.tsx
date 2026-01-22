@@ -11,7 +11,7 @@ function EmailRegister() {
     const { isMatch, onPasswordChangeHanlder, onConfirmPasswordChangeHanlder } =
         usePasswordMatchChecker();
 
-    const { isPending, formAction } = useEmailRegister();
+    const { isPending, formAction, inputs } = useEmailRegister();
 
     return (
         <form className="w-full space-y-4" action={formAction}>
@@ -20,6 +20,7 @@ function EmailRegister() {
                 type={'email'}
                 label={'Email'}
                 disabled={isPending}
+                defaultValue={inputs?.email}
             />
             <Input
                 name={'password'}

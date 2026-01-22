@@ -15,9 +15,12 @@ export function useEmailRegister() {
         isError: false,
         errorMessage: undefined,
         data: undefined,
+        inputs: {
+            email: '',
+        },
     });
 
-    const { isSuccess, isError, errorMessage } = state;
+    const { isSuccess, isError, errorMessage, inputs } = state;
 
     useEffect(() => {
         if (isError) {
@@ -37,5 +40,6 @@ export function useEmailRegister() {
     return {
         formAction,
         isPending,
+        inputs,
     };
 }
