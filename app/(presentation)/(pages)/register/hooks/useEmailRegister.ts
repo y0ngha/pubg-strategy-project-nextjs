@@ -4,9 +4,11 @@ import {
     registerWithEmailAction,
 } from '@/(presentation)/user/actions/register-with-email.action';
 import { toast } from 'react-toastify';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export function useEmailRegister() {
+    const router = useRouter();
+
     const [state, formAction, isPending] = useActionState<
         RegisterWithEmailAction,
         FormData
@@ -33,9 +35,9 @@ export function useEmailRegister() {
     useEffect(() => {
         if (isSuccess) {
             toast.success('회원가입이 완료되었습니다.');
-            redirect('/login');
+            router.push('/login').then();
         }
-    }, [isSuccess]);
+    }, [isSuccess, router]);
 
     return {
         formAction,
