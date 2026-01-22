@@ -6,13 +6,14 @@ import 'reflect-metadata';
 import { http, HttpResponse } from 'msw';
 import { ApiClient } from '@/infrastructure/http/api-client';
 import {
-    NotFoundError,
-    UnauthorizedError,
-    TimeoutError,
-    NetworkError,
     ApiError,
+    NetworkError,
+    NotFoundError,
+    TimeoutError,
+    UnauthorizedError,
 } from '@/infrastructure/http/api-errors';
 import { server } from './api-client.setup';
+import { CookieKeys } from '@/application/constants/cookie-keys';
 
 const BASE_URL = 'http://localhost:3001';
 
@@ -20,7 +21,7 @@ jest.mock('next/headers', () => ({
     cookies: jest.fn(() =>
         Promise.resolve({
             get: jest.fn((name: string) => {
-                if (name === 'auth_token') {
+                if (name === CookieKeys.ACCESS_TOKEN) {
                     return { value: 'test-token-123' };
                 }
                 return undefined;
