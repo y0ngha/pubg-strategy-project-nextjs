@@ -4,7 +4,7 @@ import {
     registerWithEmailAction,
 } from '@/(presentation)/user/actions/register-with-email.action';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export function useEmailRegister() {
     const router = useRouter();
@@ -35,7 +35,7 @@ export function useEmailRegister() {
     useEffect(() => {
         if (isSuccess) {
             toast.success('회원가입이 완료되었습니다.');
-            router.push('/login').then();
+            router.push('/login');
         }
     }, [isSuccess, router]);
 
