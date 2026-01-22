@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { env } from '../config/environment-variables';
 import { RequestInterceptor, ResponseInterceptor } from './types';
+import { CookieKeys } from '@/application/constants/cookie-keys';
 
 export const loggingRequestInterceptor: RequestInterceptor<unknown> = async (
     url,
@@ -26,7 +27,10 @@ export const authRequestInterceptor: RequestInterceptor<unknown> = async (
 ) => {
     if (config.withAuthorizationHeader) {
         if (typeof window === 'undefined') {
-            const token = (await cookies()).get('auth_token')?.value;
+            /**
+             * TODO Refresh 요청하는 URL인 경우 Refresh Token으로 바꿔치기 해야함.
+             */
+            const token = (await cookies()).get(CookieKeys.ACCESS_TOKEN)?.value;
             if (token) {
                 config.headers = {
                     ...config.headers,
