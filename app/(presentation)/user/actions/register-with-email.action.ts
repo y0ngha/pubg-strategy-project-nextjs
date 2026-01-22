@@ -49,5 +49,25 @@ export async function registerWithEmailAction(
         RegisterWithEmailUseCase
     );
 
-    return await useCase.execute(dto);
+    try {
+        await useCase.execute(dto);
+
+        return {
+            isSuccess: true,
+            isError: false,
+            errorMessage: undefined,
+            data: undefined,
+        };
+    } catch (e) {
+        if (e instanceof Error) {
+            return {
+                isSuccess: false,
+                isError: true,
+                errorMessage: e.message,
+                data: undefined,
+            };
+        }
+
+        throw e;
+    }
 }
