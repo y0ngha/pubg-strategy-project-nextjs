@@ -1,4 +1,7 @@
-import { LoginWithEmailAction, loginWithEmailAction, } from '@/(presentation)/user/actions/login-with-email.action';
+import {
+    LoginWithEmailAction,
+    loginWithEmailAction,
+} from '@/(presentation)/user/actions/login-with-email.action';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
