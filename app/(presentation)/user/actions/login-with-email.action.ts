@@ -3,8 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
 import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { ServerAction } from '@/(presentation)/shared/types/server-action';
+import { saveTokens } from '@/(presentation)/user/services/token.service';
 
-export async function loginWithEmailAction(_: unknown, formData: FormData) {
+export type LoginWithEmailAction = ServerAction;
+
+export async function loginWithEmailAction(
+    _: unknown,
+    formData: FormData
+): Promise<LoginWithEmailAction> {
     const getService = initializeRequestServices();
 
     const { email, password } = parseFormData(formData, [
@@ -28,7 +35,9 @@ export async function loginWithEmailAction(_: unknown, formData: FormData) {
     const useCase = getService<LoginWithEmailUseCase>(LoginWithEmailUseCase);
 
     try {
-        await useCase.execute(dto);
+        const { accessToken, refreshToken } = await useCase.execute(dto);
+
+        await saveTokens(accessToken, refreshToken);
 
         return {
             isSuccess: true,
