@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
 function LoginPageLayout({
     introduce,
     form,
 }: {
-    introduce: React.ReactNode;
-    form: React.ReactNode;
+    introduce: ReactNode;
+    form: ReactNode;
 }) {
     return (
         <div className={'flex h-full w-full flex-row'}>
