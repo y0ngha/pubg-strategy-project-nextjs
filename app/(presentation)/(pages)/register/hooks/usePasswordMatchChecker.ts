@@ -20,7 +20,7 @@ export function usePasswordMatchChecker() {
     }, [password, confirmPassword]);
 
     return {
-        isMatch: isMatch,
+        isMatch,
         onPasswordChangeHandler,
         onConfirmPasswordChangeHandler,
     };
