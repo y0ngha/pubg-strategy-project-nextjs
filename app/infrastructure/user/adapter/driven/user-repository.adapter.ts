@@ -20,7 +20,7 @@ export class UserRepositoryAdapter extends UserRepositoryPort {
         throw new Error('Method not implemented.');
     }
 
-    async findByAccessToken(): Promise<User | null> {
+    async findByAccessToken(accessToken?: string): Promise<User | null> {
         throw new Error('Method not implemented.');
     }
 }

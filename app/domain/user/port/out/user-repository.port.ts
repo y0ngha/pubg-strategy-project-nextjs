@@ -11,5 +11,5 @@ export abstract class UserRepositoryPort {
 
     abstract existsByEmail(email: Email): Promise<boolean>;
 
-    abstract findByAccessToken(): Promise<User | null>;
+    abstract findByAccessToken(accessToken?: string): Promise<User | null>;
 }
