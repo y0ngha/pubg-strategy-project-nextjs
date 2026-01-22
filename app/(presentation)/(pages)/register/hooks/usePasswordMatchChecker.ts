@@ -5,11 +5,11 @@ export function usePasswordMatchChecker() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [isMatch, setIsMatch] = useState<boolean>(true);
 
-    const onPasswordChangeHanlder = (event: ChangeEvent<HTMLInputElement>) => {
+    const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
 
-    const onConfirmPasswordChangeHanlder = (
+    const onConfirmPasswordChangeHandler = (
         event: ChangeEvent<HTMLInputElement>
     ) => {
         setConfirmPassword(event.target.value);
@@ -21,7 +21,7 @@ export function usePasswordMatchChecker() {
 
     return {
         isMatch: isMatch,
-        onPasswordChangeHanlder,
-        onConfirmPasswordChangeHanlder,
+        onPasswordChangeHandler,
+        onConfirmPasswordChangeHandler,
     };
 }

@@ -8,7 +8,7 @@ import Checkbox from '@/(presentation)/shared/components/checkbox.component';
 import Link from 'next/link';
 
 function EmailRegister() {
-    const { isMatch, onPasswordChangeHanlder, onConfirmPasswordChangeHanlder } =
+    const { isMatch, onPasswordChangeHandler, onConfirmPasswordChangeHandler } =
         usePasswordMatchChecker();
 
     const { isPending, formAction, inputs } = useEmailRegister();
@@ -27,14 +27,14 @@ function EmailRegister() {
                 type={'password'}
                 label={'Password'}
                 disabled={isPending}
-                onChange={onPasswordChangeHanlder}
+                onChange={onPasswordChangeHandler}
             />
             <Input
                 name={'confirmPassword'}
                 type={'password'}
                 label={'Confirm Password'}
                 disabled={isPending}
-                onChange={onConfirmPasswordChangeHanlder}
+                onChange={onConfirmPasswordChangeHandler}
                 error={!isMatch ? '비밀번호가 일치하지 않습니다.' : undefined}
             />
 
