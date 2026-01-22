@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function deleteCommentAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();

@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function requestFriendshipAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();

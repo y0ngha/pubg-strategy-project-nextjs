@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
 
 export async function deleteStrategyAction(_: unknown, formData: FormData) {

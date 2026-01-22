@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-strategy.usecase';
 
 export async function createStrategyAction(_: unknown, formData: FormData) {

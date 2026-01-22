@@ -2,11 +2,11 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { ServerAction } from '@/(presentation)/shared/types/server-action';
 import { saveTokens } from '@/(presentation)/user/services/token.service';
 
-export type LoginWithEmailAction = ServerAction;
+export type LoginWithEmailAction = ServerAction<{ id: string; email: string }>;
 
 export async function loginWithEmailAction(
     _: unknown,
@@ -35,7 +35,7 @@ export async function loginWithEmailAction(
     const useCase = getService<LoginWithEmailUseCase>(LoginWithEmailUseCase);
 
     try {
-        const { accessToken, refreshToken } = await useCase.execute(dto);
+        const { accessToken, refreshToken, user } = await useCase.execute(dto);
 
         await saveTokens(accessToken, refreshToken);
 
@@ -43,6 +43,10 @@ export async function loginWithEmailAction(
             isSuccess: true,
             isError: false,
             errorMessage: undefined,
+            data: {
+                id: user.id,
+                email: user.email,
+            },
         };
     } catch (e) {
         if (e instanceof Error) {
@@ -50,6 +54,7 @@ export async function loginWithEmailAction(
                 isSuccess: false,
                 isError: true,
                 errorMessage: e.message,
+                data: undefined,
             };
         }
 

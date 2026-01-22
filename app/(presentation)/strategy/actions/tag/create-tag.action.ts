@@ -2,7 +2,7 @@
 
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function createTagAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();

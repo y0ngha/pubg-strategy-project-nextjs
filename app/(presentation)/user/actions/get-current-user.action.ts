@@ -33,6 +33,7 @@ export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
                 isSuccess: false,
                 isError: true,
                 errorMessage: e.message,
+                data: undefined,
             };
         }
 
