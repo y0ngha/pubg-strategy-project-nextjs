@@ -11,7 +11,6 @@ import { inject, injectable } from 'inversify';
 import {
     RegisterWithEmailRequestDto,
     RegisterWithEmailRequestSchema,
-    RegisterWithEmailResponseObject,
 } from '../dto/register-with-email.dto';
 
 @injectable()
@@ -25,9 +24,7 @@ export class RegisterWithEmailUseCase {
         private readonly passwordCipher: PasswordCipherPort
     ) {}
 
-    async execute(
-        dto: RegisterWithEmailRequestDto
-    ): Promise<RegisterWithEmailResponseObject> {
+    async execute(dto: RegisterWithEmailRequestDto): Promise<boolean> {
         const { email, password } = RegisterWithEmailRequestSchema.parse(dto);
 
         const existingUser = await this.userRepository.existsByEmail(email);
@@ -48,11 +45,8 @@ export class RegisterWithEmailUseCase {
 
         const user = User.createWithEmail(email, encryptedPassword);
 
-        const savedUser = await this.userRepository.save(user);
+        await this.userRepository.save(user);
 
-        return {
-            id: savedUser.id.toString(),
-            email: savedUser.email.toString(),
-        };
+        return true;
     }
 }
