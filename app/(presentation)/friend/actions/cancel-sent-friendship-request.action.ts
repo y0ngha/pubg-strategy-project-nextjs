@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { CancelSentFriendshipUseCase } from '@/application/friend/use-cases/cancel-sent-friendship.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function cancelSentFriendshipRequestAction(
     _: unknown,

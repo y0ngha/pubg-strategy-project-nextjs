@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
 
 export async function addEnemyTeamAction(_: unknown, formData: FormData) {

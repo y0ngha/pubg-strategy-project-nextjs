@@ -19,4 +19,8 @@ export class UserRepositoryAdapter extends UserRepositoryPort {
     async existsByEmail(email: Email): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
+
+    async findByAccessToken(accessToken?: string): Promise<User | null> {
+        throw new Error('Method not implemented.');
+    }
 }

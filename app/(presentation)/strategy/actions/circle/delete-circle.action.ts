@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function deleteCircleAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();

@@ -2,7 +2,7 @@
 
 import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function updateCommentAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();

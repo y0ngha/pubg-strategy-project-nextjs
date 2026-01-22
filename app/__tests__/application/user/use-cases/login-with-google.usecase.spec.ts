@@ -30,7 +30,12 @@ describe('LoginWithGoogleUseCase', () => {
                 token: 'test-1234-abcd',
             };
 
-            mockAuthenticationService.googleLogin.mockResolvedValue(true);
+            const token = {
+                accessToken: '1234',
+                refreshToken: '2345',
+            };
+
+            mockAuthenticationService.googleLogin.mockResolvedValue(token);
 
             // When
             const result = await useCase.execute(dto);
@@ -40,7 +45,7 @@ describe('LoginWithGoogleUseCase', () => {
                 1
             );
 
-            expect(result).toBeTruthy();
+            expect(result).toEqual(token);
         });
     });
 
@@ -52,17 +57,15 @@ describe('LoginWithGoogleUseCase', () => {
                 token: 'test-1234-abcd',
             };
 
-            mockAuthenticationService.googleLogin.mockResolvedValue(false);
+            mockAuthenticationService.googleLogin.mockRejectedValue(
+                new Error('로그인 실패')
+            );
 
-            // When
-            const result = await useCase.execute(dto);
+            await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
 
-            // Then
             expect(mockAuthenticationService.googleLogin).toHaveBeenCalledTimes(
                 1
             );
-
-            expect(result).toBeFalsy();
         });
 
         it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {

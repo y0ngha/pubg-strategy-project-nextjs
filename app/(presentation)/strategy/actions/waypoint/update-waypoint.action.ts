@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
 
 export async function updateWaypointAction(_: unknown, formData: FormData) {

@@ -4,7 +4,10 @@ import { AuthenticationServicePort } from '@/domain/user/port/out/authentication
 import { Password } from '@/domain/user/value-objects/password';
 
 export class AuthenticationServiceAdapter extends AuthenticationServicePort {
-    async login(email: Email, password: Password): Promise<boolean> {
+    async login(
+        email: Email,
+        password: Password
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         throw new Error('Not Implemented.');
     }
 
@@ -12,7 +15,10 @@ export class AuthenticationServiceAdapter extends AuthenticationServicePort {
         throw new Error('Not Implemented.');
     }
 
-    async googleLogin(email: Email, token: string): Promise<boolean> {
+    async googleLogin(
+        email: Email,
+        token: string
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         throw new Error('Not Implemented.');
     }
 }

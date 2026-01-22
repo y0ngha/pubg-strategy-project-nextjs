@@ -2,9 +2,16 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ServerAction } from '@/(presentation)/shared/types/server-action';
+import { saveTokens } from '@/(presentation)/user/services/token.service';
 
-export async function loginWithEmailAction(_: unknown, formData: FormData) {
+export type LoginWithEmailAction = ServerAction<{ id: string; email: string }>;
+
+export async function loginWithEmailAction(
+    _: unknown,
+    formData: FormData
+): Promise<LoginWithEmailAction> {
     const getService = initializeRequestServices();
 
     const { email, password } = parseFormData(formData, [
@@ -27,5 +34,30 @@ export async function loginWithEmailAction(_: unknown, formData: FormData) {
 
     const useCase = getService<LoginWithEmailUseCase>(LoginWithEmailUseCase);
 
-    return await useCase.execute(dto);
+    try {
+        const { accessToken, refreshToken, user } = await useCase.execute(dto);
+
+        await saveTokens(accessToken, refreshToken);
+
+        return {
+            isSuccess: true,
+            isError: false,
+            errorMessage: undefined,
+            data: {
+                id: user.id,
+                email: user.email,
+            },
+        };
+    } catch (e) {
+        if (e instanceof Error) {
+            return {
+                isSuccess: false,
+                isError: true,
+                errorMessage: e.message,
+                data: undefined,
+            };
+        }
+
+        throw e;
+    }
 }

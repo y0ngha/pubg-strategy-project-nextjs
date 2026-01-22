@@ -2,24 +2,41 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { GetCurrentUserUseCase } from '@/application/user/use-cases/get-current-user.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { ServerAction } from '@/(presentation)/shared/types/server-action';
+import { GetCurrentUserResponseDto } from '@/application/user/dto/get-current-user.dto';
+import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function getCurrentUserAction(_: unknown, formData: FormData) {
+export type GetCurrentUserAction = ServerAction<GetCurrentUserResponseDto>;
+
+export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
     const getService = initializeRequestServices();
 
-    const { id } = parseFormData(formData, [
-        {
-            key: 'id',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-    ] as const);
+    const isLoggedIn = await isAuthenticationComplete();
 
-    const dto = {
-        id: id,
-    };
+    if (!isLoggedIn) {
+        return {
+            isSuccess: false,
+            isError: false,
+            errorMessage: undefined,
+            data: undefined,
+        };
+    }
 
-    const useCase = getService<GetCurrentUserUseCase>(GetCurrentUserUseCase);
+    try {
+        const useCase = getService<GetCurrentUserUseCase>(
+            GetCurrentUserUseCase
+        );
 
-    return await useCase.execute(dto);
+        const user = await useCase.execute();
+
+        return {
+            isSuccess: true,
+            isError: false,
+            data: {
+                ...user,
+            },
+        };
+    } catch (e) {
+        throw e;
+    }
 }

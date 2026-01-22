@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 
 export async function updateStrategySharePermissionAction(

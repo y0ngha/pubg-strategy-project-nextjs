@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
-import { parseFormData } from '@/(presentation)/helpers/form-data.helper';
+import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
 export async function logoutAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
