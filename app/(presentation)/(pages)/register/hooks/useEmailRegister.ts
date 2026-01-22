@@ -27,7 +27,7 @@ export function useEmailRegister() {
     useEffect(() => {
         if (isError) {
             toast.error(
-                errorMessage ?? '알 수 없는 오류로 로그인에 실패했습니다.'
+                errorMessage ?? '알 수 없는 오류로 회원가입에 실패했습니다.'
             );
         }
     }, [isError, errorMessage]);
