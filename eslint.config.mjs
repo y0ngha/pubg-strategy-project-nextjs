@@ -12,7 +12,7 @@ const eslintConfig = defineConfig([
         },
         rules: {
             'react-compiler/react-compiler': 'error',
-            'react-hooks/exhaustive-deps': 'off',
+            'react-hooks/exhaustive-deps': 'warn',
         },
     },
     // Override default ignores of eslint-config-next.
