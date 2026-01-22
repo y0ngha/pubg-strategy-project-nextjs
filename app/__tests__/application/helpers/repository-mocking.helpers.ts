@@ -20,7 +20,7 @@ export function getUserRepositoryMocking(): jest.Mocked<UserRepositoryPort> {
         findByUserId: jest.fn(),
         delete: jest.fn(),
         existsByEmail: jest.fn(),
-        findBySession: jest.fn(),
+        findByAccessToken: jest.fn(),
     };
 }
 
