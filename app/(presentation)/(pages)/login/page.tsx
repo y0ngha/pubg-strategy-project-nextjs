@@ -5,8 +5,16 @@ import LoginPageLayout from '@/(presentation)/(pages)/login/components/login-pag
 import Register from '@/(presentation)/(pages)/login/components/register.component';
 import EmailLoginDivider from '@/(presentation)/(pages)/login/components/email-login-divider.component';
 import LoginHeader from '@/(presentation)/(pages)/login/components/login-header.component';
+import { redirect } from 'next/navigation';
+import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export default function Login() {
+export default async function Login() {
+    const isLoggedIn = await isAuthenticationComplete();
+
+    if (isLoggedIn) {
+        redirect('/');
+    }
+
     return (
         <LoginPageLayout
             introduce={<LoginIntroduce />}
