@@ -11,7 +11,7 @@ function EmailLogin() {
         <form className="w-full space-y-4" action={formAction}>
             <Input
                 name={'email'}
-                type={'text'}
+                type={'email'}
                 label={'Email'}
                 disabled={isPending}
             />
