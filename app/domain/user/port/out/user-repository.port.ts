@@ -10,4 +10,6 @@ export abstract class UserRepositoryPort {
     abstract delete(id: UserId): Promise<void>;
 
     abstract existsByEmail(email: Email): Promise<boolean>;
+
+    abstract findByAccessToken(): Promise<User | null>;
 }
