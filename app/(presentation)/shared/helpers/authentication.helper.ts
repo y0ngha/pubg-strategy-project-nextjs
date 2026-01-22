@@ -1,4 +1,5 @@
 import { CookieKeys } from '@/application/constants/cookie-keys';
+import { cookies } from 'next/headers';
 
 export async function ensureAuthentication() {
     if (!(await isAuthenticationComplete())) {
@@ -7,6 +8,7 @@ export async function ensureAuthentication() {
 }
 
 export async function isAuthenticationComplete() {
-    const token = await cookieStore.get(CookieKeys.ACCESS_TOKEN);
+    const cookieStore = await cookies();
+    const token = cookieStore.get(CookieKeys.ACCESS_TOKEN);
     return !(token?.value == null);
 }
