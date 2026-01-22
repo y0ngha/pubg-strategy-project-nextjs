@@ -11,9 +11,10 @@ function EmailRegister() {
     const { isMatch, onPasswordChangeHanlder, onConfirmPasswordChangeHanlder } =
         usePasswordMatchChecker();
 
-    const isPending = false;
+    const { isPending, formAction } = useEmailRegister();
+
     return (
-        <form className="w-full space-y-4">
+        <form className="w-full space-y-4" action={formAction}>
             <Input
                 name={'email'}
                 type={'email'}
