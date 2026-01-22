@@ -3,4 +3,5 @@ export interface ServerAction<T = undefined> {
     isError: boolean;
     errorMessage?: string;
     data?: T;
+    inputs?: { [key: string]: string };
 }
