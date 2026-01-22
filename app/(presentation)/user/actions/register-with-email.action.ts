@@ -39,7 +39,7 @@ export async function registerWithEmailAction(
             },
             {
                 key: 'confirmPassword',
-                error: '비밀번호는 필수적으로 입력해야합니다.',
+                error: '비밀번호 확인은 필수적으로 입력해야합니다.',
                 type: 'string',
             },
             {
