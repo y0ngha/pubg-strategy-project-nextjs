@@ -3,6 +3,7 @@ import { Position } from '@/application/strategy/types/position';
 type FieldTypeMap = {
     string: string;
     number: number;
+    boolean: boolean;
     position: Position;
 };
 
@@ -97,6 +98,8 @@ const parsers: Parsers = {
 
     number: (value: unknown, error?: string) => safeParseNumber(value, error),
 
+    boolean: (value: unknown, error?: string) => safeParseBoolean(value, error),
+
     position: (value: unknown, error?: string) => {
         try {
             const json =
@@ -122,4 +125,16 @@ function safeParseNumber(value: unknown, error?: string): number {
         throw new Error(error);
 
     return parsed;
+}
+
+function safeParseBoolean(value: unknown, error?: string): boolean {
+    if (value === '') throw new Error(error);
+
+    if (typeof value === 'boolean') return value;
+
+    if (typeof value !== 'string') throw new Error(error);
+
+    const lowercaseValue = value.toLowerCase();
+
+    return lowercaseValue === 'true' || lowercaseValue === 'on';
 }
