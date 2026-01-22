@@ -4,6 +4,8 @@ import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import ReactQueryProviders from '@/react-query-provider';
+import { ReactNode } from 'react';
+import UserDehydrate from '@/dehydrate-components/user-dehydrate.component';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -23,14 +25,16 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode;
+    children: ReactNode;
 }>) {
     return (
         <html lang="en">
             <body
                 className={`${geistSans.variable} ${geistMono.variable} h-screen antialiased`}
             >
-                <ReactQueryProviders>{children}</ReactQueryProviders>
+                <ReactQueryProviders>
+                    <UserDehydrate>{children}</UserDehydrate>
+                </ReactQueryProviders>
                 <ToastContainer position={'bottom-center'} theme={'dark'} />
             </body>
         </html>
