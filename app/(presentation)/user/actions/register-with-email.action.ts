@@ -5,7 +5,18 @@ import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { ServerAction } from '@/(presentation)/shared/types/server-action';
 
-type RegisterWithEmailAction = ServerAction;
+export type RegisterWithEmailAction = ServerAction;
+
+function isConfirmPasswordMatch(
+    password: string,
+    confirmPasswordMatch: string
+) {
+    return password === confirmPasswordMatch;
+}
+
+function isAgreementTerms(terms: boolean) {
+    return terms;
+}
 
 export async function registerWithEmailAction(
     _: unknown,
