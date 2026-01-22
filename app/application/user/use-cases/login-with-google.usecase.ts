@@ -15,7 +15,9 @@ export class LoginWithGoogleUseCase {
         private readonly authenticationService: AuthenticationServicePort
     ) {}
 
-    async execute(dto: LoginWithGoogleRequestDto): Promise<boolean> {
+    async execute(
+        dto: LoginWithGoogleRequestDto
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         const { email, token } = LoginWithGoogleRequestSchema.parse(dto);
 
         // TODO 이후 googleAuthService 구현시 액션 추가

@@ -30,7 +30,12 @@ describe('LoginWithEmailUseCase', () => {
                 password: 'Abcd1234!',
             };
 
-            mockAuthenticationService.login.mockResolvedValue(true);
+            const token = {
+                accessToken: '1234',
+                refreshToken: '2345',
+            };
+
+            mockAuthenticationService.login.mockResolvedValue(token);
 
             // When
             const result = await useCase.execute(dto);
@@ -39,28 +44,27 @@ describe('LoginWithEmailUseCase', () => {
             expect(mockPasswordCipher.encrypt).toHaveBeenCalledTimes(1);
             expect(mockAuthenticationService.login).toHaveBeenCalledTimes(1);
 
-            expect(result).toBeTruthy();
+            expect(result).toEqual(token);
         });
     });
 
     describe('에러 처리', () => {
-        it('로그인에 실패할 경우 FALSE를 반환한다.', async () => {
+        it('로그인에 실패할 경우 에러를 던진다.', async () => {
             // Given
             const dto = {
                 email: 'test@test.com',
                 password: 'Abcd1234!',
             };
 
-            mockAuthenticationService.login.mockResolvedValue(false);
+            mockAuthenticationService.login.mockRejectedValue(
+                new Error('로그인 실패')
+            );
 
-            // When
-            const result = await useCase.execute(dto);
+            // When & Then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
 
-            // Then
             expect(mockPasswordCipher.encrypt).toHaveBeenCalledTimes(1);
             expect(mockAuthenticationService.login).toHaveBeenCalledTimes(1);
-
-            expect(result).toBeFalsy();
         });
 
         it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {

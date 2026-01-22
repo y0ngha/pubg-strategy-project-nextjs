@@ -16,7 +16,9 @@ export class LoginWithEmailUseCase {
         private readonly authenticationService: AuthenticationServicePort
     ) {}
 
-    async execute(dto: LoginWithEmailRequestDto): Promise<boolean> {
+    async execute(
+        dto: LoginWithEmailRequestDto
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         const { email, password } = LoginWithEmailRequestSchema.parse(dto);
 
         const encryptedPassword = Password.reconstruct(
