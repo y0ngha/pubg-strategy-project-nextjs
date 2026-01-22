@@ -24,29 +24,46 @@ export async function registerWithEmailAction(
 ): Promise<RegisterWithEmailAction> {
     const getService = initializeRequestServices();
 
-    const { email, password, confirmPassword } = parseFormData(formData, [
-        {
-            key: 'email',
-            error: '이메일은 필수적으로 입력해야합니다.',
-            type: 'string',
-        },
-        {
-            key: 'password',
-            error: '비밀번호는 필수적으로 입력해야합니다.',
-            type: 'string',
-        },
-        {
-            key: 'confirmPassword',
-            error: '비밀번호는 필수적으로 입력해야합니다.',
-            type: 'string',
-        },
-    ] as const);
+    const { email, password, confirmPassword, terms } = parseFormData(
+        formData,
+        [
+            {
+                key: 'email',
+                error: '이메일은 필수적으로 입력해야합니다.',
+                type: 'string',
+            },
+            {
+                key: 'password',
+                error: '비밀번호는 필수적으로 입력해야합니다.',
+                type: 'string',
+            },
+            {
+                key: 'confirmPassword',
+                error: '비밀번호는 필수적으로 입력해야합니다.',
+                type: 'string',
+            },
+            {
+                key: 'terms',
+                error: '약관 동의가 필요합니다.',
+                type: 'boolean',
+            },
+        ] as const
+    );
 
-    if (password !== confirmPassword) {
+    if (!isConfirmPasswordMatch(password, confirmPassword)) {
         return {
             isSuccess: false,
             isError: true,
             errorMessage: '비밀번호가 일치하지 않습니다.',
+            data: undefined,
+        };
+    }
+
+    if (!isAgreementTerms(terms)) {
+        return {
+            isSuccess: false,
+            isError: true,
+            errorMessage: '약관 동의가 필요합니다.',
             data: undefined,
         };
     }
