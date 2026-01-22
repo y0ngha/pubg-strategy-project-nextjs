@@ -27,5 +27,23 @@ export async function loginWithEmailAction(_: unknown, formData: FormData) {
 
     const useCase = getService<LoginWithEmailUseCase>(LoginWithEmailUseCase);
 
-    return await useCase.execute(dto);
+    try {
+        await useCase.execute(dto);
+
+        return {
+            isSuccess: true,
+            isError: false,
+            errorMessage: undefined,
+        };
+    } catch (e) {
+        if (e instanceof Error) {
+            return {
+                isSuccess: false,
+                isError: true,
+                errorMessage: e.message,
+            };
+        }
+
+        throw e;
+    }
 }
