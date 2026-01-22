@@ -2,7 +2,7 @@
 
 import Input from '@/(presentation)/shared/components/input.component';
 import Button from '@/(presentation)/shared/components/button.component';
-import { useEmailLogin } from '@/(presentation)/login/hooks/useEmailLogin';
+import { useEmailLogin } from '@/(presentation)/(pages)/login/hooks/useEmailLogin';
 
 function EmailLogin() {
     const { formAction, isPending } = useEmailLogin();
