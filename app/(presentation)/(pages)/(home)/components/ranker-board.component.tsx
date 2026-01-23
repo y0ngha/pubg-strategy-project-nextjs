@@ -207,11 +207,7 @@ function RankerBoardContent({ children }: { children: ReactNode }) {
 
 function RankerBoard({ rankers }: RankerBoardProps) {
     return (
-        <Card
-            className={
-                'border-border/50 bg-background/50 h-full backdrop-blur-sm'
-            }
-        >
+        <Card className={'flex h-full flex-col backdrop-blur-sm'}>
             <RankerBoardHeader />
 
             <RankerBoardContent>

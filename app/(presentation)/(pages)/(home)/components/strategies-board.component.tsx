@@ -131,11 +131,7 @@ function StrategiesEmpty() {
 
 function StrategiesBoard({ strategies }: StrategiesBoardProps) {
     return (
-        <Card
-            className={
-                'border-border/50 bg-background/50 flex h-full flex-col backdrop-blur-sm'
-            }
-        >
+        <Card className={'flex h-full flex-col backdrop-blur-sm'}>
             <StrategiesBoardHeader />
 
             <StrategiesBoardContent>
