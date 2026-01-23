@@ -29,7 +29,7 @@ interface StrategiesBoardProps {
 
 function StrategiesBoardTitle({ children }: { children: ReactNode }) {
     return (
-        <Card.Title className={'flex items-center gap-2 text-lg font-bold'}>
+        <Card.Title className={'m-0 flex items-center gap-2 text-lg font-bold'}>
             <FileText className={'text-primary h-4 w-4'} />
             {children}
         </Card.Title>

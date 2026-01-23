@@ -33,7 +33,7 @@ interface RankerBoardProps {
 
 function RankerBoardTitle({ children }: { children: ReactNode }) {
     return (
-        <Card.Title className={'flex items-center gap-2 text-lg font-bold'}>
+        <Card.Title className={'m-0 flex items-center gap-2 text-lg font-bold'}>
             <Trophy className={'h-4 w-4 text-yellow-500'} />
             {children}
         </Card.Title>
