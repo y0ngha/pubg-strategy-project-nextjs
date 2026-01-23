@@ -6,6 +6,7 @@ import { usePasswordMatchChecker } from '@/(presentation)/(pages)/register/hooks
 import { useEmailRegister } from '@/(presentation)/(pages)/register/hooks/useEmailRegister';
 import Checkbox from '@/(presentation)/shared/components/checkbox.component';
 import Link from 'next/link';
+import { Route } from '@/(presentation)/shared/constants/route';
 
 function EmailRegister() {
     const { isMatch, onPasswordChangeHandler, onConfirmPasswordChangeHandler } =
@@ -42,7 +43,7 @@ function EmailRegister() {
                 (필수) 서비스 이용약관에 동의합니다.{' '}
                 <Link
                     className={'opacity-70 hover:opacity-100'}
-                    href={'/'}
+                    href={Route.TERMS}
                     target={'_blank'}
                 >
                     [약관 보기]
