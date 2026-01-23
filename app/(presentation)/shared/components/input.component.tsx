@@ -40,7 +40,7 @@ function Input({
     const id = useId();
 
     return (
-        <div className="w-full space-y-1">
+        <div className="space-y-1">
             {label && (
                 <label
                     htmlFor={id}
