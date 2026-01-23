@@ -199,7 +199,7 @@ function RankerBoardRow({ rank, server, playerName, rp, kd }: Ranker) {
 
 function RankerBoardContent({ children }: { children: ReactNode }) {
     return (
-        <Card.Content className={'px-0 pb-0'}>
+        <Card.Content className={'flex-1 overflow-hidden px-0 pb-0'}>
             <ul className={'flex h-full flex-col'}>{children}</ul>
         </Card.Content>
     );
