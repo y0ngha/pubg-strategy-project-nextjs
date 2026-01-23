@@ -8,7 +8,7 @@ function LoginPageLayout({
     form: ReactNode;
 }) {
     return (
-        <div className={'flex h-full w-full flex-row'}>
+        <div className={'flex h-screen w-full flex-row'}>
             <div
                 className={
                     'relative flex h-full flex-1 flex-col items-center justify-center'
