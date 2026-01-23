@@ -123,6 +123,14 @@ function StrategiesBoardContent({ children }: { children: ReactNode }) {
     );
 }
 
+function StrategiesEmpty() {
+    return (
+        <div className={'flex h-full w-full items-center justify-center'}>
+            공유 받거나, 작성한 전략이 없어요.
+        </div>
+    );
+}
+
 function StrategiesBoard({ strategies }: StrategiesBoardProps) {
     return (
         <Card
@@ -133,6 +141,7 @@ function StrategiesBoard({ strategies }: StrategiesBoardProps) {
             <StrategiesBoardHeader />
 
             <StrategiesBoardContent>
+                {strategies.length === 0 && <StrategiesEmpty />}
                 {strategies.map(({ id, map, title, author }) => {
                     return (
                         <StrategiesBoardRow
