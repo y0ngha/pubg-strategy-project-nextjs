@@ -11,7 +11,7 @@ function NavigationBar({ children }: NavigationBarProps) {
     return (
         <header
             className={
-                'sticky top-0 z-50 w-full border-b border-transparent bg-transparent transition-all duration-300'
+                'scroll border-border/40 bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-md transition-all duration-300'
             }
         >
             <div
