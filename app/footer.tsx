@@ -93,16 +93,17 @@ function FooterNavigationItem({ href, children }: NavigationItemProps) {
 }
 
 interface FooterNavigationProps {
+    title: string;
     navigationItems: {
         href: string;
         name: string;
     }[];
 }
 
-function FooterNavigation({ navigationItems }: FooterNavigationProps) {
+function FooterNavigation({ title, navigationItems }: FooterNavigationProps) {
     return (
         <div className={'flex flex-col gap-4'}>
-            <FooterNavigationHeader>Product</FooterNavigationHeader>
+            <FooterNavigationHeader>{title}</FooterNavigationHeader>
             <FooterNavigationItemWrapper>
                 {navigationItems.map(navigation => {
                     return (
@@ -165,8 +166,8 @@ function Footer() {
             <FooterContainer>
                 <FooterGrid>
                     <FooterIntroduce />
-                    <FooterNavigation navigationItems={NavigationItems} />
-                    <FooterNavigation navigationItems={LegalItems} />
+                    <FooterNavigation title={'Product'} navigationItems={NavigationItems} />
+                    <FooterNavigation title={'Legal'} navigationItems={LegalItems} />
                 </FooterGrid>
 
                 <FooterCopyright />
