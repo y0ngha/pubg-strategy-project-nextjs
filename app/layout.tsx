@@ -29,6 +29,7 @@ const NAV_ITEMS = [
     { name: '무기분석', href: '/weapons' },
     { name: '맵분석', href: '/maps' },
     { name: '전략', href: '/strategies' },
+    { name: '순위', href: '/leaderboard' },
 ];
 
 export default async function RootLayout({
