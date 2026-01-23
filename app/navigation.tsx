@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import Button from '@/(presentation)/shared/components/button.component';
 import { ReactNode } from 'react';
+import Logo from '@/(presentation)/shared/components/logo.component';
+import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
+import { NavigationItems } from '@/(presentation)/shared/constants/navigation';
+import { Route } from '@/(presentation)/shared/constants/route';
 
-interface NavigationBarProps {
-    children: ReactNode;
-}
-
-function NavigationBar({ children }: NavigationBarProps) {
+function NavigationBar({ children }: { children: ReactNode }) {
     return (
         <header
             className={
@@ -25,33 +25,11 @@ function NavigationBar({ children }: NavigationBarProps) {
     );
 }
 
-interface ContainerProps {
-    children: ReactNode;
-}
-
-function Container({ children }: ContainerProps) {
+function NavigationBarContainer({ children }: { children: ReactNode }) {
     return <div className={'flex items-center gap-2 md:gap-4'}>{children}</div>;
 }
 
-function Logo() {
-    return (
-        <Link href={'/'} className={'group flex items-center gap-2'}>
-            <span
-                className={
-                    'hidden text-xl font-black tracking-tighter italic sm:inline-block'
-                }
-            >
-                PUBG<span className={'text-primary'}>.OP</span>
-            </span>
-        </Link>
-    );
-}
-
-interface ItemNavWrapperProps {
-    children: ReactNode;
-}
-
-function ItemNavWrapper({ children }: ItemNavWrapperProps) {
+function NavigationBarItemNavWrapper({ children }: { children: ReactNode }) {
     return (
         <nav
             className={'hidden items-center gap-6 text-sm font-medium md:flex'}
@@ -66,7 +44,7 @@ interface ItemProps {
     children: ReactNode;
 }
 
-function Item({ href, children }: ItemProps) {
+function NavigationBarItem({ href, children }: ItemProps) {
     return (
         <Link
             href={href}
@@ -79,7 +57,7 @@ function Item({ href, children }: ItemProps) {
     );
 }
 
-function OpenSearch() {
+function NavigationBarOpenSearch() {
     return (
         <Button
             variant={'ghost'}
@@ -91,9 +69,9 @@ function OpenSearch() {
     );
 }
 
-function MyPage() {
+function NavigationBarMyPage() {
     return (
-        <Link href={'/mypage'}>
+        <Link href={Route.MYPAGE}>
             <Button size={'sm'} className={'hidden font-bold sm:flex'}>
                 MyPage
             </Button>
@@ -101,9 +79,9 @@ function MyPage() {
     );
 }
 
-function Login() {
+function NavigationBarLogin() {
     return (
-        <Link href={'/login'}>
+        <Link href={Route.LOGIN}>
             <Button size={'sm'} className={'hidden font-bold sm:flex'}>
                 로그인
             </Button>
@@ -111,21 +89,44 @@ function Login() {
     );
 }
 
+async function Navigation() {
+    return (
+        <NavigationBar>
+            <NavigationBarContainer>
+                <Logo />
+                <NavigationBarItemNavWrapper>
+                    {NavigationItems.map(navigation => {
+                        return (
+                            <NavigationBarItem
+                                href={navigation.href}
+                                key={navigation.href}
+                            >
+                                {navigation.name}
+                            </NavigationBarItem>
+                        );
+                    })}
+                </NavigationBarItemNavWrapper>
+            </NavigationBarContainer>
+
+            <NavigationBarContainer>
+                <NavigationBarOpenSearch />
+                {(await isAuthenticationComplete()) ? (
+                    <NavigationBarMyPage />
+                ) : (
+                    <NavigationBarLogin />
+                )}
+            </NavigationBarContainer>
+        </NavigationBar>
+    );
+}
+
+Navigation.displayName = 'Navigation';
 NavigationBar.displayName = 'NavigationBar';
-Container.displayName = 'NavigationBar-Container';
-Logo.displayName = 'NavigationBar-Logo';
-ItemNavWrapper.displayName = 'NavigationBar-ItemNavWrapper';
-Item.displayName = 'NavigationBar-Item';
-OpenSearch.displayName = 'NavigationBar-OpenSearch';
-Login.displayName = 'NavigationBar-Login';
-MyPage.displayName = 'NavigationBar-MyPage';
+NavigationBarContainer.displayName = 'NavigationBar-Container';
+NavigationBarItemNavWrapper.displayName = 'NavigationBar-ItemNavWrapper';
+NavigationBarItem.displayName = 'NavigationBar-Item';
+NavigationBarOpenSearch.displayName = 'NavigationBar-OpenSearch';
+NavigationBarLogin.displayName = 'NavigationBar-Login';
+NavigationBarMyPage.displayName = 'NavigationBar-MyPage';
 
-NavigationBar.Container = Container;
-NavigationBar.Logo = Logo;
-NavigationBar.ItemNavWrapper = ItemNavWrapper;
-NavigationBar.Item = Item;
-NavigationBar.OpenSearch = OpenSearch;
-NavigationBar.Login = Login;
-NavigationBar.MyPage = MyPage;
-
-export default NavigationBar;
+export default Navigation;
