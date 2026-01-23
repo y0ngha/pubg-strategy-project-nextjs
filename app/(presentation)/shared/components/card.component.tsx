@@ -56,10 +56,10 @@ function Content({ children, className, ...props }: ContentProps) {
     );
 }
 
-Card.displayName = Card;
-Header.displayName = Header;
-Title.displayName = Title;
-Content.displayName = Content;
+Card.displayName = 'Card';
+Header.displayName = 'Card-Header';
+Title.displayName = 'Card-Title';
+Content.displayName = 'Card-Content';
 
 Card.Header = Header;
 Card.Title = Title;
