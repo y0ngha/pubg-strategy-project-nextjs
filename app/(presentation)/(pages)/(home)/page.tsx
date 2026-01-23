@@ -1,77 +1,127 @@
 import HomePageLayout from '@/(presentation)/(pages)/(home)/components/home-page-layout.component';
 import HomeHero from '@/(presentation)/(pages)/(home)/components/home-hero.component';
 import RankerBoard from '@/(presentation)/(pages)/(home)/components/ranker-board.component';
+import StrategiesBoard from '@/(presentation)/(pages)/(home)/components/strategies-board.component';
 
-const TOP_RANKERS = [
+/**
+ * Test용 Fixture
+ */
+const TOP_RANKERS: {
+    rank: number;
+    kd: number;
+    rp: number;
+    playerName: string;
+    server: 'steam' | 'kakao';
+}[] = [
     {
         rank: 1,
-        name: 'Player1',
-        server: 'Kakao',
+        playerName: 'Player1',
+        server: 'kakao',
         rp: 4520,
         kd: 4.2,
     },
     {
         rank: 2,
-        name: 'Player2',
-        server: 'Kakao',
+        playerName: 'Player2',
+        server: 'kakao',
         rp: 4480,
         kd: 3.8,
     },
     {
         rank: 3,
-        name: 'Player3',
-        server: 'Steam',
+        playerName: 'Player3',
+        server: 'steam',
         rp: 4350,
         kd: 3.5,
     },
     {
         rank: 4,
-        name: 'Player4',
-        server: 'Steam',
+        playerName: 'Player4',
+        server: 'steam',
         rp: 4210,
         kd: 3.1,
     },
     {
         rank: 5,
-        name: 'Player5',
-        server: 'Kakao',
+        playerName: 'Player5',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
     },
     {
         rank: 6,
-        name: 'Player6',
-        server: 'Kakao',
+        playerName: 'Player6',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
     },
     {
         rank: 7,
-        name: 'Player7',
-        server: 'Kakao',
+        playerName: 'Player7',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
     },
     {
         rank: 8,
-        name: 'Player8',
-        server: 'Kakao',
+        playerName: 'Player8',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
     },
     {
         rank: 9,
-        name: 'Player9',
-        server: 'Kakao',
+        playerName: 'Player9',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
     },
     {
         rank: 10,
-        name: 'Player10',
-        server: 'Kakao',
+        playerName: 'Player10',
+        server: 'kakao',
         rp: 4100,
         kd: 2.9,
+    },
+];
+const STRATEGIES: {
+    id: string;
+    map:
+        | 'erangel'
+        | 'miramar'
+        | 'sanhok'
+        | 'taego'
+        | 'vikendi'
+        | 'rondo'
+        | 'karakin'
+        | 'haven'
+        | 'deston';
+    title: string;
+    author: string;
+}[] = [
+    {
+        id: '1',
+        title: '1번 전략',
+        map: 'erangel',
+        author: 'Player',
+    },
+    {
+        id: '2',
+        title: '2번 전략',
+        map: 'taego',
+        author: 'Player',
+    },
+    {
+        id: '3',
+        title: '3번 전략',
+        map: 'miramar',
+        author: 'Player',
+    },
+    {
+        id: '4',
+        title: '4번 전략',
+        map: 'sanhok',
+        author: 'Player',
     },
 ];
 
@@ -84,7 +134,9 @@ export default function Home() {
                     <div className={'flex-1'}>
                         <RankerBoard rankers={TOP_RANKERS} />
                     </div>
-                    <div className={'flex-1'}></div>
+                    <div className={'flex-1'}>
+                        <StrategiesBoard strategies={STRATEGIES} />
+                    </div>
                 </>
             }
         />

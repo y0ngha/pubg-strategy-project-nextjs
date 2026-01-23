@@ -6,11 +6,31 @@ import { HTMLAttributes, ReactNode } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import ServerIcon from '@/(presentation)/shared/icons/server-icon.component';
 
-interface RankerBoardTitleProps {
-    children: ReactNode;
+type PubgServer = 'steam' | 'kakao';
+
+interface RankerBoardKDProps
+    extends
+        HTMLAttributes<HTMLSpanElement>,
+        VariantProps<typeof RankerBoardKDVariants> {}
+
+interface Ranker {
+    rank: number;
+    server: PubgServer;
+    playerName: string;
+    rp: number;
+    kd: number;
 }
 
-function RankerBoardTitle({ children }: RankerBoardTitleProps) {
+interface RankerBoardRankProps
+    extends
+        HTMLAttributes<HTMLSpanElement>,
+        VariantProps<typeof RankerBoardRankVariants> {}
+
+interface RankerBoardProps {
+    rankers: Ranker[];
+}
+
+function RankerBoardTitle({ children }: { children: ReactNode }) {
     return (
         <Card.Title className={'flex items-center gap-2 text-lg font-bold'}>
             <Trophy className={'h-4 w-4 text-yellow-500'} />
@@ -19,11 +39,7 @@ function RankerBoardTitle({ children }: RankerBoardTitleProps) {
     );
 }
 
-interface RankerBoardMoreLinkProps {
-    children: ReactNode;
-}
-
-function RankerBoardMoreLink({ children }: RankerBoardMoreLinkProps) {
+function RankerBoardMoreLink({ children }: { children: ReactNode }) {
     return (
         <Link
             href={'/leaderboard'}
@@ -63,11 +79,6 @@ const RankerBoardRankVariants = cva('w-4 text-center text-sm font-bold', {
     },
 });
 
-interface RankerBoardRankProps
-    extends
-        HTMLAttributes<HTMLSpanElement>,
-        VariantProps<typeof RankerBoardRankVariants> {}
-
 function RankerBoardRank({ rank, children, ...props }: RankerBoardRankProps) {
     return (
         <span className={cn(RankerBoardRankVariants({ rank }))} {...props}>
@@ -76,9 +87,10 @@ function RankerBoardRank({ rank, children, ...props }: RankerBoardRankProps) {
     );
 }
 
-type RankerBoardServerProps = HTMLAttributes<HTMLDivElement>;
-
-function RankerBoardServer({ children, ...props }: RankerBoardServerProps) {
+function RankerBoardServer({
+    children,
+    ...props
+}: HTMLAttributes<HTMLDivElement>) {
     return (
         <div className={'flex items-center gap-3'}>
             <div
@@ -93,12 +105,10 @@ function RankerBoardServer({ children, ...props }: RankerBoardServerProps) {
     );
 }
 
-type RankerBoardPlayerNameProps = HTMLAttributes<HTMLSpanElement>;
-
 function RankerBoardPlayerName({
     children,
     ...props
-}: RankerBoardPlayerNameProps) {
+}: HTMLAttributes<HTMLSpanElement>) {
     return (
         <div className={'flex items-center'}>
             <div className={'flex flex-col'}>
@@ -115,13 +125,10 @@ function RankerBoardPlayerName({
     );
 }
 
-type RankerBoardRankPointProps = HTMLAttributes<HTMLSpanElement>;
-// DIV
-
 function RankerBoardRankPoint({
     children,
     ...props
-}: RankerBoardRankPointProps) {
+}: HTMLAttributes<HTMLSpanElement>) {
     return (
         <span className={'text-foreground text-sm font-bold'} {...props}>
             {children}
@@ -139,11 +146,6 @@ const RankerBoardKDVariants = cva('', {
     },
 });
 
-interface RankerBoardKDProps
-    extends
-        HTMLAttributes<HTMLSpanElement>,
-        VariantProps<typeof RankerBoardKDVariants> {}
-
 function RankerBoardKD({ children, kd, ...props }: RankerBoardKDProps) {
     return (
         <div className={'text-muted-foreground text-[10px]'}>
@@ -155,21 +157,10 @@ function RankerBoardKD({ children, kd, ...props }: RankerBoardKDProps) {
     );
 }
 
-interface RankerBoardRowProps {
-    rank: number;
-    server: string;
-    playerName: string;
-    rp: number;
-    kd: number;
-}
-
-function RankerBoardRow({
-    rank,
-    server,
-    playerName,
-    rp,
-    kd,
-}: RankerBoardRowProps) {
+/**
+ * TODO 나중에 Link 보낼 때 playerName, server 써서 전적 검색으로 보내기
+ */
+function RankerBoardRow({ rank, server, playerName, rp, kd }: Ranker) {
     const rankProps =
         rank === 1 ? rank : rank === 2 ? rank : rank === 3 ? rank : 'others';
 
@@ -187,10 +178,10 @@ function RankerBoardRow({
                     <ServerIcon
                         width={24}
                         height={24}
-                        server={server}
+                        server={server.toLowerCase()}
                         kakaoColor={'#FEE500'}
                     />
-                    {server}
+                    {server.toUpperCase()}
                 </RankerBoardServer>
                 <RankerBoardPlayerName>{playerName}</RankerBoardPlayerName>
             </div>
@@ -205,26 +196,12 @@ function RankerBoardRow({
     );
 }
 
-interface RankerBoardContentProps {
-    children: ReactNode;
-}
-
-function RankerBoardContent({ children }: RankerBoardContentProps) {
+function RankerBoardContent({ children }: { children: ReactNode }) {
     return (
         <Card.Content className={'px-0 pb-0'}>
-            <ul className={'flex flex-col'}>{children}</ul>
+            <ul className={'flex h-full flex-col'}>{children}</ul>
         </Card.Content>
     );
-}
-
-interface RankerBoardProps {
-    rankers: {
-        rank: number;
-        kd: number;
-        rp: number;
-        name: string;
-        server: string;
-    }[];
 }
 
 function RankerBoard({ rankers }: RankerBoardProps) {
@@ -237,15 +214,15 @@ function RankerBoard({ rankers }: RankerBoardProps) {
             <RankerBoardHeader />
 
             <RankerBoardContent>
-                {rankers.map(({ rank, name, rp, kd, server }) => {
+                {rankers.map(({ rank, playerName, rp, kd, server }) => {
                     return (
                         <RankerBoardRow
                             rank={rank}
                             kd={kd}
                             rp={rp}
-                            playerName={name}
+                            playerName={playerName}
                             server={server}
-                            key={`${server}-${name}`}
+                            key={`${server}-${playerName}`}
                         />
                     );
                 })}
