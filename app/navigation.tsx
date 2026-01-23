@@ -35,7 +35,7 @@ function Container({ children }: ContainerProps) {
 
 function Logo() {
     return (
-        <Link href={'/public'} className={'group flex items-center gap-2'}>
+        <Link href={'/'} className={'group flex items-center gap-2'}>
             <span
                 className={
                     'hidden text-xl font-black tracking-tighter italic sm:inline-block'
