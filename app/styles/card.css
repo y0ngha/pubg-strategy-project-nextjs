@@ -1,0 +1,7 @@
+@layer base {
+    :root {
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --card-border: 240 3.7% 15.9%;
+    }
+}
