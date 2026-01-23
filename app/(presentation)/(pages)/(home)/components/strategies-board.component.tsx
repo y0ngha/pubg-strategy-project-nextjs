@@ -115,9 +115,7 @@ function StrategiesBoardRow({ id, map, title, author }: Strategy) {
 
 function StrategiesBoardContent({ children }: { children: ReactNode }) {
     return (
-        <Card.Content
-            className={'flex-1 cursor-pointer overflow-hidden px-0 pb-0'}
-        >
+        <Card.Content className={'flex-1 overflow-hidden px-0 pb-0'}>
             <ul className={'flex h-full flex-col'}>{children}</ul>
         </Card.Content>
     );
@@ -166,6 +164,7 @@ StrategiesBoardTitleCell.displayName = 'StrategiesBoardTitleCell';
 StrategiesBoardAuthorCell.displayName = 'StrategiesBoardAuthorCell';
 StrategiesBoardRow.displayName = 'StrategiesBoardRow';
 StrategiesBoardContent.displayName = 'StrategiesBoardContent';
+StrategiesEmpty.displayName = 'StrategiesEmpty';
 StrategiesBoard.displayName = 'StrategiesBoard';
 
 export default StrategiesBoard;
