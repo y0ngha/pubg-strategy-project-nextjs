@@ -9,11 +9,16 @@ import {
     getSharedStrategiesAction,
     GetSharedStrategiesAction,
 } from '@/(presentation)/strategy/actions/get-shared-strategies.action';
+import { InfiniteData } from '@tanstack/query-core';
 
 export function useGetSharedStrategies(
     limit?: number,
     options?: Omit<
-        UseInfiniteQueryOptions<GetSharedStrategiesAction, Error>,
+        UseInfiniteQueryOptions<
+            GetSharedStrategiesAction,
+            Error,
+            InfiniteData<GetSharedStrategiesAction>
+        >,
         | 'queryKey'
         | 'queryFn'
         | 'enabled'
@@ -23,7 +28,7 @@ export function useGetSharedStrategies(
         | 'getNextPageParam'
         | 'initialPageParam'
     >
-): UseInfiniteQueryResult<GetSharedStrategiesAction, Error> {
+): UseInfiniteQueryResult<InfiniteData<GetSharedStrategiesAction>, Error> {
     const user = useGetCurrentUser();
 
     return useInfiniteQuery({
