@@ -1,3 +1,5 @@
+import React from 'react';
+
 type SkeletonProps = React.HTMLAttributes<HTMLDivElement>;
 
 function Skeleton({ className, ...props }: SkeletonProps) {
