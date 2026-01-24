@@ -1,13 +1,13 @@
 export type StrategiesBoardMap =
-    | 'erangel'
-    | 'miramar'
-    | 'sanhok'
-    | 'taego'
-    | 'vikendi'
-    | 'rondo'
-    | 'karakin'
-    | 'haven'
-    | 'deston';
+    | '에란겔'
+    | '미라마'
+    | '테이고'
+    | '론도'
+    | '사녹'
+    | '비켄디'
+    | '카라킨'
+    | '헤이븐'
+    | '데스턴';
 
 export interface StrategyPost {
     id: string;
