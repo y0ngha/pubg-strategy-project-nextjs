@@ -1,25 +1,32 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { GetStrategiesUseCase } from '@/application/strategy/use-cases/get-strategies.usecase';
+import { GetStrategiesResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function getStrategiesAction(_: unknown, formData: FormData) {
+export type GetStrategiesAction = GetStrategiesResponseDto;
+
+export async function getStrategiesAction(
+    userId: string
+): Promise<GetStrategiesAction> {
     const getService = initializeRequestServices();
 
-    const { userId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-    ] as const);
+    await ensureAuthentication();
 
-    const useCase = getService(GetStrategiesUseCase);
+    try {
+        const useCase = getService(GetStrategiesUseCase);
 
-    const dto = {
-        actorId: userId,
-    };
+        const dto = {
+            actorId: userId,
+        };
 
-    return await useCase.execute(dto);
+        const strategies = await useCase.execute(dto);
+
+        return {
+            ...strategies,
+        };
+    } catch (e) {
+        throw e;
+    }
 }
