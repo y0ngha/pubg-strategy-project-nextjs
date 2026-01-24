@@ -2168,6 +2168,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-virtual@npm:^3.13.18":
+  version: 3.13.18
+  resolution: "@tanstack/react-virtual@npm:3.13.18"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.13.18"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/600fabdf9fe077d609dad5114025c502aa1125d21bfd64ae4eeeab4743de1c76ca0d5c29ca4cba0c1220834a9dfedbe0c7304276b0e0e7f9048e2c8a5562fa26
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:3.13.18":
+  version: 3.13.18
+  resolution: "@tanstack/virtual-core@npm:3.13.18"
+  checksum: 10c0/f43a92bbe4e891242a6bb5274ee60b166534abfcd5115cbe7f92f833e745941ac3b8cb808dd0537cbf1e0c5004aacd2d2cab4a1ce738f7930ec723566e37ec11
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.10.0, @tybys/wasm-util@npm:^0.10.1":
   version: 0.10.1
   resolution: "@tybys/wasm-util@npm:0.10.1"
@@ -7300,6 +7319,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:^4"
     "@tanstack/react-query": "npm:^5.90.19"
     "@tanstack/react-query-devtools": "npm:5"
+    "@tanstack/react-virtual": "npm:^3.13.18"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^25.0.1"
     "@types/react": "npm:^19"
