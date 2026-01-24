@@ -1,9 +1,15 @@
+'use server';
+
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
-export type GetOwnedStrategiesAction = GetStrategyResponseDto[];
+export type GetOwnedStrategiesAction = {
+    hasNextPage: boolean;
+    nextPage: number;
+    data: GetStrategyResponseDto[];
+};
 
 export async function getOwnedStrategiesAction(
     userId: string,
@@ -26,7 +32,9 @@ export async function getOwnedStrategiesAction(
         const strategies = await useCase.execute(dto);
 
         return {
-            ...strategies,
+            hasNextPage: strategies.hasNextPage,
+            nextPage: strategies.nextPage,
+            data: [...strategies.data],
         };
     } catch (e) {
         throw e;

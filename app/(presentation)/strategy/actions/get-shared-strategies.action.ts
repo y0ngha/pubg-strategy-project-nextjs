@@ -1,3 +1,5 @@
+'use server';
+
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
