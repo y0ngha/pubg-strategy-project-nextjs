@@ -2,21 +2,43 @@
 
 import Input from '@/(presentation)/shared/components/input.component';
 import Button from '@/(presentation)/shared/components/button.component';
-import { useEmailLogin } from '@/(presentation)/(pages)/login/hooks/useEmailLogin';
+import { useEmailLoginMutation } from '@/(presentation)/(pages)/login/hooks/useEmailLoginMutation';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+interface LoginFormInputs {
+    email: string;
+    password: string;
+}
 
 function EmailLogin() {
-    const { formAction, isPending } = useEmailLogin();
+    const { login, isPending } = useEmailLoginMutation();
+    const { register, handleSubmit, reset } = useForm<LoginFormInputs>();
+
+    const onSubmit: SubmitHandler<LoginFormInputs> = (
+        data: LoginFormInputs
+    ) => {
+        const formData = new FormData();
+        formData.append('email', data.email);
+        formData.append('password', data.password);
+
+        login(formData, {
+            onError: () => {
+                reset();
+            },
+        });
+    };
 
     return (
-        <form className="w-full space-y-4" action={formAction}>
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <Input
-                name={'email'}
+                {...register('email')}
                 type={'email'}
                 label={'Email'}
                 disabled={isPending}
             />
             <Input
-                name={'password'}
+                {...register('password')}
                 type={'password'}
                 label={'Password'}
                 disabled={isPending}

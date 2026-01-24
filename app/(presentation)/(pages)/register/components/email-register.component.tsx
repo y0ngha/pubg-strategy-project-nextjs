@@ -3,35 +3,60 @@
 import Input from '@/(presentation)/shared/components/input.component';
 import Button from '@/(presentation)/shared/components/button.component';
 import { usePasswordMatchChecker } from '@/(presentation)/(pages)/register/hooks/usePasswordMatchChecker';
-import { useEmailRegister } from '@/(presentation)/(pages)/register/hooks/useEmailRegister';
+import { useEmailRegisterMutation } from '@/(presentation)/(pages)/register/hooks/useEmailRegisterMutation';
 import Checkbox from '@/(presentation)/shared/components/checkbox.component';
-import Link from 'next/link';
 import { Route } from '@/(presentation)/shared/constants/route';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import Link from 'next/link';
+
+interface RegisterFormInputs {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    terms: string;
+}
 
 function EmailRegister() {
     const { isMatch, onPasswordChangeHandler, onConfirmPasswordChangeHandler } =
         usePasswordMatchChecker();
+    const { register: registerAction, isPending } = useEmailRegisterMutation();
+    const { register, handleSubmit, resetField } =
+        useForm<RegisterFormInputs>();
 
-    const { isPending, formAction, inputs } = useEmailRegister();
+    const onSubmit: SubmitHandler<RegisterFormInputs> = (
+        data: RegisterFormInputs
+    ) => {
+        const formData = new FormData();
+        formData.append('email', data.email);
+        formData.append('password', data.password);
+        formData.append('confirmPassword', data.confirmPassword);
+        formData.append('terms', data.terms);
+
+        registerAction(formData, {
+            onError: () => {
+                resetField('password');
+                resetField('confirmPassword');
+            },
+        });
+    };
 
     return (
-        <form className="w-full space-y-4" action={formAction}>
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <Input
-                name={'email'}
+                {...register('email')}
                 type={'email'}
                 label={'Email'}
                 disabled={isPending}
-                defaultValue={inputs?.email}
             />
             <Input
-                name={'password'}
+                {...register('password')}
                 type={'password'}
                 label={'Password'}
                 disabled={isPending}
                 onChange={onPasswordChangeHandler}
             />
             <Input
-                name={'confirmPassword'}
+                {...register('confirmPassword')}
                 type={'password'}
                 label={'Confirm Password'}
                 disabled={isPending}
@@ -39,7 +64,7 @@ function EmailRegister() {
                 error={!isMatch ? '비밀번호가 일치하지 않습니다.' : undefined}
             />
 
-            <Checkbox name="terms" required>
+            <Checkbox {...register('terms')} required>
                 (필수) 서비스 이용약관에 동의합니다.{' '}
                 <Link
                     className={'opacity-70 hover:opacity-100'}

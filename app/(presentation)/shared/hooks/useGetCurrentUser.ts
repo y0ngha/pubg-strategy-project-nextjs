@@ -1,8 +1,20 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import {
+    useQuery,
+    UseQueryOptions,
+    UseQueryResult,
+} from '@tanstack/react-query';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { getCurrentUserAction } from '@/(presentation)/user/actions/get-current-user.action';
+import {
+    GetCurrentUserAction,
+    getCurrentUserAction,
+} from '@/(presentation)/user/actions/get-current-user.action';
 
-export function useGetCurrentUser(options?: UseQueryOptions) {
+export function useGetCurrentUser(
+    options?: Omit<
+        UseQueryOptions<GetCurrentUserAction, Error>,
+        'queryKey' | 'queryFn' | 'staleTime' | 'gcTime' | 'retry'
+    >
+): UseQueryResult<GetCurrentUserAction, Error> {
     return useQuery({
         queryKey: [ReactQueryKeys.GET_CURRENT_USER],
         queryFn: async () => await getCurrentUserAction(),

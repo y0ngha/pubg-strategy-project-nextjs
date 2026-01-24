@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 export function useSafetyContext<T>(
     baseContext: React.Context<T>,
