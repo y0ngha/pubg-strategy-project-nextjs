@@ -7,16 +7,15 @@ const MapBadgeVariants = cva(
     {
         variants: {
             map: {
-                erangel:
-                    'bg-emerald-900/50 text-emerald-400 border-emerald-800',
-                miramar: 'bg-amber-900/50 text-amber-400 border-amber-800',
-                sanhok: 'bg-lime-900/50 text-lime-400 border-lime-800',
-                taego: 'bg-sky-900/50 text-sky-400 border-sky-800',
-                vikendi: 'bg-slate-800/50 text-slate-300 border-slate-600',
-                rondo: 'bg-zinc-800 text-zinc-400 border-zinc-700',
-                karakin: 'bg-zinc-800 text-zinc-400 border-zinc-700',
-                haven: 'bg-zinc-800 text-zinc-400 border-zinc-700',
-                deston: 'bg-zinc-800 text-zinc-400 border-zinc-700',
+                에란겔: 'bg-emerald-900/50 text-emerald-400 border-emerald-800',
+                미라마: 'bg-amber-900/50 text-amber-400 border-amber-800',
+                사녹: 'bg-lime-900/50 text-lime-400 border-lime-800',
+                테이고: 'bg-sky-900/50 text-sky-400 border-sky-800',
+                비켄디: 'bg-slate-800/50 text-slate-300 border-slate-600',
+                론도: 'bg-zinc-800 text-zinc-400 border-zinc-700',
+                카라킨: 'bg-zinc-800 text-zinc-400 border-zinc-700',
+                헤이븐: 'bg-zinc-800 text-zinc-400 border-zinc-700',
+                데스턴: 'bg-zinc-800 text-zinc-400 border-zinc-700',
             },
         },
     }
