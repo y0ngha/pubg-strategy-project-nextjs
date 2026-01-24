@@ -3,23 +3,25 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { ServerAction } from '@/(presentation)/shared/types/server-action';
 
-export type RegisterWithEmailAction = ServerAction;
+export type RegisterWithEmailAction = boolean;
 
-function isConfirmPasswordMatch(
+function ensureConfirmPasswordMatch(
     password: string,
     confirmPasswordMatch: string
 ) {
-    return password === confirmPasswordMatch;
+    if (password !== confirmPasswordMatch) {
+        throw new Error('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    }
 }
 
-function isAgreementTerms(terms: boolean) {
-    return terms;
+function ensureAgreementTerms(terms: boolean) {
+    if (!terms) {
+        throw new Error('이용약관에 반드시 동의해야합니다.');
+    }
 }
 
 export async function registerWithEmailAction(
-    _: unknown,
     formData: FormData
 ): Promise<RegisterWithEmailAction> {
     const getService = initializeRequestServices();
@@ -50,29 +52,8 @@ export async function registerWithEmailAction(
         ] as const
     );
 
-    if (!isConfirmPasswordMatch(password, confirmPassword)) {
-        return {
-            isSuccess: false,
-            isError: true,
-            errorMessage: '비밀번호가 일치하지 않습니다.',
-            data: undefined,
-            inputs: {
-                email: email,
-            },
-        };
-    }
-
-    if (!isAgreementTerms(terms)) {
-        return {
-            isSuccess: false,
-            isError: true,
-            errorMessage: '약관 동의가 필요합니다.',
-            data: undefined,
-            inputs: {
-                email: email,
-            },
-        };
-    }
+    ensureConfirmPasswordMatch(password, confirmPassword);
+    ensureAgreementTerms(terms);
 
     const dto = {
         email: email,
@@ -86,25 +67,8 @@ export async function registerWithEmailAction(
     try {
         await useCase.execute(dto);
 
-        return {
-            isSuccess: true,
-            isError: false,
-            errorMessage: undefined,
-            data: undefined,
-        };
+        return true;
     } catch (e) {
-        if (e instanceof Error) {
-            return {
-                isSuccess: false,
-                isError: true,
-                errorMessage: e.message,
-                data: undefined,
-                inputs: {
-                    email: email,
-                },
-            };
-        }
-
         throw e;
     }
 }
