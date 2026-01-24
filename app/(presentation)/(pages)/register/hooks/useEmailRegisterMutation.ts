@@ -10,6 +10,7 @@ export function useEmailRegisterMutation() {
         mutationFn: async (formData: FormData) =>
             await registerWithEmailAction(formData),
         onSuccess: async () => {
+            toast.success('회원가입이 완료되었습니다.');
             router.push('/login');
         },
         onError: error => {
