@@ -13,6 +13,7 @@ import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('DeleteTagUseCase', () => {
     let useCase: DeleteTagUseCase;
@@ -20,6 +21,7 @@ describe('DeleteTagUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let tagId: TagId;
@@ -32,7 +34,7 @@ describe('DeleteTagUseCase', () => {
 
         useCase = new DeleteTagUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addTag(ownerId, TagContent.create('삭제될 내용'));

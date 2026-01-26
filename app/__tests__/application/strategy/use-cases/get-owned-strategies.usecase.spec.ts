@@ -6,6 +6,7 @@ import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('GetOwnedStrategiesUseCase', () => {
     let useCase: GetOwnedStrategiesUseCase;
@@ -19,6 +20,7 @@ describe('GetOwnedStrategiesUseCase', () => {
     let strategyFixture5: Strategy;
 
     const myId = UserId.generate();
+    const myEmail = Email.create('test@domain.com');
 
     const title1 = StrategyTitle.create('전략 제목');
     const title2 = StrategyTitle.create('가나라');
@@ -36,32 +38,35 @@ describe('GetOwnedStrategiesUseCase', () => {
             strategyMapper
         );
 
-        strategyFixture1 = Strategy.create(myId, title2, map);
-        strategyFixture2 = Strategy.create(myId, title1, map);
+        strategyFixture1 = Strategy.create(myId, myEmail, title2, map);
+        strategyFixture2 = Strategy.create(myId, myEmail, title1, map);
 
         jest.advanceTimersByTime(1000 * 60 * 60);
 
-        strategyFixture3 = Strategy.create(myId, title1, map);
+        strategyFixture3 = Strategy.create(myId, myEmail, title1, map);
 
         jest.advanceTimersByTime(1000 * 60 * 60);
 
-        strategyFixture4 = Strategy.create(myId, title2, map);
-        strategyFixture5 = Strategy.create(myId, title3, map);
+        strategyFixture4 = Strategy.create(myId, myEmail, title2, map);
+        strategyFixture5 = Strategy.create(myId, myEmail, title3, map);
     });
 
     afterEach(() => {
         jest.useRealTimers();
     });
 
-    it('내 전략을 조회하며, [최신순 -> 이름순]으로 정렬하여 반환한다.', async () => {
+    it('내 전략을 조회한다.', async () => {
         // given
-        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue([
-            strategyFixture1,
-            strategyFixture2,
-            strategyFixture3,
-            strategyFixture4,
-            strategyFixture5,
-        ]);
+        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [
+                strategyFixture1,
+                strategyFixture2,
+                strategyFixture3,
+                strategyFixture4,
+                strategyFixture5,
+            ],
+        });
 
         const dto = {
             actorId: myId.toString(),
@@ -73,23 +78,24 @@ describe('GetOwnedStrategiesUseCase', () => {
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(5);
+        expect(strategies.data).toHaveLength(5);
 
         const expectedIds = [
-            strategyFixture4.id.toString(),
-            strategyFixture5.id.toString(),
-            strategyFixture3.id.toString(),
             strategyFixture1.id.toString(),
             strategyFixture2.id.toString(),
+            strategyFixture3.id.toString(),
+            strategyFixture4.id.toString(),
+            strategyFixture5.id.toString(),
         ];
-        expect(strategies.map(s => s.id)).toEqual(expectedIds);
+        expect(strategies.data.map(s => s.id)).toEqual(expectedIds);
     });
 
     it('조회된 전략이 하나도 없는 경우 빈 배열을 반환한다.', async () => {
         // given
-        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue(
-            []
-        );
+        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [],
+        });
 
         const dto = {
             actorId: myId.toString(),
@@ -101,7 +107,7 @@ describe('GetOwnedStrategiesUseCase', () => {
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(0);
+        expect(strategies.data).toHaveLength(0);
     });
 
     it('예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {

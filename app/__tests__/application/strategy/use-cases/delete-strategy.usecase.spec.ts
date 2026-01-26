@@ -10,6 +10,7 @@ import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('DeleteStrategyUseCase', () => {
     let useCase: DeleteStrategyUseCase;
@@ -19,13 +20,14 @@ describe('DeleteStrategyUseCase', () => {
     let strategyId: StrategyId;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
     const title = StrategyTitle.create('전략 생성 테스트');
     const map = PubgMap.ERANGEL;
 
     beforeEach(() => {
         mockStrategyRepository = getStrategyRepositoryMocking();
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         useCase = new DeleteStrategyUseCase(mockStrategyRepository);

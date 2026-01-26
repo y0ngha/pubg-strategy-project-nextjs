@@ -26,6 +26,7 @@ describe('GetStrategyUseCase', () => {
     const viewerId = UserId.generate();
     const strangerId = UserId.generate();
 
+    const ownerEmail = Email.create('test@domain.com');
     const editorEmail = Email.create('editor@test.com');
     const viewerEmail = Email.create('viewer@test.com');
 
@@ -42,7 +43,7 @@ describe('GetStrategyUseCase', () => {
             strategyMapper
         );
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addStrategyShare(

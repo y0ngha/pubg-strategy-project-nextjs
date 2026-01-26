@@ -13,6 +13,7 @@ import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('DeleteCircleUseCase', () => {
     let useCase: DeleteCircleUseCase;
@@ -20,6 +21,7 @@ describe('DeleteCircleUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let circleId: CircleId;
@@ -32,7 +34,7 @@ describe('DeleteCircleUseCase', () => {
 
         useCase = new DeleteCircleUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addCircle(ownerId, CirclePhase.create(1));

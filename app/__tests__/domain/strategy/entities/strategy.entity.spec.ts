@@ -173,6 +173,7 @@ describe('Strategy', () => {
         strategyFixture = Strategy.reconstruct(
             StrategyId.generate(),
             ownerId,
+            ownerEmail,
             defaultTitle,
             defaultMap,
             [
@@ -207,7 +208,12 @@ describe('Strategy', () => {
     describe('Create', () => {
         it('최초 생성시 기본값이 잘 들어간 채로 생성된다.', () => {
             // when
-            const strategy = Strategy.create(ownerId, defaultTitle, defaultMap);
+            const strategy = Strategy.create(
+                ownerId,
+                ownerEmail,
+                defaultTitle,
+                defaultMap
+            );
 
             // then
             expect(strategy.title).toBe(defaultTitle);
@@ -258,6 +264,7 @@ describe('Strategy', () => {
             const strategy = Strategy.reconstruct(
                 StrategyId.generate(),
                 ownerId,
+                ownerEmail,
                 defaultTitle,
                 defaultMap,
                 teamPlayers,
@@ -289,7 +296,12 @@ describe('Strategy', () => {
     describe('Delete', () => {
         it('삭제가 되지 않은 객체이고, 전략 소유주라면 삭제된다.', () => {
             // give
-            const strategy = Strategy.create(ownerId, defaultTitle, defaultMap);
+            const strategy = Strategy.create(
+                ownerId,
+                ownerEmail,
+                defaultTitle,
+                defaultMap
+            );
 
             // when
             strategy.delete(ownerId);
@@ -300,7 +312,12 @@ describe('Strategy', () => {
 
         it('전략 소유주가 아니면 에러를 던진다.', () => {
             // give
-            const strategy = Strategy.create(ownerId, defaultTitle, defaultMap);
+            const strategy = Strategy.create(
+                ownerId,
+                ownerEmail,
+                defaultTitle,
+                defaultMap
+            );
 
             // when & then
             expect(() => strategy.delete(editorId)).toThrow(
@@ -316,7 +333,12 @@ describe('Strategy', () => {
 
         it('이미 삭제된 객체라면, 에러를 던진다.', () => {
             // give
-            const strategy = Strategy.create(ownerId, defaultTitle, defaultMap);
+            const strategy = Strategy.create(
+                ownerId,
+                ownerEmail,
+                defaultTitle,
+                defaultMap
+            );
             strategy.delete(ownerId);
 
             // when & then
@@ -362,6 +384,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -384,6 +407,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -441,6 +465,7 @@ describe('Strategy', () => {
                 // give
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -1078,6 +1103,7 @@ describe('Strategy', () => {
 
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -1347,6 +1373,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -1376,6 +1403,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -1394,6 +1422,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -2162,6 +2191,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -2186,6 +2216,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );
@@ -2205,6 +2236,7 @@ describe('Strategy', () => {
                 // given
                 const strategy = Strategy.create(
                     ownerId,
+                    ownerEmail,
                     defaultTitle,
                     defaultMap
                 );

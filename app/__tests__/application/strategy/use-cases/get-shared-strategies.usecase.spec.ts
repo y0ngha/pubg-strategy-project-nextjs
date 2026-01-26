@@ -23,6 +23,7 @@ describe('GetSharedStrategiesUseCase', () => {
     const myId = UserId.generate();
     const myEmail = Email.create('test@domain.com');
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     const title1 = StrategyTitle.create('전략 제목');
     const title2 = StrategyTitle.create('가나라');
@@ -40,14 +41,14 @@ describe('GetSharedStrategiesUseCase', () => {
             strategyMapper
         );
 
-        strategyFixture1 = Strategy.create(ownerId, title2, map);
+        strategyFixture1 = Strategy.create(ownerId, ownerEmail, title2, map);
         strategyFixture1.addStrategyShare(
             ownerId,
             myId,
             myEmail,
             StrategySharePermission.EDITABLE
         );
-        strategyFixture2 = Strategy.create(ownerId, title1, map);
+        strategyFixture2 = Strategy.create(ownerId, ownerEmail, title1, map);
         strategyFixture2.addStrategyShare(
             ownerId,
             myId,
@@ -57,7 +58,7 @@ describe('GetSharedStrategiesUseCase', () => {
 
         jest.advanceTimersByTime(1000 * 60 * 60);
 
-        strategyFixture3 = Strategy.create(ownerId, title1, map);
+        strategyFixture3 = Strategy.create(ownerId, ownerEmail, title1, map);
         strategyFixture3.addStrategyShare(
             ownerId,
             myId,
@@ -67,7 +68,7 @@ describe('GetSharedStrategiesUseCase', () => {
 
         jest.advanceTimersByTime(1000 * 60 * 60);
 
-        strategyFixture4 = Strategy.create(ownerId, title2, map);
+        strategyFixture4 = Strategy.create(ownerId, ownerEmail, title2, map);
         strategyFixture4.addStrategyShare(
             ownerId,
             myId,
@@ -75,7 +76,7 @@ describe('GetSharedStrategiesUseCase', () => {
             StrategySharePermission.READ_ONLY
         );
 
-        strategyFixture5 = Strategy.create(ownerId, title3, map);
+        strategyFixture5 = Strategy.create(ownerId, ownerEmail, title3, map);
         strategyFixture5.addStrategyShare(
             ownerId,
             myId,
@@ -88,15 +89,18 @@ describe('GetSharedStrategiesUseCase', () => {
         jest.useRealTimers();
     });
 
-    it('내 전략을 조회하며, [최신순 -> 이름순]으로 정렬하여 반환한다.', async () => {
+    it('공유받은 전략을 조회한다.', async () => {
         // given
-        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue([
-            strategyFixture1,
-            strategyFixture2,
-            strategyFixture3,
-            strategyFixture4,
-            strategyFixture5,
-        ]);
+        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [
+                strategyFixture1,
+                strategyFixture2,
+                strategyFixture3,
+                strategyFixture4,
+                strategyFixture5,
+            ],
+        });
 
         const dto = {
             actorId: myId.toString(),
@@ -108,23 +112,24 @@ describe('GetSharedStrategiesUseCase', () => {
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(5);
+        expect(strategies.data).toHaveLength(5);
 
         const expectedIds = [
-            strategyFixture4.id.toString(),
-            strategyFixture5.id.toString(),
-            strategyFixture3.id.toString(),
             strategyFixture1.id.toString(),
             strategyFixture2.id.toString(),
+            strategyFixture3.id.toString(),
+            strategyFixture4.id.toString(),
+            strategyFixture5.id.toString(),
         ];
-        expect(strategies.map(s => s.id)).toEqual(expectedIds);
+        expect(strategies.data.map(s => s.id)).toEqual(expectedIds);
     });
 
     it('조회된 전략이 하나도 없는 경우 빈 배열을 반환한다.', async () => {
         // given
-        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue(
-            []
-        );
+        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [],
+        });
 
         const dto = {
             actorId: myId.toString(),
@@ -136,7 +141,7 @@ describe('GetSharedStrategiesUseCase', () => {
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(0);
+        expect(strategies.data).toHaveLength(0);
     });
 
     it('예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {

@@ -10,6 +10,7 @@ import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('CreateCircleUseCase', () => {
     let useCase: CreateCircleUseCase;
@@ -17,6 +18,7 @@ describe('CreateCircleUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
 
@@ -28,7 +30,7 @@ describe('CreateCircleUseCase', () => {
 
         useCase = new CreateCircleUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
     });
 

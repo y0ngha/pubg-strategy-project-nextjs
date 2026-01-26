@@ -29,6 +29,7 @@ describe('CreateStrategyShareUseCase', () => {
     let userFixture: User;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let targetUserId: UserId;
@@ -46,7 +47,7 @@ describe('CreateStrategyShareUseCase', () => {
             mockUserRepository
         );
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         userFixture = User.createWithEmail(

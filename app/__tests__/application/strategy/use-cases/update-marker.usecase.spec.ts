@@ -14,6 +14,7 @@ import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('UpdateMarkerUseCase', () => {
     let useCase: UpdateMarkerUseCase;
@@ -21,6 +22,7 @@ describe('UpdateMarkerUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
@@ -36,7 +38,7 @@ describe('UpdateMarkerUseCase', () => {
 
         useCase = new UpdateMarkerUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addTeamPlayer(ownerId);

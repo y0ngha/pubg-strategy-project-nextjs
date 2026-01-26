@@ -12,6 +12,7 @@ import { ZodError } from 'zod';
 import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('UpdateStrategyUseCase', () => {
     let useCase: UpdateStrategyUseCase;
@@ -19,6 +20,7 @@ describe('UpdateStrategyUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
 
@@ -30,7 +32,12 @@ describe('UpdateStrategyUseCase', () => {
 
         useCase = new UpdateStrategyUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, initialTitle, initialMap);
+        strategyFixture = Strategy.create(
+            ownerId,
+            ownerEmail,
+            initialTitle,
+            initialMap
+        );
         strategyId = strategyFixture.id;
     });
 

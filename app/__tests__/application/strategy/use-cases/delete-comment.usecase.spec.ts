@@ -34,7 +34,7 @@ describe('DeleteCommentUseCase', () => {
 
         useCase = new DeleteCommentUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addComment(

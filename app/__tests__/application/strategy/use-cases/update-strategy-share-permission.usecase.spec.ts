@@ -21,6 +21,8 @@ describe('UpdateStrategySharePermissionUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
+
     const tagetUserId = UserId.generate();
     const tagetUserEmail = Email.create('test@domain.com');
 
@@ -37,7 +39,7 @@ describe('UpdateStrategySharePermissionUseCase', () => {
             mockStrategyRepository
         );
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addStrategyShare(

@@ -14,6 +14,7 @@ import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('UpdateWaypointUseCase', () => {
     let useCase: UpdateWaypointUseCase;
@@ -21,6 +22,7 @@ describe('UpdateWaypointUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
@@ -55,7 +57,7 @@ describe('UpdateWaypointUseCase', () => {
 
         useCase = new UpdateWaypointUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addTeamPlayer(ownerId);
