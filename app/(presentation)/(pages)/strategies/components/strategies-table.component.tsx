@@ -75,6 +75,11 @@ function StrategiesTable<
         estimateSize: () => 73,
         getScrollElement: () => tableContainerRef.current,
         overscan: 5,
+        measureElement:
+            typeof window !== 'undefined' &&
+            navigator.userAgent.indexOf('Firefox') === -1
+                ? element => element.getBoundingClientRect().height
+                : undefined,
     });
 
     const items = virtualizer.getVirtualItems();
@@ -135,13 +140,9 @@ function StrategiesTable<
                         <Table.Row
                             key={strategy.id}
                             className={`flex`}
-                            data-id={item.index}
+                            data-index={item.index}
+                            ref={virtualizer.measureElement}
                             style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: `${item.size}px`,
                                 transform: `translateY(${item.start}px)`,
                             }}
                         >
