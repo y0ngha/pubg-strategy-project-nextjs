@@ -73,7 +73,7 @@ function Dropdown({ children }: { children: ReactNode }) {
         <DropdownContext.Provider value={{ open, setOpen }}>
             <div
                 ref={containerRef}
-                className={'relative inline-block text-left'}
+                className={'relative inline-block cursor-pointer text-left'}
             >
                 {children}
             </div>
