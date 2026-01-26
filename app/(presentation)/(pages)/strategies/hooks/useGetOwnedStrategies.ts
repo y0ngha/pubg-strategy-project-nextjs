@@ -41,6 +41,7 @@ export function useGetOwnedStrategies(
                     '유저 고유 식별자를 불러오지 못했습니다.'
                 );
             }
+
             return await getOwnedStrategiesAction(
                 user?.id,
                 pageParam as number,
