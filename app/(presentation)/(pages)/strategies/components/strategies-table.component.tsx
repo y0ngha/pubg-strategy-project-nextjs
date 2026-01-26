@@ -15,6 +15,7 @@ import {
     InfiniteData,
     InfiniteQueryObserverResult,
 } from '@tanstack/query-core';
+import { toYyyyMmDdHhMmString } from '@/(presentation)/shared/helpers/date.helper';
 
 const CellStyles = {
     title: 'flex items-center flex-3',
@@ -63,7 +64,7 @@ function StrategiesTable<
                       map: item.map as StrategiesBoardMap,
                       title: item.title,
                       author: item.ownerEmail,
-                      updatedAt: item.updatedAt.toLocaleString(),
+                      updatedAt: toYyyyMmDdHhMmString(item.updatedAt),
                   };
               });
           })
