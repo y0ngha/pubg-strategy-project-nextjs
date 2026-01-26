@@ -84,8 +84,6 @@ function StrategiesTable<
 
     const items = virtualizer.getVirtualItems();
 
-    const bodyHeight = 73;
-
     useEffect(() => {
         const lastItem = items[items.length - 3];
         if (!lastItem) return;
@@ -131,7 +129,7 @@ function StrategiesTable<
 
             <Table.Body
                 className={`relative flex flex-col`}
-                style={{ height: `${bodyHeight}px` }}
+                style={{ height: `${virtualizer.getTotalSize()}px` }}
             >
                 {items.map(item => {
                     const strategy = strategies[item.index];
