@@ -100,6 +100,7 @@ export type ChildCommentResponseDto = Omit<
 export interface GetStrategyResponseDto {
     id: string;
     ownerId: string;
+    ownerEmail: string;
     title: string;
     map: string;
 

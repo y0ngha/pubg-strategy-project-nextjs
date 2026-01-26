@@ -37,6 +37,7 @@ export class StrategyMapper {
         return {
             id: entity.id.toString(),
             ownerId: entity.ownerId.toString(),
+            ownerEmail: entity.ownerEmail.toString(),
             title: entity.title.value,
             map: PubgMapNames[entity.map],
 
