@@ -7,4 +7,6 @@ export const Route = {
     LOGIN: '/login',
     REGISTER: '/register',
     MYPAGE: '/mypage',
+
+    STRATEGIES_NEW: '/strategies/new',
 };

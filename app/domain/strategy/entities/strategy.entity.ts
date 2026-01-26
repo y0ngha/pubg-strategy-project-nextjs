@@ -63,6 +63,7 @@ export class Strategy {
     private constructor(
         public readonly id: StrategyId,
         public readonly ownerId: UserId,
+        public readonly ownerEmail: Email,
         private _title: StrategyTitle,
         private _map: PubgMap,
         private _teamPlayers: TeamPlayer[],
@@ -132,10 +133,16 @@ export class Strategy {
     /**
      * Factory Methods
      */
-    static create(ownerId: UserId, title: StrategyTitle, map: PubgMap) {
+    static create(
+        ownerId: UserId,
+        ownerEmail: Email,
+        title: StrategyTitle,
+        map: PubgMap
+    ) {
         return new Strategy(
             StrategyId.generate(),
             ownerId,
+            ownerEmail,
             title,
             map,
             [
@@ -162,6 +169,7 @@ export class Strategy {
     static reconstruct(
         id: StrategyId,
         ownerId: UserId,
+        ownerEmail: Email,
         title: StrategyTitle,
         map: PubgMap,
         teamPlayers: TeamPlayer[],
@@ -178,6 +186,7 @@ export class Strategy {
         return new Strategy(
             id,
             ownerId,
+            ownerEmail,
             title,
             map,
             [...teamPlayers],

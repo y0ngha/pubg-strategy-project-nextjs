@@ -4,27 +4,10 @@ import Link from 'next/link';
 import MapBadge from '@/(presentation)/shared/components/map-badge.component';
 import { ReactNode } from 'react';
 import { Route } from '@/(presentation)/shared/constants/route';
-
-type StrategiesBoardMap =
-    | 'erangel'
-    | 'miramar'
-    | 'sanhok'
-    | 'taego'
-    | 'vikendi'
-    | 'rondo'
-    | 'karakin'
-    | 'haven'
-    | 'deston';
-
-interface Strategy {
-    id: string;
-    map: StrategiesBoardMap;
-    title: string;
-    author: string;
-}
+import { StrategyPost } from '@/(presentation)/shared/types/strategy';
 
 interface StrategiesBoardProps {
-    strategies: Strategy[];
+    strategies: StrategyPost[];
 }
 
 function StrategiesBoardTitle({ children }: { children: ReactNode }) {
@@ -62,7 +45,7 @@ function StrategiesBoardHeader() {
     );
 }
 
-function StrategiesBoardMapCell({ map }: Pick<Strategy, 'map'>) {
+function StrategiesBoardMapCell({ map }: Pick<StrategyPost, 'map'>) {
     return (
         <div className={'w-1/5'}>
             <MapBadge map={map} className={'text-sm'}>
@@ -99,7 +82,12 @@ function StrategiesBoardAuthorCell({ children }: { children: ReactNode }) {
 /**
  * TODO 나중에 Link 보낼 때 id 써서 전략 상세로 보내기
  */
-function StrategiesBoardRow({ id, map, title, author }: Strategy) {
+function StrategiesBoardRow({
+    id,
+    map,
+    title,
+    author,
+}: Omit<StrategyPost, 'updatedAt'>) {
     return (
         <li
             className={

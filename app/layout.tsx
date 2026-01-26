@@ -40,7 +40,7 @@ export default async function RootLayout({
                 <Navigation />
                 <ReactQueryProviders>
                     <UserDehydrate>
-                        <main>{children}</main>
+                        <main className={'w-full flex-1'}>{children}</main>
                     </UserDehydrate>
                 </ReactQueryProviders>
 

@@ -12,6 +12,7 @@ import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('AddMarkerUseCase', () => {
     let useCase: AddMarkerUseCase;
@@ -19,6 +20,7 @@ describe('AddMarkerUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
@@ -34,7 +36,7 @@ describe('AddMarkerUseCase', () => {
 
         useCase = new AddMarkerUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addTeamPlayer(ownerId);

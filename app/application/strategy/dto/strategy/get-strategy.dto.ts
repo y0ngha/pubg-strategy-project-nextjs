@@ -19,12 +19,16 @@ export const GetStrategyRequestSchema = z.object({
 
 export interface GetStrategiesRequestDto {
     actorId: string;
+    page: number;
+    limit: number;
 }
 
 export const GetStrategiesRequestSchema = z.object({
     actorId: z.string().transform(value => {
         return UserId.create(value);
     }),
+    page: z.number(),
+    limit: z.number(),
 });
 
 export interface WaypointResponseDto {
@@ -96,6 +100,7 @@ export type ChildCommentResponseDto = Omit<
 export interface GetStrategyResponseDto {
     id: string;
     ownerId: string;
+    ownerEmail: string;
     title: string;
     map: string;
 

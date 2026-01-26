@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
-import React, { useId } from 'react';
+import React, { Ref, useId } from 'react';
 import { useSafetyContext } from '@/(presentation)/shared/hooks/useSafetyContext';
 
 type TableRowId = string;
@@ -15,17 +15,28 @@ const TableContext = React.createContext<TableContextValue | undefined>(
     undefined
 );
 
-interface TableProps extends React.ComponentProps<'table'>, TableContextValue {}
+interface TableProps extends React.ComponentProps<'table'>, TableContextValue {
+    containerRef?: Ref<HTMLDivElement>;
+    containerClassName?: string;
+}
 
 function Table({
     onRowClick,
     clickable = true,
     className,
+    containerRef,
+    containerClassName,
     ...props
 }: TableProps) {
     return (
         <TableContext.Provider value={{ onRowClick, clickable }}>
-            <div className="relative w-full overflow-auto">
+            <div
+                className={cn(
+                    'relative w-full overflow-auto',
+                    containerClassName
+                )}
+                ref={containerRef}
+            >
                 <table
                     className={cn('w-full caption-bottom text-sm', className)}
                     {...props}

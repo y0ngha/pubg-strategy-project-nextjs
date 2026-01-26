@@ -14,9 +14,10 @@ export class CreateStrategyUseCase {
     ) {}
 
     async execute(dto: CreateStrategyRequestDto): Promise<boolean> {
-        const { actorId, title, map } = CreateStrategyRequestSchema.parse(dto);
+        const { actorId, actorEmail, title, map } =
+            CreateStrategyRequestSchema.parse(dto);
 
-        const strategy = Strategy.create(actorId, title, map);
+        const strategy = Strategy.create(actorId, actorEmail, title, map);
 
         await this.strategyRepository.save(strategy);
 

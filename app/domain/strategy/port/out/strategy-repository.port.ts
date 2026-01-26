@@ -13,11 +13,17 @@ export abstract class StrategyRepositoryPort {
         userId: UserId,
         page: number,
         limit: number
-    ): Promise<Strategy[]>;
+    ): Promise<{
+        hasNextPage: boolean;
+        data: Strategy[];
+    }>;
 
     abstract findSharedStrategiesByUserID(
         userId: UserId,
         page: number,
         limit: number
-    ): Promise<Strategy[]>;
+    ): Promise<{
+        hasNextPage: boolean;
+        data: Strategy[];
+    }>;
 }

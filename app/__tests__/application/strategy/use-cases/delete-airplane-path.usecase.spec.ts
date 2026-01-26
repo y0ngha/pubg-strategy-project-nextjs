@@ -11,6 +11,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('DeleteAirplanePathUseCase', () => {
     let useCase: DeleteAirplanePathUseCase;
@@ -18,6 +19,7 @@ describe('DeleteAirplanePathUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
 
@@ -29,7 +31,7 @@ describe('DeleteAirplanePathUseCase', () => {
 
         useCase = new DeleteAirplanePathUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addAirplanePath(

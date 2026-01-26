@@ -10,6 +10,7 @@ describe('CreateStrategyUseCase', () => {
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
 
     const ownerId = UserId.generate();
+    const ownerEmail = 'test@domain.com';
     const title = StrategyTitle.create('전략 생성 테스트');
     const map = PubgMap.ERANGEL;
 
@@ -23,6 +24,7 @@ describe('CreateStrategyUseCase', () => {
         // given
         const dto = {
             actorId: ownerId.toString(),
+            actorEmail: ownerEmail,
             title: title.toString(),
             map: map,
         };
@@ -38,6 +40,7 @@ describe('CreateStrategyUseCase', () => {
         expect(savedStrategy.title.toString()).toEqual(dto.title);
         expect(savedStrategy.map).toEqual(dto.map);
         expect(savedStrategy.ownerId.toString()).toEqual(dto.actorId);
+        expect(savedStrategy.ownerEmail.toString()).toEqual(dto.actorEmail);
     });
 
     it('예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
@@ -48,6 +51,7 @@ describe('CreateStrategyUseCase', () => {
 
         const dto = {
             actorId: ownerId.toString(),
+            actorEmail: ownerEmail,
             title: title.toString(),
             map: map,
         };

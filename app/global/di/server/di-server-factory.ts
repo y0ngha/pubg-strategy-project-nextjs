@@ -47,7 +47,9 @@ import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/del
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
 import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
-import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import {
+    UpdateStrategySharePermissionUseCase
+} from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
@@ -57,6 +59,9 @@ import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-pla
 import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/add-waypoint.usecase';
 import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
 import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
+import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
+import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
+import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
 
 /**
  * User
@@ -149,7 +154,10 @@ const strategyUseCases: ClassDependency[] = [
     { class: AddWaypointUseCase },
     { class: DeleteWaypointUseCase },
     { class: UpdateWaypointUseCase },
+    { class: GetOwnedStrategiesUseCase },
+    { class: GetSharedStrategiesUseCase },
 ];
+const strategyServices: ClassDependency[] = [{ class: StrategyMapper }];
 
 const dependencyInjectedClasses: ClassDependency[] = [
     ...userRepositories,
@@ -159,6 +167,7 @@ const dependencyInjectedClasses: ClassDependency[] = [
     ...friendUseCases,
     ...strategyRepositories,
     ...strategyUseCases,
+    ...strategyServices,
 ];
 
 const dependencyInjectedValues: ValueDependency = {} as const;

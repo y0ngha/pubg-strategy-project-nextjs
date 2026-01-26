@@ -3,7 +3,10 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { saveTokens } from '@/(presentation)/user/services/token.service';
+import {
+    saveTokens,
+    saveUserId,
+} from '@/(presentation)/user/services/authentication-save.service';
 
 export type LoginWithEmailAction = { id: string; email: string };
 
@@ -36,6 +39,7 @@ export async function loginWithEmailAction(
         const { accessToken, refreshToken, user } = await useCase.execute(dto);
 
         await saveTokens(accessToken, refreshToken);
+        await saveUserId(user.id);
 
         return {
             id: user.id,

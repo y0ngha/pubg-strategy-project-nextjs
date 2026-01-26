@@ -2,25 +2,25 @@ import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repos
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
-import { Email } from '@domain/shared/value-objects/email';
-import { GetStrategiesUseCase } from '@/application/strategy/use-cases/get-strategies.usecase';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
+import { Email } from '@domain/shared/value-objects/email';
 
-describe('GetStrategiesUseCase', () => {
-    let useCase: GetStrategiesUseCase;
+describe('GetOwnedStrategiesUseCase', () => {
+    let useCase: GetOwnedStrategiesUseCase;
     let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
     const strategyMapper = new StrategyMapper();
 
-    let strategyFixture: Strategy;
-    let sharedStrategyFixture1: Strategy;
-    let sharedStrategyFixture2: Strategy;
+    let strategyFixture1: Strategy;
+    let strategyFixture2: Strategy;
+    let strategyFixture3: Strategy;
+    let strategyFixture4: Strategy;
+    let strategyFixture5: Strategy;
 
     const myId = UserId.generate();
     const myEmail = Email.create('test@domain.com');
-    const strangerId = UserId.generate();
 
     const title1 = StrategyTitle.create('전략 제목');
     const title2 = StrategyTitle.create('가나라');
@@ -33,95 +33,96 @@ describe('GetStrategiesUseCase', () => {
 
         mockStrategyRepository = getStrategyRepositoryMocking();
 
-        useCase = new GetStrategiesUseCase(
+        useCase = new GetOwnedStrategiesUseCase(
             mockStrategyRepository,
             strategyMapper
         );
 
-        strategyFixture = Strategy.create(myId, title1, map);
+        strategyFixture1 = Strategy.create(myId, myEmail, title2, map);
+        strategyFixture2 = Strategy.create(myId, myEmail, title1, map);
 
-        jest.advanceTimersByTime(3600000);
+        jest.advanceTimersByTime(1000 * 60 * 60);
 
-        sharedStrategyFixture1 = Strategy.create(strangerId, title2, map);
-        sharedStrategyFixture2 = Strategy.create(strangerId, title3, map);
+        strategyFixture3 = Strategy.create(myId, myEmail, title1, map);
 
-        sharedStrategyFixture1.addStrategyShare(
-            strangerId,
-            myId,
-            myEmail,
-            StrategySharePermission.READ_ONLY
-        );
-        sharedStrategyFixture2.addStrategyShare(
-            strangerId,
-            myId,
-            myEmail,
-            StrategySharePermission.EDITABLE
-        );
+        jest.advanceTimersByTime(1000 * 60 * 60);
+
+        strategyFixture4 = Strategy.create(myId, myEmail, title2, map);
+        strategyFixture5 = Strategy.create(myId, myEmail, title3, map);
     });
 
     afterEach(() => {
         jest.useRealTimers();
     });
 
-    it('내 전략과 공유받은 전략을 합쳐서 조회하며, [최신순 -> 이름순]으로 정렬하여 반환한다.', async () => {
+    it('내 전략을 조회한다.', async () => {
         // given
-        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue([
-            strategyFixture,
-        ]);
-        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue([
-            sharedStrategyFixture1,
-            sharedStrategyFixture2,
-        ]);
+        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [
+                strategyFixture1,
+                strategyFixture2,
+                strategyFixture3,
+                strategyFixture4,
+                strategyFixture5,
+            ],
+        });
 
         const dto = {
             actorId: myId.toString(),
+            page: 1,
+            limit: 100,
         };
 
         // when
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(3);
+        expect(strategies.data).toHaveLength(5);
 
-        const expectedTitles = [
-            title2.toString(),
-            title3.toString(),
-            title1.toString(),
+        const expectedIds = [
+            strategyFixture1.id.toString(),
+            strategyFixture2.id.toString(),
+            strategyFixture3.id.toString(),
+            strategyFixture4.id.toString(),
+            strategyFixture5.id.toString(),
         ];
-        expect(strategies.map(s => s.title)).toEqual(expectedTitles);
+        expect(strategies.data.map(s => s.id)).toEqual(expectedIds);
     });
 
     it('조회된 전략이 하나도 없는 경우 빈 배열을 반환한다.', async () => {
         // given
-        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue(
-            []
-        );
-        mockStrategyRepository.findSharedStrategiesByUserID.mockResolvedValue(
-            []
-        );
+        mockStrategyRepository.findOwnedStrategiesByUserID.mockResolvedValue({
+            hasNextPage: false,
+            data: [],
+        });
 
         const dto = {
             actorId: myId.toString(),
+            page: 1,
+            limit: 100,
         };
 
         // when
         const strategies = await useCase.execute(dto);
 
         // then
-        expect(strategies).toHaveLength(0);
+        expect(strategies.data).toHaveLength(0);
     });
 
     it('예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // given
         jest.spyOn(
             mockStrategyRepository,
-            'findSharedStrategiesByUserID'
+            'findOwnedStrategiesByUserID'
         ).mockImplementation(() => {
             throw new Error();
         });
 
         const dto = {
             actorId: myId.toString(),
+            page: 1,
+            limit: 100,
         };
 
         //when & then

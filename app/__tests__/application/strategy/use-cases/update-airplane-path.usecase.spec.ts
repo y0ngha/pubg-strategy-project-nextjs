@@ -11,6 +11,7 @@ import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airp
 import { Position } from '@domain/strategy/value-objects/position';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('UpdateAirplanePathUseCase', () => {
     let useCase: UpdateAirplanePathUseCase;
@@ -18,6 +19,7 @@ describe('UpdateAirplanePathUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
 
@@ -29,7 +31,7 @@ describe('UpdateAirplanePathUseCase', () => {
 
         useCase = new UpdateAirplanePathUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyFixture.addAirplanePath(
             ownerId,
             Position.create(1000, 1000),

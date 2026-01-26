@@ -14,6 +14,7 @@ import { ZodError } from 'zod';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('UpdateCircleUseCase', () => {
     let useCase: UpdateCircleUseCase;
@@ -21,6 +22,7 @@ describe('UpdateCircleUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
     let circleId: CircleId;
@@ -33,7 +35,7 @@ describe('UpdateCircleUseCase', () => {
 
         useCase = new UpdateCircleUseCase(mockStrategyRepository);
 
-        strategyFixture = Strategy.create(ownerId, title, map);
+        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
         strategyFixture.addCircle(ownerId, CirclePhase.create(1));
