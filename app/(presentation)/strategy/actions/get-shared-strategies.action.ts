@@ -5,7 +5,10 @@ import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentica
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
 
-export type GetSharedStrategiesAction = GetStrategyResponseDto[];
+export type GetSharedStrategiesAction = {
+    hasNextPage: boolean;
+    data: GetStrategyResponseDto[];
+};
 
 export async function getSharedStrategiesAction(
     userId: string,
@@ -28,7 +31,8 @@ export async function getSharedStrategiesAction(
         const strategies = await useCase.execute(dto);
 
         return {
-            ...strategies,
+            hasNextPage: strategies.hasNextPage,
+            data: [...strategies.data],
         };
     } catch (e) {
         throw e;
