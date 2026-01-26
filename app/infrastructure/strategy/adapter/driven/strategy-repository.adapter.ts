@@ -20,7 +20,10 @@ export class StrategyRepositoryAdapter extends StrategyRepositoryPort {
         userId: UserId,
         page: number,
         limit: number
-    ): Promise<Strategy[]> {
+    ): Promise<{
+        hasNextPage: boolean;
+        data: Strategy[];
+    }> {
         throw new Error('Not Implemented.');
     }
 
@@ -28,7 +31,10 @@ export class StrategyRepositoryAdapter extends StrategyRepositoryPort {
         userId: UserId,
         page: number,
         limit: number
-    ): Promise<Strategy[]> {
+    ): Promise<{
+        hasNextPage: boolean;
+        data: Strategy[];
+    }> {
         throw new Error('Not Implemented.');
     }
 }
