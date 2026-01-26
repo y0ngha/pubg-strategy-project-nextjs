@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 function StrategiesTabContent({ children }: { children: ReactNode }) {
-    return <div className={'h-full w-full'}>{children}</div>;
+    return <>{children}</>;
 }
 
 StrategiesTabContent.displayName = 'StrategiesTabContent';
