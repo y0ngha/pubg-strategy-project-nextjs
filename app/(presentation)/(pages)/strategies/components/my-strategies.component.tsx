@@ -1,117 +1,21 @@
 'use client';
 
-import {
-    StrategiesBoardMap,
-    StrategyPost,
-} from '@/(presentation)/shared/types/strategy';
+import { useGetOwnedStrategies } from '@/(presentation)/(pages)/strategies/hooks/useGetOwnedStrategies';
 import StrategiesTable from '@/(presentation)/(pages)/strategies/components/strategies-table.component';
 
 function MyStrategies() {
-    const stratiges: StrategyPost[] = (
-        [
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-            'vikendi',
-            'rondo',
-            'karakin',
-            'haven',
-            'deston',
-            'erangel',
-            'miramar',
-            'sanhok',
-            'taego',
-        ] as StrategiesBoardMap[]
-    ).map((map, index) => {
-        return {
-            id: index.toString(),
-            map: map,
-            author: 'Player',
-            title: `${map.toUpperCase()} 전략`,
-            updatedAt: '2026.01.01 10:00',
-        };
-    });
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+        useGetOwnedStrategies(15);
 
-    return <StrategiesTable strategies={stratiges} />;
+    return (
+        <StrategiesTable
+            data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            isOwned={true}
+        />
+    );
 }
 
 MyStrategies.displayName = 'MyStrategies';
