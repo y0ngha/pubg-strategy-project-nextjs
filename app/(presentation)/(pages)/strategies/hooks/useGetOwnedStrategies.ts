@@ -9,6 +9,7 @@ import {
     getOwnedStrategiesAction,
 } from '@/(presentation)/strategy/actions/get-owned-strategies.action';
 import { InfiniteData, type QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useGetOwnedStrategies(
     limit?: number,
@@ -30,10 +31,8 @@ export function useGetOwnedStrategies(
         | 'initialPageParam'
     >
 ): UseInfiniteQueryResult<InfiniteData<GetOwnedStrategiesAction>, Error> {
-    // const { data: user } = useGetCurrentUser();
-    const user = {
-        id: 'bf89ed6c-bed6-4898-9421-1d33acccaf04',
-    };
+    const { data: user } = useGetCurrentUser();
+
     return useInfiniteQuery<
         GetOwnedStrategiesAction,
         Error,
