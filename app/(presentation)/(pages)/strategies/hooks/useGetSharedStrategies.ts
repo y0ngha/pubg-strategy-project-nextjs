@@ -9,7 +9,7 @@ import {
     getSharedStrategiesAction,
     GetSharedStrategiesAction,
 } from '@/(presentation)/strategy/actions/get-shared-strategies.action';
-import { InfiniteData } from '@tanstack/query-core';
+import { InfiniteData, type QueryKey } from '@tanstack/query-core';
 
 export function useGetSharedStrategies(
     limit?: number,
@@ -17,7 +17,9 @@ export function useGetSharedStrategies(
         UseInfiniteQueryOptions<
             GetSharedStrategiesAction,
             Error,
-            InfiniteData<GetSharedStrategiesAction>
+            InfiniteData<GetSharedStrategiesAction>,
+            QueryKey,
+            number
         >,
         | 'queryKey'
         | 'queryFn'
@@ -31,7 +33,13 @@ export function useGetSharedStrategies(
 ): UseInfiniteQueryResult<InfiniteData<GetSharedStrategiesAction>, Error> {
     const user = useGetCurrentUser();
 
-    return useInfiniteQuery({
+    return useInfiniteQuery<
+        GetSharedStrategiesAction,
+        Error,
+        InfiniteData<GetSharedStrategiesAction>,
+        QueryKey,
+        number
+    >({
         queryKey: [user.data?.id, ReactQueryKeys.SHARED_STRATIGES],
         queryFn: async ({ pageParam }) => {
             if (user.data?.id === undefined) {
@@ -49,9 +57,8 @@ export function useGetSharedStrategies(
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24,
         retry: false,
-        getNextPageParam: lastPage => {
-            // TODO 아직 구현 안됨 -> 서버에서 어떻게 주는지 확인 필요
-            return undefined;
+        getNextPageParam: (lastPage, _, lastPageParam) => {
+            return lastPage.hasNextPage ? lastPageParam + 1 : undefined;
         },
         initialPageParam: 1,
         ...options,
