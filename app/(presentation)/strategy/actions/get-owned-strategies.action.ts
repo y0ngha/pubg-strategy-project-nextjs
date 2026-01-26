@@ -3,6 +3,7 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type GetOwnedStrategiesAction = {
     hasNextPage: boolean;
@@ -16,7 +17,7 @@ export async function getOwnedStrategiesAction(
 ): Promise<GetOwnedStrategiesAction> {
     const getService = initializeRequestServices();
 
-    // await ensureAuthentication();
+    await ensureAuthentication();
 
     try {
         const useCase = getService(GetOwnedStrategiesUseCase);
