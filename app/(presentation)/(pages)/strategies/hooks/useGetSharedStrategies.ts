@@ -44,9 +44,10 @@ export function useGetSharedStrategies(
         queryFn: async ({ pageParam }) => {
             if (user.data?.id === undefined) {
                 return Promise.reject(
-                    '유저 고유 식별자를 불러오지 못했습니다.'
+                    new Error('유저 고유 식별자를 불러오지 못했습니다.')
                 );
             }
+
             return await getSharedStrategiesAction(
                 user.data?.id,
                 pageParam as number,

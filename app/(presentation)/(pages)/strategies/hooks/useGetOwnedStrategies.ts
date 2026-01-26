@@ -44,7 +44,7 @@ export function useGetOwnedStrategies(
         queryFn: async ({ pageParam }) => {
             if (user?.id === undefined) {
                 return Promise.reject(
-                    '유저 고유 식별자를 불러오지 못했습니다.'
+                    new Error('유저 고유 식별자를 불러오지 못했습니다.')
                 );
             }
 
