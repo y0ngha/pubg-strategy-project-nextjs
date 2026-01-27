@@ -2,6 +2,7 @@ import HomePageLayout from '@/(presentation)/(pages)/(home)/components/home-page
 import HomeHero from '@/(presentation)/(pages)/(home)/components/home-hero.component';
 import RankerBoard from '@/(presentation)/(pages)/(home)/components/ranker-board.component';
 import StrategiesBoard from '@/(presentation)/(pages)/(home)/components/strategies-board.component';
+import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
 
 /**
  * Test용 Fixture
@@ -84,46 +85,6 @@ const TOP_RANKERS: {
         kd: 2.9,
     },
 ];
-const STRATEGIES: {
-    id: string;
-    map:
-        | 'erangel'
-        | 'miramar'
-        | 'sanhok'
-        | 'taego'
-        | 'vikendi'
-        | 'rondo'
-        | 'karakin'
-        | 'haven'
-        | 'deston';
-    title: string;
-    author: string;
-}[] = [
-    {
-        id: '1',
-        title: '1번 전략',
-        map: 'erangel',
-        author: 'Player',
-    },
-    {
-        id: '2',
-        title: '2번 전략',
-        map: 'taego',
-        author: 'Player',
-    },
-    {
-        id: '3',
-        title: '3번 전략',
-        map: 'miramar',
-        author: 'Player',
-    },
-    {
-        id: '4',
-        title: '4번 전략',
-        map: 'sanhok',
-        author: 'Player',
-    },
-];
 
 export default function Home() {
     return (
@@ -135,7 +96,9 @@ export default function Home() {
                         <RankerBoard rankers={TOP_RANKERS} />
                     </div>
                     <div className={'flex-1'}>
-                        <StrategiesBoard strategies={STRATEGIES} />
+                        <StrategiesDehydrate>
+                            <StrategiesBoard />
+                        </StrategiesDehydrate>
                     </div>
                 </>
             }

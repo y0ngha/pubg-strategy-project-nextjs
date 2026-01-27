@@ -4,10 +4,7 @@ import Table from '@/(presentation)/shared/components/table.component';
 import MapBadge from '@/(presentation)/shared/components/map-badge.component';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import StrategyActionMenu from '@/(presentation)/(pages)/strategies/components/strategy-action-menu.component';
-import {
-    StrategiesBoardMap,
-    StrategyPost,
-} from '@/(presentation)/shared/types/strategy';
+import { StrategyPost } from '@/(presentation)/shared/types/strategy';
 import { useEffect, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
@@ -61,9 +58,9 @@ function StrategiesTable<
               return page.data.map(item => {
                   return {
                       id: item.id,
-                      map: item.map as StrategiesBoardMap,
+                      map: item.map,
                       title: item.title,
-                      author: item.ownerEmail,
+                      ownerEmail: item.ownerEmail,
                       updatedAt: toYyyyMmDdHhMmString(item.updatedAt),
                   };
               });
@@ -160,7 +157,7 @@ function StrategiesTable<
                             <Table.Cell
                                 className={`${CellStyles.author} text-muted-foreground text-sm`}
                             >
-                                {strategy.author}
+                                {strategy.ownerEmail}
                             </Table.Cell>
                             <Table.Cell
                                 className={`${CellStyles.updatedAt} text-muted-foreground text-sm`}

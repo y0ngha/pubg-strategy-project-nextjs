@@ -1,3 +1,5 @@
+'use client';
+
 import Card from '@/(presentation)/shared/components/card.component';
 import { ArrowRight, FileText } from 'lucide-react';
 import Link from 'next/link';
@@ -5,10 +7,7 @@ import MapBadge from '@/(presentation)/shared/components/map-badge.component';
 import { ReactNode } from 'react';
 import { Route } from '@/(presentation)/shared/constants/route';
 import { StrategyPost } from '@/(presentation)/shared/types/strategy';
-
-interface StrategiesBoardProps {
-    strategies: StrategyPost[];
-}
+import { useGetStrategies } from '@/(presentation)/(pages)/(home)/hooks/useGetStrategies';
 
 function StrategiesBoardTitle({ children }: { children: ReactNode }) {
     return (
@@ -86,7 +85,7 @@ function StrategiesBoardRow({
     id,
     map,
     title,
-    author,
+    ownerEmail,
 }: Omit<StrategyPost, 'updatedAt'>) {
     return (
         <li
@@ -96,7 +95,7 @@ function StrategiesBoardRow({
         >
             <StrategiesBoardMapCell map={map} />
             <StrategiesBoardTitleCell>{title}</StrategiesBoardTitleCell>
-            <StrategiesBoardAuthorCell>{author}</StrategiesBoardAuthorCell>
+            <StrategiesBoardAuthorCell>{ownerEmail}</StrategiesBoardAuthorCell>
         </li>
     );
 }
@@ -117,18 +116,20 @@ function StrategiesEmpty() {
     );
 }
 
-function StrategiesBoard({ strategies }: StrategiesBoardProps) {
+function StrategiesBoard() {
+    const { strategies } = useGetStrategies(10);
+
     return (
         <Card className={'flex h-full flex-col backdrop-blur-sm'}>
             <StrategiesBoardHeader />
 
             <StrategiesBoardContent>
                 {strategies.length === 0 && <StrategiesEmpty />}
-                {strategies.map(({ id, map, title, author }) => {
+                {strategies.map(({ id, map, title, ownerEmail }) => {
                     return (
                         <StrategiesBoardRow
                             id={id}
-                            author={author}
+                            ownerEmail={ownerEmail}
                             map={map}
                             title={title}
                             key={id}
