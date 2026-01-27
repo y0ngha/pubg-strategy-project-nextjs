@@ -21,11 +21,11 @@ interface Tabs {
 
 const STRATEGIES_PAGE_TABS: Tabs[] = [
     {
-        value: 'my-stratiges',
+        value: 'my-strategies',
         label: '내가 쓴 전술',
     },
     {
-        value: 'share-stratiges',
+        value: 'share-strategies',
         label: '공유 받은 전술',
     },
 ] as const;
