@@ -40,9 +40,7 @@ function getNextResponse(redirectUrl: URL) {
 }
 
 function isIncludesNeedAuthenticationPathnames(pathName: string): boolean {
-    return (
-        NEED_AUTHENTICATION_PATHNAMES.find(needAuthenticationPathName =>
-            pathName.startsWith(needAuthenticationPathName)
-        ) !== undefined
+    return NEED_AUTHENTICATION_PATHNAMES.some(needAuthenticationPathName =>
+        pathName.startsWith(needAuthenticationPathName)
     );
 }
