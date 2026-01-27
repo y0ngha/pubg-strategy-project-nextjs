@@ -12,7 +12,9 @@ function AuthFeedbackListner() {
         const authErrorSignal = cookie.getCookie(CookieKeys.AUTH_ERROR_SIGNAL);
 
         if (authErrorSignal != null) {
-            toast.error('로그인이 필요한 서비스입니다.');
+            toast.error('로그인이 필요한 서비스입니다.', {
+                toastId: 'AUTH_ERROR',
+            });
             deleteCookie(CookieKeys.AUTH_ERROR_SIGNAL);
         }
     }, [cookie]);
