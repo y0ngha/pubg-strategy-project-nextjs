@@ -8,6 +8,7 @@ import { ReactNode } from 'react';
 import UserDehydrate from '@/dehydrate-components/user-dehydrate.component';
 import Footer from '@/footer';
 import Navigation from '@/navigation';
+import AuthFeedbackListner from '@/auth-feedback-listner.component';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -44,6 +45,7 @@ export default async function RootLayout({
                     </UserDehydrate>
                 </ReactQueryProviders>
 
+                <AuthFeedbackListner />
                 <ToastContainer position={'bottom-center'} theme={'dark'} />
                 <Footer />
             </body>
