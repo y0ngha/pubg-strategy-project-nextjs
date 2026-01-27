@@ -41,7 +41,7 @@ function sortingStrategies(
     a: GetStrategyResponseDto,
     b: GetStrategyResponseDto
 ) {
-    const timeDescending = orderByDescendingTheUpdatedAt(a, b);
+    const timeDescending = orderByDescendingTheCreatedAt(a, b);
 
     if (timeDescending !== 0) {
         return timeDescending;
@@ -50,7 +50,7 @@ function sortingStrategies(
     return orderByAscendingTheTitle(a, b);
 }
 
-function orderByDescendingTheUpdatedAt(
+function orderByDescendingTheCreatedAt(
     a: GetStrategyResponseDto,
     b: GetStrategyResponseDto
 ) {
