@@ -5,27 +5,44 @@ import {
     StrategiesHeaderLayout,
     StrategiyCreateButton,
 } from '@/(presentation)/(pages)/strategies/components/strategies-header.component';
-import StrategiesTabContent from '@/(presentation)/(pages)/strategies/components/strategies-tab-content.component';
 import MyStrategies from '@/(presentation)/(pages)/strategies/components/my-strategies.component';
-import ShareStrategies from '@/(presentation)/(pages)/strategies/components/shared-strategies.component';
 import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
+import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
+import SharedStrategies from '@/(presentation)/(pages)/strategies/components/shared-strategies.component';
+import StrategiesTabContent from './components/strategies-tab-content.component';
 
 interface StrategyDashboardPageProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
-const STRATEGIES_PAGE_TABS = [
+interface Tabs {
+    value: string;
+    label: string;
+}
+
+const STRATEGIES_PAGE_TABS: Tabs[] = [
     {
-        value: 'my-stratiges',
+        value: 'my-strategies',
         label: '내가 쓴 전술',
     },
     {
-        value: 'share-stratiges',
+        value: 'share-strategies',
         label: '공유 받은 전술',
     },
-];
+] as const;
 
 const tabQueryParameterKey = 'strategy';
+
+function TabsContent({ activeTab }: { activeTab: string }) {
+    switch (activeTab) {
+        case STRATEGIES_PAGE_TABS[0].value:
+            return <MyStrategies />;
+        case STRATEGIES_PAGE_TABS[1].value:
+            return <SharedStrategies />;
+        default:
+            return <></>;
+    }
+}
 
 export default async function StrategyDashboardPage({
     searchParams,
@@ -37,24 +54,25 @@ export default async function StrategyDashboardPage({
 
     return (
         <StrategiesDehydrate>
-            <div className={'flex h-full w-full flex-col space-y-4 p-6'}>
-                <StrategiesHeaderLayout
-                    header={<StrategiesHeader />}
-                    buttons={<StrategiyCreateButton />}
-                />
-                <StrategiesTabs
-                    tabs={STRATEGIES_PAGE_TABS}
-                    queryParameterKey={tabQueryParameterKey}
-                />
-                <StrategiesTabContent>
-                    {activeTab === STRATEGIES_PAGE_TABS[0].value && (
-                        <MyStrategies />
-                    )}
-                    {activeTab === STRATEGIES_PAGE_TABS[1].value && (
-                        <ShareStrategies />
-                    )}
-                </StrategiesTabContent>
-            </div>
+            <StrategiesPageLayout
+                headerLayout={
+                    <StrategiesHeaderLayout
+                        header={<StrategiesHeader />}
+                        buttons={<StrategiyCreateButton />}
+                    />
+                }
+                tabs={
+                    <StrategiesTabs
+                        tabs={STRATEGIES_PAGE_TABS}
+                        queryParameterKey={tabQueryParameterKey}
+                    />
+                }
+                content={
+                    <StrategiesTabContent>
+                        <TabsContent activeTab={activeTab} />
+                    </StrategiesTabContent>
+                }
+            />
         </StrategiesDehydrate>
     );
 }
