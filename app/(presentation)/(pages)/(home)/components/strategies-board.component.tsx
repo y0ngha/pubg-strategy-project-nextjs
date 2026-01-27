@@ -1,3 +1,5 @@
+'use client';
+
 import Card from '@/(presentation)/shared/components/card.component';
 import { ArrowRight, FileText } from 'lucide-react';
 import Link from 'next/link';
