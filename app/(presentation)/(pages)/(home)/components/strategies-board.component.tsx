@@ -7,10 +7,7 @@ import MapBadge from '@/(presentation)/shared/components/map-badge.component';
 import { ReactNode } from 'react';
 import { Route } from '@/(presentation)/shared/constants/route';
 import { StrategyPost } from '@/(presentation)/shared/types/strategy';
-
-interface StrategiesBoardProps {
-    strategies: StrategyPost[];
-}
+import { useGetStrategies } from '@/(presentation)/(pages)/(home)/hooks/useGetStrategies';
 
 function StrategiesBoardTitle({ children }: { children: ReactNode }) {
     return (
@@ -120,6 +117,7 @@ function StrategiesEmpty() {
 }
 
 function StrategiesBoard({ strategies }: StrategiesBoardProps) {
+    const { strategies } = useGetStrategies(10);
     return (
         <Card className={'flex h-full flex-col backdrop-blur-sm'}>
             <StrategiesBoardHeader />
