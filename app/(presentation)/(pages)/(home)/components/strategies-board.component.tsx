@@ -85,7 +85,7 @@ function StrategiesBoardRow({
     id,
     map,
     title,
-    author,
+    ownerEmail,
 }: Omit<StrategyPost, 'updatedAt'>) {
     return (
         <li
@@ -95,7 +95,7 @@ function StrategiesBoardRow({
         >
             <StrategiesBoardMapCell map={map} />
             <StrategiesBoardTitleCell>{title}</StrategiesBoardTitleCell>
-            <StrategiesBoardAuthorCell>{author}</StrategiesBoardAuthorCell>
+            <StrategiesBoardAuthorCell>{ownerEmail}</StrategiesBoardAuthorCell>
         </li>
     );
 }
@@ -116,19 +116,20 @@ function StrategiesEmpty() {
     );
 }
 
-function StrategiesBoard({ strategies }: StrategiesBoardProps) {
+function StrategiesBoard() {
     const { strategies } = useGetStrategies(10);
+
     return (
         <Card className={'flex h-full flex-col backdrop-blur-sm'}>
             <StrategiesBoardHeader />
 
             <StrategiesBoardContent>
                 {strategies.length === 0 && <StrategiesEmpty />}
-                {strategies.map(({ id, map, title, author }) => {
+                {strategies.map(({ id, map, title, ownerEmail }) => {
                     return (
                         <StrategiesBoardRow
                             id={id}
-                            author={author}
+                            ownerEmail={ownerEmail}
                             map={map}
                             title={title}
                             key={id}
