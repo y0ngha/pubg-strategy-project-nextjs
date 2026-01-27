@@ -29,17 +29,26 @@ const MapBadgeVariants = cva(
     }
 );
 
-interface MapBadgeProps
-    extends
-        HTMLAttributes<HTMLSpanElement>,
-        VariantProps<typeof MapBadgeVariants> {}
+interface MapBadgeProps extends HTMLAttributes<HTMLSpanElement> {
+    map: string;
+}
 
 function MapBadge({ map, children, className, ...props }: MapBadgeProps) {
+    const safeMap: VariantProps<typeof MapBadgeVariants>['map'] =
+        isMapInMapStyles(map) ? map : 'default';
+
     return (
-        <span className={cn(MapBadgeVariants({ map }), className)} {...props}>
+        <span
+            className={cn(MapBadgeVariants({ map: safeMap }), className)}
+            {...props}
+        >
             {children}
         </span>
     );
+}
+
+function isMapInMapStyles(map: string): map is Map {
+    return Object.keys(MapStyles).includes(map);
 }
 
 MapBadge.displayName = 'MapBadge';
