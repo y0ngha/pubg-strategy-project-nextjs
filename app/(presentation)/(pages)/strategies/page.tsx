@@ -9,6 +9,7 @@ import MyStrategies from '@/(presentation)/(pages)/strategies/components/my-stra
 import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
 import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
 import SharedStrategies from '@/(presentation)/(pages)/strategies/components/shared-strategies.component';
+import StrategiesTabContent from './components/strategies-tab-content.component';
 
 interface StrategyDashboardPageProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -32,7 +33,7 @@ const STRATEGIES_PAGE_TABS: Tabs[] = [
 
 const tabQueryParameterKey = 'strategy';
 
-function StrategiesTabContent({ activeTab }: { activeTab: string }) {
+function TabsContent({ activeTab }: { activeTab: string }) {
     switch (activeTab) {
         case STRATEGIES_PAGE_TABS[0].value:
             return <MyStrategies />;
@@ -66,7 +67,11 @@ export default async function StrategyDashboardPage({
                         queryParameterKey={tabQueryParameterKey}
                     />
                 }
-                content={<StrategiesTabContent activeTab={activeTab} />}
+                content={
+                    <StrategiesTabContent>
+                        <TabsContent activeTab={activeTab} />
+                    </StrategiesTabContent>
+                }
             />
         </StrategiesDehydrate>
     );
