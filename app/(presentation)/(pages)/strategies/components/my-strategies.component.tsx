@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetOwnedStrategies } from '@/(presentation)/(pages)/strategies/hooks/useGetOwnedStrategies';
+import { useGetOwnedStrategies } from '@/(presentation)/shared/hooks/useGetOwnedStrategies';
 import StrategiesTable from '@/(presentation)/(pages)/strategies/components/strategies-table.component';
 
 function MyStrategies() {

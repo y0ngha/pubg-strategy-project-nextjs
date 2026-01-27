@@ -1,7 +1,7 @@
 'use client';
 
 import StrategiesTable from '@/(presentation)/(pages)/strategies/components/strategies-table.component';
-import { useGetSharedStrategies } from '@/(presentation)/(pages)/strategies/hooks/useGetSharedStrategies';
+import { useGetSharedStrategies } from '@/(presentation)/shared/hooks/useGetSharedStrategies';
 
 function SharedStrategies() {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
