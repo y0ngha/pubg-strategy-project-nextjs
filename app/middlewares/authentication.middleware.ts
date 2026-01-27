@@ -11,21 +11,32 @@ export async function authenticationMiddleware(
 ) {
     if (isIncludesNeedAuthenticationPathnames(pathname)) {
         if (!(await isAuthenticationComplete())) {
-            const response = NextResponse.redirect(
-                new URL(Route.LOGIN, request.url)
-            );
+            const url = getRedirectUrl(request.url);
 
-            response.cookies.set(CookieKeys.AUTH_ERROR_SIGNAL, 'signal', {
-                maxAge: 10,
-                path: '/',
-                httpOnly: false,
-            });
-
-            return response;
+            return getNextResponse(url);
         }
     }
 
     return NextResponse.next();
+}
+
+function getRedirectUrl(baseUrl: string): URL {
+    const redirectUrl = new URL(`${Route.LOGIN}`, baseUrl);
+    redirectUrl.searchParams.set('t', new Date().getTime().toString());
+
+    return redirectUrl;
+}
+
+function getNextResponse(redirectUrl: URL) {
+    const response = NextResponse.redirect(redirectUrl);
+
+    response.cookies.set(CookieKeys.AUTH_ERROR_SIGNAL, 'signal', {
+        maxAge: 10,
+        path: '/',
+        httpOnly: false,
+    });
+
+    return response;
 }
 
 function isIncludesNeedAuthenticationPathnames(pathName: string): boolean {
