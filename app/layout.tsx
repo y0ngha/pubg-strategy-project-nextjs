@@ -8,7 +8,7 @@ import { ReactNode } from 'react';
 import UserDehydrate from '@/dehydrate-components/user-dehydrate.component';
 import Footer from '@/footer';
 import Navigation from '@/navigation';
-import AuthFeedbackListner from '@/auth-feedback-listner.component';
+import AuthFeedbackListner from '@/auth-feedback-listner';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
