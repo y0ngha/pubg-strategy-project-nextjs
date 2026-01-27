@@ -6,16 +6,16 @@ import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-
 export function useGetStrategies(limit: number) {
     const { data: ownedStrategiesData, isPending: isOwnedStrategiesPending } =
         useGetOwnedStrategies(limit);
-    const { data: sharedStrtegiesData, isPending: isSharedStrategiesPending } =
+    const { data: sharedStrategiesData, isPending: isSharedStrategiesPending } =
         useGetSharedStrategies(limit);
 
     const ownedStrategies =
         flattenInfiniteData<GetStrategyResponseDto>(ownedStrategiesData);
 
-    const sharedStrtegies =
-        flattenInfiniteData<GetStrategyResponseDto>(sharedStrtegiesData);
+    const sharedStrategies =
+        flattenInfiniteData<GetStrategyResponseDto>(sharedStrategiesData);
 
-    const strategies = [...ownedStrategies, ...sharedStrtegies]
+    const strategies = [...ownedStrategies, ...sharedStrategies]
         .sort(sortingStrategies)
         .slice(0, limit);
 
