@@ -27,10 +27,10 @@ function EmailRegister() {
         data: RegisterFormInputs
     ) => {
         const formData = new FormData();
-        formData.append('email', data.email);
-        formData.append('password', data.password);
-        formData.append('confirmPassword', data.confirmPassword);
-        formData.append('terms', data.terms);
+        formData.set('email', data.email);
+        formData.set('password', data.password);
+        formData.set('confirmPassword', data.confirmPassword);
+        formData.set('terms', data.terms);
 
         registerAction(formData, {
             onError: () => {

@@ -19,8 +19,8 @@ function EmailLogin() {
         data: LoginFormInputs
     ) => {
         const formData = new FormData();
-        formData.append('email', data.email);
-        formData.append('password', data.password);
+        formData.set('email', data.email);
+        formData.set('password', data.password);
 
         login(formData, {
             onError: () => {
