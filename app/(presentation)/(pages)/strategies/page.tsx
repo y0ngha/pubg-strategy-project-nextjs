@@ -1,15 +1,14 @@
-import * as React from 'react';
 import StrategiesTabs from '@/(presentation)/(pages)/strategies/components/strategies-tabs.component';
-import {
-    StrategiesHeader,
-    StrategiesHeaderLayout,
-    StrategiyCreateButton,
-} from '@/(presentation)/(pages)/strategies/components/strategies-header.component';
 import MyStrategies from '@/(presentation)/(pages)/strategies/components/my-strategies.component';
 import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
 import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
 import SharedStrategies from '@/(presentation)/(pages)/strategies/components/shared-strategies.component';
 import StrategiesTabContent from './components/strategies-tab-content.component';
+import StrategiesHeaderLayout from '@/(presentation)/(pages)/strategies/components/strategies-header-layout.component';
+import StrategiesHeader from '@/(presentation)/(pages)/strategies/components/strategies-header.component';
+import StrategiyCreateButton from '@/(presentation)/(pages)/strategies/components/strategy-create-button.component';
+import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/strategy-create-modal-controller.component';
+import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/strategy-create-modal.component';
 
 interface StrategyDashboardPageProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -58,7 +57,12 @@ export default async function StrategyDashboardPage({
                 headerLayout={
                     <StrategiesHeaderLayout
                         header={<StrategiesHeader />}
-                        buttons={<StrategiyCreateButton />}
+                        strategyCreate={
+                            <StrategyCreateModalController
+                                trigger={<StrategiyCreateButton />}
+                                modal={<StrategyCreateModal />}
+                            />
+                        }
                     />
                 }
                 tabs={
