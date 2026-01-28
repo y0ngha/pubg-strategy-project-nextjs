@@ -62,6 +62,10 @@ import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
 import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
+import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-strategy.usecase';
+import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
+import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
+import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
 
 /**
  * User
@@ -156,6 +160,10 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateWaypointUseCase },
     { class: GetOwnedStrategiesUseCase },
     { class: GetSharedStrategiesUseCase },
+    { class: CreateStrategyUseCase },
+    { class: DeleteStrategyUseCase },
+    { class: GetStrategyUseCase },
+    { class: UpdateStrategyUseCase },
 ];
 const strategyServices: ClassDependency[] = [{ class: StrategyMapper }];
 
