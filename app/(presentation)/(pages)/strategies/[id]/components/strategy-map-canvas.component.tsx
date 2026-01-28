@@ -3,8 +3,9 @@
 import { Layer, Stage } from 'react-konva';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKonvaHandleWheelZoomControl';
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
+import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useResizeObserver';
 
 interface StrategyMapCanvasProps {
     map: PubgMap;
@@ -27,12 +28,18 @@ function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
     const { scale, stagePosistion, handleWheel } =
         useKonvaHandleWheelZoomControl();
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { width, height } = useResizeObserver(containerRef);
+
     return (
-        <div className={'h-full w-full overflow-hidden bg-zinc-900'}>
+        <div
+            className={'h-screen w-full overflow-hidden bg-zinc-900'}
+            ref={containerRef}
+        >
             <Stage
-                width={1500}
-                height={1500}
-                draggable={false}
+                width={width}
+                height={height}
+                draggable={true}
                 onWheel={handleWheel}
                 scaleX={scale}
                 scaleY={scale}
