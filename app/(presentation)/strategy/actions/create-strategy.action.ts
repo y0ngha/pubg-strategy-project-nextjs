@@ -11,7 +11,7 @@ export async function createStrategyAction(
 ): Promise<CreateStrategyAction> {
     const getService = initializeRequestServices();
 
-    const { userId, title, map } = parseFormData(formData, [
+    const { userId, userEmail, title, map } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -38,7 +38,7 @@ export async function createStrategyAction(
 
     const dto = {
         actorId: userId,
-        actorEmail: userId,
+        actorEmail: userEmail,
         title: title,
         map: map,
     };
