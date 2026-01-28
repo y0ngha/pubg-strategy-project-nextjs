@@ -10,7 +10,7 @@ import StrategiyCreateButton from '@/(presentation)/(pages)/strategies/component
 import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/strategy-create-modal-controller.component';
 import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/strategy-create-modal.component';
 
-interface StrategyDashboardPageProps {
+interface StrategyDashboardProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
@@ -43,9 +43,9 @@ function TabsContent({ activeTab }: { activeTab: string }) {
     }
 }
 
-export default async function StrategyDashboardPage({
+export default async function StrategyDashboard({
     searchParams,
-}: StrategyDashboardPageProps) {
+}: StrategyDashboardProps) {
     const query = await searchParams;
 
     const activeTab =
