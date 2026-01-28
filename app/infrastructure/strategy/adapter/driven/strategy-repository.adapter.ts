@@ -12,7 +12,7 @@ export class StrategyRepositoryAdapter extends StrategyRepositoryPort {
         throw new Error('Not Implemented.');
     }
 
-    save(strategy: Strategy): Promise<void> {
+    save(strategy: Strategy): Promise<Strategy> {
         throw new Error('Not Implemented.');
     }
 
