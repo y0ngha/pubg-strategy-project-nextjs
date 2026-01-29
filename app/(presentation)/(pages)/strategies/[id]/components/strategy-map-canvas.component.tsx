@@ -6,6 +6,7 @@ import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strateg
 import { ReactNode, useRef, useState } from 'react';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useResizeObserver';
+import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKovnaHandleDrag';
 
 interface StrategyMapCanvasProps {
     map: PubgMap;
@@ -33,6 +34,11 @@ function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
 
     const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
+    const { handleDragBound, handleDragEnd } = useKovnaHandleDrag(scale, {
+        width,
+        height,
+    });
+
     return (
         <div
             className={'h-full w-full overflow-hidden bg-zinc-900'}
@@ -42,8 +48,13 @@ function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
                 width={width}
                 height={height}
                 draggable={true}
+                dragBoundFunc={handleDragBound}
                 onWheel={event => {
                     const newStagePosition = handleWheel(event);
+                    setStagePosistion(newStagePosition);
+                }}
+                onDragEnd={event => {
+                    const newStagePosition = handleDragEnd(event);
                     setStagePosistion(newStagePosition);
                 }}
                 scaleX={scale}
