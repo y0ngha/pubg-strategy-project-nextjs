@@ -2,7 +2,8 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { useState } from 'react';
 
 export function useKonvaHandleWheelZoomControl() {
-    const [scale, setScale] = useState<number>(0.2);
+    const minScale = 0.2;
+    const [scale, setScale] = useState<number>(minScale);
 
     const calculateMousePoint = (
         pointerPosition: number,
@@ -16,8 +17,8 @@ export function useKonvaHandleWheelZoomControl() {
         const scaleBy = 1.1;
 
         const newScale = deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
-        if (newScale < 0.2) {
-            return 0.2;
+        if (newScale < minScale) {
+            return minScale;
         }
 
         return newScale;
