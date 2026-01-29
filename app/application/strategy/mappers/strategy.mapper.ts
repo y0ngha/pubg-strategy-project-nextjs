@@ -14,7 +14,7 @@ import {
     WaypointResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { Position as PositionInterface } from '@/application/strategy/types/position';
-import { PubgMapNames } from '@domain/strategy/enums/map.enum';
+import { PubgMap, PubgMapNames } from '@domain/strategy/enums/map.enum';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyShareNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TeamPlayer } from '@domain/strategy/entities/team-player.entity';
@@ -31,6 +31,18 @@ import { CommentId } from '@domain/strategy/value-objects/comment-id';
 
 @injectable()
 export class StrategyMapper {
+    private readonly mapImages = {
+        [PubgMap.ERANGEL]: '/images/maps/Erangel.webp',
+        [PubgMap.MIRAMAR]: '/images/maps/Miramar.webp',
+        [PubgMap.TAEGO]: '/images/maps/Taego.webp',
+        [PubgMap.RONDO]: '/images/maps/Rondo.webp',
+        [PubgMap.SANHOK]: '/images/maps/Sanhok.webp',
+        [PubgMap.VIKENDI]: '/images/maps/Vikendi.webp',
+        [PubgMap.KARAKIN]: '/images/maps/Karakin.webp',
+        [PubgMap.HAVEN]: '/images/maps/Haven.webp',
+        [PubgMap.DESTON]: '/images/maps/Deston.webp',
+    };
+
     toResponse(entity: Strategy, actorId: UserId): GetStrategyResponseDto {
         const permission = this.getPermission(entity, actorId);
 
@@ -40,7 +52,7 @@ export class StrategyMapper {
             ownerEmail: entity.ownerEmail.toString(),
             title: entity.title.value,
             map: PubgMapNames[entity.map],
-
+            mapImage: this.mapImages[entity.map],
             teamPlayers: entity.teamPlayers.map(tp => this.parseTeamPlayer(tp)),
             enemyTeams: entity.enemyTeams.map(et => this.parseEnemyTeam(et)),
             circles: entity.circles.map(c => this.parseCircle(c)),
