@@ -1,7 +1,7 @@
 'use client';
 
-import ToolButton from '@/(presentation)/(pages)/strategies/[id]/components/tool-button.component';
-import ToolDivider from '@/(presentation)/(pages)/strategies/[id]/components/tool-divider.component';
+import StrategyToolButton from '@/(presentation)/(pages)/strategies/[id]/components/strategy-tool-button.component';
+import StrategyToolDivider from '@/(presentation)/(pages)/strategies/[id]/components/strategy-tool-divider.component';
 import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useToolbar';
 import { LucideIcon } from 'lucide-react';
 
@@ -36,7 +36,7 @@ function StrategyToolbar({
                         const isActive = selectedTool === tool;
 
                         return (
-                            <ToolButton
+                            <StrategyToolButton
                                 key={tool}
                                 icon={<IconComponent size={iconSize} />}
                                 tooltip={tooltip}
@@ -45,7 +45,7 @@ function StrategyToolbar({
                             />
                         );
                     }),
-                    <ToolDivider key={`tool-group-${index}`} />,
+                    <StrategyToolDivider key={`tool-group-${index}`} />,
                 ];
             })}
         </div>

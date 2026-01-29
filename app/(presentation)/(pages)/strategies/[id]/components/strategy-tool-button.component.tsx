@@ -19,7 +19,7 @@ const ToolButtonVariants = cva(
     }
 );
 
-interface ToolButtonProps
+interface StrategyToolButtonProps
     extends
         HTMLAttributes<HTMLButtonElement>,
         VariantProps<typeof ToolButtonVariants> {
@@ -28,13 +28,13 @@ interface ToolButtonProps
     active: boolean;
 }
 
-function ToolButton({
+function StrategyToolButton({
     icon,
     tooltip,
     active,
     className,
     ...props
-}: ToolButtonProps) {
+}: StrategyToolButtonProps) {
     return (
         <button
             type={'button'}
@@ -57,6 +57,6 @@ function ToolButton({
     );
 }
 
-ToolButton.displayName = 'ToolButton';
+StrategyToolButton.displayName = 'StrategyToolButton';
 
-export default ToolButton;
+export default StrategyToolButton;
