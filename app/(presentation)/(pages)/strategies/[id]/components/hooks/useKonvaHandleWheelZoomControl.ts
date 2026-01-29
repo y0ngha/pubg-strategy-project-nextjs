@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 export function useKonvaHandleWheelZoomControl() {
     const [scale, setScale] = useState<number>(0.2);
-    const [stagePosistion, setStagePosistion] = useState({ x: 0, y: 0 });
 
     const calculateMousePoint = (
         pointerPosition: number,
@@ -48,7 +47,7 @@ export function useKonvaHandleWheelZoomControl() {
 
             setScale(newScale);
 
-            setStagePosistion({
+            return {
                 x: calculateStagePosition(
                     mousePointTo.x,
                     pointerPosition.x,
@@ -59,13 +58,17 @@ export function useKonvaHandleWheelZoomControl() {
                     pointerPosition.y,
                     newScale
                 ),
-            });
+            };
         }
+
+        return {
+            x: 0,
+            y: 0,
+        };
     };
 
     return {
         handleWheel,
-        stagePosistion,
         scale,
     };
 }

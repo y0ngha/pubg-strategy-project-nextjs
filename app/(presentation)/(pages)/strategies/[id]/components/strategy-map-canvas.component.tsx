@@ -3,7 +3,7 @@
 import { Layer, Stage } from 'react-konva';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKonvaHandleWheelZoomControl';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useResizeObserver';
 
@@ -25,11 +25,13 @@ const MAP_ASSETS: Record<PubgMap, string> = {
 };
 
 function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
-    const { scale, stagePosistion, handleWheel } =
-        useKonvaHandleWheelZoomControl();
-
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const [stagePosistion, setStagePosistion] = useState({ x: 0, y: 0 });
+
     const { width, height } = useResizeObserver(containerRef);
+
+    const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
     return (
         <div
@@ -40,7 +42,10 @@ function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
                 width={width}
                 height={height}
                 draggable={true}
-                onWheel={handleWheel}
+                onWheel={event => {
+                    const newStagePosition = handleWheel(event);
+                    setStagePosistion(newStagePosition);
+                }}
                 scaleX={scale}
                 scaleY={scale}
                 x={stagePosistion.x}
