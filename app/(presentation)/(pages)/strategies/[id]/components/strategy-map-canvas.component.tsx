@@ -9,7 +9,7 @@ import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/comp
 
 interface StrategyMapCanvasProps {
     map: PubgMap;
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 const MAP_ASSETS: Record<PubgMap, string> = {
@@ -33,7 +33,7 @@ function StrategyMapCanvas({ map, children }: StrategyMapCanvasProps) {
 
     return (
         <div
-            className={'h-screen w-full overflow-hidden bg-zinc-900'}
+            className={'h-full w-full overflow-hidden bg-zinc-900'}
             ref={containerRef}
         >
             <Stage
