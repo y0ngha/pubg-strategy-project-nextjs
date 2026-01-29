@@ -12,13 +12,9 @@ const ToolButtonVariants = cva(
                 true: 'border-orange-500 bg-orange-500/10 text-orange-500',
                 false: 'border-transparent bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-100 cursor-pointer',
             },
-            dangerous: {
-                true: 'hover:bg-red-500/20 hover:text-red-500',
-            },
         },
         defaultVariants: {
             active: false,
-            dangerous: false,
         },
     }
 );
@@ -30,7 +26,6 @@ interface ToolButtonProps
     icon: ReactNode;
     tooltip: string;
     active: boolean;
-    dangerous?: boolean;
 }
 
 function ToolButton({
@@ -38,13 +33,12 @@ function ToolButton({
     tooltip,
     active,
     className,
-    dangerous = false,
     ...props
 }: ToolButtonProps) {
     return (
         <button
             type={'button'}
-            className={cn(ToolButtonVariants({ active, dangerous }), className)}
+            className={cn(ToolButtonVariants({ active }), className)}
             {...props}
         >
             {icon}
