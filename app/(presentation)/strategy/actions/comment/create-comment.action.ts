@@ -4,6 +4,7 @@ import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/c
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type CreateCommentAction = {
     id: string;
@@ -17,6 +18,8 @@ export type CreateCommentAction = {
 export async function createCommentAction(
     formData: FormData
 ): Promise<CreateCommentAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const {

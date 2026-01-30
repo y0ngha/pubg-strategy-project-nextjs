@@ -17,9 +17,9 @@ export type CreateCircleAction = {
 export async function createCircleAction(
     formData: FormData
 ): Promise<CreateCircleAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     const { userId, strategyId, phase, position } = parseFormData(formData, [
         {

@@ -4,6 +4,7 @@ import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-ta
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type CreateTagAction = {
     id: string;
@@ -14,6 +15,8 @@ export type CreateTagAction = {
 export async function createTagAction(
     formData: FormData
 ): Promise<CreateTagAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, content, position } = parseFormData(formData, [

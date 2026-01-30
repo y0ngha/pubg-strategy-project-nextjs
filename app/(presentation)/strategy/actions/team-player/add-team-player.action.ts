@@ -16,9 +16,9 @@ export type AddTeamPlayerAction = {
 export async function addTeamPlayerAction(
     formData: FormData
 ): Promise<AddTeamPlayerAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     const { userId, strategyId, position } = parseFormData(formData, [
         {

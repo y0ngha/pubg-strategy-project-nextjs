@@ -4,6 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type AddEnemyTeamAction = {
     id: string;
@@ -14,6 +15,8 @@ export type AddEnemyTeamAction = {
 export async function addEnemyTeamAction(
     formData: FormData
 ): Promise<AddEnemyTeamAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamLabel, position } = parseFormData(

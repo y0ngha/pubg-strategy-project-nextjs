@@ -4,6 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type AddMarkerAction = {
     id: string;
@@ -14,6 +15,8 @@ export type AddMarkerAction = {
 export async function addMarkerAction(
     formData: FormData
 ): Promise<AddMarkerAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId, position } = parseFormData(
