@@ -679,6 +679,8 @@ export class Strategy {
         );
 
         this._comments.push(comment);
+
+        return comment;
     }
 
     removeComment(actorId: UserId, commentId: CommentId) {

@@ -3,8 +3,20 @@
 import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { Position } from '@/application/strategy/types/position';
 
-export async function createCommentAction(_: unknown, formData: FormData) {
+export type CreateCommentAction = {
+    id: string;
+    position: Position | null;
+    authorId: string;
+    authorEmail: string;
+    content: string;
+    parentCommentId: string | null;
+};
+
+export async function createCommentAction(
+    formData: FormData
+): Promise<CreateCommentAction> {
     const getService = initializeRequestServices();
 
     const {
