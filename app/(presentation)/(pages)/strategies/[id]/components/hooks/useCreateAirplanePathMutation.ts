@@ -22,9 +22,7 @@ export function useCreateAirplanePathMutation(strategyId: string) {
             return await addAirplanePathAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-
-            optimisticUpdate(strataegyQueryKey, data);
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],

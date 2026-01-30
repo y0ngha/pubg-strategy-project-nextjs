@@ -25,9 +25,7 @@ export function useCreateCircleMutation(strategyId: string) {
             return await createCircleAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-
-            optimisticUpdate(strataegyQueryKey, data);
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],

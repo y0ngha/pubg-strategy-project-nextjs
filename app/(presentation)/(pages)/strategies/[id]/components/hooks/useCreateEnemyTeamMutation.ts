@@ -24,9 +24,7 @@ export function useCreateEnemyTeamMutation(strategyId: string) {
             return await addEnemyTeamAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-
-            optimisticUpdate(strataegyQueryKey, data);
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
