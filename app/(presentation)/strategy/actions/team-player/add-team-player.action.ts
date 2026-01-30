@@ -20,7 +20,7 @@ export async function addTeamPlayerAction(
 
     await ensureAuthentication();
 
-    const { userId, strategyId } = parseFormData(formData, [
+    const { userId, strategyId, position } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -31,6 +31,11 @@ export async function addTeamPlayerAction(
             error: '전략 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
+        {
+            key: 'position',
+            error: '자기장 위치를 불러올 수 없습니다.',
+            type: 'position',
+        },
     ] as const);
 
     const useCase = getService(AddTeamPlayerUseCase);
@@ -38,6 +43,7 @@ export async function addTeamPlayerAction(
     const dto = {
         actorId: userId,
         strategyId: strategyId,
+        position: position,
     };
 
     return await useCase.execute(dto);

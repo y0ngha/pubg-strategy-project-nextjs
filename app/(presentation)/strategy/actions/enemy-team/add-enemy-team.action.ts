@@ -16,23 +16,31 @@ export async function addEnemyTeamAction(
 ): Promise<AddEnemyTeamAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamLabel } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'strategyId',
-            error: '전략 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'teamLabel',
-            error: '팀 라벨을 불러올 수 없습니다.',
-            type: 'string',
-        },
-    ] as const);
+    const { userId, strategyId, teamLabel, position } = parseFormData(
+        formData,
+        [
+            {
+                key: 'userId',
+                error: '유저 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'strategyId',
+                error: '전략 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'teamLabel',
+                error: '팀 라벨을 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'position',
+                error: '자기장 위치를 불러올 수 없습니다.',
+                type: 'position',
+            },
+        ] as const
+    );
 
     const useCase = getService(AddEnemyTeamUseCase);
 
@@ -40,6 +48,7 @@ export async function addEnemyTeamAction(
         actorId: userId,
         strategyId: strategyId,
         teamLabel: teamLabel,
+        position: position,
     };
 
     return await useCase.execute(dto);
