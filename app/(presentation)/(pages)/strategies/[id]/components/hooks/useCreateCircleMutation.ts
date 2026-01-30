@@ -4,7 +4,11 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
-import { createCircleAction } from '@/(presentation)/strategy/actions/circle/create-circle.action';
+import {
+    CreateCircleAction,
+    createCircleAction,
+} from '@/(presentation)/strategy/actions/circle/create-circle.action';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateCircleMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -23,32 +27,11 @@ export function useCreateCircleMutation(strategyId: string) {
         onSuccess: data => {
             const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
 
+            optimisticUpdate(strataegyQueryKey, data);
+
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        circles: [
-                            ...oldStrategy.circles,
-                            {
-                                id: data.id,
-                                centerPosition: data.centerPosition,
-                                phase: data.phase,
-                                radius: data.radius,
-                                color: data.color,
-                            },
-                        ],
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateCircleMutation', error);
@@ -57,6 +40,28 @@ export function useCreateCircleMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (qureyKey: QueryKey, data: CreateCircleAction) => {
+        queryClient.setQueryData<GetStrategyAction>(qureyKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                circles: [
+                    ...oldStrategy.circles,
+                    {
+                        id: data.id,
+                        centerPosition: data.centerPosition,
+                        phase: data.phase,
+                        radius: data.radius,
+                        color: data.color,
+                    },
+                ],
+            };
+        });
+    };
 
     return {
         createCircle: mutate,
