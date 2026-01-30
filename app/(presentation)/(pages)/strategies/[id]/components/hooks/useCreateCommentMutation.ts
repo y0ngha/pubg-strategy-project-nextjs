@@ -4,7 +4,12 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { toast } from 'react-toastify';
-import { createCommentAction } from '@/(presentation)/strategy/actions/comment/create-comment.action';
+import {
+    CreateCommentAction,
+    createCommentAction,
+} from '@/(presentation)/strategy/actions/comment/create-comment.action';
+import { QueryKey } from '@tanstack/query-core';
+import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
 export function useCreateCommentMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -18,63 +23,11 @@ export function useCreateCommentMutation(strategyId: string) {
             return await createCommentAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    let newComments = [...oldStrategy.comments];
-
-                    if (data.parentCommentId) {
-                        const parentCommentIndex =
-                            oldStrategy.comments.findIndex(
-                                comment => comment.id === data.parentCommentId
-                            );
-
-                        if (parentCommentIndex !== -1) {
-                            newComments[parentCommentIndex].childComments = [
-                                ...newComments[parentCommentIndex]
-                                    .childComments,
-                                {
-                                    id: data.id,
-                                    authorId: data.authorId,
-                                    authorEmail: data.authorEmail,
-                                    content: data.content,
-                                },
-                            ];
-                        }
-                    } else {
-                        if (data.position) {
-                            newComments = [
-                                ...newComments,
-                                {
-                                    id: data.id,
-                                    authorId: data.authorId,
-                                    authorEmail: data.authorEmail,
-                                    content: data.content,
-                                    childComments: [],
-                                    position: data.position,
-                                },
-                            ];
-                        } else {
-                            newComments = [...newComments];
-                        }
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        comments: [...newComments],
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateCommentMutation', error);
@@ -83,6 +36,101 @@ export function useCreateCommentMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (
+        queryKey: QueryKey,
+        data: CreateCommentAction
+    ) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                comments: [...generateNewComments(data, oldStrategy.comments)],
+            };
+        });
+    };
+
+    const findCommentIndexByParentCommentId = (
+        comments: CommentResponseDto[],
+        parentCommentId: string
+    ) => {
+        const index = comments.findIndex(
+            comment => comment.id === parentCommentId
+        );
+
+        if (index === -1) {
+            return null;
+        }
+
+        return index;
+    };
+
+    const isParentComment = (parentCommentId: string | null) => {
+        return parentCommentId !== null;
+    };
+
+    const appendChildComment = (
+        data: CreateCommentAction,
+        parentIndex: number,
+        comments: CommentResponseDto[]
+    ): CommentResponseDto[] => {
+        comments[parentIndex].childComments = [
+            ...comments[parentIndex].childComments,
+            {
+                id: data.id,
+                authorId: data.authorId,
+                authorEmail: data.authorEmail,
+                content: data.content,
+            },
+        ];
+
+        return comments;
+    };
+
+    const appendParentComment = (
+        data: CreateCommentAction,
+        comments: CommentResponseDto[]
+    ): CommentResponseDto[] => {
+        return [
+            ...comments,
+            {
+                id: data.id,
+                authorId: data.authorId,
+                authorEmail: data.authorEmail,
+                content: data.content,
+                childComments: [],
+                position: data.position!,
+            },
+        ];
+    };
+
+    const generateNewComments = (
+        data: CreateCommentAction,
+        comments: CommentResponseDto[]
+    ) => {
+        const { parentCommentId, position } = data;
+        if (isParentComment(parentCommentId)) {
+            const parentCommentIndex = findCommentIndexByParentCommentId(
+                comments,
+                parentCommentId
+            );
+
+            if (parentCommentIndex === null) {
+                return comments;
+            }
+
+            return appendChildComment(data, parentCommentIndex, comments);
+        } else {
+            if (position === null) {
+                return comments;
+            }
+
+            return appendParentComment(data, comments);
+        }
+    };
 
     return {
         createComment: mutate,
