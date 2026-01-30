@@ -159,6 +159,8 @@ export class TeamPlayer {
 
         this._marker = Marker.create(position);
         this._updatedAt = new Date();
+
+        return this._marker;
     }
 
     addWaypoint(positions: Position[]) {

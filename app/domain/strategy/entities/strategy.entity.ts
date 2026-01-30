@@ -287,9 +287,11 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.addMarker(position);
+        const marker = teamPlayer.addMarker(position);
 
         this._updatedAt = new Date();
+
+        return marker;
     }
 
     updateTeamPlayerMarker(
