@@ -4,6 +4,8 @@ import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-s
 import { PubgMap } from '@domain/strategy/enums/map.enum';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Strategy } from '@domain/strategy/entities/strategy.entity';
+import { Email } from '@domain/shared/value-objects/email';
 
 describe('CreateStrategyUseCase', () => {
     let useCase: CreateStrategyUseCase;
@@ -28,6 +30,14 @@ describe('CreateStrategyUseCase', () => {
             title: title.toString(),
             map: map,
         };
+        mockStrategyRepository.save.mockResolvedValue(
+            Strategy.create(
+                UserId.create(dto.actorId),
+                Email.create(dto.actorEmail),
+                StrategyTitle.create(dto.title),
+                dto.map
+            )
+        );
 
         // when
         await useCase.execute(dto);

@@ -13,14 +13,14 @@ export class CreateStrategyUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: CreateStrategyRequestDto): Promise<boolean> {
+    async execute(dto: CreateStrategyRequestDto): Promise<string> {
         const { actorId, actorEmail, title, map } =
             CreateStrategyRequestSchema.parse(dto);
 
         const strategy = Strategy.create(actorId, actorEmail, title, map);
 
-        await this.strategyRepository.save(strategy);
+        const savedStrategy = await this.strategyRepository.save(strategy);
 
-        return true;
+        return savedStrategy.id.toString();
     }
 }

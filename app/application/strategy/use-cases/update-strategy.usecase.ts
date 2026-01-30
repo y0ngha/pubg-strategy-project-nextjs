@@ -13,7 +13,7 @@ export class UpdateStrategyUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateStrategyRequestDto): Promise<boolean> {
+    async execute(dto: UpdateStrategyRequestDto) {
         const { actorId, strategyId, title, map } =
             UpdateStrategyRequestSchema.parse(dto);
 
@@ -23,10 +23,13 @@ export class UpdateStrategyUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.update(actorId, title, map);
+        const updatedStrategy = strategy.update(actorId, title, map);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            title: updatedStrategy.title.toString(),
+            map: updatedStrategy.map,
+        };
     }
 }

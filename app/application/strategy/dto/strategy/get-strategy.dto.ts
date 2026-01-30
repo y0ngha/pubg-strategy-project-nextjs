@@ -103,6 +103,8 @@ export interface GetStrategyResponseDto {
     ownerEmail: string;
     title: string;
     map: string;
+    mapName: string;
+    mapImage: string;
 
     teamPlayers: TeamPlayerResponseDto[];
     enemyTeams: EnemyTeamResponseDto[];

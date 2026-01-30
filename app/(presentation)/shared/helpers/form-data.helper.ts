@@ -60,7 +60,7 @@ function parseField(
 
     const value = formData.get(key);
 
-    if (value == null) {
+    if (value == null || value === '') {
         if (allowUndefined) return [key, undefined];
         throw new Error(errorMessage);
     }

@@ -31,7 +31,7 @@ interface SelectProps
     error?: string;
     disabled?: boolean;
     value?: OptionValue;
-    onValueChange: (value: OptionValue) => void;
+    onValueChange?: (value: OptionValue) => void;
 }
 
 function Select({
@@ -64,7 +64,7 @@ function Select({
                     id={id}
                     disabled={disabled}
                     value={value}
-                    onChange={e => onValueChange(e.target.value)}
+                    onChange={e => onValueChange?.(e.target.value)}
                     className={cn(
                         SelectVariants({ size }),
                         error && 'border-red-500 focus-visible:ring-red-500',
