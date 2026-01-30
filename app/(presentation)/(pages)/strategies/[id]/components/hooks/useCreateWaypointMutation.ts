@@ -66,12 +66,18 @@ export function useCreateWaypointMutation(strategyId: string) {
             return teamPlayers;
         }
 
-        teamPlayers[teamPlayerIndex].waypoint = {
-            id: data.id,
-            positions: data.positions,
-        };
-
-        return teamPlayers;
+        return teamPlayers.map((player, index) => {
+            if (index !== teamPlayerIndex) {
+                return player;
+            }
+            return {
+                ...player,
+                waypoint: {
+                    id: data.id,
+                    positions: data.positions,
+                },
+            };
+        });
     };
 
     const optimisticUpdate = (queryKey: QueryKey, data: AddWaypointAction) => {
