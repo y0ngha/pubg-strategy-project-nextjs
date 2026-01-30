@@ -628,7 +628,7 @@ export class Strategy {
      * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
      * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
      */
-    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
+    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap): Strategy {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
@@ -647,6 +647,8 @@ export class Strategy {
         if (isTitleChanged || isMapChange) {
             this._updatedAt = new Date();
         }
+
+        return this;
     }
 
     /**
