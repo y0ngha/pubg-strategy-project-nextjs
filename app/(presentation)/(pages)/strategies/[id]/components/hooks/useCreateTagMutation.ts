@@ -4,7 +4,11 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { toast } from 'react-toastify';
-import { createTagAction } from '@/(presentation)/strategy/actions/tag/create-tag.action';
+import {
+    CreateTagAction,
+    createTagAction,
+} from '@/(presentation)/strategy/actions/tag/create-tag.action';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateTagMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -18,32 +22,11 @@ export function useCreateTagMutation(strategyId: string) {
             return await createTagAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        tags: [
-                            ...oldStrategy.tags,
-                            {
-                                id: data.id,
-                                content: data.content,
-                                position: data.position,
-                            },
-                        ],
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateTagMutation', error);
@@ -52,6 +35,26 @@ export function useCreateTagMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (queryKey: QueryKey, data: CreateTagAction) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                tags: [
+                    ...oldStrategy.tags,
+                    {
+                        id: data.id,
+                        content: data.content,
+                        position: data.position,
+                    },
+                ],
+            };
+        });
+    };
 
     return {
         createTag: mutate,
