@@ -36,8 +36,8 @@ export function useCreateCircleMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (qureyKey: QueryKey, data: CreateCircleAction) => {
-        queryClient.setQueryData<GetStrategyAction>(qureyKey, oldStrategy => {
+    const optimisticUpdate = (queryKey: QueryKey, data: CreateCircleAction) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
             }
