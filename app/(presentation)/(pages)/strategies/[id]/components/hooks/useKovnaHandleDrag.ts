@@ -1,4 +1,5 @@
 import { KonvaEventObject } from 'konva/lib/Node';
+import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 
 export function useKovnaHandleDrag(
     scale: number,
@@ -28,7 +29,7 @@ export function useKovnaHandleDrag(
         const { width: stageWidth, height: stageHeight } = stageSize;
 
         const { width: mapWidth, height: mapHeight } =
-            calculatedScaledMapSize(8192);
+            calculatedScaledMapSize(ORIGINAL_MAP_SIZE);
 
         const x = calculatedNewPosition(pos.x, stageWidth, mapWidth);
         const y = calculatedNewPosition(pos.y, stageHeight, mapHeight);
