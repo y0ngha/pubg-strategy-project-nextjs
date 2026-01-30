@@ -3,8 +3,17 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
+import { Position } from '@/application/strategy/types/position';
 
-export async function addEnemyTeamAction(_: unknown, formData: FormData) {
+export type AddEnemyTeamAction = {
+    id: string;
+    teamLabel: string;
+    position: Position;
+};
+
+export async function addEnemyTeamAction(
+    formData: FormData
+): Promise<AddEnemyTeamAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamLabel } = parseFormData(formData, [

@@ -13,7 +13,7 @@ export class AddEnemyTeamUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: AddEnemyTeamRequestDto): Promise<boolean> {
+    async execute(dto: AddEnemyTeamRequestDto) {
         const { actorId, strategyId, teamLabel } =
             AddEnemyTeamRequestSchema.parse(dto);
 
@@ -23,10 +23,17 @@ export class AddEnemyTeamUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addEnemyTeam(actorId, teamLabel);
+        const enemyTeam = strategy.addEnemyTeam(actorId, teamLabel);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: enemyTeam.id.toString(),
+            teamLabel: enemyTeam.teamLabel.toString(),
+            position: {
+                x: enemyTeam.position.x,
+                y: enemyTeam.position.y,
+            },
+        };
     }
 }

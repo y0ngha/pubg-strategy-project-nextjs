@@ -374,6 +374,8 @@ export class Strategy {
 
         this._enemyTeams.push(enemyTeam);
         this._updatedAt = new Date();
+
+        return enemyTeam;
     }
 
     removeEnemyTeam(actorId: UserId, enemyTeamId: EnemyTeamId) {
