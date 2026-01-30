@@ -65,12 +65,18 @@ export function useCreateMarkerMutation(strategyId: string) {
             return teamPlayers;
         }
 
-        teamPlayers[teamPlayerIndex].marker = {
-            id: data.id,
-            position: data.position,
-        };
-
-        return teamPlayers;
+        return teamPlayers.map((player, index) => {
+            if (index !== teamPlayerIndex) {
+                return player;
+            }
+            return {
+                ...player,
+                marker: {
+                    id: data.id,
+                    position: data.position,
+                },
+            };
+        });
     };
 
     const optimisticUpdate = (queryKey: QueryKey, data: AddMarkerAction) => {
