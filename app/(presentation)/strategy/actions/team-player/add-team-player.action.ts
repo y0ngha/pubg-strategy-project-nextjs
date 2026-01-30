@@ -3,9 +3,22 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { AddTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/add-team-player.usecase';
+import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function addTeamPlayerAction(_: unknown, formData: FormData) {
+export type AddTeamPlayerAction = {
+    id: string;
+    color: string;
+    position: Position;
+    priority: number;
+};
+
+export async function addTeamPlayerAction(
+    formData: FormData
+): Promise<AddTeamPlayerAction> {
     const getService = initializeRequestServices();
+
+    await ensureAuthentication();
 
     const { userId, strategyId } = parseFormData(formData, [
         {

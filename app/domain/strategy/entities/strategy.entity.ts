@@ -229,7 +229,7 @@ export class Strategy {
     /**
      * Team Players
      */
-    addTeamPlayer(actorId: UserId) {
+    addTeamPlayer(actorId: UserId): TeamPlayer {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddTeamPlayer();
@@ -243,6 +243,8 @@ export class Strategy {
 
         this._teamPlayers.push(teamPlayer);
         this._updatedAt = new Date();
+
+        return teamPlayer;
     }
 
     removeTeamPlayer(actorId: UserId, teamPlayerId: TeamPlayerId) {
