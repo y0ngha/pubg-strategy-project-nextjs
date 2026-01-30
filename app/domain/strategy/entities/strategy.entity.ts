@@ -7,7 +7,7 @@ import { AirplanePath } from '@domain/strategy/entities/airplane-path.entity';
 import { Tag } from '@domain/strategy/entities/tag.entity';
 import { StrategyShare } from '@domain/strategy/entities/strategy-share.entity';
 import { Comment } from '@domain/strategy/entities/comment.entity';
-import { PubgMap, PubgMapSizes } from '@domain/strategy/enums/map.enum';
+import { PubgMap } from '@domain/strategy/enums/map.enum';
 import {
     AirplanePathExistsException,
     AirplanePathNotFoundException,
@@ -728,12 +728,6 @@ export class Strategy {
         this._airplanePath?.delete();
         this._tags.forEach(tag => tag.delete());
         this._shares.forEach(share => share.delete());
-    }
-
-    private getMapCenterPosition(): Position {
-        const size = PubgMapSizes[this._map];
-
-        return Position.create(size.width / 2, size.height / 2);
     }
 
     private getNextPriorityTeamPlayer(): number {
