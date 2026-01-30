@@ -1,10 +1,14 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { addTeamPlayerAction } from '@/(presentation)/strategy/actions/team-player/add-team-player.action';
+import {
+    AddTeamPlayerAction,
+    addTeamPlayerAction,
+} from '@/(presentation)/strategy/actions/team-player/add-team-player.action';
 import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateTeamPlayerMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -20,33 +24,11 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
             return await addTeamPlayerAction(formData);
         },
         onSuccess: data => {
-            const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        teamPlayers: [
-                            ...oldStrategy.teamPlayers,
-                            {
-                                id: data.id,
-                                priority: data.priority,
-                                position: data.position,
-                                color: data.color,
-                            },
-                        ],
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateTeamPlayerMutation', error);
@@ -56,6 +38,30 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (
+        queryKey: QueryKey,
+        data: AddTeamPlayerAction
+    ) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                teamPlayers: [
+                    ...oldStrategy.teamPlayers,
+                    {
+                        id: data.id,
+                        priority: data.priority,
+                        position: data.position,
+                        color: data.color,
+                    },
+                ],
+            };
+        });
+    };
 
     return {
         createTeamPlayer: mutate,
