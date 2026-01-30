@@ -1996,6 +1996,7 @@ describe('Strategy', () => {
     describe('Tag', () => {
         describe('AddTag', () => {
             const content = TagContent.create('태그');
+            const tagPosition = Position.create(1, 1);
             it('전략에 대한 편집 권한이 있으면, 태그가 추가된다.', () => {
                 // given
                 const content1 = TagContent.create('첫 번째 태그');
@@ -2003,27 +2004,33 @@ describe('Strategy', () => {
                 const oldTagLength = strategyFixture.tags.length;
 
                 // when
-                strategyFixture.addTag(ownerId, content1);
-                strategyFixture.addTag(editorId, content2);
-
-                // then
-                const tagContents = strategyFixture.tags.map(
-                    tag => tag.content
+                const savedTag1 = strategyFixture.addTag(
+                    ownerId,
+                    content1,
+                    tagPosition
+                );
+                const savedTag2 = strategyFixture.addTag(
+                    editorId,
+                    content2,
+                    tagPosition
                 );
 
+                // then
                 expect(strategyFixture.tags).toHaveLength(oldTagLength + 2);
-                expect(tagContents.includes(content1)).toBeTruthy();
-                expect(tagContents.includes(content2)).toBeTruthy();
+                expect(strategyFixture.tags).toContainEqual(savedTag1);
+                expect(strategyFixture.tags).toContainEqual(savedTag2);
+                expect(savedTag1.position).toEqual(tagPosition);
+                expect(savedTag2.position).toEqual(tagPosition);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
-                expect(() => strategyFixture.addTag(viewerId, content)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
+                expect(() =>
+                    strategyFixture.addTag(viewerId, content, tagPosition)
+                ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addTag(strangerId, content)
+                    strategyFixture.addTag(strangerId, content, tagPosition)
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -2032,9 +2039,9 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addTag(ownerId, content)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addTag(ownerId, content, tagPosition)
+                ).toThrow(DeletedStrategyException);
             });
         });
 
@@ -2043,7 +2050,7 @@ describe('Strategy', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
 
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
 
                 const tagId1 = tagFixture.id;
                 const tagId2 = strategyFixture.tags[1].id;
@@ -2091,7 +2098,7 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 태그 위치가 업데이트된다.', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
                 const newTagPosition1 = Position.create(300, 300);
                 const newTagPosition2 = Position.create(500, 500);
 
@@ -2127,7 +2134,7 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 태그 내용이 업데이트된다.', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
 
                 const newTagContent1 = TagContent.create('2026');
                 const newTagContent2 = TagContent.create('2027');

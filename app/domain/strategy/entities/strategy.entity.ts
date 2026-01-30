@@ -524,14 +524,16 @@ export class Strategy {
     /**
      * Tags
      */
-    addTag(actorId: UserId, content: TagContent) {
+    addTag(actorId: UserId, content: TagContent, position: Position) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
-        const tag = Tag.create(this.getMapCenterPosition(), content);
+        const tag = Tag.create(position, content);
 
         this._tags.push(tag);
         this._updatedAt = new Date();
+
+        return tag;
     }
 
     removeTag(actorId: UserId, tagId: TagId) {
