@@ -15,9 +15,7 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
     const user = useGetCurrentUser();
 
     const { mutate } = useMutation({
-        mutationFn: async () => {
-            const formData = new FormData();
-
+        mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
