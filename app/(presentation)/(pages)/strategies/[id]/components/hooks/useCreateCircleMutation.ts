@@ -15,12 +15,9 @@ export function useCreateCircleMutation(strategyId: string) {
     const user = useGetCurrentUser();
 
     const { mutate } = useMutation({
-        mutationFn: async (phase: number) => {
-            const formData = new FormData();
-
+        mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
-            formData.set('phase', phase.toString());
 
             return await createCircleAction(formData);
         },
