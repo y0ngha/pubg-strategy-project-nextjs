@@ -415,7 +415,7 @@ export class Strategy {
     /**
      * Circles
      */
-    addCircle(actorId: UserId, phase: CirclePhase) {
+    addCircle(actorId: UserId, phase: CirclePhase): Circle {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddCircle();
@@ -425,6 +425,8 @@ export class Strategy {
 
         this._circles.push(circle);
         this._updatedAt = new Date();
+
+        return circle;
     }
 
     removeCircle(actorId: UserId, circleId: CircleId) {

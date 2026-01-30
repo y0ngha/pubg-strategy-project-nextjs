@@ -3,9 +3,23 @@
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function createCircleAction(_: unknown, formData: FormData) {
+export type CreateCircleAction = {
+    id: string;
+    centerPosition: Position;
+    phase: number;
+    radius: number;
+    color: string;
+};
+
+export async function createCircleAction(
+    formData: FormData
+): Promise<CreateCircleAction> {
     const getService = initializeRequestServices();
+
+    await ensureAuthentication();
 
     const { userId, strategyId, phase } = parseFormData(formData, [
         {

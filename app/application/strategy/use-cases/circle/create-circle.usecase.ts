@@ -13,7 +13,7 @@ export class CreateCircleUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: CreateCircleRequestDto): Promise<boolean> {
+    async execute(dto: CreateCircleRequestDto) {
         const { actorId, strategyId, phase } =
             CreateCircleRequestSchema.parse(dto);
 
@@ -23,10 +23,19 @@ export class CreateCircleUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addCircle(actorId, phase);
+        const circle = strategy.addCircle(actorId, phase);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: circle.id.toString(),
+            centerPosition: {
+                x: circle.centerPosition.x,
+                y: circle.centerPosition.y,
+            },
+            phase: circle.phase.toString(),
+            radius: circle.phase.radius,
+            color: circle.phase.color,
+        };
     }
 }
