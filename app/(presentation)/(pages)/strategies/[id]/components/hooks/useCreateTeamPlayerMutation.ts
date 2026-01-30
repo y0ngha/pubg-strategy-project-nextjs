@@ -22,6 +22,10 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
         onSuccess: data => {
             const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
 
+            queryClient.invalidateQueries({
+                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+            });
+
             queryClient.setQueryData<GetStrategyAction>(
                 strataegyQueryKey,
                 oldStrategy => {
