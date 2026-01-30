@@ -417,13 +417,13 @@ export class Strategy {
     /**
      * Circles
      */
-    addCircle(actorId: UserId, phase: CirclePhase): Circle {
+    addCircle(actorId: UserId, phase: CirclePhase, position: Position): Circle {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddCircle();
         this.ensureNoDuplicatePhase(phase);
 
-        const circle = Circle.create(this.getMapCenterPosition(), phase);
+        const circle = Circle.create(position, phase);
 
         this._circles.push(circle);
         this._updatedAt = new Date();

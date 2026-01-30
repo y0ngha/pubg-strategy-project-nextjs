@@ -1387,8 +1387,8 @@ describe('Strategy', () => {
                 const phase2 = CirclePhase.create(2);
 
                 // when
-                strategy.addCircle(ownerId, phase1);
-                strategy.addCircle(editorId, phase2);
+                strategy.addCircle(ownerId, phase1, Position.create(1, 1));
+                strategy.addCircle(editorId, phase2, Position.create(1, 1));
 
                 // then
                 const circlePhases = strategy.circles.map(
@@ -1409,12 +1409,20 @@ describe('Strategy', () => {
                 );
 
                 for (let i = 1; i <= 8; i++) {
-                    strategy.addCircle(ownerId, CirclePhase.create(i));
+                    strategy.addCircle(
+                        ownerId,
+                        CirclePhase.create(i),
+                        Position.create(1, 1)
+                    );
                 }
 
                 // when & then
                 expect(() =>
-                    strategy.addCircle(ownerId, CirclePhase.create(8))
+                    strategy.addCircle(
+                        ownerId,
+                        CirclePhase.create(8),
+                        Position.create(1, 1)
+                    )
                 ).toThrow(CircleLimitExceededException);
             });
 
@@ -1427,22 +1435,30 @@ describe('Strategy', () => {
                     defaultMap
                 );
                 const phase = CirclePhase.create(1);
-                strategy.addCircle(ownerId, phase);
+                strategy.addCircle(ownerId, phase, Position.create(1, 1));
 
                 // when & then
-                expect(() => strategy.addCircle(ownerId, phase)).toThrow(
-                    CirclePhaseDuplicateException
-                );
+                expect(() =>
+                    strategy.addCircle(ownerId, phase, Position.create(1, 1))
+                ).toThrow(CirclePhaseDuplicateException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.addCircle(viewerId, phase)
+                    strategyFixture.addCircle(
+                        viewerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addCircle(strangerId, phase)
+                    strategyFixture.addCircle(
+                        strangerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1451,9 +1467,13 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addCircle(ownerId, phase)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addCircle(
+                        ownerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
+                ).toThrow(DeletedStrategyException);
             });
         });
 

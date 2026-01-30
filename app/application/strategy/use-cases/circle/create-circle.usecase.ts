@@ -14,7 +14,7 @@ export class CreateCircleUseCase {
     ) {}
 
     async execute(dto: CreateCircleRequestDto) {
-        const { actorId, strategyId, phase } =
+        const { actorId, strategyId, phase, position } =
             CreateCircleRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -23,7 +23,7 @@ export class CreateCircleUseCase {
             throw new StrategyNotFoundException();
         }
 
-        const circle = strategy.addCircle(actorId, phase);
+        const circle = strategy.addCircle(actorId, phase, position);
 
         await this.strategyRepository.save(strategy);
 

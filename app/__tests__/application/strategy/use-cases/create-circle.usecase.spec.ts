@@ -41,6 +41,10 @@ describe('CreateCircleUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             phase: 1,
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         // when & then
@@ -58,6 +62,10 @@ describe('CreateCircleUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             phase: 1,
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         // when
@@ -73,6 +81,7 @@ describe('CreateCircleUseCase', () => {
 
         expect(strategyFixture.circles).toHaveLength(1);
         expect(addedCircle?.phase.value).toEqual(dto.phase);
+        expect(addedCircle?.centerPosition).toEqual(dto.position);
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
@@ -87,6 +96,10 @@ describe('CreateCircleUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             phase: 1,
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         // When & Then

@@ -21,7 +21,7 @@ export async function createCircleAction(
 
     await ensureAuthentication();
 
-    const { userId, strategyId, phase } = parseFormData(formData, [
+    const { userId, strategyId, phase, position } = parseFormData(formData, [
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -37,6 +37,11 @@ export async function createCircleAction(
             error: '자기장 페이즈를 불러올 수 없습니다.',
             type: 'number',
         },
+        {
+            key: 'position',
+            error: '자기장 위치를 불러올 수 없습니다.',
+            type: 'position',
+        },
     ] as const);
 
     const useCase = getService(CreateCircleUseCase);
@@ -45,6 +50,7 @@ export async function createCircleAction(
         actorId: userId,
         strategyId: strategyId,
         phase: phase,
+        position: position,
     };
 
     return await useCase.execute(dto);
