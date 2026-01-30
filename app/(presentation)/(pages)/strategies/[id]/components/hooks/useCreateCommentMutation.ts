@@ -77,17 +77,24 @@ export function useCreateCommentMutation(strategyId: string) {
         parentIndex: number,
         comments: CommentResponseDto[]
     ): CommentResponseDto[] => {
-        comments[parentIndex].childComments = [
-            ...comments[parentIndex].childComments,
-            {
-                id: data.id,
-                authorId: data.authorId,
-                authorEmail: data.authorEmail,
-                content: data.content,
-            },
-        ];
+        return comments.map((comment, index) => {
+            if (index !== parentIndex) {
+                return comment;
+            }
 
-        return comments;
+            return {
+                ...comment,
+                childComments: [
+                    ...comment.childComments,
+                    {
+                        id: data.id,
+                        authorId: data.authorId,
+                        authorEmail: data.authorEmail,
+                        content: data.content,
+                    },
+                ],
+            };
+        });
     };
 
     const appendParentComment = (
