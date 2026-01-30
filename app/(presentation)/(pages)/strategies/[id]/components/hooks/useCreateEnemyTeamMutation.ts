@@ -4,7 +4,11 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
-import { addEnemyTeamAction } from '@/(presentation)/strategy/actions/enemy-team/add-enemy-team.action';
+import {
+    AddEnemyTeamAction,
+    addEnemyTeamAction,
+} from '@/(presentation)/strategy/actions/enemy-team/add-enemy-team.action';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateEnemyTeamMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -22,30 +26,11 @@ export function useCreateEnemyTeamMutation(strategyId: string) {
         onSuccess: data => {
             const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
 
+            optimisticUpdate(strataegyQueryKey, data);
+
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        enemyTeams: [
-                            ...oldStrategy.enemyTeams,
-                            {
-                                id: data.id,
-                                teamLabel: data.teamLabel,
-                                position: data.position,
-                            },
-                        ],
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateEnemyTeamMutation', error);
@@ -54,6 +39,26 @@ export function useCreateEnemyTeamMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (queryKey: QueryKey, data: AddEnemyTeamAction) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                enemyTeams: [
+                    ...oldStrategy.enemyTeams,
+                    {
+                        id: data.id,
+                        teamLabel: data.teamLabel,
+                        position: data.position,
+                    },
+                ],
+            };
+        });
+    };
 
     return {
         createEnemyTeam: mutate,
