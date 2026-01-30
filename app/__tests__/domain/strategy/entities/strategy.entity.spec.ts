@@ -380,6 +380,8 @@ describe('Strategy', () => {
 
     describe('TeamPlayer', () => {
         describe('AddTeamPlayer', () => {
+            const teamPlayerPosition = Position.create(1, 1);
+
             it('팀 플레이어가 4명 이하이고, 편집 권한이 있으면 추가된다.', () => {
                 // given
                 const strategy = Strategy.create(
@@ -396,11 +398,21 @@ describe('Strategy', () => {
                 );
 
                 // when
-                strategy.addTeamPlayer(editorId);
-                strategy.addTeamPlayer(ownerId);
+                const savedTeamPlayer1 = strategy.addTeamPlayer(
+                    editorId,
+                    teamPlayerPosition
+                );
+                const savedTeamPlayer2 = strategy.addTeamPlayer(
+                    ownerId,
+                    teamPlayerPosition
+                );
 
                 // then
                 expect(strategy.teamPlayers).toHaveLength(3);
+                expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer1);
+                expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer2);
+                expect(savedTeamPlayer1.position).toEqual(teamPlayerPosition);
+                expect(savedTeamPlayer2.position).toEqual(teamPlayerPosition);
             });
 
             it('팀 플레이어가 4명 이상이면, 추가시 에러를 던진다.', () => {
@@ -412,24 +424,27 @@ describe('Strategy', () => {
                     defaultMap
                 );
 
-                strategy.addTeamPlayer(ownerId);
-                strategy.addTeamPlayer(ownerId);
-                strategy.addTeamPlayer(ownerId);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
 
                 // when & then
-                expect(() => strategy.addTeamPlayer(ownerId)).toThrow(
-                    TeamPlayerLimitExceededException
-                );
+                expect(() =>
+                    strategy.addTeamPlayer(ownerId, teamPlayerPosition)
+                ).toThrow(TeamPlayerLimitExceededException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
-                expect(() => strategyFixture.addTeamPlayer(viewerId)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
-                expect(() => strategyFixture.addTeamPlayer(strangerId)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
+                expect(() =>
+                    strategyFixture.addTeamPlayer(viewerId, teamPlayerPosition)
+                ).toThrow(StrategyEditPermissionDeniedException);
+                expect(() =>
+                    strategyFixture.addTeamPlayer(
+                        strangerId,
+                        teamPlayerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
             });
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
@@ -437,9 +452,9 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addTeamPlayer(ownerId)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addTeamPlayer(ownerId, teamPlayerPosition)
+                ).toThrow(DeletedStrategyException);
             });
         });
         describe('RemoveTeamPlayer', () => {

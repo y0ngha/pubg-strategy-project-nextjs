@@ -40,6 +40,10 @@ describe('AddTeamPlayerUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         // when & then
@@ -56,6 +60,10 @@ describe('AddTeamPlayerUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         // when
@@ -79,6 +87,10 @@ describe('AddTeamPlayerUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            position: {
+                x: 1,
+                y: 1,
+            },
         };
 
         //when & then

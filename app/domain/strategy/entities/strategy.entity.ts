@@ -229,14 +229,14 @@ export class Strategy {
     /**
      * Team Players
      */
-    addTeamPlayer(actorId: UserId): TeamPlayer {
+    addTeamPlayer(actorId: UserId, position: Position): TeamPlayer {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddTeamPlayer();
 
         const teamPlayer = TeamPlayer.create(
             this.getNextPriorityTeamPlayer(),
-            this.getMapCenterPosition(),
+            position,
             null,
             null
         );

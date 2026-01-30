@@ -14,7 +14,8 @@ export class AddTeamPlayerUseCase {
     ) {}
 
     async execute(dto: AddTeamPlayerRequestDto) {
-        const { actorId, strategyId } = AddTeamPlayerRequestSchema.parse(dto);
+        const { actorId, strategyId, position } =
+            AddTeamPlayerRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
 
@@ -22,7 +23,7 @@ export class AddTeamPlayerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        const teamPlayer = strategy.addTeamPlayer(actorId);
+        const teamPlayer = strategy.addTeamPlayer(actorId, position);
 
         await this.strategyRepository.save(strategy);
 
