@@ -15,6 +15,7 @@ import { ZodError } from 'zod';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { Position } from '@domain/strategy/value-objects/position';
 
 describe('UpdateEnemyTeamUseCase', () => {
     let useCase: UpdateEnemyTeamUseCase;
@@ -38,7 +39,11 @@ describe('UpdateEnemyTeamUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addEnemyTeam(ownerId, TeamLabel.create('A'));
+        strategyFixture.addEnemyTeam(
+            ownerId,
+            TeamLabel.create('A'),
+            Position.create(1, 1)
+        );
         enemyTeamId = strategyFixture.enemyTeams[0].id;
     });
 

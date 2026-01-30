@@ -38,6 +38,7 @@ describe('CreateTagUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             content: '내용입니다.',
+            position: { x: 1, y: 1 },
         };
 
         // when & then
@@ -55,6 +56,7 @@ describe('CreateTagUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             content: '내용입니다.',
+            position: { x: 1, y: 1 },
         };
 
         // when
@@ -80,6 +82,7 @@ describe('CreateTagUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             content: '내용입니다.',
+            position: { x: 1, y: 1 },
         };
 
         // When & Then

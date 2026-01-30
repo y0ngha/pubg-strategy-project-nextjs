@@ -13,8 +13,8 @@ export class CreateTagUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: CreateTagRequestDto): Promise<boolean> {
-        const { actorId, strategyId, content } =
+    async execute(dto: CreateTagRequestDto) {
+        const { actorId, strategyId, content, position } =
             CreateTagRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -23,10 +23,17 @@ export class CreateTagUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addTag(actorId, content);
+        const tag = strategy.addTag(actorId, content, position);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: tag.id.toString(),
+            position: {
+                x: tag.position.x,
+                y: tag.position.y,
+            },
+            content: tag.content.toString(),
+        };
     }
 }

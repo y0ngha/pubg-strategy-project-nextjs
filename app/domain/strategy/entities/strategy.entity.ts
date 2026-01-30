@@ -7,7 +7,7 @@ import { AirplanePath } from '@domain/strategy/entities/airplane-path.entity';
 import { Tag } from '@domain/strategy/entities/tag.entity';
 import { StrategyShare } from '@domain/strategy/entities/strategy-share.entity';
 import { Comment } from '@domain/strategy/entities/comment.entity';
-import { PubgMap, PubgMapSizes } from '@domain/strategy/enums/map.enum';
+import { PubgMap } from '@domain/strategy/enums/map.enum';
 import {
     AirplanePathExistsException,
     AirplanePathNotFoundException,
@@ -229,20 +229,22 @@ export class Strategy {
     /**
      * Team Players
      */
-    addTeamPlayer(actorId: UserId) {
+    addTeamPlayer(actorId: UserId, position: Position): TeamPlayer {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddTeamPlayer();
 
         const teamPlayer = TeamPlayer.create(
             this.getNextPriorityTeamPlayer(),
-            this.getMapCenterPosition(),
+            position,
             null,
             null
         );
 
         this._teamPlayers.push(teamPlayer);
         this._updatedAt = new Date();
+
+        return teamPlayer;
     }
 
     removeTeamPlayer(actorId: UserId, teamPlayerId: TeamPlayerId) {
@@ -285,9 +287,11 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.addMarker(position);
+        const marker = teamPlayer.addMarker(position);
 
         this._updatedAt = new Date();
+
+        return marker;
     }
 
     updateTeamPlayerMarker(
@@ -344,8 +348,10 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.addWaypoint(positions);
+        const waypoint = teamPlayer.addWaypoint(positions);
         this._updatedAt = new Date();
+
+        return waypoint;
     }
 
     removeTeamPlayerWaypoint(actorId: UserId, teamPlayerId: TeamPlayerId) {
@@ -361,17 +367,16 @@ export class Strategy {
     /**
      * Enemy Teams
      */
-    addEnemyTeam(actorId: UserId, teamLabel: TeamLabel) {
+    addEnemyTeam(actorId: UserId, teamLabel: TeamLabel, position: Position) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
-        const enemyTeam = EnemyTeam.create(
-            teamLabel,
-            this.getMapCenterPosition()
-        );
+        const enemyTeam = EnemyTeam.create(teamLabel, position);
 
         this._enemyTeams.push(enemyTeam);
         this._updatedAt = new Date();
+
+        return enemyTeam;
     }
 
     removeEnemyTeam(actorId: UserId, enemyTeamId: EnemyTeamId) {
@@ -413,16 +418,18 @@ export class Strategy {
     /**
      * Circles
      */
-    addCircle(actorId: UserId, phase: CirclePhase) {
+    addCircle(actorId: UserId, phase: CirclePhase, position: Position): Circle {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureCanAddCircle();
         this.ensureNoDuplicatePhase(phase);
 
-        const circle = Circle.create(this.getMapCenterPosition(), phase);
+        const circle = Circle.create(position, phase);
 
         this._circles.push(circle);
         this._updatedAt = new Date();
+
+        return circle;
     }
 
     removeCircle(actorId: UserId, circleId: CircleId) {
@@ -487,6 +494,8 @@ export class Strategy {
 
         this._airplanePath = AirplanePath.create(startPosition, endPosition);
         this._updatedAt = new Date();
+
+        return this._airplanePath;
     }
 
     updateAirplanePath(
@@ -519,14 +528,16 @@ export class Strategy {
     /**
      * Tags
      */
-    addTag(actorId: UserId, content: TagContent) {
+    addTag(actorId: UserId, content: TagContent, position: Position) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
-        const tag = Tag.create(this.getMapCenterPosition(), content);
+        const tag = Tag.create(position, content);
 
         this._tags.push(tag);
         this._updatedAt = new Date();
+
+        return tag;
     }
 
     removeTag(actorId: UserId, tagId: TagId) {
@@ -624,7 +635,7 @@ export class Strategy {
      * 이미 API에서 불러와 메모리에 올라와있는 시점이고, 그것을 순회한다고 하여 큰 오버헤드가 발생하지 않음.
      * 더군다나 배열 순회도 그리 많이하는 편도 아닐 것으로 생각되어, 메서드는 분리하는게 트레이드오프가 더 좋을 것 같음.
      */
-    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap) {
+    update(actorId: UserId, title?: StrategyTitle, map?: PubgMap): Strategy {
         this.ensureNotDeleted();
         this.ensureOwner(actorId);
 
@@ -643,6 +654,8 @@ export class Strategy {
         if (isTitleChanged || isMapChange) {
             this._updatedAt = new Date();
         }
+
+        return this;
     }
 
     /**
@@ -670,6 +683,8 @@ export class Strategy {
         );
 
         this._comments.push(comment);
+
+        return comment;
     }
 
     removeComment(actorId: UserId, commentId: CommentId) {
@@ -719,12 +734,6 @@ export class Strategy {
         this._airplanePath?.delete();
         this._tags.forEach(tag => tag.delete());
         this._shares.forEach(share => share.delete());
-    }
-
-    private getMapCenterPosition(): Position {
-        const size = PubgMapSizes[this._map];
-
-        return Position.create(size.width / 2, size.height / 2);
     }
 
     private getNextPriorityTeamPlayer(): number {

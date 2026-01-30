@@ -14,7 +14,7 @@ export class AddAirplanePathUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: AddAirplanePathRequestDto): Promise<boolean> {
+    async execute(dto: AddAirplanePathRequestDto) {
         const { actorId, strategyId, startPosition, endPosition } =
             AddAirplanePathRequestSchema.parse(dto);
 
@@ -24,10 +24,24 @@ export class AddAirplanePathUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addAirplanePath(actorId, startPosition, endPosition);
+        const airplanePath = strategy.addAirplanePath(
+            actorId,
+            startPosition,
+            endPosition
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: airplanePath.id.toString(),
+            startPosition: {
+                x: airplanePath.startPosition.x,
+                y: airplanePath.startPosition.y,
+            },
+            endPosition: {
+                x: airplanePath.endPosition.x,
+                y: airplanePath.endPosition.y,
+            },
+        };
     }
 }

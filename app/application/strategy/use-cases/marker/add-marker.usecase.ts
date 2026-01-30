@@ -13,7 +13,7 @@ export class AddMarkerUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: AddMarkerRequestDto): Promise<boolean> {
+    async execute(dto: AddMarkerRequestDto) {
         const { actorId, strategyId, teamPlayerId, position } =
             AddMarkerRequestSchema.parse(dto);
 
@@ -23,10 +23,21 @@ export class AddMarkerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addTeamPlayerMarker(actorId, teamPlayerId, position);
+        const marker = strategy.addTeamPlayerMarker(
+            actorId,
+            teamPlayerId,
+            position
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: marker.id.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            position: {
+                x: marker.position.x,
+                y: marker.position.y,
+            },
+        };
     }
 }

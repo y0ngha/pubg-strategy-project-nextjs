@@ -15,6 +15,7 @@ import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { Position } from '@domain/strategy/value-objects/position';
 
 describe('UpdateTagUseCase', () => {
     let useCase: UpdateTagUseCase;
@@ -38,7 +39,11 @@ describe('UpdateTagUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTag(ownerId, TagContent.create('업데이트 될 내용'));
+        strategyFixture.addTag(
+            ownerId,
+            TagContent.create('업데이트 될 내용'),
+            Position.create(1, 1)
+        );
         tagId = strategyFixture.tags[0].id;
     });
 

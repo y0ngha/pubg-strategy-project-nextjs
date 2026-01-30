@@ -13,8 +13,9 @@ export class AddTeamPlayerUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: AddTeamPlayerRequestDto): Promise<boolean> {
-        const { actorId, strategyId } = AddTeamPlayerRequestSchema.parse(dto);
+    async execute(dto: AddTeamPlayerRequestDto) {
+        const { actorId, strategyId, position } =
+            AddTeamPlayerRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
 
@@ -22,10 +23,18 @@ export class AddTeamPlayerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addTeamPlayer(actorId);
+        const teamPlayer = strategy.addTeamPlayer(actorId, position);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: teamPlayer.id.toString(),
+            color: teamPlayer.color,
+            priority: teamPlayer.priority,
+            position: {
+                x: teamPlayer.position.x,
+                y: teamPlayer.position.y,
+            },
+        };
     }
 }

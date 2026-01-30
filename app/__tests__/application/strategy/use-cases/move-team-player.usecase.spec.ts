@@ -13,6 +13,7 @@ import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { Position } from '@domain/strategy/value-objects/position';
 
 describe('MoveTeamPlayerUseCase', () => {
     let useCase: MoveTeamPlayerUseCase;
@@ -36,7 +37,7 @@ describe('MoveTeamPlayerUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTeamPlayer(ownerId);
+        strategyFixture.addTeamPlayer(ownerId, Position.create(1, 1));
         teamPlayerId = strategyFixture.teamPlayers[0].id;
     });
 

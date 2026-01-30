@@ -60,7 +60,7 @@ describe('UpdateWaypointUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTeamPlayer(ownerId);
+        strategyFixture.addTeamPlayer(ownerId, Position.create(1, 1));
 
         teamPlayerId = strategyFixture.teamPlayers[0].id;
     });

@@ -22,6 +22,7 @@ export function useLucideIconToCursorUrl(
                 color: options.color,
                 size: options.size,
                 strokeWidth: options.strokeWidth,
+                fill: options.color,
             })
         );
 

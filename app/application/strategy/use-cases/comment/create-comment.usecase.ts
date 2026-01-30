@@ -13,7 +13,7 @@ export class CreateCommentUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: CreateCommentRequestDto): Promise<boolean> {
+    async execute(dto: CreateCommentRequestDto) {
         const {
             actorId,
             actorEmail,
@@ -29,7 +29,7 @@ export class CreateCommentUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addComment(
+        const comment = strategy.addComment(
             actorId,
             actorEmail,
             content,
@@ -39,6 +39,16 @@ export class CreateCommentUseCase {
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: comment.id.toString(),
+            position:
+                comment.position !== null
+                    ? { x: comment.position.x, y: comment.position.y }
+                    : null,
+            authorId: comment.authorId.toString(),
+            authorEmail: comment.authorEmail.toString(),
+            content: comment.content.toString(),
+            parentCommentId: comment.parentCommentId?.toString() ?? null,
+        };
     }
 }

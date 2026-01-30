@@ -14,6 +14,7 @@ import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
 import { Email } from '@domain/shared/value-objects/email';
+import { Position } from '@domain/strategy/value-objects/position';
 
 describe('DeleteCircleUseCase', () => {
     let useCase: DeleteCircleUseCase;
@@ -37,7 +38,11 @@ describe('DeleteCircleUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addCircle(ownerId, CirclePhase.create(1));
+        strategyFixture.addCircle(
+            ownerId,
+            CirclePhase.create(1),
+            Position.create(1, 1)
+        );
         circleId = strategyFixture.circles[0].id;
     });
 

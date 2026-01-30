@@ -380,6 +380,8 @@ describe('Strategy', () => {
 
     describe('TeamPlayer', () => {
         describe('AddTeamPlayer', () => {
+            const teamPlayerPosition = Position.create(1, 1);
+
             it('팀 플레이어가 4명 이하이고, 편집 권한이 있으면 추가된다.', () => {
                 // given
                 const strategy = Strategy.create(
@@ -396,11 +398,21 @@ describe('Strategy', () => {
                 );
 
                 // when
-                strategy.addTeamPlayer(editorId);
-                strategy.addTeamPlayer(ownerId);
+                const savedTeamPlayer1 = strategy.addTeamPlayer(
+                    editorId,
+                    teamPlayerPosition
+                );
+                const savedTeamPlayer2 = strategy.addTeamPlayer(
+                    ownerId,
+                    teamPlayerPosition
+                );
 
                 // then
                 expect(strategy.teamPlayers).toHaveLength(3);
+                expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer1);
+                expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer2);
+                expect(savedTeamPlayer1.position).toEqual(teamPlayerPosition);
+                expect(savedTeamPlayer2.position).toEqual(teamPlayerPosition);
             });
 
             it('팀 플레이어가 4명 이상이면, 추가시 에러를 던진다.', () => {
@@ -412,24 +424,27 @@ describe('Strategy', () => {
                     defaultMap
                 );
 
-                strategy.addTeamPlayer(ownerId);
-                strategy.addTeamPlayer(ownerId);
-                strategy.addTeamPlayer(ownerId);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
 
                 // when & then
-                expect(() => strategy.addTeamPlayer(ownerId)).toThrow(
-                    TeamPlayerLimitExceededException
-                );
+                expect(() =>
+                    strategy.addTeamPlayer(ownerId, teamPlayerPosition)
+                ).toThrow(TeamPlayerLimitExceededException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
-                expect(() => strategyFixture.addTeamPlayer(viewerId)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
-                expect(() => strategyFixture.addTeamPlayer(strangerId)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
+                expect(() =>
+                    strategyFixture.addTeamPlayer(viewerId, teamPlayerPosition)
+                ).toThrow(StrategyEditPermissionDeniedException);
+                expect(() =>
+                    strategyFixture.addTeamPlayer(
+                        strangerId,
+                        teamPlayerPosition
+                    )
+                ).toThrow(StrategyEditPermissionDeniedException);
             });
 
             it('삭제된 전략이라면, 에러를 던진다.', () => {
@@ -437,9 +452,9 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addTeamPlayer(ownerId)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addTeamPlayer(ownerId, teamPlayerPosition)
+                ).toThrow(DeletedStrategyException);
             });
         });
         describe('RemoveTeamPlayer', () => {
@@ -1094,7 +1109,7 @@ describe('Strategy', () => {
 
     describe('EnemyTeam', () => {
         const teamLabel = TeamLabel.create('A');
-
+        const enemyTeamPosition = Position.create(1, 1);
         describe('AddEnemyTeam', () => {
             it('전략에 대한 편집 권한이 있으면, 적 팀이 추가된다.', () => {
                 // given
@@ -1115,26 +1130,41 @@ describe('Strategy', () => {
                 );
 
                 // when
-                strategy.addEnemyTeam(ownerId, teamLabel1);
-                strategy.addEnemyTeam(editorId, teamLabel2);
+                const savedEnemyTeam1 = strategy.addEnemyTeam(
+                    ownerId,
+                    teamLabel1,
+                    enemyTeamPosition
+                );
+                const savedEnemyTeam2 = strategy.addEnemyTeam(
+                    editorId,
+                    teamLabel2,
+                    enemyTeamPosition
+                );
 
                 // then
-                const teamLabels = strategy.enemyTeams.map(
-                    enemyTeam => enemyTeam.teamLabel
-                );
                 expect(strategy.enemyTeams).toHaveLength(2);
-                expect(teamLabels.includes(teamLabel1)).toBeTruthy();
-                expect(teamLabels.includes(teamLabel2)).toBeTruthy();
+                expect(strategy.enemyTeams).toContainEqual(savedEnemyTeam1);
+                expect(strategy.enemyTeams).toContainEqual(savedEnemyTeam2);
+                expect(savedEnemyTeam1.position).toEqual(enemyTeamPosition);
+                expect(savedEnemyTeam2.position).toEqual(enemyTeamPosition);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.addEnemyTeam(viewerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        viewerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addEnemyTeam(strangerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        strangerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1144,7 +1174,11 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.addEnemyTeam(ownerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        ownerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(DeletedStrategyException);
             });
         });
@@ -1385,18 +1419,26 @@ describe('Strategy', () => {
                 );
                 const phase1 = CirclePhase.create(1);
                 const phase2 = CirclePhase.create(2);
+                const circlePosition = Position.create(1, 1);
 
                 // when
-                strategy.addCircle(ownerId, phase1);
-                strategy.addCircle(editorId, phase2);
+                const savedCircle1 = strategy.addCircle(
+                    ownerId,
+                    phase1,
+                    circlePosition
+                );
+                const savedCircle2 = strategy.addCircle(
+                    editorId,
+                    phase2,
+                    circlePosition
+                );
 
                 // then
-                const circlePhases = strategy.circles.map(
-                    circle => circle.phase
-                );
                 expect(strategy.circles).toHaveLength(2);
-                expect(circlePhases.includes(phase1)).toBeTruthy();
-                expect(circlePhases.includes(phase2)).toBeTruthy();
+                expect(strategy.circles).toContainEqual(savedCircle1);
+                expect(strategy.circles).toContainEqual(savedCircle2);
+                expect(savedCircle1.centerPosition).toEqual(circlePosition);
+                expect(savedCircle2.centerPosition).toEqual(circlePosition);
             });
 
             it('Circle이 8개 이상인데 추가하려 하면, 에러를 던진다.', () => {
@@ -1409,12 +1451,20 @@ describe('Strategy', () => {
                 );
 
                 for (let i = 1; i <= 8; i++) {
-                    strategy.addCircle(ownerId, CirclePhase.create(i));
+                    strategy.addCircle(
+                        ownerId,
+                        CirclePhase.create(i),
+                        Position.create(1, 1)
+                    );
                 }
 
                 // when & then
                 expect(() =>
-                    strategy.addCircle(ownerId, CirclePhase.create(8))
+                    strategy.addCircle(
+                        ownerId,
+                        CirclePhase.create(8),
+                        Position.create(1, 1)
+                    )
                 ).toThrow(CircleLimitExceededException);
             });
 
@@ -1427,22 +1477,30 @@ describe('Strategy', () => {
                     defaultMap
                 );
                 const phase = CirclePhase.create(1);
-                strategy.addCircle(ownerId, phase);
+                strategy.addCircle(ownerId, phase, Position.create(1, 1));
 
                 // when & then
-                expect(() => strategy.addCircle(ownerId, phase)).toThrow(
-                    CirclePhaseDuplicateException
-                );
+                expect(() =>
+                    strategy.addCircle(ownerId, phase, Position.create(1, 1))
+                ).toThrow(CirclePhaseDuplicateException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.addCircle(viewerId, phase)
+                    strategyFixture.addCircle(
+                        viewerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addCircle(strangerId, phase)
+                    strategyFixture.addCircle(
+                        strangerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1451,9 +1509,13 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addCircle(ownerId, phase)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addCircle(
+                        ownerId,
+                        phase,
+                        Position.create(1, 1)
+                    )
+                ).toThrow(DeletedStrategyException);
             });
         });
 
@@ -1934,6 +1996,7 @@ describe('Strategy', () => {
     describe('Tag', () => {
         describe('AddTag', () => {
             const content = TagContent.create('태그');
+            const tagPosition = Position.create(1, 1);
             it('전략에 대한 편집 권한이 있으면, 태그가 추가된다.', () => {
                 // given
                 const content1 = TagContent.create('첫 번째 태그');
@@ -1941,27 +2004,33 @@ describe('Strategy', () => {
                 const oldTagLength = strategyFixture.tags.length;
 
                 // when
-                strategyFixture.addTag(ownerId, content1);
-                strategyFixture.addTag(editorId, content2);
-
-                // then
-                const tagContents = strategyFixture.tags.map(
-                    tag => tag.content
+                const savedTag1 = strategyFixture.addTag(
+                    ownerId,
+                    content1,
+                    tagPosition
+                );
+                const savedTag2 = strategyFixture.addTag(
+                    editorId,
+                    content2,
+                    tagPosition
                 );
 
+                // then
                 expect(strategyFixture.tags).toHaveLength(oldTagLength + 2);
-                expect(tagContents.includes(content1)).toBeTruthy();
-                expect(tagContents.includes(content2)).toBeTruthy();
+                expect(strategyFixture.tags).toContainEqual(savedTag1);
+                expect(strategyFixture.tags).toContainEqual(savedTag2);
+                expect(savedTag1.position).toEqual(tagPosition);
+                expect(savedTag2.position).toEqual(tagPosition);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
-                expect(() => strategyFixture.addTag(viewerId, content)).toThrow(
-                    StrategyEditPermissionDeniedException
-                );
+                expect(() =>
+                    strategyFixture.addTag(viewerId, content, tagPosition)
+                ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addTag(strangerId, content)
+                    strategyFixture.addTag(strangerId, content, tagPosition)
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1970,9 +2039,9 @@ describe('Strategy', () => {
                 strategyFixture.delete(ownerId);
 
                 // when & then
-                expect(() => strategyFixture.addTag(ownerId, content)).toThrow(
-                    DeletedStrategyException
-                );
+                expect(() =>
+                    strategyFixture.addTag(ownerId, content, tagPosition)
+                ).toThrow(DeletedStrategyException);
             });
         });
 
@@ -1981,7 +2050,7 @@ describe('Strategy', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
 
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
 
                 const tagId1 = tagFixture.id;
                 const tagId2 = strategyFixture.tags[1].id;
@@ -2029,7 +2098,7 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 태그 위치가 업데이트된다.', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
                 const newTagPosition1 = Position.create(300, 300);
                 const newTagPosition2 = Position.create(500, 500);
 
@@ -2065,7 +2134,7 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 태그 내용이 업데이트된다.', () => {
                 // given
                 const content = TagContent.create('태그입니다.');
-                strategyFixture.addTag(ownerId, content);
+                strategyFixture.addTag(ownerId, content, Position.create(1, 1));
 
                 const newTagContent1 = TagContent.create('2026');
                 const newTagContent2 = TagContent.create('2027');

@@ -13,6 +13,7 @@ import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/ad
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { Position } from '@domain/strategy/value-objects/position';
 
 describe('AddWaypointUseCase', () => {
     let useCase: AddWaypointUseCase;
@@ -20,6 +21,7 @@ describe('AddWaypointUseCase', () => {
     let strategyFixture: Strategy;
 
     const ownerId = UserId.generate();
+    const teamPlayerPosiiton = Position.create(1, 1);
     const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
@@ -58,7 +60,7 @@ describe('AddWaypointUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTeamPlayer(ownerId);
+        strategyFixture.addTeamPlayer(ownerId, teamPlayerPosiiton);
 
         teamPlayerId = strategyFixture.teamPlayers[0].id;
     });
