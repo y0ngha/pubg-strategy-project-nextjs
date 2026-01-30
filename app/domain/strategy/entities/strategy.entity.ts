@@ -363,14 +363,11 @@ export class Strategy {
     /**
      * Enemy Teams
      */
-    addEnemyTeam(actorId: UserId, teamLabel: TeamLabel) {
+    addEnemyTeam(actorId: UserId, teamLabel: TeamLabel, position: Position) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
 
-        const enemyTeam = EnemyTeam.create(
-            teamLabel,
-            this.getMapCenterPosition()
-        );
+        const enemyTeam = EnemyTeam.create(teamLabel, position);
 
         this._enemyTeams.push(enemyTeam);
         this._updatedAt = new Date();

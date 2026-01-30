@@ -1109,7 +1109,7 @@ describe('Strategy', () => {
 
     describe('EnemyTeam', () => {
         const teamLabel = TeamLabel.create('A');
-
+        const enemyTeamPosition = Position.create(1, 1);
         describe('AddEnemyTeam', () => {
             it('전략에 대한 편집 권한이 있으면, 적 팀이 추가된다.', () => {
                 // given
@@ -1130,26 +1130,41 @@ describe('Strategy', () => {
                 );
 
                 // when
-                strategy.addEnemyTeam(ownerId, teamLabel1);
-                strategy.addEnemyTeam(editorId, teamLabel2);
+                const savedEnemyTeam1 = strategy.addEnemyTeam(
+                    ownerId,
+                    teamLabel1,
+                    enemyTeamPosition
+                );
+                const savedEnemyTeam2 = strategy.addEnemyTeam(
+                    editorId,
+                    teamLabel2,
+                    enemyTeamPosition
+                );
 
                 // then
-                const teamLabels = strategy.enemyTeams.map(
-                    enemyTeam => enemyTeam.teamLabel
-                );
                 expect(strategy.enemyTeams).toHaveLength(2);
-                expect(teamLabels.includes(teamLabel1)).toBeTruthy();
-                expect(teamLabels.includes(teamLabel2)).toBeTruthy();
+                expect(strategy.enemyTeams).toContainEqual(savedEnemyTeam1);
+                expect(strategy.enemyTeams).toContainEqual(savedEnemyTeam2);
+                expect(savedEnemyTeam1.position).toEqual(enemyTeamPosition);
+                expect(savedEnemyTeam2.position).toEqual(enemyTeamPosition);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.addEnemyTeam(viewerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        viewerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.addEnemyTeam(strangerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        strangerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1159,7 +1174,11 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.addEnemyTeam(ownerId, teamLabel)
+                    strategyFixture.addEnemyTeam(
+                        ownerId,
+                        teamLabel,
+                        enemyTeamPosition
+                    )
                 ).toThrow(DeletedStrategyException);
             });
         });
@@ -1400,18 +1419,26 @@ describe('Strategy', () => {
                 );
                 const phase1 = CirclePhase.create(1);
                 const phase2 = CirclePhase.create(2);
+                const circlePosition = Position.create(1, 1);
 
                 // when
-                strategy.addCircle(ownerId, phase1, Position.create(1, 1));
-                strategy.addCircle(editorId, phase2, Position.create(1, 1));
+                const savedCircle1 = strategy.addCircle(
+                    ownerId,
+                    phase1,
+                    circlePosition
+                );
+                const savedCircle2 = strategy.addCircle(
+                    editorId,
+                    phase2,
+                    circlePosition
+                );
 
                 // then
-                const circlePhases = strategy.circles.map(
-                    circle => circle.phase
-                );
                 expect(strategy.circles).toHaveLength(2);
-                expect(circlePhases.includes(phase1)).toBeTruthy();
-                expect(circlePhases.includes(phase2)).toBeTruthy();
+                expect(strategy.circles).toContainEqual(savedCircle1);
+                expect(strategy.circles).toContainEqual(savedCircle2);
+                expect(savedCircle1.centerPosition).toEqual(circlePosition);
+                expect(savedCircle2.centerPosition).toEqual(circlePosition);
             });
 
             it('Circle이 8개 이상인데 추가하려 하면, 에러를 던진다.', () => {

@@ -41,6 +41,7 @@ describe('AddEnemyTeamUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamLabel: 'A',
+            position: { x: 1, y: 1 },
         };
 
         // when & then
@@ -58,6 +59,7 @@ describe('AddEnemyTeamUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamLabel: 'A',
+            position: { x: 1, y: 1 },
         };
 
         // when
@@ -87,6 +89,7 @@ describe('AddEnemyTeamUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamLabel: 'A',
+            position: { x: 1, y: 1 },
         };
 
         // When & Then

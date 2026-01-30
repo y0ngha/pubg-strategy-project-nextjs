@@ -14,7 +14,7 @@ export class AddEnemyTeamUseCase {
     ) {}
 
     async execute(dto: AddEnemyTeamRequestDto) {
-        const { actorId, strategyId, teamLabel } =
+        const { actorId, strategyId, teamLabel, position } =
             AddEnemyTeamRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -23,7 +23,7 @@ export class AddEnemyTeamUseCase {
             throw new StrategyNotFoundException();
         }
 
-        const enemyTeam = strategy.addEnemyTeam(actorId, teamLabel);
+        const enemyTeam = strategy.addEnemyTeam(actorId, teamLabel, position);
 
         await this.strategyRepository.save(strategy);
 
