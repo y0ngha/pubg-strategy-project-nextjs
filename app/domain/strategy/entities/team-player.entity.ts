@@ -167,6 +167,8 @@ export class TeamPlayer {
 
         this._waypoint = Waypoint.create(positions);
         this._updatedAt = new Date();
+
+        return this._waypoint;
     }
 
     deleteMarker(): boolean {

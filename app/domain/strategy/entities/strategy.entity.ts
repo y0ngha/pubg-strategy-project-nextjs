@@ -346,8 +346,10 @@ export class Strategy {
 
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        teamPlayer.addWaypoint(positions);
+        const waypoint = teamPlayer.addWaypoint(positions);
         this._updatedAt = new Date();
+
+        return waypoint;
     }
 
     removeTeamPlayerWaypoint(actorId: UserId, teamPlayerId: TeamPlayerId) {

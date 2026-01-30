@@ -13,7 +13,7 @@ export class AddWaypointUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: AddWaypointRequestDto): Promise<boolean> {
+    async execute(dto: AddWaypointRequestDto) {
         const { actorId, strategyId, teamPlayerId, positions } =
             AddWaypointRequestSchema.parse(dto);
 
@@ -23,10 +23,23 @@ export class AddWaypointUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.addTeamPlayerWaypoint(actorId, teamPlayerId, positions);
+        const waypoint = strategy.addTeamPlayerWaypoint(
+            actorId,
+            teamPlayerId,
+            positions
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: waypoint.id.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            positions: waypoint.positions.map(position => {
+                return {
+                    x: position.x,
+                    y: position.y,
+                };
+            }),
+        };
     }
 }
