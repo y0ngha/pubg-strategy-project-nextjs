@@ -1,10 +1,14 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
 import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
-import { addAirplanePathAction } from '@/(presentation)/strategy/actions/airplane-path/add-airplane-path.action';
+import {
+    AddAirplanePathAction,
+    addAirplanePathAction,
+} from '@/(presentation)/strategy/actions/airplane-path/add-airplane-path.action';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { toast } from 'react-toastify';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateAirplanePathMutation(strategyId: string) {
     const queryClient = getQueryClient();
@@ -20,27 +24,11 @@ export function useCreateAirplanePathMutation(strategyId: string) {
         onSuccess: data => {
             const strataegyQueryKey = [ReactQueryKeys.STRATIGES, strategyId];
 
+            optimisticUpdate(strataegyQueryKey, data);
+
             queryClient.invalidateQueries({
                 queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                strataegyQueryKey,
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        airplanePath: {
-                            id: data.id,
-                            startPosition: data.startPosition,
-                            endPosition: data.endPosition,
-                        },
-                    };
-                }
-            );
         },
         onError: error => {
             console.error('useCreateAirplanePathMutation', error);
@@ -50,6 +38,26 @@ export function useCreateAirplanePathMutation(strategyId: string) {
             );
         },
     });
+
+    const optimisticUpdate = (
+        queryKey: QueryKey,
+        data: AddAirplanePathAction
+    ) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                airplanePath: {
+                    id: data.id,
+                    startPosition: data.startPosition,
+                    endPosition: data.endPosition,
+                },
+            };
+        });
+    };
 
     return {
         createAirplanePath: mutate,
