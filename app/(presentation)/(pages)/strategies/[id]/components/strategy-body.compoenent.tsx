@@ -1,6 +1,6 @@
 'use client';
 
-import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useToolbar';
+import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
 import { useLucideIconToCursorUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToCursorUrl';
 import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components/strategy-toolbar.component';
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/strategy-canvas.component';

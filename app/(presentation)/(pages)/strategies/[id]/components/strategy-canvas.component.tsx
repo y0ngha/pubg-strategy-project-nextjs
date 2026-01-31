@@ -1,6 +1,6 @@
 'use client';
 
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useToolbar';
+import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
 import { ReactNode, Ref, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useResizeObserver';
