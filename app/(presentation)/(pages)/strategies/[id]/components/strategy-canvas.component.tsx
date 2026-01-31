@@ -66,7 +66,8 @@ function StrategyCanvas({
                 y={stagePosistion.y}
             >
                 <Layer imageSmoothingEnabled={true}>{map}</Layer>
-                <Layer>{properties}</Layer>
+
+                {properties}
             </Stage>
         </div>
     );
