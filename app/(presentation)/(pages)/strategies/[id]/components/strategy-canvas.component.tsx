@@ -47,7 +47,7 @@ function StrategyCanvas({
                 ref={stageRef}
                 width={width}
                 height={height}
-                draggable={true}
+                draggable={selectedTool === 'select'}
                 dragBoundFunc={handleDragBound}
                 onWheel={event => {
                     const newStagePosition = handleWheel(event);
