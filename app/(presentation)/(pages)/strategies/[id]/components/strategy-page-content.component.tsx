@@ -29,6 +29,7 @@ function StrategyPageContent({ id }: StrategyPageContentProps) {
                         stageRef={stageRef}
                         handleMouseMove={handleMouseMove}
                         mousePosition={mousePosition}
+                        circles={strategy.circles}
                     />
                     <StrategyFooter mousePosition={mousePosition} />
                 </>

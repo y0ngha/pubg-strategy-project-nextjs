@@ -1,12 +1,18 @@
 'use client';
 
 import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
-import { useLucideIconToCursorUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToCursorUrl';
+import {
+    useLucideIconToCursorUrl
+} from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToCursorUrl';
 import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components/strategy-toolbar.component';
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/strategy-canvas.component';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
 import Konva from 'konva';
 import { Ref } from 'react';
+import CircleProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/circle-property.component';
+import { Layer } from 'react-konva';
+import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useCircleEvent';
+import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
 interface StrategyBodyProps {
     id: string;
@@ -14,6 +20,7 @@ interface StrategyBodyProps {
     stageRef: Ref<Konva.Stage>;
     handleMouseMove: () => void;
     mousePosition: { x: number; y: number };
+    circles: CircleResponseDto[];
 }
 
 function StrategyBody({
@@ -22,6 +29,7 @@ function StrategyBody({
     stageRef,
     handleMouseMove,
     mousePosition,
+    circles,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
