@@ -7,23 +7,24 @@ import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/comp
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleWheelZoomControl';
 import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKovnaHandleDrag';
 import Konva from 'konva';
+import { KonvaEventObject } from 'konva/lib/Node';
 
 interface StrategyCanvasProps {
     stageRef: Ref<Konva.Stage>;
     handleMouseMove: () => void;
-    mousePosition: { x: number; y: number };
     selectedTool: CanvasTool;
     map: ReactNode;
     properties: ReactNode;
+    onMapClick: (event: KonvaEventObject<MouseEvent>) => void;
 }
 
 function StrategyCanvas({
     stageRef,
     handleMouseMove,
-    mousePosition,
     selectedTool,
     map,
     properties,
+    onMapClick,
 }: StrategyCanvasProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -57,6 +58,7 @@ function StrategyCanvas({
                     const newStagePosition = handleDragEnd(event);
                     setStagePosistion(newStagePosition);
                 }}
+                onClick={onMapClick}
                 onMouseMove={handleMouseMove}
                 scaleX={scale}
                 scaleY={scale}
