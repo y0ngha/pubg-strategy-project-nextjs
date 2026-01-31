@@ -1,19 +1,26 @@
 'use client';
 
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useToolbar';
-import { ReactNode, useRef, useState } from 'react';
+import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useToolbar';
+import { ReactNode, Ref, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
-import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useResizeObserver';
-import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKonvaHandleWheelZoomControl';
-import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKovnaHandleDrag';
+import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useResizeObserver';
+import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleWheelZoomControl';
+import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKovnaHandleDrag';
+import Konva from 'konva';
 
 interface StrategyCanvasProps {
+    stageRef: Ref<Konva.Stage>;
+    handleMouseMove: () => void;
+    mousePosition: { x: number; y: number };
     selectedTool: CanvasTool;
     map: ReactNode;
     properties: ReactNode;
 }
 
 function StrategyCanvas({
+    stageRef,
+    handleMouseMove,
+    mousePosition,
     selectedTool,
     map,
     properties,
@@ -37,6 +44,7 @@ function StrategyCanvas({
             ref={containerRef}
         >
             <Stage
+                ref={stageRef}
                 width={width}
                 height={height}
                 draggable={true}
@@ -49,6 +57,7 @@ function StrategyCanvas({
                     const newStagePosition = handleDragEnd(event);
                     setStagePosistion(newStagePosition);
                 }}
+                onMouseMove={handleMouseMove}
                 scaleX={scale}
                 scaleY={scale}
                 x={stagePosistion.x}

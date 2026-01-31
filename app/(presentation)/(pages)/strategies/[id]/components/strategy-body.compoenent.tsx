@@ -1,15 +1,28 @@
-import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useToolbar';
-import { useLucideIconToCursorUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useLucideIconToCursorUrl';
+'use client';
+
+import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useToolbar';
+import { useLucideIconToCursorUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToCursorUrl';
 import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components/strategy-toolbar.component';
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/strategy-canvas.component';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
+import Konva from 'konva';
+import { Ref } from 'react';
 
 interface StrategyBodyProps {
     id: string;
     mapImage: string;
+    stageRef: Ref<Konva.Stage>;
+    handleMouseMove: () => void;
+    mousePosition: { x: number; y: number };
 }
 
-function StrategyBody({ id, mapImage }: StrategyBodyProps) {
+function StrategyBody({
+    id,
+    mapImage,
+    stageRef,
+    handleMouseMove,
+    mousePosition,
+}: StrategyBodyProps) {
     const {
         canvasToolGroup,
         canvasToolNames,
@@ -22,7 +35,7 @@ function StrategyBody({ id, mapImage }: StrategyBodyProps) {
     const { url } = useLucideIconToCursorUrl(canvasToolIcons[selectedTool]);
 
     return (
-        <div className={'flex h-full w-full flex-row'} style={{ cursor: url }}>
+        <div className={'flex h-full flex-1 flex-row'} style={{ cursor: url }}>
             <StrategyToolbar
                 canvasToolGroup={canvasToolGroup}
                 canvasToolNames={canvasToolNames}
@@ -32,6 +45,9 @@ function StrategyBody({ id, mapImage }: StrategyBodyProps) {
                 iconSize={iconSize}
             />
             <StrategyCanvas
+                stageRef={stageRef}
+                handleMouseMove={handleMouseMove}
+                mousePosition={mousePosition}
                 selectedTool={selectedTool}
                 map={<StrategyMapImage src={mapImage} />}
                 properties={<></>}
