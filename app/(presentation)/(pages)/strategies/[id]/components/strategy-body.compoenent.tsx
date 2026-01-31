@@ -64,7 +64,7 @@ function StrategyBody({
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,
-        onCircleCreateConfirm,
+        circleCreate,
     } = useCircleEvent(id);
 
     const onMapClick = (clickPosition: { x: number; y: number }) => {
@@ -106,7 +106,7 @@ function StrategyBody({
             <PhaseSelectModal
                 isOpen={isPhaseSelectModalOpen}
                 onClose={phaseSelectModalClose}
-                onConfirm={onCircleCreateConfirm}
+                onConfirm={circleCreate}
             />
         </div>
     );

@@ -19,7 +19,7 @@ export function useCircleEvent(strategyId: string) {
         setIsPhaseSelectModalOpen(false);
     };
 
-    const onCircleCreateConfirm = (phase: number) => {
+    const circleCreate = (phase: number) => {
         const formData = new FormData();
         formData.set('phase', phase.toString());
         formData.set('position', JSON.stringify(position));
@@ -33,6 +33,6 @@ export function useCircleEvent(strategyId: string) {
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,
-        onCircleCreateConfirm,
+        circleCreate,
     };
 }
