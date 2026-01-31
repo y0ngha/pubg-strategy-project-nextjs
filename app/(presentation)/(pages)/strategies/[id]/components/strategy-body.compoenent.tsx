@@ -1,7 +1,7 @@
 'use client';
 
 import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
-import { useLucideIconToCursorUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToCursorUrl';
+import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components/strategy-toolbar.component';
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/strategy-canvas.component';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
@@ -56,7 +56,9 @@ function StrategyBody({
         iconSize,
     } = useToolbar();
 
-    const { url } = useLucideIconToCursorUrl(canvasToolIcons[selectedTool]);
+    const { url, center } = useLucideIconToSvgUrl(
+        canvasToolIcons[selectedTool]
+    );
 
     const {
         isPhaseSelectModalOpen,
@@ -80,7 +82,10 @@ function StrategyBody({
     );
 
     return (
-        <div className={'flex h-full flex-1 flex-row'} style={{ cursor: url }}>
+        <div
+            className={'flex h-full flex-1 flex-row'}
+            style={{ cursor: `url('${url}') ${center} ${center}, auto` }}
+        >
             <StrategyToolbar
                 canvasToolGroup={canvasToolGroup}
                 canvasToolNames={canvasToolNames}

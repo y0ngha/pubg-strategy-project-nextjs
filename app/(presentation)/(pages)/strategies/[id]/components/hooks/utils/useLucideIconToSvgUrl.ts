@@ -8,7 +8,7 @@ interface CursorOptions {
     strokeWidth: number;
 }
 
-export function useLucideIconToCursorUrl(
+export function useLucideIconToSvgUrl(
     lucideIcon: LucideIcon,
     options: CursorOptions = {
         color: '#ff8c00',
@@ -33,12 +33,13 @@ export function useLucideIconToCursorUrl(
                       decodeURIComponent(encodeURIComponent(svgString))
                   );
 
-        const center = options?.size / 2;
-
-        return `url('data:image/svg+xml;base64,${encodedSvg}') ${center} ${center}, auto`;
+        return `data:image/svg+xml;base64,${encodedSvg}`;
     };
+
+    const center = options?.size / 2;
 
     return {
         url: getSvgCursorUrl(lucideIcon),
+        center,
     };
 }
