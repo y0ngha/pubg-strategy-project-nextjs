@@ -5,22 +5,24 @@ export function useCircleEvent(strategyId: string) {
     const { createCircle } = useCreateCircleMutation(strategyId);
 
     const [isPhaseSelectModalOpen, setIsPhaseSelectModalOpen] = useState(false);
+    const [position, setPosition] = useState<{ x: number; y: number }>({
+        x: 0,
+        y: 0,
+    });
 
-    const phaseSelectModalOpen = () => {
+    const phaseSelectModalOpen = (position: { x: number; y: number }) => {
         setIsPhaseSelectModalOpen(true);
+        setPosition(position);
     };
 
     const phaseSelectModalClose = () => {
         setIsPhaseSelectModalOpen(false);
     };
 
-    const onCircleCreateConfirm = (
-        phase: number,
-        clickPosition: { x: number; y: number }
-    ) => {
+    const onCircleCreateConfirm = (phase: number) => {
         const formData = new FormData();
         formData.set('phase', phase.toString());
-        formData.set('position', JSON.stringify(clickPosition));
+        formData.set('position', JSON.stringify(position));
 
         createCircle(formData);
 
