@@ -10,9 +10,14 @@ import { Ref } from 'react';
 import CircleProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/circle-property.component';
 import { Layer } from 'react-konva';
 import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useCircleEvent';
-import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import {
+    AirplanePathResponseDto,
+    CircleResponseDto,
+} from '@/application/strategy/dto/strategy/get-strategy.dto';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleMouseClick';
+import { useAirplanePathEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useAirplanePathEvent';
+import AirplanePathProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/airplane-path-property.component';
 
 interface StrategyBodyProps {
     id: string;
@@ -21,6 +26,7 @@ interface StrategyBodyProps {
     handleMouseMove: () => void;
     mousePosition: { x: number; y: number };
     circles: CircleResponseDto[];
+    airplanePath?: AirplanePathResponseDto;
 }
 
 function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
@@ -39,6 +45,23 @@ function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
     );
 }
 
+function AirplanePathLayer({
+    startPosition,
+    endPosition,
+}: {
+    startPosition?: { x: number; y: number };
+    endPosition?: { x: number; y: number };
+}) {
+    return (
+        <Layer>
+            <AirplanePathProperty
+                startPosition={startPosition}
+                endPosition={endPosition}
+            />
+        </Layer>
+    );
+}
+
 function StrategyBody({
     id,
     mapImage,
@@ -46,6 +69,7 @@ function StrategyBody({
     handleMouseMove,
     mousePosition,
     circles,
+    airplanePath,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
@@ -67,10 +91,15 @@ function StrategyBody({
         circleCreate,
     } = useCircleEvent(id);
 
+    const { clickAirplanePath, startPosition, endPosition } =
+        useAirplanePathEvent(id, airplanePath);
+
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
             case 'circle':
                 return phaseSelectModalOpen(clickPosition);
+            case 'airplane':
+                return clickAirplanePath(clickPosition);
         }
     };
 
@@ -99,7 +128,15 @@ function StrategyBody({
                 handleMouseMove={handleMouseMove}
                 selectedTool={selectedTool}
                 map={<StrategyMapImage src={mapImage} />}
-                properties={<CirclesLayer circles={circles} />}
+                properties={
+                    <>
+                        <CirclesLayer circles={circles} />
+                        <AirplanePathLayer
+                            startPosition={startPosition}
+                            endPosition={endPosition}
+                        />
+                    </>
+                }
                 onMapClick={handleClick}
             />
 
