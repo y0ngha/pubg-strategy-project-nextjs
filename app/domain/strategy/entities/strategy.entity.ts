@@ -515,6 +515,8 @@ export class Strategy {
         if (isStartChanged || isEndChanged) {
             this._updatedAt = new Date();
         }
+
+        return this._airplanePath;
     }
 
     removeAirplanePath(actorId: UserId) {
