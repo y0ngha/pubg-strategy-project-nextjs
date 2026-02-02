@@ -54,6 +54,7 @@ export function useAirplanePathEvent(
     };
 
     const airplanePathCreate = () => {
+    const airplanePathConfirm = () => {
         const formData = new FormData();
         formData.set('startPosition', JSON.stringify(startPosition));
         formData.set('endPosition', JSON.stringify(endPosition));
@@ -71,7 +72,7 @@ export function useAirplanePathEvent(
             setStartPosition(position);
         } else if (step === WAITING_FOR_END_POSITION) {
             setEndPosition(position);
-            airplanePathCreate();
+            airplanePathConfirm();
         }
 
         nextStep();
