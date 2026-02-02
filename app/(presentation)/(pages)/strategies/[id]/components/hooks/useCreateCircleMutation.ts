@@ -28,7 +28,7 @@ export function useCreateCircleMutation(strategyId: string) {
             return await createCircleAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -46,7 +46,7 @@ export function useCreateCircleMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (queryKey: QueryKey, data: CreateCircleAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: CreateCircleAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

@@ -29,7 +29,7 @@ export function useCreateCommentMutation(strategyId: string) {
             return await createCommentAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -47,10 +47,7 @@ export function useCreateCommentMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (
-        queryKey: QueryKey,
-        data: CreateCommentAction
-    ) => {
+    const cacheUpdate = (queryKey: QueryKey, data: CreateCommentAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

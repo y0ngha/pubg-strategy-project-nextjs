@@ -34,7 +34,7 @@ export function useUpdateStrategyMutation(strategyId: string) {
             return await updateStrategyAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -54,10 +54,7 @@ export function useUpdateStrategyMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (
-        queryKey: QueryKey,
-        data: UpdateStrategyAction
-    ) => {
+    const cacheUpdate = (queryKey: QueryKey, data: UpdateStrategyAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

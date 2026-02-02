@@ -28,7 +28,7 @@ export function useUpdateAirplanePathMutation(strategyId: string) {
             return await updateAirplanePathAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -47,7 +47,7 @@ export function useUpdateAirplanePathMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (
+    const cacheUpdate = (
         queryKey: QueryKey,
         data: UpdateAirplanePathAction
     ) => {

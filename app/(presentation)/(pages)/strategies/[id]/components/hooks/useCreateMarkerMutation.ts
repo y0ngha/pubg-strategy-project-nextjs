@@ -29,7 +29,7 @@ export function useCreateMarkerMutation(strategyId: string) {
             return await addMarkerAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -89,7 +89,7 @@ export function useCreateMarkerMutation(strategyId: string) {
         });
     };
 
-    const optimisticUpdate = (queryKey: QueryKey, data: AddMarkerAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddMarkerAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

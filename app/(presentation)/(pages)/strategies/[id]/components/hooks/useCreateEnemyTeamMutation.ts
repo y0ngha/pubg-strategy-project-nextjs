@@ -28,7 +28,7 @@ export function useCreateEnemyTeamMutation(strategyId: string) {
             return await addEnemyTeamAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -46,7 +46,7 @@ export function useCreateEnemyTeamMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (queryKey: QueryKey, data: AddEnemyTeamAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddEnemyTeamAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

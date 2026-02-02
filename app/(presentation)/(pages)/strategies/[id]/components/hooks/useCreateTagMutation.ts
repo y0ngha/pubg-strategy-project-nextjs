@@ -28,7 +28,7 @@ export function useCreateTagMutation(strategyId: string) {
             return await createTagAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
@@ -46,7 +46,7 @@ export function useCreateTagMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (queryKey: QueryKey, data: CreateTagAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: CreateTagAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
