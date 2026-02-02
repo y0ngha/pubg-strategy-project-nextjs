@@ -15,6 +15,12 @@ export function useCreateCommentMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -26,10 +32,14 @@ export function useCreateCommentMutation(strategyId: string) {
             optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateCommentMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 댓글 생성에 실패했습니다.'
