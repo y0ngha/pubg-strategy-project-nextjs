@@ -24,7 +24,6 @@ interface StrategyBodyProps {
     mapImage: string;
     stageRef: Ref<Konva.Stage>;
     handleMouseMove: () => void;
-    mousePosition: { x: number; y: number };
     circles: CircleResponseDto[];
     airplanePath?: AirplanePathResponseDto;
 }
@@ -67,7 +66,6 @@ function StrategyBody({
     mapImage,
     stageRef,
     handleMouseMove,
-    mousePosition,
     circles,
     airplanePath,
 }: StrategyBodyProps) {

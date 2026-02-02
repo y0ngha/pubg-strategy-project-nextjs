@@ -28,7 +28,6 @@ function StrategyPageContent({ id }: StrategyPageContentProps) {
                         mapImage={strategy.mapImage}
                         stageRef={stageRef}
                         handleMouseMove={handleMouseMove}
-                        mousePosition={mousePosition}
                         circles={strategy.circles}
                         airplanePath={strategy.airplanePath}
                     />
