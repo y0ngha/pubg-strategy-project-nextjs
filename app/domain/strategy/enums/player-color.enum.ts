@@ -1,7 +1,7 @@
 export const PlayerColor = {
-    RED: '#FF0000',
-    ORANGE: '#ff8c00',
     YELLOW: '#ffff00',
+    ORANGE: '#ff8c00',
+    BLUE: '#0000ff',
     GREEN: '#00ff00',
 } as const;
 
