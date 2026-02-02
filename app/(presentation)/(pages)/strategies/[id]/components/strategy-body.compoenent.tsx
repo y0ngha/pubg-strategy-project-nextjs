@@ -13,11 +13,15 @@ import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/compone
 import {
     AirplanePathResponseDto,
     CircleResponseDto,
+    EnemyTeamResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleMouseClick';
 import { useAirplanePathEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useAirplanePathEvent';
 import AirplanePathProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/airplane-path-property.component';
+import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
+import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useEnemyTeamEvent';
+import EnemyTeamProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
 
 interface StrategyBodyProps {
     id: string;
@@ -26,6 +30,7 @@ interface StrategyBodyProps {
     handleMouseMove: () => void;
     circles: CircleResponseDto[];
     airplanePath?: AirplanePathResponseDto;
+    enemyTeams: EnemyTeamResponseDto[];
 }
 
 function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
@@ -61,6 +66,25 @@ function AirplanePathLayer({
     );
 }
 
+function EnemyTeamsLayer({
+    enemyTeams,
+    scale,
+}: { scale: number } & Pick<StrategyBodyProps, 'enemyTeams'>) {
+    return (
+        <Layer>
+            {enemyTeams.map(field => (
+                <EnemyTeamProperty
+                    key={field.id}
+                    x={field.position.x}
+                    y={field.position.y}
+                    teamLabel={field.teamLabel}
+                    scale={scale}
+                />
+            ))}
+        </Layer>
+    );
+}
+
 function StrategyBody({
     id,
     mapImage,
@@ -68,6 +92,7 @@ function StrategyBody({
     handleMouseMove,
     circles,
     airplanePath,
+    enemyTeams,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
@@ -92,12 +117,21 @@ function StrategyBody({
     const { clickAirplanePath, startPosition, endPosition } =
         useAirplanePathEvent(id, airplanePath);
 
+    const {
+        isEnterEnemyTeamLabelModalOpen,
+        enterEnemyTeamLabelModalOpen,
+        enterEnemyTeamLabelModalClose,
+        enemyTeamCreate,
+    } = useEnemyTeamEvent(id);
+
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
             case 'circle':
                 return phaseSelectModalOpen(clickPosition);
             case 'airplane':
                 return clickAirplanePath(clickPosition);
+            case 'enemy':
+                return enterEnemyTeamLabelModalOpen(clickPosition);
         }
     };
 
@@ -118,20 +152,27 @@ function StrategyBody({
                 selectedTool={selectedTool}
                 iconSize={iconSize}
             />
+
             <StrategyCanvas
                 stageRef={stageRef}
                 handleMouseMove={handleMouseMove}
                 selectedTool={selectedTool}
                 map={<StrategyMapImage src={mapImage} />}
-                properties={
-                    <>
-                        <CirclesLayer circles={circles} />
-                        <AirplanePathLayer
-                            startPosition={startPosition}
-                            endPosition={endPosition}
-                        />
-                    </>
-                }
+                properties={({ scale }) => {
+                    return (
+                        <>
+                            <CirclesLayer circles={circles} />
+                            <AirplanePathLayer
+                                startPosition={startPosition}
+                                endPosition={endPosition}
+                            />
+                            <EnemyTeamsLayer
+                                enemyTeams={enemyTeams}
+                                scale={scale}
+                            />
+                        </>
+                    );
+                }}
                 onMapClick={handleClick}
             />
 
@@ -139,6 +180,12 @@ function StrategyBody({
                 isOpen={isPhaseSelectModalOpen}
                 onClose={phaseSelectModalClose}
                 onConfirm={circleCreate}
+            />
+
+            <EnterTeamLabelModal
+                isOpen={isEnterEnemyTeamLabelModalOpen}
+                onClose={enterEnemyTeamLabelModalClose}
+                onConfirm={enemyTeamCreate}
             />
         </div>
     );
