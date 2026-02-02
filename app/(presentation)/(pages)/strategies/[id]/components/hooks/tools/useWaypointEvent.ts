@@ -56,13 +56,6 @@ export function useWaypointEvent(
         }
     };
 
-    const altKeydownHandler = (event: KeyboardEvent) => {
-        if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
-            setKeydownAlt(true);
-            setClickedPositions([]);
-        }
-    };
-
     const confirm = (positions: { x: number; y: number }[]) => {
         const formData = new FormData();
         formData.set('positions', JSON.stringify(positions));
@@ -73,6 +66,13 @@ export function useWaypointEvent(
             createWaypoint(formData);
         }
     };
+
+    const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
+        if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
+            setKeydownAlt(true);
+            setClickedPositions([]);
+        }
+    });
 
     const altKeyupHandler = useEffectEvent((event: KeyboardEvent) => {
         if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
