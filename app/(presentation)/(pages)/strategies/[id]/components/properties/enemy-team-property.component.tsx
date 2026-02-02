@@ -55,7 +55,7 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
                 />
                 <Text
                     text={teamLabel}
-                    fontSize={12}
+                    fontSize={32}
                     padding={6}
                     fill={'white'}
                     align={'center'}

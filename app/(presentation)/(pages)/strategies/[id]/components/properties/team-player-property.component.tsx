@@ -83,7 +83,7 @@ function TeamPlayerProperty({
                 />
                 <Text
                     text={priority.toString()}
-                    fontSize={12}
+                    fontSize={32}
                     padding={6}
                     fill={'white'}
                     align={'center'}
