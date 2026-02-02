@@ -6,7 +6,7 @@ import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/strategy-canvas.component';
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
 import Konva from 'konva';
-import { Ref } from 'react';
+import React, { Ref } from 'react';
 import CircleProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/circle-property.component';
 import { Layer } from 'react-konva';
 import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useCircleEvent';
@@ -25,6 +25,8 @@ import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/comp
 import EnemyTeamProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
 import TeamPlayerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
 import { useTeamPlayerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTeamPlayerEvent';
+import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/marker-property.component';
+import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useMarkerEvent';
 
 interface StrategyBodyProps {
     id: string;
@@ -104,20 +106,29 @@ function TeamPlayersLayer({
     return (
         <Layer>
             {teamPlayers.map(field => (
-                <TeamPlayerProperty
-                    key={field.id}
-                    id={field.id}
-                    x={field.position.x}
-                    y={field.position.y}
-                    priorty={field.priority}
-                    color={field.color}
-                    scale={scale}
-                    clickable={clickable}
-                    isClicked={field.id === selectedTeamPlayerId}
-                    onClick={id => {
-                        changeSelectedTeamPlayerId(id);
-                    }}
-                />
+                <React.Fragment key={field.id}>
+                    <TeamPlayerProperty
+                        id={field.id}
+                        x={field.position.x}
+                        y={field.position.y}
+                        priorty={field.priority}
+                        color={field.color}
+                        scale={scale}
+                        clickable={clickable}
+                        isClicked={field.id === selectedTeamPlayerId}
+                        onClick={id => {
+                            changeSelectedTeamPlayerId(id);
+                        }}
+                    />
+                    {field.marker && (
+                        <MarkerProperty
+                            color={field.color}
+                            priorty={field.priority}
+                            x={field.marker.position.x}
+                            y={field.marker.position.y}
+                        />
+                    )}
+                </React.Fragment>
             ))}
         </Layer>
     );
@@ -171,6 +182,8 @@ function StrategyBody({
         changeSelectedTeamPlayerId,
     } = useTeamPlayerEvent(id, selectedTool);
 
+    const { markerCreate } = useMarkerEvent(id, selectedTeamPlayerId);
+
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
             case 'circle':
@@ -181,6 +194,8 @@ function StrategyBody({
                 return enterEnemyTeamLabelModalOpen(clickPosition);
             case 'team':
                 return teamPlayerCreate(clickPosition);
+            case 'marker':
+                return markerCreate(clickPosition);
         }
     };
 
