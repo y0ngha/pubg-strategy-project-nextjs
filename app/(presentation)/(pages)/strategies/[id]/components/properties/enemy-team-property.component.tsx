@@ -1,0 +1,70 @@
+import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
+import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
+import { Swords } from 'lucide-react';
+import useImage from 'use-image';
+
+interface EnemyTeamPropertyProps {
+    x: number;
+    y: number;
+    teamLabel: string;
+    scale: number;
+}
+
+function EnemyTeamProperty({ x, y, teamLabel, scale }: EnemyTeamPropertyProps) {
+    const { url, center } = useLucideIconToSvgUrl(Swords, {
+        color: '#ffffff',
+        size: 64,
+        strokeWidth: 2,
+    });
+
+    const [enemyImage] = useImage(url ?? '');
+
+    const radius = 50;
+
+    return (
+        <Group x={x} y={y} listening={false}>
+            <Circle
+                radius={radius}
+                fill={'rgba(239, 68, 68, 0.2)'}
+                stroke={'#ef4444'}
+                strokeWidth={1}
+                shadowColor={'black'}
+                shadowBlur={10}
+                shadowOpacity={0.3}
+            />
+
+            <Image
+                image={enemyImage}
+                offsetX={center}
+                offsetY={center}
+                scaleX={0.8}
+                scaleY={0.8}
+                alt={'적 팀'}
+            />
+
+            <Label y={radius + 8}>
+                <Tag
+                    fill={'#18181b'}
+                    stroke={'#ef4444'}
+                    strokeWidth={1 / scale}
+                    cornerRadius={4}
+                    opacity={0.8}
+                    pointerDirection={'up'}
+                    pointerWidth={10}
+                    pointerHeight={5}
+                />
+                <Text
+                    text={teamLabel}
+                    fontSize={12 / scale}
+                    padding={6}
+                    fill={'white'}
+                    align={'center'}
+                />
+            </Label>
+        </Group>
+    );
+}
+
+EnemyTeamProperty.displayName = 'EnemyTeamProperty';
+
+export default EnemyTeamProperty;
