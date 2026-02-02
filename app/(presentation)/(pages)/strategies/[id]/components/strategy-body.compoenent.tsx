@@ -103,12 +103,9 @@ function StrategyBody({
         }
     };
 
-    const { handleClick } = useKonvaHandleMouseClick(
-        mousePosition,
-        (_, clickPosition) => {
-            onMapClick(clickPosition);
-        }
-    );
+    const { handleClick } = useKonvaHandleMouseClick((_, clickPosition) => {
+        onMapClick(clickPosition);
+    });
 
     return (
         <div
