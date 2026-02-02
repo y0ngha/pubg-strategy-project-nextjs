@@ -3,12 +3,22 @@ import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.hel
 import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { toast } from 'react-toastify';
-import { updateStrategyAction } from '@/(presentation)/strategy/actions/update-strategy.action';
+import {
+    UpdateStrategyAction,
+    updateStrategyAction,
+} from '@/(presentation)/strategy/actions/update-strategy.action';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { QueryKey } from '@tanstack/query-core';
 
 export function useUpdateStrategyMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const { data: user } = useGetCurrentUser();
+    const user = useGetCurrentUser();
+
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
 
     const {
         mutate: updateStrategy,
@@ -18,40 +28,52 @@ export function useUpdateStrategyMutation(strategyId: string) {
         isSuccess,
     } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user?.id ?? '');
+            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
             return await updateStrategyAction(formData);
         },
         onSuccess: data => {
+            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+
             queryClient.invalidateQueries({
-                queryKey: [user?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
-
-            queryClient.setQueryData<GetStrategyAction>(
-                [ReactQueryKeys.STRATIGES, strategyId],
-                oldStrategy => {
-                    if (!oldStrategy) {
-                        return undefined;
-                    }
-
-                    return {
-                        ...oldStrategy,
-                        title: data.title,
-                        map: data.map,
-                    };
-                }
-            );
 
             toast.success('전략이 수정되었습니다.');
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useUpdateStrategyMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 전략 수정에 실패했습니다.'
             );
         },
     });
+
+    const optimisticUpdate = (
+        queryKey: QueryKey,
+        data: UpdateStrategyAction
+    ) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            if (!oldStrategy.airplanePath) {
+                return oldStrategy;
+            }
+
+            return {
+                ...oldStrategy,
+                title: data.title,
+                map: data.map,
+            };
+        });
+    };
 
     return {
         updateStrategy,
