@@ -53,16 +53,34 @@ export function useAirplanePathEvent(
         );
     };
 
-    const airplanePathCreate = () => {
+    const confirmOnSuccessCallbackHandler = (data: {
+        startPosition: { x: number; y: number };
+        endPosition: { x: number; y: number };
+    }) => {
+        setStartPosition(data.startPosition);
+        setEndPosition(data.endPosition);
+    };
+
+    const confirmOnErrorCallbackHandler = () => {
+        setStartPosition(position?.startPosition);
+        setEndPosition(position?.endPosition);
+    };
+
     const airplanePathConfirm = () => {
         const formData = new FormData();
         formData.set('startPosition', JSON.stringify(startPosition));
         formData.set('endPosition', JSON.stringify(endPosition));
 
         if (isFirstCreate) {
-            createAirplanePath(formData);
+            createAirplanePath(formData, {
+                onSuccess: confirmOnSuccessCallbackHandler,
+                onError: confirmOnErrorCallbackHandler,
+            });
         } else {
-            updateAirplanePath(formData);
+            updateAirplanePath(formData, {
+                onSuccess: confirmOnSuccessCallbackHandler,
+                onError: confirmOnErrorCallbackHandler,
+            });
         }
     };
 
