@@ -328,6 +328,8 @@ export class Strategy {
         if (isChanged) {
             this._updatedAt = new Date();
         }
+
+        return teamPlayer.waypoint;
     }
 
     removeTeamPlayerMarker(actorId: UserId, teamPlayerId: TeamPlayerId) {

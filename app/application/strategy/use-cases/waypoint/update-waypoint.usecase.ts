@@ -13,7 +13,7 @@ export class UpdateWaypointUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateWaypointRequestDto): Promise<boolean> {
+    async execute(dto: UpdateWaypointRequestDto) {
         const { actorId, strategyId, teamPlayerId, positions } =
             UpdateWaypointRequestSchema.parse(dto);
 
@@ -23,10 +23,23 @@ export class UpdateWaypointUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateTeamPlayerWaypoint(actorId, teamPlayerId, positions);
+        const waypoint = strategy.updateTeamPlayerWaypoint(
+            actorId,
+            teamPlayerId,
+            positions
+        );
+
+        if (!waypoint) {
+            throw new Error(
+                '알 수 없는 이유로 웨이포인트 수정에 실패했습니다.'
+            );
+        }
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            teamPlayerId: teamPlayerId.toString(),
+            positions: waypoint.positions,
+        };
     }
 }

@@ -27,6 +27,8 @@ import TeamPlayerProperty from '@/(presentation)/(pages)/strategies/[id]/compone
 import { useTeamPlayerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTeamPlayerEvent';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/marker-property.component';
 import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useMarkerEvent';
+import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/waypoint-property.component';
+import { useWaypointEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useWaypointEvent';
 
 interface StrategyBodyProps {
     id: string;
@@ -97,16 +99,20 @@ function TeamPlayersLayer({
     clickable,
     selectedTeamPlayerId,
     changeSelectedTeamPlayerId,
+    isWaypointDrawing,
+    waypointClickedPositions,
 }: {
     scale: number;
     clickable: boolean;
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
+    isWaypointDrawing: boolean;
+    waypointClickedPositions: { x: number; y: number }[];
 } & Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <Layer>
             {teamPlayers.map(field => (
-                <React.Fragment key={field.id}>
+                <React.Fragment key={`tp-${field.id}`}>
                     <TeamPlayerProperty
                         id={field.id}
                         x={field.position.x}
@@ -126,6 +132,18 @@ function TeamPlayersLayer({
                             priorty={field.priority}
                             x={field.marker.position.x}
                             y={field.marker.position.y}
+                        />
+                    )}
+                    {field.waypoint && (
+                        <WaypointProperty
+                            positions={
+                                isWaypointDrawing
+                                    ? waypointClickedPositions
+                                    : field.waypoint.positions
+                            }
+                            color={field.color}
+                            priorty={field.priority}
+                            isDrawing={isWaypointDrawing}
                         />
                     )}
                 </React.Fragment>
@@ -182,7 +200,17 @@ function StrategyBody({
         changeSelectedTeamPlayerId,
     } = useTeamPlayerEvent(id, selectedTool);
 
-    const { markerCreate } = useMarkerEvent(id, selectedTeamPlayerId);
+    const { markerClick } = useMarkerEvent(
+        id,
+        teamPlayers,
+        selectedTeamPlayerId
+    );
+
+    const {
+        waypointCreate,
+        isDrawing: isWaypointDrawing,
+        clickedPositions: waypointClickedPositions,
+    } = useWaypointEvent(id, teamPlayers, selectedTeamPlayerId);
 
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
@@ -195,7 +223,9 @@ function StrategyBody({
             case 'team':
                 return teamPlayerCreate(clickPosition);
             case 'marker':
-                return markerCreate(clickPosition);
+                return markerClick(clickPosition);
+            case 'waypoint':
+                return waypointCreate(clickPosition);
         }
     };
 
@@ -241,6 +271,10 @@ function StrategyBody({
                                 selectedTeamPlayerId={selectedTeamPlayerId}
                                 changeSelectedTeamPlayerId={
                                     changeSelectedTeamPlayerId
+                                }
+                                isWaypointDrawing={isWaypointDrawing}
+                                waypointClickedPositions={
+                                    waypointClickedPositions
                                 }
                             />
                         </>

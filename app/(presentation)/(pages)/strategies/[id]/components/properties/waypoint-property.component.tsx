@@ -6,12 +6,14 @@ interface WaypointPropertyProps {
     positions: { x: number; y: number }[];
     priorty: number;
     color: string;
+    isDrawing: boolean;
 }
 
 function WaypointProperty({
     positions,
     priorty,
     color,
+    isDrawing,
 }: WaypointPropertyProps) {
     const flattenedPoints = positions.flatMap(position => [
         position.x,
@@ -70,7 +72,7 @@ function WaypointProperty({
                             strokeWidth={4}
                         />
 
-                        {!isLast && (
+                        {((!isLast && !isDrawing) || isDrawing) && (
                             <Arrow
                                 points={[-radius / 3, 0, radius / 3, 0]}
                                 pointerLength={radius / 1.5}
@@ -84,7 +86,9 @@ function WaypointProperty({
                             />
                         )}
 
-                        {isLast && <Circle radius={radius / 2} fill={color} />}
+                        {isLast && !isDrawing && (
+                            <Circle radius={radius / 2} fill={color} />
+                        )}
                     </Group>
                 );
             })}
