@@ -7,10 +7,9 @@ interface EnemyTeamPropertyProps {
     x: number;
     y: number;
     teamLabel: string;
-    scale: number;
 }
 
-function EnemyTeamProperty({ x, y, teamLabel, scale }: EnemyTeamPropertyProps) {
+function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
     const { url, center } = useLucideIconToSvgUrl(Swords, {
         color: '#ffffff',
         size: 64,
@@ -47,7 +46,7 @@ function EnemyTeamProperty({ x, y, teamLabel, scale }: EnemyTeamPropertyProps) {
                 <Tag
                     fill={'#18181b'}
                     stroke={'#ef4444'}
-                    strokeWidth={1 / scale}
+                    strokeWidth={1}
                     cornerRadius={4}
                     opacity={0.8}
                     pointerDirection={'up'}
@@ -56,7 +55,7 @@ function EnemyTeamProperty({ x, y, teamLabel, scale }: EnemyTeamPropertyProps) {
                 />
                 <Text
                     text={teamLabel}
-                    fontSize={12 / scale}
+                    fontSize={12}
                     padding={6}
                     fill={'white'}
                     align={'center'}
