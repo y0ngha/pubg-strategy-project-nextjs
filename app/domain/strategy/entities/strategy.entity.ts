@@ -309,6 +309,8 @@ export class Strategy {
         if (isChanged) {
             this._updatedAt = new Date();
         }
+
+        return teamPlayer.marker;
     }
 
     updateTeamPlayerWaypoint(

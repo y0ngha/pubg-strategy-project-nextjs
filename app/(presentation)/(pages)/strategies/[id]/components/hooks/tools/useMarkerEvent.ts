@@ -1,20 +1,34 @@
 import { useCreateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useCreateMarkerMutation';
 import { toast } from 'react-toastify';
+import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useUpdateMarkerMutation';
+import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
 export function useMarkerEvent(
     strategyId: string,
+    teamPlayers: TeamPlayerResponseDto[],
     selectedTeamPlayerId?: string
 ) {
     const { createMarker } = useCreateMarkerMutation(strategyId);
+    const { updateMarker } = useUpdateMarkerMutation(strategyId);
 
-    const markerCreate = (position: { x: number; y: number }) => {
+    const selectedTeamPlayer = teamPlayers.find(
+        player => player.id === selectedTeamPlayerId
+    );
+
+    const existingMarker = selectedTeamPlayer?.marker !== undefined;
+
+    const markerClick = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
 
             const formData = new FormData();
             formData.set('position', JSON.stringify(position));
 
-            createMarker(formData);
+            if (existingMarker) {
+                updateMarker(formData);
+            } else {
+                createMarker(formData);
+            }
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(
@@ -36,6 +50,6 @@ export function useMarkerEvent(
     };
 
     return {
-        markerCreate,
+        markerClick,
     };
 }

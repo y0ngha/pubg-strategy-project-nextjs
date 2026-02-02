@@ -13,7 +13,7 @@ export class UpdateMarkerUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateMarkerRequestDto): Promise<boolean> {
+    async execute(dto: UpdateMarkerRequestDto) {
         const { actorId, strategyId, teamPlayerId, position } =
             UpdateMarkerRequestSchema.parse(dto);
 
@@ -23,10 +23,24 @@ export class UpdateMarkerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateTeamPlayerMarker(actorId, teamPlayerId, position);
+        const marker = strategy.updateTeamPlayerMarker(
+            actorId,
+            teamPlayerId,
+            position
+        );
+
+        if (!marker) {
+            throw new Error('알 수 없는 이유로 마커 수정에 실패했습니다.');
+        }
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            teamPlayerId: teamPlayerId.toString(),
+            position: {
+                x: marker.position.x,
+                y: marker.position.y,
+            },
+        };
     }
 }
