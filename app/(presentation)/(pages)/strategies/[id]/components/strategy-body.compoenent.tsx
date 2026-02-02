@@ -287,4 +287,4 @@ function StrategyBody({
 
 StrategyBody.displayName = 'StrategyBody';
 
-export default StrategyBody;
+export default React.memo(StrategyBody);
