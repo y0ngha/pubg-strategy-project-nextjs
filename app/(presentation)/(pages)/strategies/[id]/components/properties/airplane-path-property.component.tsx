@@ -33,16 +33,6 @@ function AirplanePathProperty({
                 offsetX={center}
                 offsetY={center}
             />
-
-            // <Circle
-            //     x={startPosition.x}
-            //     y={startPosition.y}
-            //     radius={32}
-            //     fill={'white'}
-            //     stroke={'#fbbf24'}
-            //     strokeWidth={5}
-            //     opacity={0.8}
-            // />
         );
     }
 
@@ -75,13 +65,6 @@ function AirplanePathProperty({
                         offsetY={center}
                     />
                 )}
-
-                {/*<Circle*/}
-                {/*    x={startPosition.x}*/}
-                {/*    y={startPosition.y}*/}
-                {/*    radius={32}*/}
-                {/*    fill={'#fbbf24'}*/}
-                {/*/>*/}
             </>
         );
     }
