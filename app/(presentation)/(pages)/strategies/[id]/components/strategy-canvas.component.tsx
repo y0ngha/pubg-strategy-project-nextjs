@@ -1,7 +1,7 @@
 'use client';
 
 import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
-import { ReactNode, Ref, useRef, useState } from 'react';
+import React, { ReactNode, Ref, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useResizeObserver';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleWheelZoomControl';
@@ -78,4 +78,4 @@ function StrategyCanvas({
 
 StrategyCanvas.displayName = 'StrategyCanvas';
 
-export default StrategyCanvas;
+export default React.memo(StrategyCanvas);
