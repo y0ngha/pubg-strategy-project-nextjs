@@ -65,6 +65,7 @@ function AirplanePathProperty({
                         y={startPosition.y}
                         offsetX={center}
                         offsetY={center}
+                        alt={'비행기 동선'}
                     />
                 )}
             </Group>
