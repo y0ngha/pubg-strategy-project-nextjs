@@ -14,7 +14,7 @@ interface StrategyCanvasProps {
     handleMouseMove: () => void;
     selectedTool: CanvasTool;
     map: ReactNode;
-    properties: (props: { scale: number }) => ReactNode;
+    properties: ReactNode;
     onMapClick: (event: KonvaEventObject<MouseEvent>) => void;
 }
 
@@ -70,7 +70,7 @@ function StrategyCanvas({
             >
                 <Layer imageSmoothingEnabled={true}>{map}</Layer>
 
-                {properties({ scale })}
+                {properties}
             </Stage>
         </div>
     );

@@ -76,8 +76,7 @@ function AirplanePathLayer({
 
 function EnemyTeamsLayer({
     enemyTeams,
-    scale,
-}: { scale: number } & Pick<StrategyBodyProps, 'enemyTeams'>) {
+}: Pick<StrategyBodyProps, 'enemyTeams'>) {
     return (
         <Layer>
             {enemyTeams.map(field => (
@@ -86,7 +85,6 @@ function EnemyTeamsLayer({
                     x={field.position.x}
                     y={field.position.y}
                     teamLabel={field.teamLabel}
-                    scale={scale}
                 />
             ))}
         </Layer>
@@ -95,14 +93,12 @@ function EnemyTeamsLayer({
 
 function TeamPlayersLayer({
     teamPlayers,
-    scale,
     clickable,
     selectedTeamPlayerId,
     changeSelectedTeamPlayerId,
     isWaypointDrawing,
     waypointClickedPositions,
 }: {
-    scale: number;
     clickable: boolean;
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
@@ -119,7 +115,6 @@ function TeamPlayersLayer({
                         y={field.position.y}
                         priority={field.priority}
                         color={field.color}
-                        scale={scale}
                         clickable={clickable}
                         isClicked={field.id === selectedTeamPlayerId}
                         onClick={id => {

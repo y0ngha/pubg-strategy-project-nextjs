@@ -10,7 +10,6 @@ interface TeamPlayerPropertyProps {
     y: number;
     priority: number;
     color: string;
-    scale: number;
     clickable: boolean;
     isClicked: boolean;
     onClick: (id: string) => void;
@@ -22,7 +21,6 @@ function TeamPlayerProperty({
     y,
     priority,
     color,
-    scale,
     clickable,
     isClicked,
     onClick,
@@ -76,7 +74,7 @@ function TeamPlayerProperty({
                 <Tag
                     fill={'#18181b'}
                     stroke={color}
-                    strokeWidth={1 / scale}
+                    strokeWidth={1}
                     cornerRadius={4}
                     opacity={0.8}
                     pointerDirection={'up'}
@@ -84,9 +82,8 @@ function TeamPlayerProperty({
                     pointerHeight={5}
                 />
                 <Text
-                    text={priorty.toString()}
-                    fontSize={12 / scale}
                     text={priority.toString()}
+                    fontSize={12}
                     padding={6}
                     fill={'white'}
                     align={'center'}
