@@ -31,6 +31,7 @@ function StrategyPageContent({ id }: StrategyPageContentProps) {
                         circles={strategy.circles}
                         airplanePath={strategy.airplanePath}
                         enemyTeams={strategy.enemyTeams}
+                        teamPlayers={strategy.teamPlayers}
                     />
                     <StrategyFooter mousePosition={mousePosition} />
                 </>

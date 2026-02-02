@@ -14,6 +14,7 @@ import {
     AirplanePathResponseDto,
     CircleResponseDto,
     EnemyTeamResponseDto,
+    TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleMouseClick';
@@ -22,6 +23,7 @@ import AirplanePathProperty from '@/(presentation)/(pages)/strategies/[id]/compo
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useEnemyTeamEvent';
 import EnemyTeamProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
+import TeamPlayerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
 
 interface StrategyBodyProps {
     id: string;
@@ -31,6 +33,7 @@ interface StrategyBodyProps {
     circles: CircleResponseDto[];
     airplanePath?: AirplanePathResponseDto;
     enemyTeams: EnemyTeamResponseDto[];
+    teamPlayers: TeamPlayerResponseDto[];
 }
 
 function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
@@ -85,6 +88,26 @@ function EnemyTeamsLayer({
     );
 }
 
+function TeamPlayersLayer({
+    teamPlayers,
+    scale,
+}: { scale: number } & Pick<StrategyBodyProps, 'teamPlayers'>) {
+    return (
+        <Layer>
+            {teamPlayers.map(field => (
+                <TeamPlayerProperty
+                    key={field.id}
+                    x={field.position.x}
+                    y={field.position.y}
+                    priorty={field.priority}
+                    color={field.color}
+                    scale={scale}
+                />
+            ))}
+        </Layer>
+    );
+}
+
 function StrategyBody({
     id,
     mapImage,
@@ -93,6 +116,7 @@ function StrategyBody({
     circles,
     airplanePath,
     enemyTeams,
+    teamPlayers,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
@@ -168,6 +192,10 @@ function StrategyBody({
                             />
                             <EnemyTeamsLayer
                                 enemyTeams={enemyTeams}
+                                scale={scale}
+                            />
+                            <TeamPlayersLayer
+                                teamPlayers={teamPlayers}
                                 scale={scale}
                             />
                         </>
