@@ -13,9 +13,9 @@ interface MarkerPropertyProps {
 function MarkerProperty({ x, y, priority, color }: MarkerPropertyProps) {
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
-        size: 96,
+        size: 112,
         strokeWidth: 1,
-        fill: false,
+        fill: true,
     });
 
     const [markerImage] = useImage(url ?? '');
