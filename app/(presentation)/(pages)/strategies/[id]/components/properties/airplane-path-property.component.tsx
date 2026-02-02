@@ -1,4 +1,4 @@
-import { Arrow, Image } from 'react-konva';
+import { Arrow, Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
@@ -26,19 +26,21 @@ function AirplanePathProperty({
 
     if (isDrawing) {
         return (
-            <Image
-                image={planeImage}
-                x={startPosition.x}
-                y={startPosition.y}
-                offsetX={center}
-                offsetY={center}
-            />
+            <Group>
+                <Image
+                    image={planeImage}
+                    x={startPosition.x}
+                    y={startPosition.y}
+                    offsetX={center}
+                    offsetY={center}
+                />
+            </Group>
         );
     }
 
     if (isDrawCompleted) {
         return (
-            <>
+            <Group>
                 <Arrow
                     points={[
                         startPosition.x,
@@ -65,7 +67,7 @@ function AirplanePathProperty({
                         offsetY={center}
                     />
                 )}
-            </>
+            </Group>
         );
     }
 
