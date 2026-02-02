@@ -1,7 +1,15 @@
 import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useCreateTeamPlayerMutation';
+import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
+import { useState } from 'react';
 
-export function useTeamPlayerEvent(strategyId: string) {
+export function useTeamPlayerEvent(
+    strategyId: string,
+    selectedTool: CanvasTool
+) {
     const { createTeamPlayer } = useCreateTeamPlayerMutation(strategyId);
+    const [selectedTeamPlayerId, setSelectedTeamPlayerId] = useState<
+        string | undefined
+    >(undefined);
 
     const teamPlayerCreate = (position: { x: number; y: number }) => {
         const formData = new FormData();
@@ -10,7 +18,22 @@ export function useTeamPlayerEvent(strategyId: string) {
         createTeamPlayer(formData);
     };
 
+    const isClickableTeamPlayer = selectedTool === 'select';
+
+    const changeSelectedTeamPlayerId = (id: string) => {
+        setSelectedTeamPlayerId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     return {
         teamPlayerCreate,
+        selectedTeamPlayerId,
+        isClickableTeamPlayer,
+        changeSelectedTeamPlayerId,
     };
 }

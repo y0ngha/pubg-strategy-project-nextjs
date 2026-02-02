@@ -2,22 +2,32 @@ import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
+import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleCursorChange';
 
 interface TeamPlayerPropertyProps {
+    id: string;
     x: number;
     y: number;
     priorty: number;
     color: string;
     scale: number;
+    clickable: boolean;
+    isClicked: boolean;
+    onClick: (id: string) => void;
 }
 
 function TeamPlayerProperty({
+    id,
     x,
     y,
     priorty,
     color,
     scale,
+    clickable,
+    isClicked,
+    onClick,
 }: TeamPlayerPropertyProps) {
+    const { handleMouseLeave, handleMouseEnter } = useKonvaHandleCursorChange();
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: '#ffffff',
         size: 64,
@@ -28,16 +38,28 @@ function TeamPlayerProperty({
 
     const radius = 50;
 
+    const handleClick = () => {
+        onClick(id);
+    };
+
     return (
-        <Group x={x} y={y} listening={false}>
+        <Group
+            x={x}
+            y={y}
+            listening={clickable}
+            onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <Circle
                 radius={radius}
-                fill={`${color}33`}
-                stroke={color}
+                fill={isClicked ? '#00000033' : `${color}33`}
+                stroke={isClicked ? '#000000' : color}
                 strokeWidth={1}
                 shadowColor={'black'}
                 shadowBlur={10}
                 shadowOpacity={0.3}
+                dash={isClicked ? [30, 30] : undefined}
             />
 
             <Image

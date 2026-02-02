@@ -92,17 +92,31 @@ function EnemyTeamsLayer({
 function TeamPlayersLayer({
     teamPlayers,
     scale,
-}: { scale: number } & Pick<StrategyBodyProps, 'teamPlayers'>) {
+    clickable,
+    selectedTeamPlayerId,
+    changeSelectedTeamPlayerId,
+}: {
+    scale: number;
+    clickable: boolean;
+    selectedTeamPlayerId?: string;
+    changeSelectedTeamPlayerId: (id: string) => void;
+} & Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <Layer>
             {teamPlayers.map(field => (
                 <TeamPlayerProperty
                     key={field.id}
+                    id={field.id}
                     x={field.position.x}
                     y={field.position.y}
                     priorty={field.priority}
                     color={field.color}
                     scale={scale}
+                    clickable={clickable}
+                    isClicked={field.id === selectedTeamPlayerId}
+                    onClick={id => {
+                        changeSelectedTeamPlayerId(id);
+                    }}
                 />
             ))}
         </Layer>
@@ -150,7 +164,12 @@ function StrategyBody({
         enemyTeamCreate,
     } = useEnemyTeamEvent(id);
 
-    const { teamPlayerCreate } = useTeamPlayerEvent(id);
+    const {
+        teamPlayerCreate,
+        selectedTeamPlayerId,
+        isClickableTeamPlayer,
+        changeSelectedTeamPlayerId,
+    } = useTeamPlayerEvent(id, selectedTool);
 
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
@@ -203,6 +222,11 @@ function StrategyBody({
                             <TeamPlayersLayer
                                 teamPlayers={teamPlayers}
                                 scale={scale}
+                                clickable={isClickableTeamPlayer}
+                                selectedTeamPlayerId={selectedTeamPlayerId}
+                                changeSelectedTeamPlayerId={
+                                    changeSelectedTeamPlayerId
+                                }
                             />
                         </>
                     );
