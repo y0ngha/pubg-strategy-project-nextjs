@@ -60,10 +60,6 @@ export function useUpdateStrategyMutation(strategyId: string) {
                 return undefined;
             }
 
-            if (!oldStrategy.airplanePath) {
-                return oldStrategy;
-            }
-
             return {
                 ...oldStrategy,
                 title: data.title,
