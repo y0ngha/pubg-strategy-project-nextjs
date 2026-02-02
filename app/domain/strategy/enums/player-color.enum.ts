@@ -1,8 +1,8 @@
 export const PlayerColor = {
-    YELLOW: '#ffff00',
-    ORANGE: '#ff8c00',
-    BLUE: '#0000ff',
-    GREEN: '#00ff00',
+    YELLOW: '#FBBF24',
+    ORANGE: '#E67E22',
+    BLUE: '#3498DB',
+    GREEN: '#2ECC71',
 } as const;
 
 export type PlayerColor = (typeof PlayerColor)[keyof typeof PlayerColor];
