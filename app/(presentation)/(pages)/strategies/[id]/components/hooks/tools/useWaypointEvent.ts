@@ -2,7 +2,7 @@ import { useCreateWaypointMutation } from '@/(presentation)/(pages)/strategies/[
 import { toast } from 'react-toastify';
 import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useUpdateWaypointMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 export function useWaypointEvent(
     strategyId: string,
@@ -63,13 +63,6 @@ export function useWaypointEvent(
         }
     };
 
-    const altKeyupHandler = (event: KeyboardEvent) => {
-        if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
-            setKeydownAlt(false);
-            setIsDrawing(false);
-        }
-    };
-
     const confirm = (positions: { x: number; y: number }[]) => {
         const formData = new FormData();
         formData.set('positions', JSON.stringify(positions));
@@ -80,6 +73,17 @@ export function useWaypointEvent(
             createWaypoint(formData);
         }
     };
+
+    const altKeyupHandler = useEffectEvent((event: KeyboardEvent) => {
+        if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
+            setKeydownAlt(false);
+            setIsDrawing(false);
+
+            if (isDrawing && clickedPositions.length > 0) {
+                confirm(clickedPositions);
+            }
+        }
+    });
 
     const ensureSelectedTeamPlayerId = () => {
         if (selectedTeamPlayerId === undefined) {
@@ -104,12 +108,6 @@ export function useWaypointEvent(
             window.removeEventListener('keyup', altKeyupHandler);
         };
     }, []);
-
-    useEffect(() => {
-        if (!isDrawing && !keydownAlt && clickedPositions.length > 0) {
-            confirm(clickedPositions);
-        }
-    }, [clickedPositions, confirm, isDrawing, keydownAlt]);
 
     return {
         waypointCreate,
