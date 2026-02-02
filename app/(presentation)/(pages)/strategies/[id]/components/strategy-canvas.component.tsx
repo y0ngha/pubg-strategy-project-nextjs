@@ -30,7 +30,10 @@ function StrategyCanvas({
 
     const [stagePosistion, setStagePosistion] = useState({ x: 0, y: 0 });
 
-    const { width, height } = useResizeObserver(containerRef);
+    const { width, height } = useResizeObserver(containerRef, {
+        width: 1500,
+        height: 1500,
+    });
 
     const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
