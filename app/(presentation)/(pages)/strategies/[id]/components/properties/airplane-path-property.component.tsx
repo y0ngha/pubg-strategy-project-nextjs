@@ -20,6 +20,7 @@ function AirplanePathProperty({
         color: '#fbbf24',
         size: 128,
         strokeWidth: 1,
+        fill: true,
     });
 
     const [planeImage] = useImage(url ?? '');

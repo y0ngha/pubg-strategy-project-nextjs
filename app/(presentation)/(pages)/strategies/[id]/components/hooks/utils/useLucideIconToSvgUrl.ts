@@ -6,6 +6,7 @@ interface CursorOptions {
     color: string;
     size: number;
     strokeWidth: number;
+    fill: boolean;
 }
 
 export function useLucideIconToSvgUrl(
@@ -14,6 +15,7 @@ export function useLucideIconToSvgUrl(
         color: '#ff8c00',
         size: 28,
         strokeWidth: 1,
+        fill: true,
     }
 ) {
     const getSvgCursorUrl = (
@@ -28,7 +30,7 @@ export function useLucideIconToSvgUrl(
                 color: options.color,
                 size: options.size,
                 strokeWidth: options.strokeWidth,
-                fill: options.color,
+                fill: options.fill ? options.color : 'transparent',
             })
         );
 

@@ -15,6 +15,7 @@ function EnemyTeamProperty({ x, y, teamLabel, scale }: EnemyTeamPropertyProps) {
         color: '#ffffff',
         size: 64,
         strokeWidth: 2,
+        fill: false,
     });
 
     const [enemyImage] = useImage(url ?? '');

@@ -32,6 +32,7 @@ function TeamPlayerProperty({
         color: '#ffffff',
         size: 64,
         strokeWidth: 2,
+        fill: false,
     });
 
     const [teamPlayerImage] = useImage(url ?? '');
