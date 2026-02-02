@@ -24,7 +24,6 @@ import {
     StrategyShareNotFoundException,
     StrategyShareSelfDeniedException,
     TagNotFoundException,
-    TeamPlayerBelowMinimumException,
     TeamPlayerLimitExceededException,
     TeamPlayerNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -49,12 +48,6 @@ interface FindEntity<T> {
 }
 
 export class Strategy {
-    private static readonly DEFAULT_TEAM_PLAYER_POSITION = Position.create(
-        10,
-        10
-    );
-    private static readonly DEFAULT_TEAM_PLAYER_PRIORITY = 1;
-
     private static readonly MAX_CIRCLE_COUNT = 8;
 
     private static readonly MAX_TEAM_PLAYER_COUNT = 4;
@@ -145,14 +138,7 @@ export class Strategy {
             ownerEmail,
             title,
             map,
-            [
-                TeamPlayer.create(
-                    Strategy.DEFAULT_TEAM_PLAYER_PRIORITY,
-                    Strategy.DEFAULT_TEAM_PLAYER_POSITION,
-                    null,
-                    null
-                ),
-            ],
+            [],
             [],
             [],
             null,
@@ -250,7 +236,6 @@ export class Strategy {
     removeTeamPlayer(actorId: UserId, teamPlayerId: TeamPlayerId) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
-        this.ensureNotLastPlayer();
 
         const { value: teamPlayer, index } = this.findTeamPlayer(teamPlayerId);
 
@@ -831,12 +816,6 @@ export class Strategy {
     private ensureCanAddCircle(): void {
         if (this._circles.length >= Strategy.MAX_CIRCLE_COUNT) {
             throw new CircleLimitExceededException();
-        }
-    }
-
-    private ensureNotLastPlayer(): void {
-        if (this._teamPlayers.length <= Strategy.MIN_TEAM_PLAYER_COUNT) {
-            throw new TeamPlayerBelowMinimumException();
         }
     }
 

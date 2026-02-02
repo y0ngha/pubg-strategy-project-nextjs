@@ -27,7 +27,6 @@ import {
     StrategyPermissionDeniedException,
     StrategyShareDuplicateException,
     StrategyShareSelfDeniedException,
-    TeamPlayerBelowMinimumException,
     TeamPlayerLimitExceededException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CommentId } from '@domain/strategy/value-objects/comment-id';
@@ -218,7 +217,7 @@ describe('Strategy', () => {
             // then
             expect(strategy.title).toBe(defaultTitle);
             expect(strategy.map).toBe(defaultMap);
-            expect(strategy.teamPlayers).toHaveLength(1);
+            expect(strategy.teamPlayers).toEqual([]);
             expect(strategy.enemyTeams).toEqual([]);
             expect(strategy.circles).toEqual([]);
             expect(strategy.airplanePath).toBeNull();
@@ -408,7 +407,7 @@ describe('Strategy', () => {
                 );
 
                 // then
-                expect(strategy.teamPlayers).toHaveLength(3);
+                expect(strategy.teamPlayers).toHaveLength(2);
                 expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer1);
                 expect(strategy.teamPlayers).toContainEqual(savedTeamPlayer2);
                 expect(savedTeamPlayer1.position).toEqual(teamPlayerPosition);
@@ -424,6 +423,7 @@ describe('Strategy', () => {
                     defaultMap
                 );
 
+                strategy.addTeamPlayer(ownerId, teamPlayerPosition);
                 strategy.addTeamPlayer(ownerId, teamPlayerPosition);
                 strategy.addTeamPlayer(ownerId, teamPlayerPosition);
                 strategy.addTeamPlayer(ownerId, teamPlayerPosition);
@@ -474,23 +474,6 @@ describe('Strategy', () => {
 
                 expect(teamPlayerIds.includes(teamPlayerId1)).toBeFalsy();
                 expect(teamPlayerIds.includes(teamPlayerId2)).toBeFalsy();
-            });
-
-            it('팀 플레이어가 1명일 때 삭제하면 에러를 던진다.', () => {
-                // give
-                const strategy = Strategy.create(
-                    ownerId,
-                    ownerEmail,
-                    defaultTitle,
-                    defaultMap
-                );
-
-                const teamPlayerId = strategy.teamPlayers[0].id;
-
-                // when & then
-                expect(() =>
-                    strategy.removeTeamPlayer(ownerId, teamPlayerId)
-                ).toThrow(TeamPlayerBelowMinimumException);
             });
 
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
