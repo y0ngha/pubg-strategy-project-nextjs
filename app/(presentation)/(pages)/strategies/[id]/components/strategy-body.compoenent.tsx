@@ -107,42 +107,43 @@ function TeamPlayersLayer({
 } & Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <Layer>
-            {teamPlayers.map(field => (
-                <React.Fragment key={`tp-${field.id}`}>
-                    <TeamPlayerProperty
-                        id={field.id}
-                        x={field.position.x}
-                        y={field.position.y}
-                        priority={field.priority}
-                        color={field.color}
-                        clickable={clickable}
-                        isClicked={field.id === selectedTeamPlayerId}
-                        onClick={id => {
-                            changeSelectedTeamPlayerId(id);
-                        }}
-                    />
-                    {field.marker && (
-                        <MarkerProperty
-                            color={field.color}
+            {teamPlayers.map(field => {
+                return (
+                    <React.Fragment key={`tp-${field.priority}`}>
+                        <TeamPlayerProperty
+                            id={field.id}
+                            x={field.position.x}
+                            y={field.position.y}
                             priority={field.priority}
-                            x={field.marker.position.x}
-                            y={field.marker.position.y}
+                            color={field.color}
+                            clickable={clickable}
+                            isClicked={field.id === selectedTeamPlayerId}
+                            onClick={id => {
+                                changeSelectedTeamPlayerId(id);
+                            }}
                         />
-                    )}
-                    {field.waypoint && (
+                        {field.marker && (
+                            <MarkerProperty
+                                color={field.color}
+                                priority={field.priority}
+                                x={field.marker.position.x}
+                                y={field.marker.position.y}
+                            />
+                        )}
                         <WaypointProperty
                             positions={
-                                isWaypointDrawing
+                                isWaypointDrawing &&
+                                selectedTeamPlayerId === field.id
                                     ? waypointClickedPositions
-                                    : field.waypoint.positions
+                                    : (field.waypoint?.positions ?? [])
                             }
                             color={field.color}
                             priority={field.priority}
                             isDrawing={isWaypointDrawing}
                         />
-                    )}
-                </React.Fragment>
-            ))}
+                    </React.Fragment>
+                );
+            })}
         </Layer>
     );
 }
