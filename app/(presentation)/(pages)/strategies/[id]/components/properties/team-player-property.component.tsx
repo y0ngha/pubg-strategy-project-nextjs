@@ -8,7 +8,7 @@ interface TeamPlayerPropertyProps {
     id: string;
     x: number;
     y: number;
-    priorty: number;
+    priority: number;
     color: string;
     scale: number;
     clickable: boolean;
@@ -20,7 +20,7 @@ function TeamPlayerProperty({
     id,
     x,
     y,
-    priorty,
+    priority,
     color,
     scale,
     clickable,
@@ -69,7 +69,7 @@ function TeamPlayerProperty({
                 offsetY={center}
                 scaleX={0.8}
                 scaleY={0.8}
-                alt={`팀 플레이어 - ${priorty}`}
+                alt={`팀 플레이어 - ${priority}`}
             />
 
             <Label y={radius + 8}>
@@ -86,6 +86,7 @@ function TeamPlayerProperty({
                 <Text
                     text={priorty.toString()}
                     fontSize={12 / scale}
+                    text={priority.toString()}
                     padding={6}
                     fill={'white'}
                     align={'center'}

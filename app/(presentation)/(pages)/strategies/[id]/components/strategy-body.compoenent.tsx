@@ -117,7 +117,7 @@ function TeamPlayersLayer({
                         id={field.id}
                         x={field.position.x}
                         y={field.position.y}
-                        priorty={field.priority}
+                        priority={field.priority}
                         color={field.color}
                         scale={scale}
                         clickable={clickable}
@@ -129,7 +129,7 @@ function TeamPlayersLayer({
                     {field.marker && (
                         <MarkerProperty
                             color={field.color}
-                            priorty={field.priority}
+                            priority={field.priority}
                             x={field.marker.position.x}
                             y={field.marker.position.y}
                         />
@@ -142,7 +142,7 @@ function TeamPlayersLayer({
                                     : field.waypoint.positions
                             }
                             color={field.color}
-                            priorty={field.priority}
+                            priority={field.priority}
                             isDrawing={isWaypointDrawing}
                         />
                     )}
@@ -252,34 +252,26 @@ function StrategyBody({
                 handleMouseMove={handleMouseMove}
                 selectedTool={selectedTool}
                 map={<StrategyMapImage src={mapImage} />}
-                properties={({ scale }) => {
-                    return (
-                        <>
-                            <CirclesLayer circles={circles} />
-                            <AirplanePathLayer
-                                startPosition={startPosition}
-                                endPosition={endPosition}
-                            />
-                            <EnemyTeamsLayer
-                                enemyTeams={enemyTeams}
-                                scale={scale}
-                            />
-                            <TeamPlayersLayer
-                                teamPlayers={teamPlayers}
-                                scale={scale}
-                                clickable={isClickableTeamPlayer}
-                                selectedTeamPlayerId={selectedTeamPlayerId}
-                                changeSelectedTeamPlayerId={
-                                    changeSelectedTeamPlayerId
-                                }
-                                isWaypointDrawing={isWaypointDrawing}
-                                waypointClickedPositions={
-                                    waypointClickedPositions
-                                }
-                            />
-                        </>
-                    );
-                }}
+                properties={
+                    <>
+                        <CirclesLayer circles={circles} />
+                        <AirplanePathLayer
+                            startPosition={startPosition}
+                            endPosition={endPosition}
+                        />
+                        <EnemyTeamsLayer enemyTeams={enemyTeams} />
+                        <TeamPlayersLayer
+                            teamPlayers={teamPlayers}
+                            clickable={isClickableTeamPlayer}
+                            selectedTeamPlayerId={selectedTeamPlayerId}
+                            changeSelectedTeamPlayerId={
+                                changeSelectedTeamPlayerId
+                            }
+                            isWaypointDrawing={isWaypointDrawing}
+                            waypointClickedPositions={waypointClickedPositions}
+                        />
+                    </>
+                }
                 onMapClick={handleClick}
             />
 

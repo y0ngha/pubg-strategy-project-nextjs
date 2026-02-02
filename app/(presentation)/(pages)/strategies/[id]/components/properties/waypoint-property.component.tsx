@@ -4,14 +4,14 @@ import { Arrow, Circle, Group, Line } from 'react-konva';
 
 interface WaypointPropertyProps {
     positions: { x: number; y: number }[];
-    priorty: number;
+    priority: number;
     color: string;
     isDrawing: boolean;
 }
 
 function WaypointProperty({
     positions,
-    priorty,
+    priority,
     color,
     isDrawing,
 }: WaypointPropertyProps) {
@@ -61,7 +61,7 @@ function WaypointProperty({
 
                 return (
                     <Group
-                        key={`tp-${priorty}-wp-${index}`}
+                        key={`tp-${priority}-wp-${index}`}
                         x={position.x}
                         y={position.y}
                     >
