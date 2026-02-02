@@ -123,13 +123,14 @@ function StrategyBody({
         canvasToolGroup,
         canvasToolNames,
         canvasToolIcons,
+        canvasToolCursor,
         changeTool,
         selectedTool,
         iconSize,
     } = useToolbar();
 
     const { url, center } = useLucideIconToSvgUrl(
-        canvasToolIcons[selectedTool]
+        canvasToolCursor[selectedTool]
     );
 
     const {

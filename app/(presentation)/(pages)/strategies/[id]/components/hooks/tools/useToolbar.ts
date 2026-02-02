@@ -68,6 +68,19 @@ export function useToolbar() {
         eraser: Eraser,
     };
 
+    const canvasToolCursor: Record<CanvasTool, LucideIcon | undefined> = {
+        select: undefined,
+        circle: CircleDashed,
+        airplane: Plane,
+        enemy: Swords,
+        team: User,
+        marker: MapPin,
+        waypoint: Route,
+        tag: Tag,
+        comment: MessageSquareText,
+        eraser: Eraser,
+    };
+
     const changeTool = (tool: CanvasTool) => {
         setSelectedTool(tool);
     };
@@ -76,6 +89,7 @@ export function useToolbar() {
         canvasToolGroup,
         canvasToolNames,
         canvasToolIcons,
+        canvasToolCursor,
         changeTool,
         selectedTool,
         iconSize,

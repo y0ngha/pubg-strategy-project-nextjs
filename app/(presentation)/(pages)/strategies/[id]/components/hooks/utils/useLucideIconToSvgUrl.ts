@@ -9,14 +9,20 @@ interface CursorOptions {
 }
 
 export function useLucideIconToSvgUrl(
-    lucideIcon: LucideIcon,
+    lucideIcon?: LucideIcon,
     options: CursorOptions = {
         color: '#ff8c00',
         size: 28,
         strokeWidth: 1,
     }
 ) {
-    const getSvgCursorUrl = (iconComponent: LucideIcon): string | undefined => {
+    const getSvgCursorUrl = (
+        iconComponent?: LucideIcon
+    ): string | undefined => {
+        if (iconComponent === undefined) {
+            return 'default';
+        }
+
         const svgString = renderToStaticMarkup(
             createElement(iconComponent, {
                 color: options.color,
