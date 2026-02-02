@@ -24,6 +24,7 @@ import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/compon
 import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useEnemyTeamEvent';
 import EnemyTeamProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
 import TeamPlayerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
+import { useTeamPlayerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTeamPlayerEvent';
 
 interface StrategyBodyProps {
     id: string;
@@ -148,6 +149,8 @@ function StrategyBody({
         enemyTeamCreate,
     } = useEnemyTeamEvent(id);
 
+    const { teamPlayerCreate } = useTeamPlayerEvent(id);
+
     const onMapClick = (clickPosition: { x: number; y: number }) => {
         switch (selectedTool) {
             case 'circle':
@@ -156,6 +159,8 @@ function StrategyBody({
                 return clickAirplanePath(clickPosition);
             case 'enemy':
                 return enterEnemyTeamLabelModalOpen(clickPosition);
+            case 'team':
+                return teamPlayerCreate(clickPosition);
         }
     };
 
