@@ -29,6 +29,8 @@ import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/
 import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useMarkerEvent';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/waypoint-property.component';
 import { useWaypointEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useWaypointEvent';
+import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
+import { useTagEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTagEvent';
 
 interface StrategyBodyProps {
     id: string;
@@ -196,6 +198,13 @@ function StrategyBody({
         changeSelectedTeamPlayerId,
     } = useTeamPlayerEvent(id, selectedTool);
 
+    const {
+        isEnterTagContentModalOpen,
+        enterTagContentModalOpen,
+        enterTagContentModalClose,
+        tagCreate,
+    } = useTagEvent(id);
+
     const { markerClick } = useMarkerEvent(
         id,
         teamPlayers,
@@ -222,6 +231,8 @@ function StrategyBody({
                 return markerClick(clickPosition);
             case 'waypoint':
                 return waypointCreate(clickPosition);
+            case 'tag':
+                return enterTagContentModalOpen(clickPosition);
         }
     };
 
@@ -281,6 +292,12 @@ function StrategyBody({
                 isOpen={isEnterEnemyTeamLabelModalOpen}
                 onClose={enterEnemyTeamLabelModalClose}
                 onConfirm={enemyTeamCreate}
+            />
+
+            <EnterTagContentModal
+                isOpen={isEnterTagContentModalOpen}
+                onClose={enterTagContentModalClose}
+                onConfirm={tagCreate}
             />
         </div>
     );
