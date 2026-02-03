@@ -12,6 +12,7 @@ import {
     AirplanePathResponseDto,
     CircleResponseDto,
     EnemyTeamResponseDto,
+    TagResponseDto,
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
@@ -28,6 +29,7 @@ import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/pr
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
+import TagsLayer from './properties/tag-property.component';
 
 export interface StrategyBodyProps {
     id: string;
@@ -38,6 +40,7 @@ export interface StrategyBodyProps {
     airplanePath?: AirplanePathResponseDto;
     enemyTeams: EnemyTeamResponseDto[];
     teamPlayers: TeamPlayerResponseDto[];
+    tags: TagResponseDto[];
 }
 
 function StrategyBody({
@@ -49,6 +52,7 @@ function StrategyBody({
     airplanePath,
     enemyTeams,
     teamPlayers,
+    tags,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
@@ -167,6 +171,7 @@ function StrategyBody({
                             isWaypointDrawing={isWaypointDrawing}
                             waypointClickedPositions={waypointClickedPositions}
                         />
+                        <TagsLayer tags={tags} />
                     </>
                 }
                 onMapClick={handleClick}
