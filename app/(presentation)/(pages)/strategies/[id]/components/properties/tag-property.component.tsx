@@ -22,7 +22,7 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
         handleMouseEnter: cursorHandleMouseEnter,
     } = useKonvaHandleCursorChange('pointer', 'default');
 
-    const iconColor = '#f59e0b';
+    const iconColor = '#A855F7';
 
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,
