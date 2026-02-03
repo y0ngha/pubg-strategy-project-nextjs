@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useSyncExternalStore } from 'react';
+import React, { useEffect, useEffectEvent, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { X } from 'lucide-react';
@@ -37,17 +37,17 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
         }
     };
 
-    const modalSetup = () => {
+    const modalSetup = useEffectEvent(() => {
         if (closeableByEsc) {
             window.addEventListener('keydown', escKeydownHandler);
         }
-    };
+    });
 
-    const modalCleanup = () => {
+    const modalCleanup = useEffectEvent(() => {
         if (closeableByEsc) {
             window.removeEventListener('keydown', escKeydownHandler);
         }
-    };
+    });
 
     useEffect(() => {
         if (open) {
@@ -59,7 +59,7 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
                 modalCleanup();
             };
         }
-    }, [modalCleanup, modalSetup, open]);
+    }, [open]);
 
     if (!mounted) return null;
 
