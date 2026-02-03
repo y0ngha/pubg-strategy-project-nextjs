@@ -9,6 +9,8 @@ export function useWaypointEvent(
     teamPlayers: TeamPlayerResponseDto[],
     selectedTeamPlayerId?: string
 ) {
+    const maxWaypoint = 6;
+
     const { createWaypoint } = useCreateWaypointMutation(strategyId);
     const { updateWaypoint } = useUpdateWaypointMutation(strategyId);
 
@@ -34,7 +36,7 @@ export function useWaypointEvent(
             ensurePressAltKey();
 
             setClickedPositions(prevState => {
-                if (prevState.length === 6) {
+                if (prevState.length === maxWaypoint) {
                     return prevState;
                 }
 
