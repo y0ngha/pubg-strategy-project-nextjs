@@ -102,12 +102,6 @@ export class TeamPlayerLimitExceededException extends DomainException {
     }
 }
 
-export class TeamPlayerBelowMinimumException extends DomainException {
-    constructor() {
-        super('팀 플레이어는 최소 1명 이상 있어야 합니다.');
-    }
-}
-
 export class TeamPlayerNotFoundException extends DomainException {
     constructor() {
         super('팀 플레이어를 찾을 수 없습니다.');
