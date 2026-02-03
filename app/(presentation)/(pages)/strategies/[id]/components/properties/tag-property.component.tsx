@@ -6,6 +6,7 @@ import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/comp
 import React, { useState } from 'react';
 import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleCursorChange';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleHover';
 
 interface TagPropertyProps {
     x: number;
@@ -14,13 +15,18 @@ interface TagPropertyProps {
 }
 
 function TagProperty({ x, y, content }: TagPropertyProps) {
-    const [isHovered, setIsHovered] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     const {
         handleMouseLeave: cursorHandleMouseLeave,
         handleMouseEnter: cursorHandleMouseEnter,
     } = useKonvaHandleCursorChange('pointer', 'default');
+
+    const {
+        isHovered,
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+    } = useKonvaHandleHover();
 
     const iconColor = '#A855F7';
 
@@ -34,12 +40,12 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
     const [tagImage] = useImage(url ?? '');
 
     const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        setIsHovered(true);
+        hoverHandleMouseEnter();
         cursorHandleMouseEnter(event);
     };
 
     const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        setIsHovered(false);
+        hoverHandleMouseLeave();
         cursorHandleMouseLeave(event);
     };
 

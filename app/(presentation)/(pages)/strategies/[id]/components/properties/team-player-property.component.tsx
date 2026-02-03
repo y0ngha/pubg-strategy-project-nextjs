@@ -7,6 +7,8 @@ import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/component
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/marker-property.component';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleHover';
+import { KonvaEventObject } from 'konva/lib/Node';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -29,11 +31,21 @@ function TeamPlayerProperty({
     isClicked,
     onClick,
 }: TeamPlayerPropertyProps) {
-    const { handleMouseLeave, handleMouseEnter } =
-        useKonvaHandleCursorChange('pointer');
+    const {
+        handleMouseLeave: cursorHandleMouseLeave,
+        handleMouseEnter: cursorHandleMouseEnter,
+    } = useKonvaHandleCursorChange('pointer');
+
+    const {
+        isHovered,
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+    } = useKonvaHandleHover();
+
+    const iconColor = '#ffffff';
 
     const { url, center } = useLucideIconToSvgUrl(User, {
-        color: '#ffffff',
+        color: iconColor,
         size: 64,
         strokeWidth: 2,
         fill: false,
@@ -42,6 +54,16 @@ function TeamPlayerProperty({
     const [teamPlayerImage] = useImage(url ?? '');
 
     const radius = 50;
+
+    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
+        hoverHandleMouseEnter();
+        cursorHandleMouseEnter(event);
+    };
+
+    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
+        hoverHandleMouseLeave();
+        cursorHandleMouseLeave(event);
+    };
 
     const handleClick = () => {
         onClick(id);
@@ -71,8 +93,10 @@ function TeamPlayerProperty({
                 image={teamPlayerImage}
                 offsetX={center}
                 offsetY={center}
-                scaleX={0.8}
-                scaleY={0.8}
+                scaleX={isHovered ? 1.0 : 0.8}
+                scaleY={isHovered ? 1.0 : 0.8}
+                shadowColor={iconColor}
+                shadowBlur={isHovered ? 15 : 0}
                 alt={`팀 플레이어 - ${priority}`}
             />
 
