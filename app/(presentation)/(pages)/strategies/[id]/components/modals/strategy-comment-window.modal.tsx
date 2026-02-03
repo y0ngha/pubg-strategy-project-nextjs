@@ -13,10 +13,7 @@ import {
     useSyncExternalStore,
 } from 'react';
 import { CornerDownRight, Pencil, Send, Trash2, User, X } from 'lucide-react';
-import {
-    ChildCommentResponseDto,
-    CommentResponseDto,
-} from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { ChildCommentResponseDto, CommentResponseDto, } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import Button from '@/(presentation)/shared/components/button.component';
 import { toYyyyMmDdHhMmString } from '@/(presentation)/shared/helpers/date.helper';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
@@ -226,7 +223,7 @@ function CommentWindowBody({
                             onReply({ id: root.id, author: root.authorEmail })
                         }
                         onEdit={onEdit}
-                        isAuthor={true}
+                        isAuthor={root.isAuthor}
                         isEditing={root.id === editTargetId}
                     />
 
@@ -241,7 +238,7 @@ function CommentWindowBody({
                                     key={child.id}
                                     comment={child}
                                     onEdit={onEdit}
-                                    isAuthor={true}
+                                    isAuthor={root.isAuthor}
                                     isEditing={child.id === editTargetId}
                                 />
                             ))}
