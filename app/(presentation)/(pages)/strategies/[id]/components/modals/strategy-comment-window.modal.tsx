@@ -334,7 +334,7 @@ function CommentInput({
             nativeEvent: { inputType: string };
         }
     ) => {
-        onChangeInputText(event.target.value.trim());
+        onChangeInputText(event.target.value);
         setSelectionStart(event.target.selectionStart);
     };
 
@@ -543,7 +543,7 @@ function StrategyCommentWindow({
                         ref={textareaRef}
                         inputText={inputText}
                         handleSubmit={handleSubmit}
-                        onChangeInputText={inputText => setInputText(inputText)}
+                        onChangeInputText={setInputText}
                         isReply={replyTarget !== null}
                     />
 
