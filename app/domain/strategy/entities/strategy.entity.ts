@@ -713,6 +713,8 @@ export class Strategy {
         if (position) {
             comment.updatePosition(actorId, position);
         }
+
+        return comment;
     }
 
     /**
