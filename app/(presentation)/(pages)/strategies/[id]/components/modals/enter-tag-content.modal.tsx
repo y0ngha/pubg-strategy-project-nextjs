@@ -23,7 +23,7 @@ function EnterTagContentModal({
     return (
         <Modal open={isOpen} onClose={onClose}>
             <Modal.Header>
-                <Modal.Title>적 팀 라벨 선택</Modal.Title>
+                <Modal.Title>태그 내용 입력</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Input
