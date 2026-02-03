@@ -17,7 +17,7 @@ function EnterTagContentModal({
     const [content, setContent] = useState<string>('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setContent(event.target.value.trim());
+        setContent(event.target.value);
     };
 
     return (
