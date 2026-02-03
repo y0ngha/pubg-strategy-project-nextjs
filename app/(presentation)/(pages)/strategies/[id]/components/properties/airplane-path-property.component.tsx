@@ -1,7 +1,8 @@
-import { Arrow, Group, Image } from 'react-konva';
+import { Arrow, Group, Image, Layer } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
+import React from 'react';
 
 interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
@@ -34,6 +35,7 @@ function AirplanePathProperty({
                     y={startPosition.y}
                     offsetX={center}
                     offsetY={center}
+                    alt={'비행기 동선 시작'}
                 />
             </Group>
         );
@@ -66,7 +68,7 @@ function AirplanePathProperty({
                         y={startPosition.y}
                         offsetX={center}
                         offsetY={center}
-                        alt={'비행기 동선'}
+                        alt={'비행기 동선 시작'}
                     />
                 )}
             </Group>
@@ -78,4 +80,23 @@ function AirplanePathProperty({
 
 AirplanePathProperty.displayName = 'AirplanePathProperty';
 
-export default AirplanePathProperty;
+function AirplanePathLayer({
+    startPosition,
+    endPosition,
+}: {
+    startPosition?: { x: number; y: number };
+    endPosition?: { x: number; y: number };
+}) {
+    return (
+        <Layer>
+            <AirplanePathProperty
+                startPosition={startPosition}
+                endPosition={endPosition}
+            />
+        </Layer>
+    );
+}
+
+AirplanePathLayer.displayName = 'AirplanePathLayer';
+
+export default AirplanePathLayer;

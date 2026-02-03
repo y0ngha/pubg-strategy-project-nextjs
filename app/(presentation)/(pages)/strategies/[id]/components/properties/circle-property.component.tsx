@@ -1,7 +1,9 @@
 'use client';
 
-import { Group, Shape } from 'react-konva';
+import { Group, Layer, Shape } from 'react-konva';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
+import React from 'react';
+import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
 
 interface CirclePropertyProps {
     x: number;
@@ -34,4 +36,22 @@ function CircleProperty({ x, y, radius, color }: CirclePropertyProps) {
 
 CircleProperty.displayName = 'CircleProperty';
 
-export default CircleProperty;
+function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
+    return (
+        <Layer>
+            {circles.map(field => (
+                <CircleProperty
+                    key={field.phase}
+                    color={field.color}
+                    radius={field.radius}
+                    x={field.centerPosition.x}
+                    y={field.centerPosition.y}
+                />
+            ))}
+        </Layer>
+    );
+}
+
+CirclesLayer.displayName = 'CirclesLayer';
+
+export default CirclesLayer;

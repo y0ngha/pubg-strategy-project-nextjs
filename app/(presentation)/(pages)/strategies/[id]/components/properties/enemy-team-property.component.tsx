@@ -1,7 +1,8 @@
-import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
+import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import { Swords } from 'lucide-react';
 import useImage from 'use-image';
+import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
 
 interface EnemyTeamPropertyProps {
     x: number;
@@ -67,4 +68,23 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
 
 EnemyTeamProperty.displayName = 'EnemyTeamProperty';
 
-export default EnemyTeamProperty;
+function EnemyTeamsLayer({
+    enemyTeams,
+}: Pick<StrategyBodyProps, 'enemyTeams'>) {
+    return (
+        <Layer>
+            {enemyTeams.map(field => (
+                <EnemyTeamProperty
+                    key={field.id}
+                    x={field.position.x}
+                    y={field.position.y}
+                    teamLabel={field.teamLabel}
+                />
+            ))}
+        </Layer>
+    );
+}
+
+EnemyTeamsLayer.displayName = 'EnemyTeamsLayer';
+
+export default EnemyTeamsLayer;

@@ -7,8 +7,6 @@ import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/strategy-map-image.component';
 import Konva from 'konva';
 import React, { Ref } from 'react';
-import CircleProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/circle-property.component';
-import { Layer } from 'react-konva';
 import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useCircleEvent';
 import {
     AirplanePathResponseDto,
@@ -19,20 +17,19 @@ import {
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleMouseClick';
 import { useAirplanePathEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useAirplanePathEvent';
-import AirplanePathProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/airplane-path-property.component';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useEnemyTeamEvent';
-import EnemyTeamProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
-import TeamPlayerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
 import { useTeamPlayerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTeamPlayerEvent';
-import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/marker-property.component';
 import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useMarkerEvent';
-import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/waypoint-property.component';
 import { useWaypointEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useWaypointEvent';
 import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
 import { useTagEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useTagEvent';
+import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/circle-property.component';
+import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/airplane-path-property.component';
+import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
+import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
 
-interface StrategyBodyProps {
+export interface StrategyBodyProps {
     id: string;
     mapImage: string;
     stageRef: Ref<Konva.Stage>;
@@ -41,113 +38,6 @@ interface StrategyBodyProps {
     airplanePath?: AirplanePathResponseDto;
     enemyTeams: EnemyTeamResponseDto[];
     teamPlayers: TeamPlayerResponseDto[];
-}
-
-function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
-    return (
-        <Layer>
-            {circles.map(field => (
-                <CircleProperty
-                    key={field.phase}
-                    color={field.color}
-                    radius={field.radius}
-                    x={field.centerPosition.x}
-                    y={field.centerPosition.y}
-                />
-            ))}
-        </Layer>
-    );
-}
-
-function AirplanePathLayer({
-    startPosition,
-    endPosition,
-}: {
-    startPosition?: { x: number; y: number };
-    endPosition?: { x: number; y: number };
-}) {
-    return (
-        <Layer>
-            <AirplanePathProperty
-                startPosition={startPosition}
-                endPosition={endPosition}
-            />
-        </Layer>
-    );
-}
-
-function EnemyTeamsLayer({
-    enemyTeams,
-}: Pick<StrategyBodyProps, 'enemyTeams'>) {
-    return (
-        <Layer>
-            {enemyTeams.map(field => (
-                <EnemyTeamProperty
-                    key={field.id}
-                    x={field.position.x}
-                    y={field.position.y}
-                    teamLabel={field.teamLabel}
-                />
-            ))}
-        </Layer>
-    );
-}
-
-function TeamPlayersLayer({
-    teamPlayers,
-    clickable,
-    selectedTeamPlayerId,
-    changeSelectedTeamPlayerId,
-    isWaypointDrawing,
-    waypointClickedPositions,
-}: {
-    clickable: boolean;
-    selectedTeamPlayerId?: string;
-    changeSelectedTeamPlayerId: (id: string) => void;
-    isWaypointDrawing: boolean;
-    waypointClickedPositions: { x: number; y: number }[];
-} & Pick<StrategyBodyProps, 'teamPlayers'>) {
-    return (
-        <Layer>
-            {teamPlayers.map(field => {
-                return (
-                    <React.Fragment key={`tp-${field.priority}`}>
-                        <TeamPlayerProperty
-                            id={field.id}
-                            x={field.position.x}
-                            y={field.position.y}
-                            priority={field.priority}
-                            color={field.color}
-                            clickable={clickable}
-                            isClicked={field.id === selectedTeamPlayerId}
-                            onClick={id => {
-                                changeSelectedTeamPlayerId(id);
-                            }}
-                        />
-                        {field.marker && (
-                            <MarkerProperty
-                                color={field.color}
-                                priority={field.priority}
-                                x={field.marker.position.x}
-                                y={field.marker.position.y}
-                            />
-                        )}
-                        <WaypointProperty
-                            positions={
-                                isWaypointDrawing &&
-                                selectedTeamPlayerId === field.id
-                                    ? waypointClickedPositions
-                                    : (field.waypoint?.positions ?? [])
-                            }
-                            color={field.color}
-                            priority={field.priority}
-                            isDrawing={isWaypointDrawing}
-                        />
-                    </React.Fragment>
-                );
-            })}
-        </Layer>
-    );
 }
 
 function StrategyBody({

@@ -1,8 +1,12 @@
-import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
+import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
 import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleCursorChange';
+import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/waypoint-property.component';
+import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/properties/marker-property.component';
+import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
+import React from 'react';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -25,7 +29,9 @@ function TeamPlayerProperty({
     isClicked,
     onClick,
 }: TeamPlayerPropertyProps) {
-    const { handleMouseLeave, handleMouseEnter } = useKonvaHandleCursorChange();
+    const { handleMouseLeave, handleMouseEnter } =
+        useKonvaHandleCursorChange('pointer');
+
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: '#ffffff',
         size: 64,
@@ -95,4 +101,63 @@ function TeamPlayerProperty({
 
 TeamPlayerProperty.displayName = 'TeamPlayerProperty';
 
-export default TeamPlayerProperty;
+function TeamPlayersLayer({
+    teamPlayers,
+    clickable,
+    selectedTeamPlayerId,
+    changeSelectedTeamPlayerId,
+    isWaypointDrawing,
+    waypointClickedPositions,
+}: {
+    clickable: boolean;
+    selectedTeamPlayerId?: string;
+    changeSelectedTeamPlayerId: (id: string) => void;
+    isWaypointDrawing: boolean;
+    waypointClickedPositions: { x: number; y: number }[];
+} & Pick<StrategyBodyProps, 'teamPlayers'>) {
+    return (
+        <Layer>
+            {teamPlayers.map(field => {
+                return (
+                    <React.Fragment key={`tp-${field.priority}`}>
+                        <TeamPlayerProperty
+                            id={field.id}
+                            x={field.position.x}
+                            y={field.position.y}
+                            priority={field.priority}
+                            color={field.color}
+                            clickable={clickable}
+                            isClicked={field.id === selectedTeamPlayerId}
+                            onClick={id => {
+                                changeSelectedTeamPlayerId(id);
+                            }}
+                        />
+                        {field.marker && (
+                            <MarkerProperty
+                                color={field.color}
+                                priority={field.priority}
+                                x={field.marker.position.x}
+                                y={field.marker.position.y}
+                            />
+                        )}
+                        <WaypointProperty
+                            positions={
+                                isWaypointDrawing &&
+                                selectedTeamPlayerId === field.id
+                                    ? waypointClickedPositions
+                                    : (field.waypoint?.positions ?? [])
+                            }
+                            color={field.color}
+                            priority={field.priority}
+                            isDrawing={isWaypointDrawing}
+                        />
+                    </React.Fragment>
+                );
+            })}
+        </Layer>
+    );
+}
+
+TeamPlayersLayer.displayName = 'TeamPlayersLayer';
+
+export default TeamPlayersLayer;
