@@ -4,6 +4,9 @@
 - `Next`: v16 (Release. 2025.10.21)
 - `Yarn`: v4.12.0 (Release. 2025.11.23)
 
+![실행 이미지1](docs/images/0203-1image.png)
+![실행 이미지2](docs/images/0203-2image.png)
+
 > 문서
 > [Technical specifications](docs/Technical_specifications.md)
 
@@ -75,9 +78,19 @@
 > 문서
 > [Domain Design](docs/Domain_Design.md)
 
-# 폴더 구조(2026-01-11)
+# 폴더 구조(2026-02-03)
 
 > [Folder Structure](docs/Folder_Structure_20260111.md)
+
+# 테스트 커버리지 (2026-02-03)
+
+> 테스트 커버리지 100%를 목표로 하기보단, 코어를 테스트하는데 집중합니다.
+
+Statements   : 97.43% ( 2427/2491 ) <br/>
+Branches     : 84.47% ( 664/786 ) <br/>
+Functions    : 95.65% ( 704/736 ) <br/>
+Lines        : 97.32% ( 2288/2351 ) <br/>
+---
 
 # 실행방법
 
@@ -85,14 +98,6 @@
 2. `npm install -g yarn`
 3. 폴더에 들어와서 `yarn install`
 4. `yarn dev` 로 개발서버 실행
-
-# 테스트 커버리지 (2026-01-18)
-> 테스트 커버리지 100%를 목표로 하기보단, 코어를 테스트하는데 집중합니다.
-
-Statements   : 97.48% ( 2403/2465 )<br/>
-Branches     : 85.47% ( 653/764 )<br/>
-Functions    : 95.76% ( 701/732 )<br/>
-Lines        : 97.37% ( 2266/2327 )<br/>
 
 ---
 
