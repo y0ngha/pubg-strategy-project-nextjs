@@ -90,6 +90,7 @@ export interface CommentResponseDto {
     position: Position;
     content: string;
     createdAt: Date;
+    isAuthor: boolean;
     childComments: ChildCommentResponseDto[];
 }
 
