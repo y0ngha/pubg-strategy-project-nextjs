@@ -15,6 +15,12 @@ export function useCreateWaypointMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -23,13 +29,17 @@ export function useCreateWaypointMutation(strategyId: string) {
             return await addWaypointAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateWaypointMutation', error);
             toast.error(
                 error.message ??
@@ -80,7 +90,7 @@ export function useCreateWaypointMutation(strategyId: string) {
         });
     };
 
-    const optimisticUpdate = (queryKey: QueryKey, data: AddWaypointAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddWaypointAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

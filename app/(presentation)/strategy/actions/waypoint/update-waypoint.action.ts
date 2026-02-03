@@ -4,7 +4,14 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
 
-export async function updateWaypointAction(_: unknown, formData: FormData) {
+export type UpdateWaypointAction = {
+    teamPlayerId: string;
+    positions: { x: number; y: number }[];
+};
+
+export async function updateWaypointAction(
+    formData: FormData
+): Promise<UpdateWaypointAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId, positions } = parseFormData(

@@ -49,6 +49,8 @@ export class CreateCommentUseCase {
             authorEmail: comment.authorEmail.toString(),
             content: comment.content.toString(),
             parentCommentId: comment.parentCommentId?.toString() ?? null,
+            createdAt: comment.createdAt,
+            isAuthor: comment.authorId.equals(actorId),
         };
     }
 }

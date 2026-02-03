@@ -2,7 +2,7 @@
 
 import StrategyToolButton from '@/(presentation)/(pages)/strategies/[id]/components/strategy-tool-button.component';
 import StrategyToolDivider from '@/(presentation)/(pages)/strategies/[id]/components/strategy-tool-divider.component';
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useToolbar';
+import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
 import { LucideIcon } from 'lucide-react';
 
 interface StrategyToolbarProps {

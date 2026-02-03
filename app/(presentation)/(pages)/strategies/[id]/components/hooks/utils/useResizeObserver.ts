@@ -1,9 +1,13 @@
 import { RefObject, useEffect, useState } from 'react';
 
 export function useResizeObserver<T extends HTMLElement>(
-    ref: RefObject<T | null>
+    ref: RefObject<T | null>,
+    defaultSize: { width: number; height: number }
 ) {
-    const [size, setSize] = useState({ width: 0, height: 0 });
+    const [size, setSize] = useState({
+        width: defaultSize.width,
+        height: defaultSize.height,
+    });
 
     useEffect(() => {
         const container = ref.current;
@@ -20,7 +24,7 @@ export function useResizeObserver<T extends HTMLElement>(
         resizeObserver.observe(container);
 
         return () => resizeObserver.disconnect();
-    }, []);
+    }, [ref]);
 
     return {
         width: size.width,

@@ -6,23 +6,31 @@ interface CursorOptions {
     color: string;
     size: number;
     strokeWidth: number;
+    fill: boolean;
 }
 
-export function useLucideIconToCursorUrl(
-    lucideIcon: LucideIcon,
+export function useLucideIconToSvgUrl(
+    lucideIcon?: LucideIcon,
     options: CursorOptions = {
         color: '#ff8c00',
         size: 28,
         strokeWidth: 1,
+        fill: true,
     }
 ) {
-    const getSvgCursorUrl = (iconComponent: LucideIcon): string | undefined => {
+    const getSvgCursorUrl = (
+        iconComponent?: LucideIcon
+    ): string | undefined => {
+        if (iconComponent === undefined) {
+            return 'default';
+        }
+
         const svgString = renderToStaticMarkup(
             createElement(iconComponent, {
                 color: options.color,
                 size: options.size,
                 strokeWidth: options.strokeWidth,
-                fill: options.color,
+                fill: options.fill ? options.color : 'transparent',
             })
         );
 
@@ -33,12 +41,13 @@ export function useLucideIconToCursorUrl(
                       decodeURIComponent(encodeURIComponent(svgString))
                   );
 
-        const center = options?.size / 2;
-
-        return `url('data:image/svg+xml;base64,${encodedSvg}') ${center} ${center}, auto`;
+        return `data:image/svg+xml;base64,${encodedSvg}`;
     };
+
+    const center = options?.size / 2;
 
     return {
         url: getSvgCursorUrl(lucideIcon),
+        center,
     };
 }

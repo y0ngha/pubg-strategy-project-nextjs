@@ -15,6 +15,12 @@ export function useCreateMarkerMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -23,13 +29,17 @@ export function useCreateMarkerMutation(strategyId: string) {
             return await addMarkerAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateMarkerMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 마커 생성에 실패했습니다.'
@@ -79,7 +89,7 @@ export function useCreateMarkerMutation(strategyId: string) {
         });
     };
 
-    const optimisticUpdate = (queryKey: QueryKey, data: AddMarkerAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddMarkerAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

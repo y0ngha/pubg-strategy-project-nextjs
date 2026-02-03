@@ -62,7 +62,7 @@ export class StrategyMapper {
                 : undefined,
             tags: entity.tags.map(tag => this.parseTag(tag)),
             shares: entity.shares.map(share => this.parseStrategyShare(share)),
-            comments: this.parseParentComments(entity.comments),
+            comments: this.parseParentComments(entity.comments, actorId),
             permission: permission,
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,
@@ -148,16 +148,24 @@ export class StrategyMapper {
         };
     }
 
-    private parseComments(entities: Comment): ChildCommentResponseDto {
+    private parseComments(
+        entities: Comment,
+        actorId: UserId
+    ): ChildCommentResponseDto {
         return {
             id: entities.id.toString(),
             authorId: entities.authorId.toString(),
             authorEmail: entities.authorEmail.toString(),
             content: entities.content.value,
+            createdAt: entities.createdAt,
+            isAuthor: entities.authorId.equals(actorId),
         };
     }
 
-    private parseParentComments(entities: Comment[]): CommentResponseDto[] {
+    private parseParentComments(
+        entities: Comment[],
+        actorId: UserId
+    ): CommentResponseDto[] {
         const parentComments = entities.filter(entity => entity.isParent);
 
         return parentComments.map(parentComment => {
@@ -171,10 +179,10 @@ export class StrategyMapper {
             );
 
             return {
-                ...this.parseComments(parentComment),
+                ...this.parseComments(parentComment, actorId),
                 position: this.parsePosition(parentComment.position),
                 childComments: childComments.map(childComment =>
-                    this.parseComments(childComment)
+                    this.parseComments(childComment, actorId)
                 ),
             };
         });

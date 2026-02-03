@@ -124,16 +124,16 @@ describe('TeamPlayer', () => {
     });
 
     describe('Get Player Color', () => {
-        it('TeamPlayer는 Priority에 따라 1 ~ 4까지 빨강 ~ 초록 색깔을 가진다.', () => {
+        it('TeamPlayer는 Priority에 따라 1 ~ 4까지 고유한 색깔을 가진다.', () => {
             // given
             const teamPlayers = [1, 2, 3, 4].map(priority => {
                 return TeamPlayer.create(priority, position, null, null);
             });
 
             // when & then
-            expect(teamPlayers[0].color).toBe(PlayerColor.RED);
+            expect(teamPlayers[0].color).toBe(PlayerColor.YELLOW);
             expect(teamPlayers[1].color).toBe(PlayerColor.ORANGE);
-            expect(teamPlayers[2].color).toBe(PlayerColor.YELLOW);
+            expect(teamPlayers[2].color).toBe(PlayerColor.BLUE);
             expect(teamPlayers[3].color).toBe(PlayerColor.GREEN);
         });
     });

@@ -14,6 +14,12 @@ export function useCreateCircleMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -22,13 +28,17 @@ export function useCreateCircleMutation(strategyId: string) {
             return await createCircleAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateCircleMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 자기장 생성에 실패했습니다.'
@@ -36,7 +46,7 @@ export function useCreateCircleMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (queryKey: QueryKey, data: CreateCircleAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: CreateCircleAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

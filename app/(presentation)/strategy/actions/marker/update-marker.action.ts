@@ -3,8 +3,16 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
+import { Position } from '@/application/strategy/types/position';
 
-export async function updateMarkerAction(_: unknown, formData: FormData) {
+export type UpdateMarkerAction = {
+    teamPlayerId: string;
+    position: Position;
+};
+
+export async function updateMarkerAction(
+    formData: FormData
+): Promise<UpdateMarkerAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId, position } = parseFormData(

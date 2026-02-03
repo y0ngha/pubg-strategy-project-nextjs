@@ -4,6 +4,8 @@ import { useGetStrategy } from '@/(presentation)/(pages)/strategies/[id]/compone
 import StrategyBody from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
 import StrategyHeader from '@/(presentation)/(pages)/strategies/[id]/components/strategy-header.component';
 import Skeleton from '@/(presentation)/shared/components/skeleton.component';
+import { useKonvaHandleMouseMove } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleMouseMove';
+import StrategyFooter from '@/(presentation)/(pages)/strategies/[id]/components/strategy-footer.component';
 
 interface StrategyPageContentProps {
     id: string;
@@ -12,13 +14,28 @@ interface StrategyPageContentProps {
 function StrategyPageContent({ id }: StrategyPageContentProps) {
     const { data: strategy, isPending } = useGetStrategy(id);
 
+    const { stageRef, handleMouseMove, mousePosition } =
+        useKonvaHandleMouseMove();
+
     return (
         <div className={'flex h-full w-full flex-col'}>
             {!strategy && isPending && <Skeleton className={'h-full'} />}
             {strategy && (
                 <>
                     <StrategyHeader id={id} title={strategy.title} />
-                    <StrategyBody id={id} mapImage={strategy.mapImage} />
+                    <StrategyBody
+                        id={id}
+                        mapImage={strategy.mapImage}
+                        stageRef={stageRef}
+                        handleMouseMove={handleMouseMove}
+                        circles={strategy.circles}
+                        airplanePath={strategy.airplanePath}
+                        enemyTeams={strategy.enemyTeams}
+                        teamPlayers={strategy.teamPlayers}
+                        tags={strategy.tags}
+                        comments={strategy.comments}
+                    />
+                    <StrategyFooter mousePosition={mousePosition} />
                 </>
             )}
         </div>

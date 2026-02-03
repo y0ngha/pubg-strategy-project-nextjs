@@ -14,6 +14,12 @@ export function useCreateAirplanePathMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -22,25 +28,27 @@ export function useCreateAirplanePathMutation(strategyId: string) {
             return await addAirplanePathAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateAirplanePathMutation', error);
             toast.error(
                 error.message ??
                     '알 수 없는 오류로 비행기 동선 생성에 실패했습니다.'
             );
         },
+        onSettled: () => {},
     });
 
-    const optimisticUpdate = (
-        queryKey: QueryKey,
-        data: AddAirplanePathAction
-    ) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddAirplanePathAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

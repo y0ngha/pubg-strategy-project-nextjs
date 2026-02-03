@@ -3,7 +3,7 @@ export function toYyyyMmDdString(_date: Date, seperator: string = '-') {
     const month = (_date.getMonth() + 1).toString().padStart(2, '0');
     const date = _date.getDate().toString().padStart(2, '0');
 
-    return `${year}${seperator}${month}${date}`;
+    return `${year}${seperator}${month}${seperator}${date}`;
 }
 
 export function toYyyyMmDdHhMmString(

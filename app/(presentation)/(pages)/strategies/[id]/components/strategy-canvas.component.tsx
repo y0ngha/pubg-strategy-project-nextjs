@@ -1,28 +1,39 @@
 'use client';
 
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useToolbar';
-import { ReactNode, useRef, useState } from 'react';
+import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useToolbar';
+import React, { ReactNode, Ref, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
-import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useResizeObserver';
-import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKonvaHandleWheelZoomControl';
-import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useKovnaHandleDrag';
+import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useResizeObserver';
+import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKonvaHandleWheelZoomControl';
+import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/konvas/useKovnaHandleDrag';
+import Konva from 'konva';
+import { KonvaEventObject } from 'konva/lib/Node';
 
 interface StrategyCanvasProps {
+    stageRef: Ref<Konva.Stage>;
+    handleMouseMove: () => void;
     selectedTool: CanvasTool;
     map: ReactNode;
     properties: ReactNode;
+    onMapClick: (event: KonvaEventObject<MouseEvent>) => void;
 }
 
 function StrategyCanvas({
+    stageRef,
+    handleMouseMove,
     selectedTool,
     map,
     properties,
+    onMapClick,
 }: StrategyCanvasProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [stagePosistion, setStagePosistion] = useState({ x: 0, y: 0 });
 
-    const { width, height } = useResizeObserver(containerRef);
+    const { width, height } = useResizeObserver(containerRef, {
+        width: 1500,
+        height: 1500,
+    });
 
     const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
@@ -37,9 +48,10 @@ function StrategyCanvas({
             ref={containerRef}
         >
             <Stage
+                ref={stageRef}
                 width={width}
                 height={height}
-                draggable={true}
+                draggable={selectedTool === 'select'}
                 dragBoundFunc={handleDragBound}
                 onWheel={event => {
                     const newStagePosition = handleWheel(event);
@@ -49,13 +61,16 @@ function StrategyCanvas({
                     const newStagePosition = handleDragEnd(event);
                     setStagePosistion(newStagePosition);
                 }}
+                onClick={onMapClick}
+                onMouseMove={handleMouseMove}
                 scaleX={scale}
                 scaleY={scale}
                 x={stagePosistion.x}
                 y={stagePosistion.y}
             >
                 <Layer imageSmoothingEnabled={true}>{map}</Layer>
-                <Layer>{properties}</Layer>
+
+                {properties}
             </Stage>
         </div>
     );
@@ -63,4 +78,4 @@ function StrategyCanvas({
 
 StrategyCanvas.displayName = 'StrategyCanvas';
 
-export default StrategyCanvas;
+export default React.memo(StrategyCanvas);

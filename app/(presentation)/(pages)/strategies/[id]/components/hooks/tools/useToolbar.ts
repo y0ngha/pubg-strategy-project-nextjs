@@ -7,9 +7,9 @@ import {
     MousePointer2,
     Plane,
     Route,
-    Shield,
     Swords,
     Tag,
+    User,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -60,7 +60,20 @@ export function useToolbar() {
         circle: CircleDashed,
         airplane: Plane,
         enemy: Swords,
-        team: Shield,
+        team: User,
+        marker: MapPin,
+        waypoint: Route,
+        tag: Tag,
+        comment: MessageSquareText,
+        eraser: Eraser,
+    };
+
+    const canvasToolCursor: Record<CanvasTool, LucideIcon | undefined> = {
+        select: undefined,
+        circle: CircleDashed,
+        airplane: Plane,
+        enemy: Swords,
+        team: User,
         marker: MapPin,
         waypoint: Route,
         tag: Tag,
@@ -76,6 +89,7 @@ export function useToolbar() {
         canvasToolGroup,
         canvasToolNames,
         canvasToolIcons,
+        canvasToolCursor,
         changeTool,
         selectedTool,
         iconSize,

@@ -14,7 +14,7 @@ export class UpdateAirplanePathUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateAirplanePathRequestDto): Promise<boolean> {
+    async execute(dto: UpdateAirplanePathRequestDto) {
         const { actorId, strategyId, startPosition, endPosition } =
             UpdateAirplanePathRequestSchema.parse(dto);
 
@@ -24,10 +24,23 @@ export class UpdateAirplanePathUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateAirplanePath(actorId, startPosition, endPosition);
+        const airplanePath = strategy.updateAirplanePath(
+            actorId,
+            startPosition,
+            endPosition
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            startPosition: {
+                x: airplanePath.startPosition.x,
+                y: airplanePath.startPosition.y,
+            },
+            endPosition: {
+                x: airplanePath.endPosition.x,
+                y: airplanePath.endPosition.y,
+            },
+        };
     }
 }

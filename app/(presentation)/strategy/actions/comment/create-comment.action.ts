@@ -13,6 +13,8 @@ export type CreateCommentAction = {
     authorEmail: string;
     content: string;
     parentCommentId: string | null;
+    createdAt: Date;
+    isAuthor: boolean;
 };
 
 export async function createCommentAction(

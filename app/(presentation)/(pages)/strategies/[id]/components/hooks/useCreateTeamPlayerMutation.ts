@@ -14,6 +14,12 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user.data?.id,
+        ReactQueryKeys.STRATIGES,
+    ];
+
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
             formData.set('userId', user.data?.id ?? '');
@@ -22,13 +28,17 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
             return await addTeamPlayerAction(formData);
         },
         onSuccess: data => {
-            optimisticUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
 
             queryClient.invalidateQueries({
-                queryKey: [user.data?.id, ReactQueryKeys.STRATIGES],
+                queryKey: strategiesQueryKey,
             });
         },
         onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
             console.error('useCreateTeamPlayerMutation', error);
             toast.error(
                 error.message ??
@@ -37,10 +47,7 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
         },
     });
 
-    const optimisticUpdate = (
-        queryKey: QueryKey,
-        data: AddTeamPlayerAction
-    ) => {
+    const cacheUpdate = (queryKey: QueryKey, data: AddTeamPlayerAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;

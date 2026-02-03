@@ -8,10 +8,5 @@ export default async function Strategy({
 }) {
     const { id } = await params;
 
-    return (
-        <StrategyPageLayout
-            content={<StrategyPageContent id={id} />}
-            footer={<></>}
-        />
-    );
+    return <StrategyPageLayout content={<StrategyPageContent id={id} />} />;
 }

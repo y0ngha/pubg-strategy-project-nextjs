@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useSyncExternalStore } from 'react';
+import React, { useEffect, useEffectEvent, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { X } from 'lucide-react';
@@ -37,17 +37,17 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
         }
     };
 
-    const modalSetup = () => {
+    const modalSetup = useEffectEvent(() => {
         if (closeableByEsc) {
             window.addEventListener('keydown', escKeydownHandler);
         }
-    };
+    });
 
-    const modalCleanup = () => {
+    const modalCleanup = useEffectEvent(() => {
         if (closeableByEsc) {
             window.removeEventListener('keydown', escKeydownHandler);
         }
-    };
+    });
 
     useEffect(() => {
         if (open) {
@@ -59,7 +59,7 @@ function Modal({ closeableByEsc = true, open, onClose, children }: ModalProps) {
                 modalCleanup();
             };
         }
-    }, [modalCleanup, modalSetup, open]);
+    }, [open]);
 
     if (!mounted) return null;
 
@@ -99,7 +99,7 @@ function Header({
     return (
         <div
             className={cn(
-                'border-border flex items-center justify-between border-b px-6 py-4',
+                'border-border bg-background flex items-center justify-between border-b px-6 py-4',
                 className
             )}
             {...props}
@@ -140,7 +140,10 @@ function Body({
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className={cn('text-foreground px-6 py-6', className)} {...props}>
+        <div
+            className={cn('bg-background text-foreground px-6 py-6', className)}
+            {...props}
+        >
             {children}
         </div>
     );
@@ -154,7 +157,7 @@ function Footer({
     return (
         <div
             className={cn(
-                'border-border bg-surface/50 flex justify-end gap-2 border-t px-6 py-4',
+                'border-border bg-surface flex justify-end gap-2 border-t px-6 py-4',
                 className
             )}
             {...props}

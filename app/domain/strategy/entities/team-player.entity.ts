@@ -49,9 +49,9 @@ export class TeamPlayer {
 
     get color(): PlayerColor {
         const colorMap: Record<number, PlayerColor> = {
-            1: PlayerColor.RED,
+            1: PlayerColor.YELLOW,
             2: PlayerColor.ORANGE,
-            3: PlayerColor.YELLOW,
+            3: PlayerColor.BLUE,
             4: PlayerColor.GREEN,
         };
         return colorMap[this.priority];

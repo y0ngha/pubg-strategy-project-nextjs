@@ -39,7 +39,7 @@ export async function addEnemyTeamAction(
             },
             {
                 key: 'position',
-                error: '자기장 위치를 불러올 수 없습니다.',
+                error: '위치를 불러올 수 없습니다.',
                 type: 'position',
             },
         ] as const
