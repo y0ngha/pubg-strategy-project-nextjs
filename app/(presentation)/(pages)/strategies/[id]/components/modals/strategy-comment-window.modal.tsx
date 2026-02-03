@@ -13,7 +13,10 @@ import {
     useSyncExternalStore,
 } from 'react';
 import { CornerDownRight, Pencil, Send, Trash2, User, X } from 'lucide-react';
-import { ChildCommentResponseDto, CommentResponseDto, } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import {
+    ChildCommentResponseDto,
+    CommentResponseDto,
+} from '@/application/strategy/dto/strategy/get-strategy.dto';
 import Button from '@/(presentation)/shared/components/button.component';
 import { toYyyyMmDdHhMmString } from '@/(presentation)/shared/helpers/date.helper';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
@@ -23,6 +26,7 @@ interface StrategyCommentWindowProps {
     onClose: () => void;
     comments: CommentResponseDto[];
     onAddComment: (content: string, parentId: string | null) => void;
+    onUpdateComment: (commentId: string, content: string) => void;
     position: { x: number; y: number };
 }
 
@@ -381,6 +385,7 @@ function StrategyCommentWindow({
     onClose,
     comments,
     onAddComment,
+    onUpdateComment,
     position,
 }: StrategyCommentWindowProps) {
     const mounted = useSyncExternalStore(
@@ -428,7 +433,11 @@ function StrategyCommentWindow({
     const handleSubmit = () => {
         if (!inputText.trim()) return;
 
-        onAddComment(inputText, replyTarget?.id || null);
+        if (!editTargetId) {
+            onAddComment(inputText, replyTarget?.id || null);
+        } else {
+            onUpdateComment(editTargetId, inputText);
+        }
 
         stateClear();
     };
