@@ -27,13 +27,7 @@ export class UpdateWaypointUseCase {
             actorId,
             teamPlayerId,
             positions
-        );
-
-        if (!waypoint) {
-            throw new Error(
-                '알 수 없는 이유로 웨이포인트 수정에 실패했습니다.'
-            );
-        }
+        )!;
 
         await this.strategyRepository.save(strategy);
 
