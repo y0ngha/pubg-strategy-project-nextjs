@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useCreateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useCreateAirplanePathMutation';
 import { useUpdateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/useUpdateAirplanePathMutation';
 
@@ -23,9 +23,7 @@ export function useAirplanePathEvent(
     const { createAirplanePath } = useCreateAirplanePathMutation(strategyId);
     const { updateAirplanePath } = useUpdateAirplanePathMutation(strategyId);
 
-    const [isFirstCreate, setIsFirstCreate] = useState<boolean>(
-        position === undefined
-    );
+    const isFirstCreate = position === undefined;
 
     const [startPosition, setStartPosition] = useState<
         | {
@@ -95,10 +93,6 @@ export function useAirplanePathEvent(
 
         nextStep();
     };
-
-    useEffect(() => {
-        setIsFirstCreate(position === undefined);
-    }, [position]);
 
     return {
         clickAirplanePath,
