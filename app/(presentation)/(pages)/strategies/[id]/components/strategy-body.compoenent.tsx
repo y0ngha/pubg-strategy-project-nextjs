@@ -122,7 +122,7 @@ function StrategyBody({
         commentWindowOpen,
         commentWindowClose,
         commentClick,
-        windowPosisiton: commentWindowPosition,
+        windowPosition: commentWindowPosition,
         filteredComments,
         commentCreate,
         commentUpdate,

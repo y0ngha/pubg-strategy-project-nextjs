@@ -19,7 +19,7 @@ export function useCommentEvent(
         y: 0,
     });
 
-    const [windowPosisiton, setWindowPosisiton] = useState<{
+    const [windowPosition, setwindowPosition] = useState<{
         x: number;
         y: number;
     }>({
@@ -31,7 +31,7 @@ export function useCommentEvent(
         commentWindowPosition: { x: number; y: number },
         commentPosition: { x: number; y: number }
     ) => {
-        setWindowPosisiton(commentWindowPosition);
+        setwindowPosition(commentWindowPosition);
         setPosition(commentPosition);
     };
 
@@ -117,7 +117,7 @@ export function useCommentEvent(
         commentCreate,
         commentUpdate,
         commentClick,
-        windowPosisiton,
+        windowPosition,
         filteredComments,
     };
 }
