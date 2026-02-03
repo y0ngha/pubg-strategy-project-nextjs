@@ -154,6 +154,7 @@ export class StrategyMapper {
             authorId: entities.authorId.toString(),
             authorEmail: entities.authorEmail.toString(),
             content: entities.content.value,
+            createdAt: entities.createdAt,
         };
     }
 
