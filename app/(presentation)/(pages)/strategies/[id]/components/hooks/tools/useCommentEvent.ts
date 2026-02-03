@@ -84,12 +84,8 @@ export function useCommentEvent(
 
     const filterSamePositionComments = (
         comment: CommentResponseDto,
-        topComment?: CommentResponseDto
+        topComment: CommentResponseDto
     ) => {
-        if (!topComment) {
-            throw new Error('Top Comment를 불러오지 못했습니다.');
-        }
-
         return (
             comment.id === topComment.id ||
             (comment.position.x === topComment.position.x &&
@@ -106,11 +102,13 @@ export function useCommentEvent(
 
     const topComment = comments.find(comment => comment.id === topCommentId);
 
-    const filteredComments = comments
-        .filter(comment => {
-            return filterSamePositionComments(comment, topComment);
-        })
-        .sort(sortingCreatedAtByAscending);
+    const filteredComments = topComment
+        ? comments
+              .filter(comment => {
+                  return filterSamePositionComments(comment, topComment);
+              })
+              .sort(sortingCreatedAtByAscending)
+        : [];
 
     return {
         isCommentWindowOpen,
