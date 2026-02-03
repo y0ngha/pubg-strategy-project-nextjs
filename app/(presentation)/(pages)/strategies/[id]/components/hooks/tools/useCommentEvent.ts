@@ -10,7 +10,7 @@ export function useCommentEvent(
     const { createComment } = useCreateCommentMutation(strategyId);
     const { updateComment } = useUpdateCommentMutation(strategyId);
 
-    const [activeCommentId, setActiveCommentId] = useState<string | null>(null);
+    const [topCommentId, setTopCommentId] = useState<string | null>(null);
 
     const [isCommentWindowOpen, setIsCommentWindowOpen] = useState(false);
 
@@ -40,13 +40,13 @@ export function useCommentEvent(
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setActiveCommentId(null);
+        setTopCommentId(null);
         setIsCommentWindowOpen(true);
     };
 
     const commentWindowClose = () => {
         setIsCommentWindowOpen(false);
-        setActiveCommentId(null);
+        setTopCommentId(null);
     };
 
     const commentCreate = (content: string, parentCommentId: string | null) => {
@@ -78,18 +78,22 @@ export function useCommentEvent(
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setActiveCommentId(commentId);
+        setTopCommentId(commentId);
         setIsCommentWindowOpen(true);
     };
 
     const filterSamePositionComments = (
         comment: CommentResponseDto,
-        activeComment?: CommentResponseDto
+        topComment?: CommentResponseDto
     ) => {
+        if (!topComment) {
+            throw new Error('Top Comment를 불러오지 못했습니다.');
+        }
+
         return (
-            comment.id === activeComment?.id ||
-            (comment.position.x === activeComment?.position.x &&
-                comment.position.y === activeComment?.position.y)
+            comment.id === topComment.id ||
+            (comment.position.x === topComment.position.x &&
+                comment.position.y === topComment.position.y)
         );
     };
 
@@ -100,13 +104,11 @@ export function useCommentEvent(
         return commentA.createdAt.getTime() - commentB.createdAt.getTime();
     };
 
-    const activeComment = comments.find(
-        comment => comment.id === activeCommentId
-    );
+    const topComment = comments.find(comment => comment.id === topCommentId);
 
     const filteredComments = comments
         .filter(comment => {
-            return filterSamePositionComments(comment, activeComment);
+            return filterSamePositionComments(comment, topComment);
         })
         .sort(sortingCreatedAtByAscending);
 
