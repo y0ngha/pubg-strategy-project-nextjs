@@ -160,4 +160,4 @@ function TeamPlayersLayer({
 
 TeamPlayersLayer.displayName = 'TeamPlayersLayer';
 
-export default TeamPlayersLayer;
+export default React.memo(TeamPlayersLayer);

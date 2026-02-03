@@ -99,4 +99,4 @@ function AirplanePathLayer({
 
 AirplanePathLayer.displayName = 'AirplanePathLayer';
 
-export default AirplanePathLayer;
+export default React.memo(AirplanePathLayer);

@@ -1,6 +1,7 @@
 'use client';
 
 import { Arrow, Circle, Group, Line } from 'react-konva';
+import React from 'react';
 
 interface WaypointPropertyProps {
     positions: { x: number; y: number }[];
@@ -98,4 +99,4 @@ function WaypointProperty({
 
 WaypointProperty.displayName = 'WaypointProperty';
 
-export default WaypointProperty;
+export default React.memo(WaypointProperty);

@@ -2,6 +2,7 @@ import { Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
+import React from 'react';
 
 interface MarkerPropertyProps {
     x: number;
@@ -36,4 +37,4 @@ function MarkerProperty({ x, y, priority, color }: MarkerPropertyProps) {
 
 MarkerProperty.displayName = 'MarkerProperty';
 
-export default MarkerProperty;
+export default React.memo(MarkerProperty);

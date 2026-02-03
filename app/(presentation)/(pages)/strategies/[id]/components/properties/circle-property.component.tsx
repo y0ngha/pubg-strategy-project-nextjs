@@ -54,4 +54,4 @@ function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
 
 CirclesLayer.displayName = 'CirclesLayer';
 
-export default CirclesLayer;
+export default React.memo(CirclesLayer);

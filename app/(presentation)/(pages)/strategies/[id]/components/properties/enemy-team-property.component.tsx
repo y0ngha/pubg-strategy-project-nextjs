@@ -3,6 +3,7 @@ import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/
 import { Swords } from 'lucide-react';
 import useImage from 'use-image';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/strategy-body.compoenent';
+import React from 'react';
 
 interface EnemyTeamPropertyProps {
     x: number;
@@ -87,4 +88,4 @@ function EnemyTeamsLayer({
 
 EnemyTeamsLayer.displayName = 'EnemyTeamsLayer';
 
-export default EnemyTeamsLayer;
+export default React.memo(EnemyTeamsLayer);
