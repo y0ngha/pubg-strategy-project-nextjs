@@ -11,6 +11,7 @@ import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/compone
 import {
     AirplanePathResponseDto,
     CircleResponseDto,
+    CommentResponseDto,
     EnemyTeamResponseDto,
     TagResponseDto,
     TeamPlayerResponseDto,
@@ -30,6 +31,9 @@ import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/componen
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/team-player-property.component';
 import TagsLayer from './properties/tag-property.component';
+import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/properties/comment-property.component';
+import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
+import { useCommentEvent } from '@/(presentation)/(pages)/strategies/[id]/components/hooks/tools/useCommentEvent';
 
 export interface StrategyBodyProps {
     id: string;
@@ -41,6 +45,7 @@ export interface StrategyBodyProps {
     enemyTeams: EnemyTeamResponseDto[];
     teamPlayers: TeamPlayerResponseDto[];
     tags: TagResponseDto[];
+    comments: CommentResponseDto[];
 }
 
 function StrategyBody({
@@ -53,6 +58,7 @@ function StrategyBody({
     enemyTeams,
     teamPlayers,
     tags,
+    comments,
 }: StrategyBodyProps) {
     const {
         canvasToolGroup,
@@ -111,7 +117,21 @@ function StrategyBody({
         clickedPositions: waypointClickedPositions,
     } = useWaypointEvent(id, teamPlayers, selectedTeamPlayerId);
 
-    const onMapClick = (clickPosition: { x: number; y: number }) => {
+    const {
+        isCommentWindowOpen,
+        commentWindowOpen,
+        commentWindowClose,
+        commentClick,
+        windowPosisiton: commentWindowPosition,
+        filteredComments,
+        commentCreate,
+        commentUpdate,
+    } = useCommentEvent(id, comments);
+
+    const onMapClick = (
+        clickPosition: { x: number; y: number },
+        windowPosition: { x: number; y: number }
+    ) => {
         switch (selectedTool) {
             case 'circle':
                 return phaseSelectModalOpen(clickPosition);
@@ -127,12 +147,16 @@ function StrategyBody({
                 return waypointCreate(clickPosition);
             case 'tag':
                 return enterTagContentModalOpen(clickPosition);
+            case 'comment':
+                return commentWindowOpen(windowPosition, clickPosition);
         }
     };
 
-    const { handleClick } = useKonvaHandleMouseClick((_, clickPosition) => {
-        onMapClick(clickPosition);
-    });
+    const { handleClick } = useKonvaHandleMouseClick(
+        (_, clickPosition, windowPosition) => {
+            onMapClick(clickPosition, windowPosition);
+        }
+    );
 
     return (
         <div
@@ -172,6 +196,10 @@ function StrategyBody({
                             waypointClickedPositions={waypointClickedPositions}
                         />
                         <TagsLayer tags={tags} />
+                        <CommentsLayer
+                            comments={comments}
+                            onClick={commentClick}
+                        />
                     </>
                 }
                 onMapClick={handleClick}
@@ -193,6 +221,16 @@ function StrategyBody({
                 isOpen={isEnterTagContentModalOpen}
                 onClose={enterTagContentModalClose}
                 onConfirm={tagCreate}
+            />
+
+            <StrategyCommentWindow
+                key={JSON.stringify(commentWindowPosition)}
+                isOpen={isCommentWindowOpen}
+                onClose={commentWindowClose}
+                comments={filteredComments}
+                onAddComment={commentCreate}
+                onUpdateComment={commentUpdate}
+                position={commentWindowPosition}
             />
         </div>
     );

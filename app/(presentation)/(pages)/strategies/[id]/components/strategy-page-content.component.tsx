@@ -33,6 +33,7 @@ function StrategyPageContent({ id }: StrategyPageContentProps) {
                         enemyTeams={strategy.enemyTeams}
                         teamPlayers={strategy.teamPlayers}
                         tags={strategy.tags}
+                        comments={strategy.comments}
                     />
                     <StrategyFooter mousePosition={mousePosition} />
                 </>
