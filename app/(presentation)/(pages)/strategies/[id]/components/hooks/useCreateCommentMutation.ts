@@ -98,6 +98,8 @@ export function useCreateCommentMutation(strategyId: string) {
                         authorId: data.authorId,
                         authorEmail: data.authorEmail,
                         content: data.content,
+                        createdAt: data.createdAt,
+                        isAuthor: data.isAuthor,
                     },
                 ],
             };
@@ -117,6 +119,8 @@ export function useCreateCommentMutation(strategyId: string) {
                 content: data.content,
                 childComments: [],
                 position: data.position!,
+                createdAt: data.createdAt,
+                isAuthor: data.isAuthor,
             },
         ];
     };
