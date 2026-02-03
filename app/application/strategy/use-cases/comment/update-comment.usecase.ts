@@ -13,7 +13,7 @@ export class UpdateCommentUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateCommentRequestDto): Promise<boolean> {
+    async execute(dto: UpdateCommentRequestDto) {
         const { actorId, strategyId, commentId, content, position } =
             UpdateCommentRequestSchema.parse(dto);
 
@@ -23,10 +23,22 @@ export class UpdateCommentUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateComment(actorId, commentId, content, position);
+        const comment = strategy.updateComment(
+            actorId,
+            commentId,
+            content,
+            position
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: comment.id.toString(),
+            position:
+                comment.position !== null
+                    ? { x: comment.position.x, y: comment.position.y }
+                    : null,
+            content: comment.content.toString(),
+        };
     }
 }

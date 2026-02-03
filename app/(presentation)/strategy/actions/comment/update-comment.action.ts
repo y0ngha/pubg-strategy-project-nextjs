@@ -3,8 +3,20 @@
 import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function updateCommentAction(_: unknown, formData: FormData) {
+export type UpdateCommentAction = {
+    id: string;
+    position: Position | null;
+    content: string;
+};
+
+export async function updateCommentAction(
+    formData: FormData
+): Promise<UpdateCommentAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, commentId, content, position } = parseFormData(
