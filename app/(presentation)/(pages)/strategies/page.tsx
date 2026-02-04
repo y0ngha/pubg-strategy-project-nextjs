@@ -6,7 +6,7 @@ import SharedStrategies from '@/(presentation)/(pages)/strategies/components/tab
 import StrategiesTabContent from './components/tabs/strategies-tab-content.component';
 import StrategiesHeaderLayout from '@/(presentation)/(pages)/strategies/components/header/strategies-header-layout.component';
 import StrategiesHeader from '@/(presentation)/(pages)/strategies/components/header/strategies-header.component';
-import StrategiyCreateButton from '@/(presentation)/(pages)/strategies/components/header/strategy-create-button.component';
+import StrategyCreateButton from '@/(presentation)/(pages)/strategies/components/header/strategy-create-button.component';
 import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal-controller.component';
 import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal.component';
 
@@ -59,7 +59,7 @@ export default async function StrategyDashboard({
                         header={<StrategiesHeader />}
                         strategyCreate={
                             <StrategyCreateModalController
-                                trigger={<StrategiyCreateButton />}
+                                trigger={<StrategyCreateButton />}
                                 modal={<StrategyCreateModal />}
                             />
                         }
