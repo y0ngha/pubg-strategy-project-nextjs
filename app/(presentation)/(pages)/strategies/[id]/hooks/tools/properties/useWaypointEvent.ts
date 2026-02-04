@@ -72,8 +72,8 @@ export function useWaypointEvent(
     };
 
     const moveWaypoint = (
-        waypointId: string,
         teamPlayerId: string,
+        waypointId: string,
         deltaPosition: { x: number; y: number }
     ) => {
         const teamPlayer = teamPlayers.find(
