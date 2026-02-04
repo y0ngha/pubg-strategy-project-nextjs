@@ -8,8 +8,10 @@ export function useMarkerEvent(
     teamPlayers: TeamPlayerResponseDto[],
     selectedTeamPlayerId?: string
 ) {
-    const { createMarker } = useCreateMarkerMutation(strategyId);
-    const { updateMarker } = useUpdateMarkerMutation(strategyId);
+    const { createMarker: createMarkerMutation } =
+        useCreateMarkerMutation(strategyId);
+    const { updateMarker: updateMarkerMutation } =
+        useUpdateMarkerMutation(strategyId);
 
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
@@ -17,7 +19,7 @@ export function useMarkerEvent(
 
     const existingMarker = selectedTeamPlayer?.marker !== undefined;
 
-    const markerClick = (position: { x: number; y: number }) => {
+    const saveMarker = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
 
@@ -25,9 +27,9 @@ export function useMarkerEvent(
             formData.set('position', JSON.stringify(position));
 
             if (existingMarker) {
-                updateMarker(formData);
+                updateMarkerMutation(formData);
             } else {
-                createMarker(formData);
+                createMarkerMutation(formData);
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -51,5 +53,6 @@ export function useMarkerEvent(
 
     return {
         markerClick,
+        saveMarker,
     };
 }

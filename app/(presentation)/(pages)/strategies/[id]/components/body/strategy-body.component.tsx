@@ -98,7 +98,7 @@ function StrategyBody({
             case 'team':
                 return teamPlayer.teamPlayerCreate(clickPosition);
             case 'marker':
-                return marker.markerClick(clickPosition);
+                return marker.saveMarker(clickPosition);
             case 'waypoint':
                 return waypoint.waypointCreate(clickPosition);
             case 'tag':
