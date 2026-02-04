@@ -4,6 +4,7 @@ import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface MarkerPropertyProps {
     x: number;
@@ -30,6 +31,8 @@ function MarkerProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
         size: 112,
@@ -44,6 +47,12 @@ function MarkerProperty({
             x={0}
             y={0}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onMouseLeave={hoverHandleMouseLeave}
             onMouseEnter={hoverHandleMouseEnter}
         >

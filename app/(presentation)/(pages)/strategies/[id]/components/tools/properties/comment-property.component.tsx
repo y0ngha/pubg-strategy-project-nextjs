@@ -6,6 +6,7 @@ import React from 'react';
 import { MessageSquareText } from 'lucide-react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface CommentPropertyProps {
     id: string;
@@ -38,6 +39,8 @@ function CommentProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const { handleClick } = useKonvaHandleMouseClick(
         (_, clickPosition, windowPosition) => {
             onClick(id, windowPosition, clickPosition);
@@ -61,6 +64,12 @@ function CommentProperty({
             onMouseLeave={hoverHandleMouseLeave}
             onClick={handleClick}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
         >
             <Image
                 image={commentImage}

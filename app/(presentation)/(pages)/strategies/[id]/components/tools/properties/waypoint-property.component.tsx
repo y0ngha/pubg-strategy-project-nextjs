@@ -3,6 +3,7 @@
 import { Arrow, Circle, Group, Line } from 'react-konva';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface WaypointPropertyProps {
     positions: { x: number; y: number }[];
@@ -29,6 +30,8 @@ function WaypointProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const flattenedPoints = positions.flatMap(position => [
         position.x,
         position.y,
@@ -52,6 +55,12 @@ function WaypointProperty({
             x={0}
             y={0}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onMouseEnter={hoverHandleMouseEnter}
             onMouseLeave={hoverHandleMouseLeave}
         >

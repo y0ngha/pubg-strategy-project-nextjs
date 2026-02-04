@@ -4,6 +4,7 @@ import { Plane } from 'lucide-react';
 import useImage from 'use-image';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
@@ -31,6 +32,8 @@ function AirplanePathProperty({
         shadowColor,
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
+
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
 
     const { url, center } = useLucideIconToSvgUrl(Plane, {
         color: iconColor,
@@ -62,6 +65,12 @@ function AirplanePathProperty({
                 x={0}
                 y={0}
                 listening={isSelectable}
+                draggable={true}
+                onMouseDown={event => {
+                    event.cancelBubble = true;
+                }}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
                 onMouseLeave={hoverHandleMouseLeave}
                 onMouseEnter={hoverHandleMouseEnter}
             >
@@ -79,8 +88,6 @@ function AirplanePathProperty({
                     pointerWidth={32}
                     dash={[30, 30]}
                     opacity={0.9}
-                    scaleX={scaleX}
-                    scaleY={scaleY}
                     shadowBlur={shadowBlur}
                     shadowColor={shadowColor}
                     shadowOpacity={shadowOpacity}

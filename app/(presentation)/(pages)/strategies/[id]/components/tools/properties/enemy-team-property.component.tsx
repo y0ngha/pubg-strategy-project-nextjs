@@ -5,6 +5,7 @@ import useImage from 'use-image';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface EnemyTeamPropertyProps {
     x: number;
@@ -31,6 +32,8 @@ function EnemyTeamProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const { url, center } = useLucideIconToSvgUrl(Swords, {
         color: iconColor,
         size: 64,
@@ -47,6 +50,12 @@ function EnemyTeamProperty({
             x={0}
             y={0}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onMouseEnter={hoverHandleMouseEnter}
             onMouseLeave={hoverHandleMouseLeave}
         >

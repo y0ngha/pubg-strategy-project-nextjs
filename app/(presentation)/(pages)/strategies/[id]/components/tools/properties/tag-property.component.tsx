@@ -5,6 +5,7 @@ import { Tag } from 'lucide-react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useState } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface TagPropertyProps {
     x: number;
@@ -28,6 +29,8 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,
         size: 128,
@@ -46,6 +49,12 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
             x={0}
             y={0}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onMouseEnter={hoverHandleMouseEnter}
             onMouseLeave={hoverHandleMouseLeave}
             onClick={handleClick}

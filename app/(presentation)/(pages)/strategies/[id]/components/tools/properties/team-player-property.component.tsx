@@ -7,6 +7,7 @@ import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -41,6 +42,8 @@ function TeamPlayerProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: iconColor,
         size: 64,
@@ -61,6 +64,12 @@ function TeamPlayerProperty({
             x={0}
             y={0}
             listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onClick={handleClick}
             onMouseEnter={hoverHandleMouseEnter}
             onMouseLeave={hoverHandleMouseLeave}

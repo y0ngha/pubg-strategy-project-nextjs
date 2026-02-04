@@ -5,6 +5,7 @@ import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 import React from 'react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface CirclePropertyProps {
     x: number;
@@ -30,6 +31,8 @@ function CircleProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+
     return (
         <Group x={0} y={0}>
             <Shape
@@ -48,22 +51,33 @@ function CircleProperty({
                 fillRule={'evenodd'}
             />
 
-            <Circle
+            <Group
+                x={0}
+                y={0}
                 listening={isSelectable}
-                x={x}
-                y={y}
-                radius={radius}
-                stroke={'#ffffff'}
-                strokeWidth={isHovered ? 4 : 2}
-                dash={[10, 10]}
-                fillEnabled={false}
-                hitStrokeWidth={50}
-                shadowBlur={shadowBlur}
-                shadowColor={shadowColor}
-                shadowOpacity={shadowOpacity}
-                onMouseLeave={hoverHandleMouseLeave}
-                onMouseEnter={hoverHandleMouseEnter}
-            />
+                draggable={true}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onMouseDown={e => {
+                    e.cancelBubble = true;
+                }}
+            >
+                <Circle
+                    x={x}
+                    y={y}
+                    radius={radius}
+                    stroke={'#ffffff'}
+                    strokeWidth={isHovered ? 4 : 2}
+                    dash={[10, 10]}
+                    fillEnabled={false}
+                    hitStrokeWidth={50}
+                    shadowBlur={shadowBlur}
+                    shadowColor={shadowColor}
+                    shadowOpacity={shadowOpacity}
+                    onMouseLeave={hoverHandleMouseLeave}
+                    onMouseEnter={hoverHandleMouseEnter}
+                />
+            </Group>
         </Group>
     );
 }
