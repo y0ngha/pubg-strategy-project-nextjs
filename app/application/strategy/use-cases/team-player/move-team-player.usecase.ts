@@ -13,7 +13,7 @@ export class MoveTeamPlayerUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: MoveTeamPlayerRequestDto): Promise<boolean> {
+    async execute(dto: MoveTeamPlayerRequestDto) {
         const { actorId, strategyId, teamPlayerId, position } =
             MoveTeamPlayerRequestSchema.parse(dto);
 
@@ -23,10 +23,20 @@ export class MoveTeamPlayerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateTeamPlayerPosition(actorId, teamPlayerId, position);
+        const teamPlayer = strategy.updateTeamPlayerPosition(
+            actorId,
+            teamPlayerId,
+            position
+        );
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: teamPlayer.id.toString(),
+            position: {
+                x: teamPlayer.position.x,
+                y: teamPlayer.position.y,
+            },
+        };
     }
 }
