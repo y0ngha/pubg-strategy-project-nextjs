@@ -18,6 +18,7 @@ function AirplanePathProperty({
     startPosition,
     endPosition,
     isSelectable,
+    onMove,
 }: AirplanePathPropertyProps) {
     const isDrawing = startPosition !== undefined && endPosition === undefined;
     const isDrawCompleted =
@@ -35,7 +36,11 @@ function AirplanePathProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(Plane, {
         color: iconColor,

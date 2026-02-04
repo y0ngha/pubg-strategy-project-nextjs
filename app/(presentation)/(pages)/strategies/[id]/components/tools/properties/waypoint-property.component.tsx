@@ -40,7 +40,13 @@ function WaypointProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            if (id) {
+                onMove(teamPlayerId, id, deltaPosition);
+            }
+        }
+    );
 
     const flattenedPoints = positions.flatMap(position => [
         position.x,
@@ -65,7 +71,7 @@ function WaypointProperty({
             x={0}
             y={0}
             listening={isSelectable}
-            draggable={true}
+            draggable={!isDrawing}
             onMouseDown={event => {
                 event.cancelBubble = true;
             }}

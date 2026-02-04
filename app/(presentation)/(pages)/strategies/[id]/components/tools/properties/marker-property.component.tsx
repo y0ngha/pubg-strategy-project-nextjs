@@ -41,7 +41,11 @@ function MarkerProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(teamPlayerId, id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,

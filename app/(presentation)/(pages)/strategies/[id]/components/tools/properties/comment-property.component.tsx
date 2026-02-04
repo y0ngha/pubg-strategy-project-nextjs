@@ -30,6 +30,7 @@ function CommentProperty({
     y,
     onClick,
     isSelectable,
+    onMove,
 }: CommentPropertyProps) {
     const iconColor = '#0EA5E9';
 
@@ -43,7 +44,11 @@ function CommentProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { handleClick } = useKonvaHandleMouseClick(
         (_, clickPosition, windowPosition) => {

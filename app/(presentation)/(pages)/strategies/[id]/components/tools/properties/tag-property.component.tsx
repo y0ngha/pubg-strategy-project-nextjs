@@ -16,7 +16,14 @@ interface TagPropertyProps {
     onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
 }
 
-function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
+function TagProperty({
+    id,
+    x,
+    y,
+    content,
+    isSelectable,
+    onMove,
+}: TagPropertyProps) {
     const iconColor = '#A855F7';
 
     const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +38,11 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,

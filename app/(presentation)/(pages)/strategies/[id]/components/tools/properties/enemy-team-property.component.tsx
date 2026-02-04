@@ -25,6 +25,7 @@ function EnemyTeamProperty({
     y,
     teamLabel,
     isSelectable,
+    onMove,
 }: EnemyTeamPropertyProps) {
     const iconColor = '#ffffff';
 
@@ -38,7 +39,11 @@ function EnemyTeamProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(Swords, {
         color: iconColor,

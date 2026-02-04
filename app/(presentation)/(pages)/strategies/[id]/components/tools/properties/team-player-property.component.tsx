@@ -47,7 +47,11 @@ function TeamPlayerProperty({
         shadowOpacity,
     } = useKonvaHandleHover(iconColor);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: iconColor,

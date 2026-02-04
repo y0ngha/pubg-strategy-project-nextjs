@@ -24,6 +24,7 @@ function CircleProperty({
     radius,
     color,
     isSelectable,
+    onMove,
 }: CirclePropertyProps) {
     const {
         isHovered,
@@ -34,7 +35,11 @@ function CircleProperty({
         shadowOpacity,
     } = useKonvaHandleHover(color);
 
-    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag();
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     return (
         <Group x={0} y={0}>
