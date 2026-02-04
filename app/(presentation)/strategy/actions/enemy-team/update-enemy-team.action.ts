@@ -3,8 +3,19 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function updateEnemyTeamAction(_: unknown, formData: FormData) {
+export type UpdateEnemyTeamAction = {
+    id: string;
+    teamLabel: string;
+    position: { x: number; y: number };
+};
+
+export async function updateEnemyTeamAction(
+    formData: FormData
+): Promise<UpdateEnemyTeamAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, enemyTeamId, teamLabel, position } =

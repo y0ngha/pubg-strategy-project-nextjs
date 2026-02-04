@@ -3,8 +3,21 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function updateCircleAction(_: unknown, formData: FormData) {
+export type UpdateCircleAction = {
+    id: string;
+    phase: number;
+    centerPosition: { x: number; y: number };
+    radius: number;
+    color: string;
+};
+
+export async function updateCircleAction(
+    formData: FormData
+): Promise<UpdateCircleAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, circleId, phase, centerPosition } =
