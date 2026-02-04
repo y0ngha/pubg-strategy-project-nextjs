@@ -3,6 +3,8 @@ import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id
 
 export function useCircleEvent(strategyId: string) {
     const { createCircle } = useCreateCircleMutation(strategyId);
+    const { createCircle: createCircleMutation } =
+        useCreateCircleMutation(strategyId);
 
     const [isPhaseSelectModalOpen, setIsPhaseSelectModalOpen] = useState(false);
     const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -19,12 +21,12 @@ export function useCircleEvent(strategyId: string) {
         setIsPhaseSelectModalOpen(false);
     };
 
-    const circleCreate = (phase: number) => {
+    const createCircle = (phase: number) => {
         const formData = new FormData();
         formData.set('phase', phase.toString());
         formData.set('position', JSON.stringify(position));
 
-        createCircle(formData);
+        createCircleMutation(formData);
 
         phaseSelectModalClose();
     };
@@ -34,5 +36,6 @@ export function useCircleEvent(strategyId: string) {
         phaseSelectModalOpen,
         phaseSelectModalClose,
         circleCreate,
+        createCircle,
     };
 }

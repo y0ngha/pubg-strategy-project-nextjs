@@ -178,7 +178,7 @@ function StrategyBody({
             <PhaseSelectModal
                 isOpen={circle.isPhaseSelectModalOpen}
                 onClose={circle.phaseSelectModalClose}
-                onConfirm={circle.circleCreate}
+                onConfirm={circle.createCircle}
             />
 
             <EnterTeamLabelModal
