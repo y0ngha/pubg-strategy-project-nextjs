@@ -1,24 +1,16 @@
 import { useState } from 'react';
 import { useCreateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateAirplanePathMutation';
 import { useUpdateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateAirplanePathMutation';
+import { AirplanePathResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
 export function useAirplanePathEvent(
     strategyId: string,
-    initialPosition?: {
-        startPosition: {
-            x: number;
-            y: number;
-        };
-        endPosition: {
-            x: number;
-            y: number;
-        };
-    }
+    airplanePath?: AirplanePathResponseDto
 ) {
-    const { createAirplanePath } = useCreateAirplanePathMutation(strategyId);
-    const { updateAirplanePath } = useUpdateAirplanePathMutation(strategyId);
-
-    const isFirstCreate = initialPosition === undefined;
+    const { createAirplanePath: createAirplanePathMutation } =
+        useCreateAirplanePathMutation(strategyId);
+    const { updateAirplanePath: updateAirplanePathMutation } =
+        useUpdateAirplanePathMutation(strategyId);
 
     const [startPosition, setStartPosition] = useState<
         | {
@@ -26,7 +18,7 @@ export function useAirplanePathEvent(
               y: number;
           }
         | undefined
-    >(initialPosition?.startPosition);
+    >(airplanePath?.startPosition);
 
     const [endPosition, setEndPosition] = useState<
         | {
@@ -34,7 +26,7 @@ export function useAirplanePathEvent(
               y: number;
           }
         | undefined
-    >(initialPosition?.endPosition);
+    >(airplanePath?.endPosition);
 
     const confirmOnSuccessCallbackHandler = (data: {
         startPosition: { x: number; y: number };
@@ -45,11 +37,16 @@ export function useAirplanePathEvent(
     };
 
     const confirmOnErrorCallbackHandler = () => {
-        setStartPosition(initialPosition?.startPosition);
-        setEndPosition(initialPosition?.endPosition);
+        setStartPosition(airplanePath?.startPosition);
+        setEndPosition(airplanePath?.endPosition);
     };
 
-    const saveAirplanePath = (
+    const callbackOption = {
+        onSuccess: confirmOnSuccessCallbackHandler,
+        onError: confirmOnErrorCallbackHandler,
+    };
+
+    const createAirplanePath = (
         startPosition: {
             x: number;
             y: number;
@@ -63,16 +60,26 @@ export function useAirplanePathEvent(
         formData.set('startPosition', JSON.stringify(startPosition));
         formData.set('endPosition', JSON.stringify(endPosition));
 
-        const callbackOption = {
-            onSuccess: confirmOnSuccessCallbackHandler,
-            onError: confirmOnErrorCallbackHandler,
-        };
+        createAirplanePathMutation(formData, callbackOption);
+    };
 
-        if (isFirstCreate) {
-            createAirplanePath(formData, callbackOption);
-        } else {
-            updateAirplanePath(formData, callbackOption);
+    const updateAirplanePath = (
+        airplanePathId: string,
+        startPosition: {
+            x: number;
+            y: number;
+        },
+        endPosition: {
+            x: number;
+            y: number;
         }
+    ) => {
+        const formData = new FormData();
+        formData.set('airplanePathId', airplanePathId);
+        formData.set('startPosition', JSON.stringify(startPosition));
+        formData.set('endPosition', JSON.stringify(endPosition));
+
+        updateAirplanePathMutation(formData, callbackOption);
     };
 
     const clickAirplanePath = (position: { x: number; y: number }) => {
@@ -85,7 +92,11 @@ export function useAirplanePathEvent(
 
         if (startPosition && !endPosition) {
             setEndPosition(position);
-            saveAirplanePath(startPosition, position);
+            if (airplanePath) {
+                updateAirplanePath(airplanePath.id, startPosition, position);
+            } else {
+                createAirplanePath(startPosition, position);
+            }
         }
     };
 
