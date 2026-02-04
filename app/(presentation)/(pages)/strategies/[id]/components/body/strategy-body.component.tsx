@@ -131,7 +131,7 @@ function StrategyBody({
             <StrategyCanvas
                 stageRef={stageRef}
                 handleMouseMove={handleMouseMove}
-                selectedTool={selectedTool}
+                isDraggable={selectedTool === 'select'}
                 map={
                     <Layer imageSmoothingEnabled={true}>
                         <StrategyMapImage src={mapImage} />

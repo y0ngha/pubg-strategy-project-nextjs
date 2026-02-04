@@ -1,6 +1,5 @@
 'use client';
 
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolbar';
 import React, { ReactNode, Ref, useRef, useState } from 'react';
 import { Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useResizeObserver';
@@ -12,7 +11,7 @@ import { KonvaEventObject } from 'konva/lib/Node';
 interface StrategyCanvasProps {
     stageRef: Ref<Konva.Stage>;
     handleMouseMove: () => void;
-    selectedTool: CanvasTool;
+    isDraggable: boolean;
     map: ReactNode;
     properties: ReactNode;
     onMapClick: (event: KonvaEventObject<MouseEvent>) => void;
@@ -21,7 +20,7 @@ interface StrategyCanvasProps {
 function StrategyCanvas({
     stageRef,
     handleMouseMove,
-    selectedTool,
+    isDraggable,
     map,
     properties,
     onMapClick,
@@ -51,7 +50,7 @@ function StrategyCanvas({
                 ref={stageRef}
                 width={width}
                 height={height}
-                draggable={selectedTool === 'select'}
+                draggable={isDraggable}
                 dragBoundFunc={handleDragBound}
                 onWheel={event => {
                     const newStagePosition = handleWheel(event);
