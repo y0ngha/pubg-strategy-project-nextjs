@@ -71,6 +71,17 @@ export function useWaypointEvent(
         }
     };
 
+    const moveWaypoint = (
+        waypointId: string,
+        positions: { x: number; y: number }[]
+    ) => {
+        const formData = new FormData();
+        formData.set('waypointId', waypointId);
+        formData.set('positions', JSON.stringify(positions));
+
+        updateWaypointMutation(formData);
+    };
+
     const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
         if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
             setKeydownAlt(true);
@@ -117,5 +128,6 @@ export function useWaypointEvent(
         createWaypoint,
         isDrawing,
         clickedPositions,
+        moveWaypoint,
     };
 }
