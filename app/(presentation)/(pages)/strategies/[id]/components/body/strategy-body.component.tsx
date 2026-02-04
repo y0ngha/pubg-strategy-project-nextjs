@@ -184,7 +184,7 @@ function StrategyBody({
             <EnterTeamLabelModal
                 isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
                 onClose={enemyTeam.enterEnemyTeamLabelModalClose}
-                onConfirm={enemyTeam.enemyTeamCreate}
+                onConfirm={enemyTeam.createEnemyTeam}
             />
 
             <EnterTagContentModal

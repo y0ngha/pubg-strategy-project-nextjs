@@ -3,8 +3,12 @@ import { useState } from 'react';
 
 export function useEnemyTeamEvent(strategyId: string) {
     const { createEnemyTeam } = useCreateEnemyTeamMutation(strategyId);
+    const { createEnemyTeam: createEnemyTeamMutation } =
+        useCreateEnemyTeamMutation(strategyId);
+
     const [isEnterEnemyTeamLabelModalOpen, setIsEnterEnemyTeamLabelModalOpen] =
         useState(false);
+
     const [position, setPosition] = useState<{ x: number; y: number }>({
         x: 0,
         y: 0,
@@ -22,12 +26,12 @@ export function useEnemyTeamEvent(strategyId: string) {
         setIsEnterEnemyTeamLabelModalOpen(false);
     };
 
-    const enemyTeamCreate = (teamLabel: string) => {
+    const createEnemyTeam = (teamLabel: string) => {
         const formData = new FormData();
         formData.set('teamLabel', teamLabel);
         formData.set('position', JSON.stringify(position));
 
-        createEnemyTeam(formData);
+        createEnemyTeamMutation(formData);
 
         enterEnemyTeamLabelModalClose();
     };
@@ -37,5 +41,6 @@ export function useEnemyTeamEvent(strategyId: string) {
         enterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalClose,
         enemyTeamCreate,
+        createEnemyTeam,
     };
 }
