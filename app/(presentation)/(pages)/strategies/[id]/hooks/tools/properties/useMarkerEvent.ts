@@ -43,6 +43,16 @@ export function useMarkerEvent(
         }
     };
 
+    const moveMarker = (
+        markerId: string,
+        position: { x: number; y: number }
+    ) => {
+        const formData = new FormData();
+        formData.set('markerId', markerId);
+        formData.set('position', JSON.stringify(position));
+
+        updateMarkerMutation(formData);
+    };
     const ensureSelectedTeamPlayerId = () => {
         if (selectedTeamPlayerId === undefined) {
             throw new Error(
@@ -52,7 +62,7 @@ export function useMarkerEvent(
     };
 
     return {
-        markerClick,
         saveMarker,
+        moveMarker,
     };
 }
