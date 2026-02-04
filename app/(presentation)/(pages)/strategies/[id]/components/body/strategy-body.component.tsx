@@ -198,8 +198,8 @@ function StrategyBody({
                 isOpen={comment.isCommentWindowOpen}
                 onClose={comment.commentWindowClose}
                 comments={comment.filteredComments}
-                onAddComment={comment.commentCreate}
-                onUpdateComment={comment.commentUpdate}
+                onAddComment={comment.createComment}
+                onUpdateComment={comment.updateComment}
                 position={comment.windowPosition}
             />
         </div>

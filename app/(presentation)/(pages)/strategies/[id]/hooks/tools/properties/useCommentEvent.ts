@@ -7,8 +7,10 @@ export function useCommentEvent(
     strategyId: string,
     comments: CommentResponseDto[]
 ) {
-    const { createComment } = useCreateCommentMutation(strategyId);
-    const { updateComment } = useUpdateCommentMutation(strategyId);
+    const { createComment: createCommentMutation } =
+        useCreateCommentMutation(strategyId);
+    const { updateComment: updateCommentMutation } =
+        useUpdateCommentMutation(strategyId);
 
     const [topCommentId, setTopCommentId] = useState<string | null>(null);
 
@@ -49,7 +51,7 @@ export function useCommentEvent(
         setTopCommentId(null);
     };
 
-    const commentCreate = (content: string, parentCommentId: string | null) => {
+    const createComment = (content: string, parentCommentId: string | null) => {
         const formData = new FormData();
         formData.set('content', content);
 
@@ -61,15 +63,15 @@ export function useCommentEvent(
             formData.set('parentCommentId', parentCommentId);
         }
 
-        createComment(formData);
+        createCommentMutation(formData);
     };
 
-    const commentUpdate = (commentId: string, content: string) => {
+    const updateComment = (commentId: string, content: string) => {
         const formData = new FormData();
         formData.set('commentId', commentId);
         formData.set('content', content);
 
-        updateComment(formData);
+        updateCommentMutation(formData);
     };
 
     const commentClick = (
@@ -114,8 +116,8 @@ export function useCommentEvent(
         isCommentWindowOpen,
         commentWindowOpen,
         commentWindowClose,
-        commentCreate,
-        commentUpdate,
+        createComment,
+        updateComment,
         commentClick,
         windowPosition,
         filteredComments,
