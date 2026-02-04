@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetStrategy } from '@/(presentation)/(pages)/strategies/[id]/hooks/queries/useGetStrategy';
-import StrategyBody from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.compoenent';
+import StrategyBody from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import StrategyHeader from '@/(presentation)/(pages)/strategies/[id]/components/header/strategy-header.component';
 import Skeleton from '@/(presentation)/shared/components/skeleton.component';
 import { useKonvaHandleMouseMove } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseMove';
