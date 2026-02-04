@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCircleMutation';
+import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCircleMutation';
 
 export function useCircleEvent(strategyId: string) {
-    const { createCircle } = useCreateCircleMutation(strategyId);
     const { createCircle: createCircleMutation } =
         useCreateCircleMutation(strategyId);
+    const { updateCircle: updateCircleMutation } =
+        useUpdateCircleMutation(strategyId);
 
     const [isPhaseSelectModalOpen, setIsPhaseSelectModalOpen] = useState(false);
     const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -31,11 +33,22 @@ export function useCircleEvent(strategyId: string) {
         phaseSelectModalClose();
     };
 
+    const moveCircle = (
+        circleId: string,
+        position: { x: number; y: number }
+    ) => {
+        const formData = new FormData();
+        formData.set('circleId', circleId);
+        formData.set('position', JSON.stringify(position));
+
+        updateCircleMutation(formData);
+    };
+
     return {
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,
-        circleCreate,
         createCircle,
+        moveCircle,
     };
 }
