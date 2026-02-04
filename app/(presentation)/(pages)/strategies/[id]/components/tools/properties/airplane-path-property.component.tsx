@@ -43,7 +43,7 @@ function AirplanePathProperty({
 
     if (isDrawCompleted) {
         return (
-            <Group>
+            <Group x={0} y={0}>
                 <Arrow
                     points={[
                         startPosition.x,

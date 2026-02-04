@@ -35,7 +35,7 @@ function WaypointProperty({
     }
 
     return (
-        <Group>
+        <Group x={0} y={0}>
             <Line
                 points={flattenedPoints}
                 stroke={color}
