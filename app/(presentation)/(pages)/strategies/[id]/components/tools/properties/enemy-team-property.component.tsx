@@ -24,8 +24,10 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
     const radius = 50;
 
     return (
-        <Group x={x} y={y} listening={false}>
+        <Group x={0} y={0} listening={false}>
             <Circle
+                x={x}
+                y={y}
                 radius={radius}
                 fill={'rgba(239, 68, 68, 0.2)'}
                 stroke={'#ef4444'}
@@ -36,6 +38,8 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
             />
 
             <Image
+                x={x}
+                y={y}
                 image={enemyImage}
                 offsetX={center}
                 offsetY={center}
@@ -44,7 +48,7 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
                 alt={'적 팀'}
             />
 
-            <Label y={radius + 8}>
+            <Label x={x} y={y + radius + 8}>
                 <Tag
                     fill={'#18181b'}
                     stroke={'#ef4444'}

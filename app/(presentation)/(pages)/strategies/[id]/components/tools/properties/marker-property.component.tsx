@@ -1,4 +1,4 @@
-import { Image } from 'react-konva';
+import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
@@ -22,16 +22,18 @@ function MarkerProperty({ x, y, priority, color }: MarkerPropertyProps) {
     const [markerImage] = useImage(url ?? '');
 
     return (
-        <Image
-            x={x}
-            y={y}
-            image={markerImage}
-            offsetX={center}
-            offsetY={center}
-            scaleX={0.8}
-            scaleY={0.8}
-            alt={`팀 플레이어 마커 - ${priority}`}
-        />
+        <Group x={0} y={0}>
+            <Image
+                x={x}
+                y={y}
+                image={markerImage}
+                offsetX={center}
+                offsetY={center}
+                scaleX={0.8}
+                scaleY={0.8}
+                alt={`팀 플레이어 마커 - ${priority}`}
+            />
+        </Group>
     );
 }
 

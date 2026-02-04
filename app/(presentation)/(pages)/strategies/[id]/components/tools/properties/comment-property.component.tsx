@@ -62,14 +62,16 @@ function CommentProperty({ id, x, y, onClick }: CommentPropertyProps) {
 
     return (
         <Group
-            x={x}
-            y={y}
+            x={0}
+            y={0}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
         >
             <Image
                 image={commentImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
                 scaleX={isHovered ? 1.0 : 0.8}

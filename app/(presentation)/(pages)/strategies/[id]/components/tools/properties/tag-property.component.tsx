@@ -55,14 +55,16 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
 
     return (
         <Group
-            x={x}
-            y={y}
+            x={0}
+            y={0}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
         >
             <Image
                 image={tagImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
                 scaleX={isHovered ? 1.0 : 0.8}
@@ -74,7 +76,7 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
             />
 
             {isOpen && (
-                <Label y={-60} opacity={0.9}>
+                <Label x={x} y={y - 60} opacity={0.9}>
                     <KonvaTag
                         fill={'#18181b'}
                         stroke={iconColor}

@@ -14,7 +14,7 @@ interface CirclePropertyProps {
 
 function CircleProperty({ x, y, radius, color }: CirclePropertyProps) {
     return (
-        <Group>
+        <Group x={0} y={0}>
             <Shape
                 fill={color}
                 listening={true}

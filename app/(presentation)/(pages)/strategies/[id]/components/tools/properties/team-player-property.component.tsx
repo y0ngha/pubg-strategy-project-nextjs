@@ -71,14 +71,16 @@ function TeamPlayerProperty({
 
     return (
         <Group
-            x={x}
-            y={y}
+            x={0}
+            y={0}
             listening={clickable}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <Circle
+                x={x}
+                y={y}
                 radius={radius}
                 fill={isClicked ? '#00000033' : `${color}33`}
                 stroke={isClicked ? '#000000' : color}
@@ -91,6 +93,8 @@ function TeamPlayerProperty({
 
             <Image
                 image={teamPlayerImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
                 scaleX={isHovered ? 1.0 : 0.8}
@@ -100,7 +104,7 @@ function TeamPlayerProperty({
                 alt={`팀 플레이어 - ${priority}`}
             />
 
-            <Label y={radius + 8}>
+            <Label x={x} y={y + radius + 8}>
                 <Tag
                     fill={'#18181b'}
                     stroke={color}
