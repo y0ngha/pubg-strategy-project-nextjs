@@ -89,9 +89,19 @@ export function useAirplanePathEvent(
         }
     };
 
+    const changeAirplanePath = (
+        startPosition: { x: number; y: number },
+        endPosition: { x: number; y: number }
+    ) => {
+        setStartPosition(startPosition);
+        setEndPosition(endPosition);
+        saveAirplanePath(startPosition, endPosition);
+    };
+
     return {
         clickAirplanePath,
         startPosition,
         endPosition,
+        changeAirplanePath,
     };
 }
