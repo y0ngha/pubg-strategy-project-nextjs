@@ -7,7 +7,7 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface AirplanePathPropertyProps {
-    id: string;
+    id?: string;
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
     isSelectable: boolean;

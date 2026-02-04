@@ -147,6 +147,7 @@ function StrategyBody({
                             circles={circles}
                         />
                         <AirplanePathLayer
+                            id={airplanePath?.id}
                             isSelectable={isSelectable}
                             startPosition={airplane.startPosition}
                             endPosition={airplane.endPosition}
