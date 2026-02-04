@@ -8,7 +8,11 @@ import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/t
 import { useWaypointEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/properties/useWaypointEvent';
 import { useCommentEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/properties/useCommentEvent';
 import {
+    AirplanePathResponseDto,
+    CircleResponseDto,
     CommentResponseDto,
+    EnemyTeamResponseDto,
+    TagResponseDto,
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
@@ -16,32 +20,29 @@ export function useToolEvent(
     strategyId: string,
     selectedTool: CanvasTool,
     properties: {
-        airplanePath?: {
-            startPosition: {
-                x: number;
-                y: number;
-            };
-            endPosition: {
-                x: number;
-                y: number;
-            };
-        };
+        circles: CircleResponseDto[];
+        airplanePath?: AirplanePathResponseDto;
+        enemyTeams: EnemyTeamResponseDto[];
         teamPlayers: TeamPlayerResponseDto[];
+        tags: TagResponseDto[];
         comments: CommentResponseDto[];
     }
 ) {
-    const circleEvent = useCircleEvent(strategyId);
+    const circleEvent = useCircleEvent(strategyId, properties.circles);
 
     const airplanePathEvent = useAirplanePathEvent(
         strategyId,
         properties.airplanePath
     );
 
-    const enemyTeamEvent = useEnemyTeamEvent(strategyId);
+    const enemyTeamEvent = useEnemyTeamEvent(strategyId, properties.enemyTeams);
 
-    const teamPlayerEvent = useTeamPlayerEvent(strategyId);
+    const teamPlayerEvent = useTeamPlayerEvent(
+        strategyId,
+        properties.teamPlayers
+    );
 
-    const tagEvent = useTagEvent(strategyId);
+    const tagEvent = useTagEvent(strategyId, properties.tags);
 
     const markerEvent = useMarkerEvent(
         strategyId,

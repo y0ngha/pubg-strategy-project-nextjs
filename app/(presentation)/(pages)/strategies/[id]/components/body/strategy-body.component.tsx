@@ -79,8 +79,11 @@ function StrategyBody({
         comment,
         isSelectable,
     } = useToolEvent(id, selectedTool, {
+        circles: circles,
         airplanePath: airplanePath,
+        enemyTeams: enemyTeams,
         teamPlayers: teamPlayers,
+        tags: tags,
         comments: comments,
     });
 
