@@ -4,26 +4,26 @@ import { Property } from 'csstype';
 
 type Cursor = Property.Cursor;
 
-export function useKonvaHandleCursorChange(
+export function useKonvaHandleCursorChange<T extends MouseEvent>(
     changeCursor: Cursor,
     defaultCursor: Cursor = 'default'
 ) {
     const [previousCursor, setPreviousCursor] = useState<string>(defaultCursor);
 
-    const handleMouseEnter = (e: KonvaEventObject<MouseEvent>) => {
-        const stage = e.target.getStage();
+    const cursorChange = (event: KonvaEventObject<T>) => {
+        const stage = event.target.getStage();
         if (stage) {
             setPreviousCursor(stage.container().style.cursor);
             stage.container().style.cursor = changeCursor;
         }
     };
 
-    const handleMouseLeave = (e: KonvaEventObject<MouseEvent>) => {
-        const stage = e.target.getStage();
+    const cursorChangeDispose = (event: KonvaEventObject<T>) => {
+        const stage = event.target.getStage();
         if (stage) {
             stage.container().style.cursor = previousCursor;
         }
     };
 
-    return { handleMouseEnter, handleMouseLeave };
+    return { cursorChange, cursorChangeDispose };
 }
