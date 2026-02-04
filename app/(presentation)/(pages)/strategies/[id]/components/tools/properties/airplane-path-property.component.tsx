@@ -1,4 +1,4 @@
-import { Arrow, Group, Image, Layer } from 'react-konva';
+import { Arrow, Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
@@ -116,13 +116,13 @@ function AirplanePathLayer({
     isSelectable,
 }: AirplanePathPropertyProps) {
     return (
-        <Layer>
+        <>
             <AirplanePathProperty
                 startPosition={startPosition}
                 endPosition={endPosition}
                 isSelectable={isSelectable}
             />
-        </Layer>
+        </>
     );
 }
 

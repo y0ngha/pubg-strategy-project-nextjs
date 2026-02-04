@@ -2,7 +2,7 @@
 
 import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolbar';
 import React, { ReactNode, Ref, useRef, useState } from 'react';
-import { Layer, Stage } from 'react-konva';
+import { Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useResizeObserver';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleWheelZoomControl';
 import { useKovnaHandleMapDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKovnaHandleMapDrag';
@@ -68,7 +68,7 @@ function StrategyCanvas({
                 x={stagePosistion.x}
                 y={stagePosistion.y}
             >
-                <Layer imageSmoothingEnabled={true}>{map}</Layer>
+                {map}
 
                 {properties}
             </Stage>

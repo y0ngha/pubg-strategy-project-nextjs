@@ -1,4 +1,4 @@
-import { Group, Image, Layer } from 'react-konva';
+import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
@@ -88,7 +88,7 @@ function CommentsLayer({
 }: Pick<CommentPropertyProps, 'onClick' | 'isSelectable'> &
     Pick<StrategyBodyProps, 'comments'>) {
     return (
-        <Layer>
+        <>
             {comments.map(field => (
                 <CommentProperty
                     key={field.id}
@@ -99,7 +99,7 @@ function CommentsLayer({
                     isSelectable={isSelectable}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 

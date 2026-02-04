@@ -27,6 +27,7 @@ import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
+import { Layer } from 'react-konva';
 
 export interface StrategyBodyProps {
     id: string;
@@ -131,9 +132,13 @@ function StrategyBody({
                 stageRef={stageRef}
                 handleMouseMove={handleMouseMove}
                 selectedTool={selectedTool}
-                map={<StrategyMapImage src={mapImage} />}
+                map={
+                    <Layer imageSmoothingEnabled={true}>
+                        <StrategyMapImage src={mapImage} />
+                    </Layer>
+                }
                 properties={
-                    <>
+                    <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
                             circles={circles}
@@ -165,7 +170,7 @@ function StrategyBody({
                             comments={comments}
                             onClick={comment.commentClick}
                         />
-                    </>
+                    </Layer>
                 }
                 onMapClick={handleClick}
             />

@@ -1,6 +1,6 @@
 'use client';
 
-import { Circle, Group, Layer, Shape } from 'react-konva';
+import { Circle, Group, Shape } from 'react-konva';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 import React from 'react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
@@ -76,7 +76,7 @@ function CirclesLayer({
 }: Pick<CirclePropertyProps, 'isSelectable'> &
     Pick<StrategyBodyProps, 'circles'>) {
     return (
-        <Layer>
+        <>
             {circles.map(field => (
                 <CircleProperty
                     key={field.phase}
@@ -87,7 +87,7 @@ function CirclesLayer({
                     isSelectable={isSelectable}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 

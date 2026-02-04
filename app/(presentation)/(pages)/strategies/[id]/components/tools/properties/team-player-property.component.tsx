@@ -1,4 +1,4 @@
-import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
+import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
@@ -134,7 +134,7 @@ function TeamPlayersLayer({
 } & Pick<TeamPlayerPropertyProps, 'isSelectable'> &
     Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
-        <Layer>
+        <>
             {teamPlayers.map(field => {
                 return (
                     <React.Fragment key={`tp-${field.priority}`}>
@@ -174,7 +174,7 @@ function TeamPlayersLayer({
                     </React.Fragment>
                 );
             })}
-        </Layer>
+        </>
     );
 }
 

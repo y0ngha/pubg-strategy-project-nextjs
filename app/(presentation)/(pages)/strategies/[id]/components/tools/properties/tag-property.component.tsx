@@ -1,4 +1,4 @@
-import { Group, Image, Label, Layer, Tag as KonvaTag, Text } from 'react-konva';
+import { Group, Image, Label, Tag as KonvaTag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { Tag } from 'lucide-react';
@@ -97,7 +97,7 @@ function TagsLayer({
     isSelectable,
 }: Pick<TagPropertyProps, 'isSelectable'> & Pick<StrategyBodyProps, 'tags'>) {
     return (
-        <Layer>
+        <>
             {tags.map(field => (
                 <TagProperty
                     key={field.id}
@@ -107,7 +107,7 @@ function TagsLayer({
                     isSelectable={isSelectable}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 

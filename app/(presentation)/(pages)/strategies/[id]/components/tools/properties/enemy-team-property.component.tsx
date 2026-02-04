@@ -1,4 +1,4 @@
-import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
+import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Swords } from 'lucide-react';
 import useImage from 'use-image';
@@ -109,7 +109,7 @@ function EnemyTeamsLayer({
 }: Pick<EnemyTeamPropertyProps, 'isSelectable'> &
     Pick<StrategyBodyProps, 'enemyTeams'>) {
     return (
-        <Layer>
+        <>
             {enemyTeams.map(field => (
                 <EnemyTeamProperty
                     key={field.id}
@@ -119,7 +119,7 @@ function EnemyTeamsLayer({
                     isSelectable={isSelectable}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 
