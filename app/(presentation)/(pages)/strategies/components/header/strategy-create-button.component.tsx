@@ -3,7 +3,7 @@
 import Button from '@/(presentation)/shared/components/button.component';
 import { Plus } from 'lucide-react';
 
-function StrategiyCreateButton({ ...props }) {
+function StrategyCreateButton({ ...props }) {
     return (
         <Button className={'shadow-primary/20 gap-2 shadow-lg'} {...props}>
             <Plus className={'h-4 w-4'} /> 새 작전 수립
@@ -11,6 +11,6 @@ function StrategiyCreateButton({ ...props }) {
     );
 }
 
-StrategiyCreateButton.displayName = 'StrategiyCreateButton';
+StrategyCreateButton.displayName = 'StrategyCreateButton';
 
-export default StrategiyCreateButton;
+export default StrategyCreateButton;
