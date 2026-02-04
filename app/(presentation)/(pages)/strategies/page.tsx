@@ -1,14 +1,14 @@
-import StrategiesTabs from '@/(presentation)/(pages)/strategies/components/tabs/strategies-tabs.component';
-import MyStrategies from '@/(presentation)/(pages)/strategies/components/tables/my-strategies.component';
+import StrategiesTabs from '@/(presentation)/(pages)/strategies/components/strategies-tabs.component';
+import MyStrategies from '@/(presentation)/(pages)/strategies/components/my-strategies.component';
 import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
 import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
-import SharedStrategies from '@/(presentation)/(pages)/strategies/components/tables/shared-strategies.component';
-import StrategiesTabContent from './components/tabs/strategies-tab-content.component';
-import StrategiesHeaderLayout from '@/(presentation)/(pages)/strategies/components/header/strategies-header-layout.component';
-import StrategiesHeader from '@/(presentation)/(pages)/strategies/components/header/strategies-header.component';
-import StrategiyCreateButton from '@/(presentation)/(pages)/strategies/components/header/strategy-create-button.component';
-import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal-controller.component';
-import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal.component';
+import SharedStrategies from '@/(presentation)/(pages)/strategies/components/shared-strategies.component';
+import StrategiesTabContent from './components/strategies-tab-content.component';
+import StrategiesHeaderLayout from '@/(presentation)/(pages)/strategies/components/strategies-header-layout.component';
+import StrategiesHeader from '@/(presentation)/(pages)/strategies/components/strategies-header.component';
+import StrategiyCreateButton from '@/(presentation)/(pages)/strategies/components/strategy-create-button.component';
+import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/strategy-create-modal-controller.component';
+import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/strategy-create-modal.component';
 
 interface StrategyDashboardProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
