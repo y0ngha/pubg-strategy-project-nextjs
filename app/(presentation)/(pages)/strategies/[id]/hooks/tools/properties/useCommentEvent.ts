@@ -74,6 +74,17 @@ export function useCommentEvent(
         updateCommentMutation(formData);
     };
 
+    const moveComment = (
+        commentId: string,
+        position: { x: number; y: number }
+    ) => {
+        const formData = new FormData();
+        formData.set('commentId', commentId);
+        formData.set('position', JSON.stringify(position));
+
+        updateCommentMutation(formData);
+    };
+
     const commentClick = (
         commentId: string,
         commentWindowPosition: { x: number; y: number },
@@ -121,5 +132,6 @@ export function useCommentEvent(
         commentClick,
         windowPosition,
         filteredComments,
+        moveComment,
     };
 }
