@@ -145,16 +145,19 @@ function StrategyBody({
                         <CirclesLayer
                             isSelectable={isSelectable}
                             circles={circles}
+                            onMove={circle.moveCircle}
                         />
                         <AirplanePathLayer
                             id={airplanePath?.id}
                             isSelectable={isSelectable}
                             startPosition={airplane.startPosition}
                             endPosition={airplane.endPosition}
+                            onMove={airplane.moveAirplanePath}
                         />
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
                             enemyTeams={enemyTeams}
+                            onMove={enemyTeam.moveEnemyTeam}
                         />
                         <TeamPlayersLayer
                             isSelectable={isSelectable}
@@ -167,12 +170,20 @@ function StrategyBody({
                             }
                             isWaypointDrawing={waypoint.isDrawing}
                             waypointClickedPositions={waypoint.clickedPositions}
+                            onMove={teamPlayer.moveTeamPlayer}
+                            onMarkerMove={marker.moveMarker}
+                            onWaypointMove={waypoint.moveWaypoint}
                         />
-                        <TagsLayer isSelectable={isSelectable} tags={tags} />
+                        <TagsLayer
+                            isSelectable={isSelectable}
+                            tags={tags}
+                            onMove={tag.moveTag}
+                        />
                         <CommentsLayer
                             isSelectable={isSelectable}
                             comments={comments}
                             onClick={comment.commentClick}
+                            onMove={comment.moveComment}
                         />
                     </Layer>
                 }

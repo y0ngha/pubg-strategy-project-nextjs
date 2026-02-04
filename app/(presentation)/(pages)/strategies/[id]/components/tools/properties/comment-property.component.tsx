@@ -18,6 +18,10 @@ interface CommentPropertyProps {
         mapClickPosition: { x: number; y: number }
     ) => void;
     isSelectable: boolean;
+    onMove: (
+        commentId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function CommentProperty({
@@ -94,7 +98,8 @@ function CommentsLayer({
     comments,
     onClick,
     isSelectable,
-}: Pick<CommentPropertyProps, 'onClick' | 'isSelectable'> &
+    onMove,
+}: Pick<CommentPropertyProps, 'onClick' | 'isSelectable' | 'onMove'> &
     Pick<StrategyBodyProps, 'comments'>) {
     return (
         <>
@@ -106,6 +111,7 @@ function CommentsLayer({
                     y={field.position.y}
                     onClick={onClick}
                     isSelectable={isSelectable}
+                    onMove={onMove}
                 />
             ))}
         </>

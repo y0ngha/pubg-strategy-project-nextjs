@@ -13,6 +13,11 @@ interface WaypointPropertyProps {
     color: string;
     isDrawing: boolean;
     isSelectable: boolean;
+    onMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function WaypointProperty({
@@ -23,6 +28,7 @@ function WaypointProperty({
     color,
     isDrawing,
     isSelectable,
+    onMove,
 }: WaypointPropertyProps) {
     const {
         handleMouseLeave: hoverHandleMouseLeave,

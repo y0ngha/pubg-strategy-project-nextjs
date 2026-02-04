@@ -11,6 +11,7 @@ interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
     isSelectable: boolean;
+    onMove: (deltaPosition: { x: number; y: number }) => void;
 }
 
 function AirplanePathProperty({
@@ -123,6 +124,7 @@ function AirplanePathLayer({
     startPosition,
     endPosition,
     isSelectable,
+    onMove,
 }: AirplanePathPropertyProps) {
     return (
         <AirplanePathProperty
@@ -130,6 +132,7 @@ function AirplanePathLayer({
             startPosition={startPosition}
             endPosition={endPosition}
             isSelectable={isSelectable}
+            onMove={onMove}
         />
     );
 }

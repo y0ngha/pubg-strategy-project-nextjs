@@ -14,6 +14,11 @@ interface MarkerPropertyProps {
     priority: number;
     color: string;
     isSelectable: boolean;
+    onMove: (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function MarkerProperty({
@@ -24,6 +29,7 @@ function MarkerProperty({
     priority,
     color,
     isSelectable,
+    onMove,
 }: MarkerPropertyProps) {
     const {
         handleMouseLeave: hoverHandleMouseLeave,

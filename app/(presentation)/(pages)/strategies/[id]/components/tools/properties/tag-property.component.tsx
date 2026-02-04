@@ -13,6 +13,7 @@ interface TagPropertyProps {
     y: number;
     content: string;
     isSelectable: boolean;
+    onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
 }
 
 function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
@@ -105,7 +106,9 @@ TagProperty.displayName = 'TagProperty';
 function TagsLayer({
     tags,
     isSelectable,
-}: Pick<TagPropertyProps, 'isSelectable'> & Pick<StrategyBodyProps, 'tags'>) {
+    onMove,
+}: Pick<TagPropertyProps, 'isSelectable' | 'onMove'> &
+    Pick<StrategyBodyProps, 'tags'>) {
     return (
         <>
             {tags.map(field => (
@@ -116,6 +119,7 @@ function TagsLayer({
                     y={field.position.y}
                     content={field.content}
                     isSelectable={isSelectable}
+                    onMove={onMove}
                 />
             ))}
         </>

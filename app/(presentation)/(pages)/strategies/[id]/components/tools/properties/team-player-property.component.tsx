@@ -18,6 +18,10 @@ interface TeamPlayerPropertyProps {
     isClicked: boolean;
     onClick: (id: string) => void;
     isSelectable: boolean;
+    onMove: (
+        teamPlayerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function TeamPlayerProperty({
@@ -29,6 +33,7 @@ function TeamPlayerProperty({
     isSelectable,
     isClicked,
     onClick,
+    onMove,
 }: TeamPlayerPropertyProps) {
     const iconColor = '#ffffff';
 
@@ -135,12 +140,25 @@ function TeamPlayersLayer({
     changeSelectedTeamPlayerId,
     isWaypointDrawing,
     waypointClickedPositions,
+    onMove,
+    onMarkerMove,
+    onWaypointMove,
 }: {
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
     isWaypointDrawing: boolean;
     waypointClickedPositions: { x: number; y: number }[];
-} & Pick<TeamPlayerPropertyProps, 'isSelectable'> &
+    onMarkerMove: (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onWaypointMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+} & Pick<TeamPlayerPropertyProps, 'isSelectable' | 'onMove'> &
     Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <>
@@ -158,6 +176,7 @@ function TeamPlayersLayer({
                             onClick={id => {
                                 changeSelectedTeamPlayerId(id);
                             }}
+                            onMove={onMove}
                         />
                         {field.marker && (
                             <MarkerProperty
@@ -168,6 +187,7 @@ function TeamPlayersLayer({
                                 isSelectable={isSelectable}
                                 id={field.marker.id}
                                 teamPlayerId={field.id}
+                                onMove={onMarkerMove}
                             />
                         )}
                         <WaypointProperty
@@ -183,6 +203,7 @@ function TeamPlayersLayer({
                             isSelectable={isSelectable}
                             id={field.waypoint?.id}
                             teamPlayerId={field.id}
+                            onMove={onWaypointMove}
                         />
                     </React.Fragment>
                 );

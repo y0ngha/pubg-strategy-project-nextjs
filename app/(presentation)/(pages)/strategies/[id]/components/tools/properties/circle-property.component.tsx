@@ -14,6 +14,7 @@ interface CirclePropertyProps {
     radius: number;
     color: string;
     isSelectable: boolean;
+    onMove: (circleId: string, deltaPosition: { x: number; y: number }) => void;
 }
 
 function CircleProperty({
@@ -89,7 +90,8 @@ CircleProperty.displayName = 'CircleProperty';
 function CirclesLayer({
     circles,
     isSelectable,
-}: Pick<CirclePropertyProps, 'isSelectable'> &
+    onMove,
+}: Pick<CirclePropertyProps, 'isSelectable' | 'onMove'> &
     Pick<StrategyBodyProps, 'circles'>) {
     return (
         <>
@@ -102,6 +104,7 @@ function CirclesLayer({
                     x={field.centerPosition.x}
                     y={field.centerPosition.y}
                     isSelectable={isSelectable}
+                    onMove={onMove}
                 />
             ))}
         </>
