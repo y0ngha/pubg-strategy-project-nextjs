@@ -64,7 +64,7 @@ export class CirclePhase {
         return this.value === circlePhase.value;
     }
 
-    toString() {
+    toNumber() {
         return this.value;
     }
 

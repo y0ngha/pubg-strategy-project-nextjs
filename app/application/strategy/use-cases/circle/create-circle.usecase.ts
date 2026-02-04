@@ -33,7 +33,7 @@ export class CreateCircleUseCase {
                 x: circle.centerPosition.x,
                 y: circle.centerPosition.y,
             },
-            phase: circle.phase.toString(),
+            phase: circle.phase.toNumber(),
             radius: circle.phase.radius,
             color: circle.phase.color,
         };
