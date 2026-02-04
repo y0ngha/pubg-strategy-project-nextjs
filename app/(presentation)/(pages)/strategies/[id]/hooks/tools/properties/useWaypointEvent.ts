@@ -11,8 +11,10 @@ export function useWaypointEvent(
 ) {
     const maxWaypoint = 6;
 
-    const { createWaypoint } = useCreateWaypointMutation(strategyId);
-    const { updateWaypoint } = useUpdateWaypointMutation(strategyId);
+    const { createWaypoint: createWaypointMutation } =
+        useCreateWaypointMutation(strategyId);
+    const { updateWaypoint: updateWaypointMutation } =
+        useUpdateWaypointMutation(strategyId);
 
     const [keydownAlt, setKeydownAlt] = useState<boolean>(false);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
@@ -30,7 +32,7 @@ export function useWaypointEvent(
     const windowAltKeyCode = 'Alt';
     const macAltKeyCode = 'Meta';
 
-    const waypointCreate = (position: { x: number; y: number }) => {
+    const createWaypoint = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
             ensurePressAltKey();
@@ -63,9 +65,9 @@ export function useWaypointEvent(
         formData.set('positions', JSON.stringify(positions));
 
         if (existingWaypoint) {
-            updateWaypoint(formData);
+            createWaypointMutation(formData);
         } else {
-            createWaypoint(formData);
+            createWaypointMutation(formData);
         }
     };
 
@@ -112,7 +114,7 @@ export function useWaypointEvent(
     }, []);
 
     return {
-        waypointCreate,
+        createWaypoint,
         isDrawing,
         clickedPositions,
     };

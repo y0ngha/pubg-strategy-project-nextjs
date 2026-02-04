@@ -100,7 +100,7 @@ function StrategyBody({
             case 'marker':
                 return marker.saveMarker(clickPosition);
             case 'waypoint':
-                return waypoint.waypointCreate(clickPosition);
+                return waypoint.createWaypoint(clickPosition);
             case 'tag':
                 return tag.enterTagContentModalOpen(clickPosition);
             case 'comment':
