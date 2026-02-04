@@ -76,8 +76,19 @@ export function useCommentEvent(
 
     const moveComment = (
         commentId: string,
-        position: { x: number; y: number }
+        deltaPosition: { x: number; y: number }
     ) => {
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (!comment) {
+            throw new Error('댓글 ID로 댓글을 찾을 수 없습니다.');
+        }
+
+        const position = {
+            x: comment.position.x + deltaPosition.x,
+            y: comment.position.y + deltaPosition.y,
+        };
+
         const formData = new FormData();
         formData.set('commentId', commentId);
         formData.set('position', JSON.stringify(position));
