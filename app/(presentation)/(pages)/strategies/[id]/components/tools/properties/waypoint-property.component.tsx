@@ -6,6 +6,8 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface WaypointPropertyProps {
+    id?: string;
+    teamPlayerId: string;
     positions: { x: number; y: number }[];
     priority: number;
     color: string;
@@ -14,6 +16,8 @@ interface WaypointPropertyProps {
 }
 
 function WaypointProperty({
+    id,
+    teamPlayerId,
     positions,
     priority,
     color,

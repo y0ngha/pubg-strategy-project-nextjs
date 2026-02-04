@@ -8,6 +8,7 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface EnemyTeamPropertyProps {
+    id: string;
     x: number;
     y: number;
     teamLabel: string;
@@ -15,6 +16,7 @@ interface EnemyTeamPropertyProps {
 }
 
 function EnemyTeamProperty({
+    id,
     x,
     y,
     teamLabel,
@@ -122,6 +124,7 @@ function EnemyTeamsLayer({
             {enemyTeams.map(field => (
                 <EnemyTeamProperty
                     key={field.id}
+                    id={field.id}
                     x={field.position.x}
                     y={field.position.y}
                     teamLabel={field.teamLabel}

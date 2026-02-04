@@ -166,6 +166,8 @@ function TeamPlayersLayer({
                                 x={field.marker.position.x}
                                 y={field.marker.position.y}
                                 isSelectable={isSelectable}
+                                id={field.marker.id}
+                                teamPlayerId={field.id}
                             />
                         )}
                         <WaypointProperty
@@ -179,6 +181,8 @@ function TeamPlayersLayer({
                             priority={field.priority}
                             isDrawing={isWaypointDrawing}
                             isSelectable={isSelectable}
+                            id={field.waypoint?.id}
+                            teamPlayerId={field.id}
                         />
                     </React.Fragment>
                 );

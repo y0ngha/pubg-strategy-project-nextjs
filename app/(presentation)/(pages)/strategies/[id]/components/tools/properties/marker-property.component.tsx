@@ -7,6 +7,8 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface MarkerPropertyProps {
+    id: string;
+    teamPlayerId: string;
     x: number;
     y: number;
     priority: number;
@@ -15,6 +17,8 @@ interface MarkerPropertyProps {
 }
 
 function MarkerProperty({
+    id,
+    teamPlayerId,
     x,
     y,
     priority,

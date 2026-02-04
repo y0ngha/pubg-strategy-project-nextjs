@@ -8,6 +8,7 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface TagPropertyProps {
+    id: string;
     x: number;
     y: number;
     content: string;
@@ -110,6 +111,7 @@ function TagsLayer({
             {tags.map(field => (
                 <TagProperty
                     key={field.id}
+                    id={field.id}
                     x={field.position.x}
                     y={field.position.y}
                     content={field.content}

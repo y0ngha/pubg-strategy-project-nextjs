@@ -8,6 +8,7 @@ import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/ho
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface CirclePropertyProps {
+    id: string;
     x: number;
     y: number;
     radius: number;
@@ -16,6 +17,7 @@ interface CirclePropertyProps {
 }
 
 function CircleProperty({
+    id,
     x,
     y,
     radius,
@@ -93,7 +95,8 @@ function CirclesLayer({
         <>
             {circles.map(field => (
                 <CircleProperty
-                    key={field.phase}
+                    key={field.id}
+                    id={field.id}
                     color={field.color}
                     radius={field.radius}
                     x={field.centerPosition.x}
