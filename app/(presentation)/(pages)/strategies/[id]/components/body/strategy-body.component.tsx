@@ -96,7 +96,7 @@ function StrategyBody({
             case 'enemy':
                 return enemyTeam.enterEnemyTeamLabelModalOpen(clickPosition);
             case 'team':
-                return teamPlayer.teamPlayerCreate(clickPosition);
+                return teamPlayer.createTeamPlayer(clickPosition);
             case 'marker':
                 return marker.saveMarker(clickPosition);
             case 'waypoint':

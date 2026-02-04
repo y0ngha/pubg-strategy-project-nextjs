@@ -3,15 +3,18 @@ import { useState } from 'react';
 
 export function useTeamPlayerEvent(strategyId: string) {
     const { createTeamPlayer } = useCreateTeamPlayerMutation(strategyId);
+    const { createTeamPlayer: createTeamPlayerMutation } =
+        useCreateTeamPlayerMutation(strategyId);
+
     const [selectedTeamPlayerId, setSelectedTeamPlayerId] = useState<
         string | undefined
     >(undefined);
 
-    const teamPlayerCreate = (position: { x: number; y: number }) => {
+    const createTeamPlayer = (position: { x: number; y: number }) => {
         const formData = new FormData();
         formData.set('position', JSON.stringify(position));
 
-        createTeamPlayer(formData);
+        createTeamPlayerMutation(formData);
     };
 
     const changeSelectedTeamPlayerId = (id: string) => {
@@ -26,6 +29,7 @@ export function useTeamPlayerEvent(strategyId: string) {
 
     return {
         teamPlayerCreate,
+        createTeamPlayer,
         selectedTeamPlayerId,
         changeSelectedTeamPlayerId,
     };
