@@ -3,8 +3,11 @@ import { useState } from 'react';
 
 export function useTagEvent(strategyId: string) {
     const { createTag } = useCreateTagMutation(strategyId);
+    const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
+
     const [isEnterTagContentModalOpen, setIsEnterTagContentModalOpen] =
         useState(false);
+
     const [position, setPosition] = useState<{ x: number; y: number }>({
         x: 0,
         y: 0,
@@ -19,12 +22,12 @@ export function useTagEvent(strategyId: string) {
         setIsEnterTagContentModalOpen(false);
     };
 
-    const tagCreate = (content: string) => {
+    const createTag = (content: string) => {
         const formData = new FormData();
         formData.set('content', content);
         formData.set('position', JSON.stringify(position));
 
-        createTag(formData);
+        createTagMutation(formData);
 
         enterTagContentModalClose();
     };
@@ -33,6 +36,6 @@ export function useTagEvent(strategyId: string) {
         isEnterTagContentModalOpen,
         enterTagContentModalOpen,
         enterTagContentModalClose,
-        tagCreate,
+        createTag,
     };
 }

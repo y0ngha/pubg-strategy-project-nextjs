@@ -190,7 +190,7 @@ function StrategyBody({
             <EnterTagContentModal
                 isOpen={tag.isEnterTagContentModalOpen}
                 onClose={tag.enterTagContentModalClose}
-                onConfirm={tag.tagCreate}
+                onConfirm={tag.createTag}
             />
 
             <StrategyCommentWindow
