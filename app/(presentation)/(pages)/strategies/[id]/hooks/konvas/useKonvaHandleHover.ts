@@ -3,21 +3,19 @@ import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/
 import { KonvaEventObject } from 'konva/lib/Node';
 
 export function useKonvaHandleHover(baseColor: string) {
-    const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer', 'default');
+    const { cursorChange, cursorChangeDispose } =
+        useKonvaHandleCursorChange<MouseEvent>('pointer', 'default');
 
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
     const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
         setIsHovered(true);
-        cursorHandleMouseEnter(event);
+        cursorChange(event);
     };
 
     const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
         setIsHovered(false);
-        cursorHandleMouseLeave(event);
+        cursorChangeDispose(event);
     };
 
     const scaleX = isHovered ? 1.2 : 1;
