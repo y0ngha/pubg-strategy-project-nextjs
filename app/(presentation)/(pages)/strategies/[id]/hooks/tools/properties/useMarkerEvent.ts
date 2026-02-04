@@ -44,9 +44,27 @@ export function useMarkerEvent(
     };
 
     const moveMarker = (
+        teamPlayerId: string,
         markerId: string,
-        position: { x: number; y: number }
+        deltaPosition: { x: number; y: number }
     ) => {
+        const teamPlayer = teamPlayers.find(
+            teamPlayer => teamPlayer.id === teamPlayerId
+        );
+
+        if (!teamPlayer) {
+            throw new Error('팀 플레이어 ID로 팀 플레이어를 찾을 수 없습니다.');
+        }
+
+        if (!teamPlayer.marker) {
+            throw new Error('팀 플레이어의 마커를 찾을 수 없습니다.');
+        }
+
+        const position = {
+            x: teamPlayer.marker.position.x + deltaPosition.x,
+            y: teamPlayer.marker.position.y + deltaPosition.y,
+        };
+
         const formData = new FormData();
         formData.set('markerId', markerId);
         formData.set('position', JSON.stringify(position));
