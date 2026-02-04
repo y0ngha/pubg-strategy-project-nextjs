@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCircleMutation';
 import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCircleMutation';
+import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
-export function useCircleEvent(strategyId: string) {
+export function useCircleEvent(
+    strategyId: string,
+    circles: CircleResponseDto[]
+) {
     const { createCircle: createCircleMutation } =
         useCreateCircleMutation(strategyId);
     const { updateCircle: updateCircleMutation } =
@@ -35,11 +39,22 @@ export function useCircleEvent(strategyId: string) {
 
     const moveCircle = (
         circleId: string,
-        position: { x: number; y: number }
+        deltaPosition: { x: number; y: number }
     ) => {
+        const circle = circles.find(circle => circle.id === circleId);
+
+        if (!circle) {
+            throw new Error('적 팀 ID로 적 팀을 찾을 수 없습니다.');
+        }
+
+        const position = {
+            x: circle.centerPosition.x + deltaPosition.x,
+            y: circle.centerPosition.y + deltaPosition.y,
+        };
+
         const formData = new FormData();
         formData.set('circleId', circleId);
-        formData.set('position', JSON.stringify(position));
+        formData.set('centerPosition', JSON.stringify(position));
 
         updateCircleMutation(formData);
     };
