@@ -5,7 +5,7 @@ import React, { ReactNode, Ref, useRef, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useResizeObserver';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleWheelZoomControl';
-import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKovnaHandleDrag';
+import { useKovnaHandleMapDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKovnaHandleMapDrag';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
@@ -37,7 +37,7 @@ function StrategyCanvas({
 
     const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
-    const { handleDragBound, handleDragEnd } = useKovnaHandleDrag(scale, {
+    const { handleDragBound, handleDragEnd } = useKovnaHandleMapDrag(scale, {
         width,
         height,
     });
