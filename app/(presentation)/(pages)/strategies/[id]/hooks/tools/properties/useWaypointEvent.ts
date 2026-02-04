@@ -65,7 +65,7 @@ export function useWaypointEvent(
         formData.set('positions', JSON.stringify(positions));
 
         if (existingWaypoint) {
-            createWaypointMutation(formData);
+            updateWaypointMutation(formData);
         } else {
             createWaypointMutation(formData);
         }
