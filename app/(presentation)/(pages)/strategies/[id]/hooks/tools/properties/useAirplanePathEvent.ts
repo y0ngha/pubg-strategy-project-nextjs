@@ -100,19 +100,31 @@ export function useAirplanePathEvent(
         }
     };
 
-    const changeAirplanePath = (
-        startPosition: { x: number; y: number },
-        endPosition: { x: number; y: number }
-    ) => {
+    const moveAirplanePath = (deltaPosition: { x: number; y: number }) => {
+        if (!airplanePath) {
+            throw new Error('비행기 동선이 존재하지 않습니다.');
+        }
+
+        const startPosition = {
+            x: airplanePath.startPosition.x + deltaPosition.x,
+            y: airplanePath.startPosition.y + deltaPosition.y,
+        };
+
+        const endPosition = {
+            x: airplanePath.endPosition.x + deltaPosition.x,
+            y: airplanePath.endPosition.y + deltaPosition.y,
+        };
+
         setStartPosition(startPosition);
         setEndPosition(endPosition);
-        saveAirplanePath(startPosition, endPosition);
+
+        updateAirplanePath(airplanePath.id, startPosition, endPosition);
     };
 
     return {
         clickAirplanePath,
         startPosition,
         endPosition,
-        changeAirplanePath,
+        moveAirplanePath,
     };
 }
