@@ -2,14 +2,9 @@ import { useState } from 'react';
 import { useCreateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateAirplanePathMutation';
 import { useUpdateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateAirplanePathMutation';
 
-const WAITING_FOR_START_POSITION = 0;
-const WAITING_FOR_END_POSITION = 1;
-
-type Step = typeof WAITING_FOR_START_POSITION | typeof WAITING_FOR_END_POSITION;
-
 export function useAirplanePathEvent(
     strategyId: string,
-    position?: {
+    initialPosition?: {
         startPosition: {
             x: number;
             y: number;
@@ -23,7 +18,7 @@ export function useAirplanePathEvent(
     const { createAirplanePath } = useCreateAirplanePathMutation(strategyId);
     const { updateAirplanePath } = useUpdateAirplanePathMutation(strategyId);
 
-    const isFirstCreate = position === undefined;
+    const isFirstCreate = initialPosition === undefined;
 
     const [startPosition, setStartPosition] = useState<
         | {
@@ -31,7 +26,7 @@ export function useAirplanePathEvent(
               y: number;
           }
         | undefined
-    >(position?.startPosition);
+    >(initialPosition?.startPosition);
 
     const [endPosition, setEndPosition] = useState<
         | {
@@ -39,17 +34,7 @@ export function useAirplanePathEvent(
               y: number;
           }
         | undefined
-    >(position?.endPosition);
-
-    const [step, setStep] = useState<Step>(WAITING_FOR_START_POSITION);
-
-    const nextStep = () => {
-        setStep(prevState =>
-            prevState === WAITING_FOR_START_POSITION
-                ? WAITING_FOR_END_POSITION
-                : WAITING_FOR_START_POSITION
-        );
-    };
+    >(initialPosition?.endPosition);
 
     const confirmOnSuccessCallbackHandler = (data: {
         startPosition: { x: number; y: number };
@@ -60,38 +45,48 @@ export function useAirplanePathEvent(
     };
 
     const confirmOnErrorCallbackHandler = () => {
-        setStartPosition(position?.startPosition);
-        setEndPosition(position?.endPosition);
+        setStartPosition(initialPosition?.startPosition);
+        setEndPosition(initialPosition?.endPosition);
     };
 
-    const airplanePathConfirm = () => {
+    const saveAirplanePath = (
+        startPosition: {
+            x: number;
+            y: number;
+        },
+        endPosition: {
+            x: number;
+            y: number;
+        }
+    ) => {
         const formData = new FormData();
         formData.set('startPosition', JSON.stringify(startPosition));
         formData.set('endPosition', JSON.stringify(endPosition));
 
+        const callbackOption = {
+            onSuccess: confirmOnSuccessCallbackHandler,
+            onError: confirmOnErrorCallbackHandler,
+        };
+
         if (isFirstCreate) {
-            createAirplanePath(formData, {
-                onSuccess: confirmOnSuccessCallbackHandler,
-                onError: confirmOnErrorCallbackHandler,
-            });
+            createAirplanePath(formData, callbackOption);
         } else {
-            updateAirplanePath(formData, {
-                onSuccess: confirmOnSuccessCallbackHandler,
-                onError: confirmOnErrorCallbackHandler,
-            });
+            updateAirplanePath(formData, callbackOption);
         }
     };
 
     const clickAirplanePath = (position: { x: number; y: number }) => {
-        if (step === WAITING_FOR_START_POSITION) {
+        if (!startPosition || (startPosition && endPosition)) {
             setEndPosition(undefined);
             setStartPosition(position);
-        } else if (step === WAITING_FOR_END_POSITION) {
-            setEndPosition(position);
-            airplanePathConfirm();
+
+            return;
         }
 
-        nextStep();
+        if (startPosition && !endPosition) {
+            setEndPosition(position);
+            saveAirplanePath(startPosition, position);
+        }
     };
 
     return {
