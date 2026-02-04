@@ -2,7 +2,7 @@ import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Swords } from 'lucide-react';
 import useImage from 'use-image';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.compoenent';
+import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
 
 interface EnemyTeamPropertyProps {
