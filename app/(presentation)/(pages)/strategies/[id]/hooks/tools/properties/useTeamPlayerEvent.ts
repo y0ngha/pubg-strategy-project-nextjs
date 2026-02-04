@@ -1,10 +1,12 @@
 import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateTeamPlayerMutation';
 import { useState } from 'react';
+import { useUpdateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerMutation';
 
 export function useTeamPlayerEvent(strategyId: string) {
-    const { createTeamPlayer } = useCreateTeamPlayerMutation(strategyId);
     const { createTeamPlayer: createTeamPlayerMutation } =
         useCreateTeamPlayerMutation(strategyId);
+    const { updateTeamPlayer: updateTeamPlayerMutation } =
+        useUpdateTeamPlayerMutation(strategyId);
 
     const [selectedTeamPlayerId, setSelectedTeamPlayerId] = useState<
         string | undefined
@@ -15,6 +17,17 @@ export function useTeamPlayerEvent(strategyId: string) {
         formData.set('position', JSON.stringify(position));
 
         createTeamPlayerMutation(formData);
+    };
+
+    const updateTeamPlayer = (
+        teamPlayerId: string,
+        position: { x: number; y: number }
+    ) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('position', JSON.stringify(position));
+
+        updateTeamPlayerMutation(formData);
     };
 
     const changeSelectedTeamPlayerId = (id: string) => {
@@ -28,8 +41,8 @@ export function useTeamPlayerEvent(strategyId: string) {
     };
 
     return {
-        teamPlayerCreate,
         createTeamPlayer,
+        updateTeamPlayer,
         selectedTeamPlayerId,
         changeSelectedTeamPlayerId,
     };
