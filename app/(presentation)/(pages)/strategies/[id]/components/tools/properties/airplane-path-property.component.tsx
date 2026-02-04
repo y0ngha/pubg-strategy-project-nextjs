@@ -3,6 +3,7 @@ import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
@@ -19,8 +20,20 @@ function AirplanePathProperty({
     const isDrawCompleted =
         startPosition !== undefined && endPosition !== undefined;
 
+    const iconColor = '#fbbf24';
+
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
+
     const { url, center } = useLucideIconToSvgUrl(Plane, {
-        color: '#fbbf24',
+        color: iconColor,
         size: 128,
         strokeWidth: 1,
         fill: true,
@@ -45,7 +58,13 @@ function AirplanePathProperty({
 
     if (isDrawCompleted) {
         return (
-            <Group x={0} y={0} listening={isSelectable}>
+            <Group
+                x={0}
+                y={0}
+                listening={isSelectable}
+                onMouseLeave={hoverHandleMouseLeave}
+                onMouseEnter={hoverHandleMouseEnter}
+            >
                 <Arrow
                     points={[
                         startPosition.x,
@@ -53,14 +72,18 @@ function AirplanePathProperty({
                         endPosition.x,
                         endPosition.y,
                     ]}
-                    stroke={'#fbbf24'}
-                    fill={'#fbbf24'}
+                    stroke={iconColor}
+                    fill={iconColor}
                     strokeWidth={32}
                     pointerLength={32}
                     pointerWidth={32}
                     dash={[30, 30]}
                     opacity={0.9}
-                    listening={false}
+                    scaleX={scaleX}
+                    scaleY={scaleY}
+                    shadowBlur={shadowBlur}
+                    shadowColor={shadowColor}
+                    shadowOpacity={shadowOpacity}
                 />
 
                 {planeImage && (
@@ -71,6 +94,11 @@ function AirplanePathProperty({
                         offsetX={center}
                         offsetY={center}
                         alt={'비행기 동선 시작'}
+                        scaleX={scaleX}
+                        scaleY={scaleY}
+                        shadowBlur={shadowBlur}
+                        shadowColor={shadowColor}
+                        shadowOpacity={shadowOpacity}
                     />
                 )}
             </Group>

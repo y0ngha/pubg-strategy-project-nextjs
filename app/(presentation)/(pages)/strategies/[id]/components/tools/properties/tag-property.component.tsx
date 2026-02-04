@@ -4,8 +4,6 @@ import useImage from 'use-image';
 import { Tag } from 'lucide-react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useState } from 'react';
-import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleCursorChange';
-import { KonvaEventObject } from 'konva/lib/Node';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface TagPropertyProps {
@@ -16,20 +14,19 @@ interface TagPropertyProps {
 }
 
 function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
+    const iconColor = '#A855F7';
+
     const [isOpen, setIsOpen] = useState(false);
 
     const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer', 'default');
-
-    const {
-        isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-    } = useKonvaHandleHover();
-
-    const iconColor = '#A855F7';
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
 
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,
@@ -40,16 +37,6 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
 
     const [tagImage] = useImage(url ?? '');
 
-    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseEnter();
-        cursorHandleMouseEnter(event);
-    };
-
-    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseLeave();
-        cursorHandleMouseLeave(event);
-    };
-
     const handleClick = () => {
         setIsOpen(prevState => !prevState);
     };
@@ -59,8 +46,8 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
             x={0}
             y={0}
             listening={isSelectable}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
             onClick={handleClick}
         >
             <Image
@@ -69,11 +56,11 @@ function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
                 y={y}
                 offsetX={center}
                 offsetY={center}
-                scaleX={isHovered ? 1.0 : 0.8}
-                scaleY={isHovered ? 1.0 : 0.8}
-                shadowColor={iconColor}
-                shadowBlur={isHovered ? 15 : 0}
-                shadowOpacity={0.8}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowColor={shadowColor}
+                shadowBlur={shadowBlur}
+                shadowOpacity={shadowOpacity}
                 alt={'태그 이미지'}
             />
 

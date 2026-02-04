@@ -2,6 +2,7 @@
 
 import { Arrow, Circle, Group, Line } from 'react-konva';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface WaypointPropertyProps {
     positions: { x: number; y: number }[];
@@ -18,6 +19,16 @@ function WaypointProperty({
     isDrawing,
     isSelectable,
 }: WaypointPropertyProps) {
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(color);
+
     const flattenedPoints = positions.flatMap(position => [
         position.x,
         position.y,
@@ -37,7 +48,13 @@ function WaypointProperty({
     }
 
     return (
-        <Group x={0} y={0} listening={isSelectable}>
+        <Group
+            x={0}
+            y={0}
+            listening={isSelectable}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
+        >
             <Line
                 points={flattenedPoints}
                 stroke={color}
@@ -73,6 +90,11 @@ function WaypointProperty({
                             fill={circleBackgroundColor}
                             stroke={color}
                             strokeWidth={4}
+                            scaleX={scaleX}
+                            scaleY={scaleY}
+                            shadowBlur={shadowBlur}
+                            shadowColor={shadowColor}
+                            shadowOpacity={shadowOpacity}
                         />
 
                         {((!isLast && !isDrawing) || isDrawing) && (
@@ -86,11 +108,24 @@ function WaypointProperty({
                                 rotation={rotation}
                                 offsetX={0}
                                 offsetY={0}
+                                scaleX={scaleX}
+                                scaleY={scaleY}
+                                shadowBlur={shadowBlur}
+                                shadowColor={shadowColor}
+                                shadowOpacity={shadowOpacity}
                             />
                         )}
 
                         {isLast && !isDrawing && (
-                            <Circle radius={radius / 2} fill={color} />
+                            <Circle
+                                radius={radius / 2}
+                                fill={color}
+                                scaleX={scaleX}
+                                scaleY={scaleY}
+                                shadowBlur={shadowBlur}
+                                shadowColor={shadowColor}
+                                shadowOpacity={shadowOpacity}
+                            />
                         )}
                     </Group>
                 );

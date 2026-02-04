@@ -4,6 +4,7 @@ import { Swords } from 'lucide-react';
 import useImage from 'use-image';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface EnemyTeamPropertyProps {
     x: number;
@@ -18,8 +19,20 @@ function EnemyTeamProperty({
     teamLabel,
     isSelectable,
 }: EnemyTeamPropertyProps) {
+    const iconColor = '#ffffff';
+
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
+
     const { url, center } = useLucideIconToSvgUrl(Swords, {
-        color: '#ffffff',
+        color: iconColor,
         size: 64,
         strokeWidth: 2,
         fill: false,
@@ -30,7 +43,13 @@ function EnemyTeamProperty({
     const radius = 50;
 
     return (
-        <Group x={0} y={0} listening={isSelectable}>
+        <Group
+            x={0}
+            y={0}
+            listening={isSelectable}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
+        >
             <Circle
                 x={x}
                 y={y}
@@ -38,9 +57,11 @@ function EnemyTeamProperty({
                 fill={'rgba(239, 68, 68, 0.2)'}
                 stroke={'#ef4444'}
                 strokeWidth={1}
-                shadowColor={'black'}
-                shadowBlur={10}
-                shadowOpacity={0.3}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
             />
 
             <Image
@@ -49,8 +70,11 @@ function EnemyTeamProperty({
                 image={enemyImage}
                 offsetX={center}
                 offsetY={center}
-                scaleX={0.8}
-                scaleY={0.8}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
                 alt={'적 팀'}
             />
 

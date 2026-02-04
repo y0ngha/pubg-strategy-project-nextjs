@@ -1,9 +1,10 @@
 'use client';
 
-import { Group, Layer, Shape } from 'react-konva';
+import { Circle, Group, Layer, Shape } from 'react-konva';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 import React from 'react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface CirclePropertyProps {
     x: number;
@@ -20,11 +21,20 @@ function CircleProperty({
     color,
     isSelectable,
 }: CirclePropertyProps) {
+    const {
+        isHovered,
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(color);
+
     return (
-        <Group x={0} y={0} listening={isSelectable}>
+        <Group x={0} y={0}>
             <Shape
+                listening={false}
                 fill={color}
-                listening={true}
                 sceneFunc={(context, shape) => {
                     context.beginPath();
 
@@ -36,6 +46,23 @@ function CircleProperty({
                     context.fillStrokeShape(shape);
                 }}
                 fillRule={'evenodd'}
+            />
+
+            <Circle
+                listening={isSelectable}
+                x={x}
+                y={y}
+                radius={radius}
+                stroke={'#ffffff'}
+                strokeWidth={isHovered ? 4 : 2}
+                dash={[10, 10]}
+                fillEnabled={false}
+                hitStrokeWidth={50}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
+                onMouseLeave={hoverHandleMouseLeave}
+                onMouseEnter={hoverHandleMouseEnter}
             />
         </Group>
     );

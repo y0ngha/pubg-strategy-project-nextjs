@@ -2,13 +2,11 @@ import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
-import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleCursorChange';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
-import { KonvaEventObject } from 'konva/lib/Node';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -31,18 +29,17 @@ function TeamPlayerProperty({
     isClicked,
     onClick,
 }: TeamPlayerPropertyProps) {
-    const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer');
+    const iconColor = '#ffffff';
 
     const {
-        isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-    } = useKonvaHandleHover();
-
-    const iconColor = '#ffffff';
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
 
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: iconColor,
@@ -55,16 +52,6 @@ function TeamPlayerProperty({
 
     const radius = 50;
 
-    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseEnter();
-        cursorHandleMouseEnter(event);
-    };
-
-    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseLeave();
-        cursorHandleMouseLeave(event);
-    };
-
     const handleClick = () => {
         onClick(id);
     };
@@ -75,20 +62,22 @@ function TeamPlayerProperty({
             y={0}
             listening={isSelectable}
             onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
         >
             <Circle
                 x={x}
                 y={y}
-                radius={radius}
-                fill={isClicked ? '#00000033' : `${color}33`}
-                stroke={isClicked ? '#000000' : color}
-                strokeWidth={1}
-                shadowColor={'black'}
-                shadowBlur={10}
-                shadowOpacity={0.3}
+                radius={isClicked ? radius + 20 : radius}
+                fill={`${color}33`}
+                stroke={color}
+                strokeWidth={isClicked ? 3 : 1}
                 dash={isClicked ? [30, 30] : undefined}
+                scaleX={isClicked ? 1.2 : scaleX}
+                scaleY={isClicked ? 1.2 : scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
             />
 
             <Image
@@ -97,10 +86,11 @@ function TeamPlayerProperty({
                 y={y}
                 offsetX={center}
                 offsetY={center}
-                scaleX={isHovered ? 1.0 : 0.8}
-                scaleY={isHovered ? 1.0 : 0.8}
-                shadowColor={iconColor}
-                shadowBlur={isHovered ? 15 : 0}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
                 alt={`팀 플레이어 - ${priority}`}
             />
 

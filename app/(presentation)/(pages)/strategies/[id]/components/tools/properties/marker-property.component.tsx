@@ -3,6 +3,7 @@ import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/
 import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 
 interface MarkerPropertyProps {
     x: number;
@@ -19,6 +20,16 @@ function MarkerProperty({
     color,
     isSelectable,
 }: MarkerPropertyProps) {
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(color);
+
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
         size: 112,
@@ -29,15 +40,24 @@ function MarkerProperty({
     const [markerImage] = useImage(url ?? '');
 
     return (
-        <Group x={0} y={0} listening={isSelectable}>
+        <Group
+            x={0}
+            y={0}
+            listening={isSelectable}
+            onMouseLeave={hoverHandleMouseLeave}
+            onMouseEnter={hoverHandleMouseEnter}
+        >
             <Image
                 x={x}
                 y={y}
                 image={markerImage}
                 offsetX={center}
                 offsetY={center}
-                scaleX={0.8}
-                scaleY={0.8}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
                 alt={`팀 플레이어 마커 - ${priority}`}
             />
         </Group>
