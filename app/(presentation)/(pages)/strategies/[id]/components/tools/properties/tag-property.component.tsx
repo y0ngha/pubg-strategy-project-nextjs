@@ -12,9 +12,10 @@ interface TagPropertyProps {
     x: number;
     y: number;
     content: string;
+    isSelectable: boolean;
 }
 
-function TagProperty({ x, y, content }: TagPropertyProps) {
+function TagProperty({ x, y, content, isSelectable }: TagPropertyProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const {
@@ -57,6 +58,7 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
         <Group
             x={0}
             y={0}
+            listening={isSelectable}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
@@ -103,7 +105,10 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
 
 TagProperty.displayName = 'TagProperty';
 
-function TagsLayer({ tags }: Pick<StrategyBodyProps, 'tags'>) {
+function TagsLayer({
+    tags,
+    isSelectable,
+}: Pick<TagPropertyProps, 'isSelectable'> & Pick<StrategyBodyProps, 'tags'>) {
     return (
         <Layer>
             {tags.map(field => (
@@ -112,6 +117,7 @@ function TagsLayer({ tags }: Pick<StrategyBodyProps, 'tags'>) {
                     x={field.position.x}
                     y={field.position.y}
                     content={field.content}
+                    isSelectable={isSelectable}
                 />
             ))}
         </Layer>

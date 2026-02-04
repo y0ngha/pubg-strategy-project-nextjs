@@ -18,9 +18,16 @@ interface CommentPropertyProps {
         commentWindowPosition: { x: number; y: number },
         mapClickPosition: { x: number; y: number }
     ) => void;
+    isSelectable: boolean;
 }
 
-function CommentProperty({ id, x, y, onClick }: CommentPropertyProps) {
+function CommentProperty({
+    id,
+    x,
+    y,
+    onClick,
+    isSelectable,
+}: CommentPropertyProps) {
     const {
         handleMouseLeave: cursorHandleMouseLeave,
         handleMouseEnter: cursorHandleMouseEnter,
@@ -67,6 +74,7 @@ function CommentProperty({ id, x, y, onClick }: CommentPropertyProps) {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
+            listening={isSelectable}
         >
             <Image
                 image={commentImage}
@@ -90,13 +98,9 @@ CommentProperty.displayName = 'CommentProperty';
 function CommentsLayer({
     comments,
     onClick,
-}: {
-    onClick: (
-        id: string,
-        commentWindowPosition: { x: number; y: number },
-        mapClickPosition: { x: number; y: number }
-    ) => void;
-} & Pick<StrategyBodyProps, 'comments'>) {
+    isSelectable,
+}: Pick<CommentPropertyProps, 'onClick' | 'isSelectable'> &
+    Pick<StrategyBodyProps, 'comments'>) {
     return (
         <Layer>
             {comments.map(field => (
@@ -106,6 +110,7 @@ function CommentsLayer({
                     x={field.position.x}
                     y={field.position.y}
                     onClick={onClick}
+                    isSelectable={isSelectable}
                 />
             ))}
         </Layer>

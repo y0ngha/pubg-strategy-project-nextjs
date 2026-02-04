@@ -8,6 +8,7 @@ interface WaypointPropertyProps {
     priority: number;
     color: string;
     isDrawing: boolean;
+    isSelectable: boolean;
 }
 
 function WaypointProperty({
@@ -15,6 +16,7 @@ function WaypointProperty({
     priority,
     color,
     isDrawing,
+    isSelectable,
 }: WaypointPropertyProps) {
     const flattenedPoints = positions.flatMap(position => [
         position.x,
@@ -35,7 +37,7 @@ function WaypointProperty({
     }
 
     return (
-        <Group x={0} y={0}>
+        <Group x={0} y={0} listening={isSelectable}>
             <Line
                 points={flattenedPoints}
                 stroke={color}

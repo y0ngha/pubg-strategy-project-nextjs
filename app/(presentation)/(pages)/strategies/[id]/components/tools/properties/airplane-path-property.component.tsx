@@ -7,11 +7,13 @@ import React from 'react';
 interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
+    isSelectable: boolean;
 }
 
 function AirplanePathProperty({
     startPosition,
     endPosition,
+    isSelectable,
 }: AirplanePathPropertyProps) {
     const isDrawing = startPosition !== undefined && endPosition === undefined;
     const isDrawCompleted =
@@ -28,7 +30,7 @@ function AirplanePathProperty({
 
     if (isDrawing) {
         return (
-            <Group>
+            <Group x={0} y={0} listening={false}>
                 <Image
                     image={planeImage}
                     x={startPosition.x}
@@ -43,7 +45,7 @@ function AirplanePathProperty({
 
     if (isDrawCompleted) {
         return (
-            <Group x={0} y={0}>
+            <Group x={0} y={0} listening={isSelectable}>
                 <Arrow
                     points={[
                         startPosition.x,
@@ -83,15 +85,14 @@ AirplanePathProperty.displayName = 'AirplanePathProperty';
 function AirplanePathLayer({
     startPosition,
     endPosition,
-}: {
-    startPosition?: { x: number; y: number };
-    endPosition?: { x: number; y: number };
-}) {
+    isSelectable,
+}: AirplanePathPropertyProps) {
     return (
         <Layer>
             <AirplanePathProperty
                 startPosition={startPosition}
                 endPosition={endPosition}
+                isSelectable={isSelectable}
             />
         </Layer>
     );

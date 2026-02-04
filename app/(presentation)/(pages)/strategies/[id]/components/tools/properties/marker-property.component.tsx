@@ -9,9 +9,16 @@ interface MarkerPropertyProps {
     y: number;
     priority: number;
     color: string;
+    isSelectable: boolean;
 }
 
-function MarkerProperty({ x, y, priority, color }: MarkerPropertyProps) {
+function MarkerProperty({
+    x,
+    y,
+    priority,
+    color,
+    isSelectable,
+}: MarkerPropertyProps) {
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
         size: 112,
@@ -22,7 +29,7 @@ function MarkerProperty({ x, y, priority, color }: MarkerPropertyProps) {
     const [markerImage] = useImage(url ?? '');
 
     return (
-        <Group x={0} y={0}>
+        <Group x={0} y={0} listening={isSelectable}>
             <Image
                 x={x}
                 y={y}

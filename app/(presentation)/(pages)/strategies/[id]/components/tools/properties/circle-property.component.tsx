@@ -10,11 +10,18 @@ interface CirclePropertyProps {
     y: number;
     radius: number;
     color: string;
+    isSelectable: boolean;
 }
 
-function CircleProperty({ x, y, radius, color }: CirclePropertyProps) {
+function CircleProperty({
+    x,
+    y,
+    radius,
+    color,
+    isSelectable,
+}: CirclePropertyProps) {
     return (
-        <Group x={0} y={0}>
+        <Group x={0} y={0} listening={isSelectable}>
             <Shape
                 fill={color}
                 listening={true}
@@ -36,7 +43,11 @@ function CircleProperty({ x, y, radius, color }: CirclePropertyProps) {
 
 CircleProperty.displayName = 'CircleProperty';
 
-function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
+function CirclesLayer({
+    circles,
+    isSelectable,
+}: Pick<CirclePropertyProps, 'isSelectable'> &
+    Pick<StrategyBodyProps, 'circles'>) {
     return (
         <Layer>
             {circles.map(field => (
@@ -46,6 +57,7 @@ function CirclesLayer({ circles }: Pick<StrategyBodyProps, 'circles'>) {
                     radius={field.radius}
                     x={field.centerPosition.x}
                     y={field.centerPosition.y}
+                    isSelectable={isSelectable}
                 />
             ))}
         </Layer>

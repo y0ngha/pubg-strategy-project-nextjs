@@ -16,9 +16,9 @@ interface TeamPlayerPropertyProps {
     y: number;
     priority: number;
     color: string;
-    clickable: boolean;
     isClicked: boolean;
     onClick: (id: string) => void;
+    isSelectable: boolean;
 }
 
 function TeamPlayerProperty({
@@ -27,7 +27,7 @@ function TeamPlayerProperty({
     y,
     priority,
     color,
-    clickable,
+    isSelectable,
     isClicked,
     onClick,
 }: TeamPlayerPropertyProps) {
@@ -73,7 +73,7 @@ function TeamPlayerProperty({
         <Group
             x={0}
             y={0}
-            listening={clickable}
+            listening={isSelectable}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -131,18 +131,18 @@ TeamPlayerProperty.displayName = 'TeamPlayerProperty';
 
 function TeamPlayersLayer({
     teamPlayers,
-    clickable,
+    isSelectable,
     selectedTeamPlayerId,
     changeSelectedTeamPlayerId,
     isWaypointDrawing,
     waypointClickedPositions,
 }: {
-    clickable: boolean;
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
     isWaypointDrawing: boolean;
     waypointClickedPositions: { x: number; y: number }[];
-} & Pick<StrategyBodyProps, 'teamPlayers'>) {
+} & Pick<TeamPlayerPropertyProps, 'isSelectable'> &
+    Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <Layer>
             {teamPlayers.map(field => {
@@ -154,7 +154,7 @@ function TeamPlayersLayer({
                             y={field.position.y}
                             priority={field.priority}
                             color={field.color}
-                            clickable={clickable}
+                            isSelectable={isSelectable}
                             isClicked={field.id === selectedTeamPlayerId}
                             onClick={id => {
                                 changeSelectedTeamPlayerId(id);
@@ -166,6 +166,7 @@ function TeamPlayersLayer({
                                 priority={field.priority}
                                 x={field.marker.position.x}
                                 y={field.marker.position.y}
+                                isSelectable={isSelectable}
                             />
                         )}
                         <WaypointProperty
@@ -178,6 +179,7 @@ function TeamPlayersLayer({
                             color={field.color}
                             priority={field.priority}
                             isDrawing={isWaypointDrawing}
+                            isSelectable={isSelectable}
                         />
                     </React.Fragment>
                 );

@@ -9,9 +9,15 @@ interface EnemyTeamPropertyProps {
     x: number;
     y: number;
     teamLabel: string;
+    isSelectable: boolean;
 }
 
-function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
+function EnemyTeamProperty({
+    x,
+    y,
+    teamLabel,
+    isSelectable,
+}: EnemyTeamPropertyProps) {
     const { url, center } = useLucideIconToSvgUrl(Swords, {
         color: '#ffffff',
         size: 64,
@@ -24,7 +30,7 @@ function EnemyTeamProperty({ x, y, teamLabel }: EnemyTeamPropertyProps) {
     const radius = 50;
 
     return (
-        <Group x={0} y={0} listening={false}>
+        <Group x={0} y={0} listening={isSelectable}>
             <Circle
                 x={x}
                 y={y}
@@ -75,7 +81,9 @@ EnemyTeamProperty.displayName = 'EnemyTeamProperty';
 
 function EnemyTeamsLayer({
     enemyTeams,
-}: Pick<StrategyBodyProps, 'enemyTeams'>) {
+    isSelectable,
+}: Pick<EnemyTeamPropertyProps, 'isSelectable'> &
+    Pick<StrategyBodyProps, 'enemyTeams'>) {
     return (
         <Layer>
             {enemyTeams.map(field => (
@@ -84,6 +92,7 @@ function EnemyTeamsLayer({
                     x={field.position.x}
                     y={field.position.y}
                     teamLabel={field.teamLabel}
+                    isSelectable={isSelectable}
                 />
             ))}
         </Layer>
