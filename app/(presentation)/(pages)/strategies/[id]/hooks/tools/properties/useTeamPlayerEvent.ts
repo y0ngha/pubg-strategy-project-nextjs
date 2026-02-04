@@ -19,7 +19,7 @@ export function useTeamPlayerEvent(strategyId: string) {
         createTeamPlayerMutation(formData);
     };
 
-    const updateTeamPlayer = (
+    const moveTeamPlayer = (
         teamPlayerId: string,
         position: { x: number; y: number }
     ) => {
@@ -42,7 +42,7 @@ export function useTeamPlayerEvent(strategyId: string) {
 
     return {
         createTeamPlayer,
-        updateTeamPlayer,
+        moveTeamPlayer,
         selectedTeamPlayerId,
         changeSelectedTeamPlayerId,
     };
