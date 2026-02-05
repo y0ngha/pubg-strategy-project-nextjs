@@ -1,10 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 
-import {
-    AirplanePathNotFoundException,
-    StrategyNotFoundException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     DeleteAirplanePathRequestDto,
     DeleteAirplanePathRequestSchema,
@@ -25,10 +22,6 @@ export class DeleteAirplanePathUseCase {
 
         if (!strategy) {
             throw new StrategyNotFoundException();
-        }
-
-        if (!strategy.airplanePath?.id.equals(airplanePathId)) {
-            throw new AirplanePathNotFoundException();
         }
 
         strategy.removeAirplanePath(actorId, airplanePathId);
