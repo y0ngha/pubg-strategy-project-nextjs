@@ -1,5 +1,6 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    MarkerNotFoundException,
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
@@ -14,6 +15,7 @@ import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/del
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 
 describe('DeleteMarkerUseCase', () => {
     let useCase: DeleteMarkerUseCase;
@@ -25,6 +27,7 @@ describe('DeleteMarkerUseCase', () => {
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
+    let markerId: MarkerId;
     const positionX = 10;
     const positionY = 200;
     const position = { x: positionX, y: positionY };
@@ -44,11 +47,13 @@ describe('DeleteMarkerUseCase', () => {
 
         teamPlayerId = strategyFixture.teamPlayers[0].id;
 
-        strategyFixture.addTeamPlayerMarker(
+        const marker = strategyFixture.addTeamPlayerMarker(
             ownerId,
             teamPlayerId,
             Position.create(position.x, position.y)
         );
+
+        markerId = marker.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -58,6 +63,7 @@ describe('DeleteMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
         };
 
         // when & then
@@ -76,11 +82,31 @@ describe('DeleteMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: randomId.toString(),
+            markerId: markerId.toString(),
         };
 
         // when & then
         await expect(() => useCase.execute(dto)).rejects.toThrow(
             TeamPlayerNotFoundException
+        );
+        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
+    it('마커를 찾지 못하면, 에러를 던진다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = MarkerId.generate();
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            markerId: randomId.toString(),
+        };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            MarkerNotFoundException
         );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
@@ -93,6 +119,7 @@ describe('DeleteMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
         };
 
         // when
@@ -124,6 +151,7 @@ describe('DeleteMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
         };
 
         // When & Then

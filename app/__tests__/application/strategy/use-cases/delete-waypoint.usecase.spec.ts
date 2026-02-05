@@ -3,6 +3,7 @@ import {
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
     TeamPlayerNotFoundException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
@@ -14,6 +15,7 @@ import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
 
 describe('DeleteWaypointUseCase', () => {
     let useCase: DeleteWaypointUseCase;
@@ -25,6 +27,7 @@ describe('DeleteWaypointUseCase', () => {
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
+    let waypointId: WaypointId;
 
     const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
@@ -41,13 +44,19 @@ describe('DeleteWaypointUseCase', () => {
 
         teamPlayerId = strategyFixture.teamPlayers[0].id;
 
-        strategyFixture.addTeamPlayerWaypoint(ownerId, teamPlayerId, [
-            Position.create(50, 10),
-            Position.create(40, 10),
-            Position.create(30, 10),
-            Position.create(20, 10),
-            Position.create(10, 10),
-        ]);
+        const waypoint = strategyFixture.addTeamPlayerWaypoint(
+            ownerId,
+            teamPlayerId,
+            [
+                Position.create(50, 10),
+                Position.create(40, 10),
+                Position.create(30, 10),
+                Position.create(20, 10),
+                Position.create(10, 10),
+            ]
+        );
+
+        waypointId = waypoint.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -57,6 +66,7 @@ describe('DeleteWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
         };
 
         // when & then
@@ -75,11 +85,31 @@ describe('DeleteWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: randomId.toString(),
+            waypointId: waypointId.toString(),
         };
 
         // when & then
         await expect(() => useCase.execute(dto)).rejects.toThrow(
             TeamPlayerNotFoundException
+        );
+        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
+    it('웨이포인트를 찾지 못하면, 에러를 던진다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = WaypointId.generate();
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            teamPlayerId: teamPlayerId.toString(),
+            waypointId: randomId.toString(),
+        };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            WaypointNotFoundException
         );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
@@ -92,6 +122,7 @@ describe('DeleteWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
         };
 
         // when
@@ -123,6 +154,7 @@ describe('DeleteWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
         };
 
         // When & Then

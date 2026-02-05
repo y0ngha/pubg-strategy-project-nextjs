@@ -33,6 +33,8 @@ import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
+import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
+import { Marker } from '@domain/strategy/entities/marker.entity';
 
 describe('Strategy', () => {
     const ownerId = UserId.generate();
@@ -50,6 +52,16 @@ describe('Strategy', () => {
     let teamPlayer3Fixture: TeamPlayer;
     let teamPlayer4Fixture: TeamPlayer;
 
+    let marker1Fixture: Marker;
+    let marker2Fixture: Marker;
+    let marker3Fixture: Marker;
+    let marker4Fixture: Marker;
+
+    let waypoint1Fixture: Waypoint;
+    let waypoint2Fixture: Waypoint;
+    let waypoint3Fixture: Waypoint;
+    let waypoint4Fixture: Waypoint;
+
     let enemyTeam1Fixture: EnemyTeam;
     let enemyTeam2Fixture: EnemyTeam;
     let enemyTeam3Fixture: EnemyTeam;
@@ -58,7 +70,7 @@ describe('Strategy', () => {
     let circle1Fixture: Circle;
     let circle2Fixture: Circle;
 
-    let airplanePath: AirplanePath;
+    let airplanePathFixture: AirplanePath;
 
     let tagFixture: Tag;
 
@@ -100,6 +112,32 @@ describe('Strategy', () => {
             null
         );
 
+        marker1Fixture = teamPlayer1Fixture.addMarker(
+            Position.create(1000, 1000)
+        );
+        marker2Fixture = teamPlayer2Fixture.addMarker(
+            Position.create(1000, 1000)
+        );
+        marker3Fixture = teamPlayer3Fixture.addMarker(
+            Position.create(1000, 1000)
+        );
+        marker4Fixture = teamPlayer4Fixture.addMarker(
+            Position.create(1000, 1000)
+        );
+
+        waypoint1Fixture = teamPlayer1Fixture.addWaypoint([
+            Position.create(1000, 1000),
+        ]);
+        waypoint2Fixture = teamPlayer2Fixture.addWaypoint([
+            Position.create(1000, 1000),
+        ]);
+        waypoint3Fixture = teamPlayer3Fixture.addWaypoint([
+            Position.create(1000, 1000),
+        ]);
+        waypoint4Fixture = teamPlayer4Fixture.addWaypoint([
+            Position.create(1000, 1000),
+        ]);
+
         enemyTeam1Fixture = EnemyTeam.create(
             TeamLabel.create('A'),
             Position.create(10, 10)
@@ -126,7 +164,7 @@ describe('Strategy', () => {
             CirclePhase.create(2)
         );
 
-        airplanePath = AirplanePath.create(
+        airplanePathFixture = AirplanePath.create(
             Position.create(0, 0),
             Position.create(100, 100)
         );
@@ -188,7 +226,7 @@ describe('Strategy', () => {
                 enemyTeam4Fixture,
             ],
             [circle1Fixture, circle2Fixture],
-            airplanePath,
+            airplanePathFixture,
             [tagFixture],
             [strategyShareEditorFixture, strategyShareViewerFixture],
             [parentCommentFixutre, childCommentFixutre1, childCommentFixutre2],
@@ -269,7 +307,7 @@ describe('Strategy', () => {
                 teamPlayers,
                 enemyTeams,
                 circles,
-                airplanePath,
+                airplanePathFixture,
                 tags,
                 shares,
                 comments,
@@ -285,7 +323,7 @@ describe('Strategy', () => {
             expect(strategy.teamPlayers).toEqual(teamPlayers);
             expect(strategy.enemyTeams).toEqual(enemyTeams);
             expect(strategy.circles).toEqual(circles);
-            expect(strategy.airplanePath).toBe(airplanePath);
+            expect(strategy.airplanePath).toBe(airplanePathFixture);
             expect(strategy.tags).toEqual(tags);
             expect(strategy.shares).toEqual(shares);
             expect(strategy.comments).toEqual(comments);
@@ -612,6 +650,18 @@ describe('Strategy', () => {
                 const teamPlayerId1 = teamPlayer1Fixture.id;
                 const teamPlayerId2 = teamPlayer2Fixture.id;
 
+                // 기존에 마커가 존재해서 삭제하고 진행
+                strategyFixture.removeTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    marker1Fixture.id
+                );
+                strategyFixture.removeTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId2,
+                    marker2Fixture.id
+                );
+
                 // when
                 strategyFixture.addTeamPlayerMarker(
                     ownerId,
@@ -679,11 +729,6 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 마커가 수정된다.', () => {
                 // given
                 const teamPlayerId1 = teamPlayer1Fixture.id;
-                strategyFixture.addTeamPlayerMarker(
-                    ownerId,
-                    teamPlayerId1,
-                    markerPosition
-                );
                 const newMarkerPosition1 = Position.create(20, 20);
                 const newMarkerPosition2 = Position.create(30, 30);
                 const oldUpdatedAt = strategyFixture.updatedAt;
@@ -694,11 +739,13 @@ describe('Strategy', () => {
                 strategyFixture.updateTeamPlayerMarker(
                     ownerId,
                     teamPlayerId1,
+                    marker1Fixture.id,
                     newMarkerPosition1
                 );
                 strategyFixture.updateTeamPlayerMarker(
                     editorId,
                     teamPlayerId1,
+                    marker1Fixture.id,
                     newMarkerPosition2
                 );
 
@@ -714,12 +761,8 @@ describe('Strategy', () => {
             it('같은 포지션으로 업데이트하면, 무시된다.', () => {
                 // given
                 const teamPlayerId1 = teamPlayer1Fixture.id;
-                strategyFixture.addTeamPlayerMarker(
-                    ownerId,
-                    teamPlayerId1,
-                    markerPosition
-                );
                 const oldUpdatedAt = strategyFixture.updatedAt;
+                const markerPosition = marker1Fixture.position;
 
                 jest.advanceTimersByTime(1000);
 
@@ -727,6 +770,7 @@ describe('Strategy', () => {
                 strategyFixture.updateTeamPlayerMarker(
                     ownerId,
                     teamPlayerId1,
+                    marker1Fixture.id,
                     markerPosition
                 );
 
@@ -748,6 +792,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerMarker(
                         viewerId,
                         teamPlayerId,
+                        marker1Fixture.id,
                         markerPosition
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
@@ -756,6 +801,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerMarker(
                         strangerId,
                         teamPlayerId,
+                        marker1Fixture.id,
                         markerPosition
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
@@ -771,6 +817,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerMarker(
                         ownerId,
                         teamPlayerId,
+                        marker1Fixture.id,
                         markerPosition
                     )
                 ).toThrow(DeletedStrategyException);
@@ -780,23 +827,20 @@ describe('Strategy', () => {
         describe('RemoveTeamPlayerMarker', () => {
             it('전략에 대한 편집 권한이 있으면, 마커가 삭제된다.', () => {
                 // given
-                const markerPosition = Position.create(15, 15);
                 const teamPlayerId1 = teamPlayer1Fixture.id;
                 const teamPlayerId2 = teamPlayer2Fixture.id;
-                strategyFixture.addTeamPlayerMarker(
-                    ownerId,
-                    teamPlayerId1,
-                    markerPosition
-                );
-                strategyFixture.addTeamPlayerMarker(
-                    editorId,
-                    teamPlayerId2,
-                    markerPosition
-                );
 
                 // when
-                strategyFixture.removeTeamPlayerMarker(ownerId, teamPlayerId1);
-                strategyFixture.removeTeamPlayerMarker(editorId, teamPlayerId2);
+                strategyFixture.removeTeamPlayerMarker(
+                    ownerId,
+                    teamPlayerId1,
+                    marker1Fixture.id
+                );
+                strategyFixture.removeTeamPlayerMarker(
+                    editorId,
+                    teamPlayerId2,
+                    marker2Fixture.id
+                );
 
                 // then
                 expect(teamPlayer1Fixture.marker).toBeNull();
@@ -811,14 +855,16 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.removeTeamPlayerMarker(
                         viewerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        marker1Fixture.id
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
                     strategyFixture.removeTeamPlayerMarker(
                         strangerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        marker1Fixture.id
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
@@ -831,7 +877,8 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.removeTeamPlayerMarker(
                         ownerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        marker1Fixture.id
                     )
                 ).toThrow(DeletedStrategyException);
             });
@@ -848,6 +895,18 @@ describe('Strategy', () => {
                 // given
                 const teamPlayerId1 = teamPlayer1Fixture.id;
                 const teamPlayerId2 = teamPlayer2Fixture.id;
+
+                // 기존에 웨이포인트가 있어서 제거하고 시작
+                strategyFixture.removeTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId1,
+                    waypoint1Fixture.id
+                );
+                strategyFixture.removeTeamPlayerWaypoint(
+                    ownerId,
+                    teamPlayerId2,
+                    waypoint2Fixture.id
+                );
 
                 // when
                 strategyFixture.addTeamPlayerWaypoint(
@@ -921,11 +980,6 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 있으면, 웨이포인트가 수정된다.', () => {
                 // given
                 const teamPlayerId1 = teamPlayer1Fixture.id;
-                strategyFixture.addTeamPlayerWaypoint(
-                    ownerId,
-                    teamPlayerId1,
-                    waypointPositions
-                );
                 const newWaypointPositions1 = [Position.create(20, 20)];
                 const newWaypointPositions2 = [Position.create(30, 30)];
                 const oldUpdatedAt = strategyFixture.updatedAt;
@@ -936,11 +990,13 @@ describe('Strategy', () => {
                 strategyFixture.updateTeamPlayerWaypoint(
                     ownerId,
                     teamPlayerId1,
+                    waypoint1Fixture.id,
                     newWaypointPositions1
                 );
                 strategyFixture.updateTeamPlayerWaypoint(
                     editorId,
                     teamPlayerId1,
+                    waypoint1Fixture.id,
                     newWaypointPositions2
                 );
 
@@ -956,11 +1012,7 @@ describe('Strategy', () => {
             it('같은 포지션으로 업데이트하면, 무시된다.', () => {
                 // given
                 const teamPlayerId1 = teamPlayer1Fixture.id;
-                strategyFixture.addTeamPlayerWaypoint(
-                    ownerId,
-                    teamPlayerId1,
-                    waypointPositions
-                );
+                const waypointPositions = waypoint1Fixture.positions;
                 const oldUpdatedAt = strategyFixture.updatedAt;
 
                 jest.advanceTimersByTime(1000);
@@ -969,6 +1021,7 @@ describe('Strategy', () => {
                 strategyFixture.updateTeamPlayerWaypoint(
                     ownerId,
                     teamPlayerId1,
+                    waypoint1Fixture.id,
                     waypointPositions
                 );
 
@@ -990,6 +1043,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerWaypoint(
                         viewerId,
                         teamPlayerId,
+                        waypoint1Fixture.id,
                         waypointPositions
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
@@ -998,6 +1052,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerWaypoint(
                         strangerId,
                         teamPlayerId,
+                        waypoint1Fixture.id,
                         waypointPositions
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
@@ -1013,6 +1068,7 @@ describe('Strategy', () => {
                     strategyFixture.updateTeamPlayerWaypoint(
                         ownerId,
                         teamPlayerId,
+                        waypoint1Fixture.id,
                         waypointPositions
                     )
                 ).toThrow(DeletedStrategyException);
@@ -1022,32 +1078,19 @@ describe('Strategy', () => {
         describe('RemoveTeamPlayerWaypoint', () => {
             it('전략에 대한 편집 권한이 있으면, 웨이포인트가 삭제된다.', () => {
                 // given
-                const waypointPositions = [
-                    Position.create(1, 1),
-                    Position.create(1, 2),
-                    Position.create(1, 3),
-                ];
                 const teamPlayerId1 = teamPlayer1Fixture.id;
                 const teamPlayerId2 = teamPlayer2Fixture.id;
-                strategyFixture.addTeamPlayerWaypoint(
-                    ownerId,
-                    teamPlayerId1,
-                    waypointPositions
-                );
-                strategyFixture.addTeamPlayerWaypoint(
-                    editorId,
-                    teamPlayerId2,
-                    waypointPositions
-                );
 
                 // when
                 strategyFixture.removeTeamPlayerWaypoint(
                     ownerId,
-                    teamPlayerId1
+                    teamPlayerId1,
+                    waypoint1Fixture.id
                 );
                 strategyFixture.removeTeamPlayerWaypoint(
                     editorId,
-                    teamPlayerId2
+                    teamPlayerId2,
+                    waypoint2Fixture.id
                 );
 
                 // then
@@ -1063,14 +1106,16 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.removeTeamPlayerWaypoint(
                         viewerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        waypoint1Fixture.id
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
                     strategyFixture.removeTeamPlayerWaypoint(
                         strangerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        waypoint1Fixture.id
                     )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
@@ -1083,7 +1128,8 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.removeTeamPlayerWaypoint(
                         ownerId,
-                        teamPlayerId
+                        teamPlayerId,
+                        waypoint1Fixture.id
                     )
                 ).toThrow(DeletedStrategyException);
             });
@@ -1750,7 +1796,10 @@ describe('Strategy', () => {
 
             it('전략에 대한 편집 권한이 있고, 비행기 경로가 없다면, 비행기 경로가 추가된다.', () => {
                 // given
-                strategyFixture.removeAirplanePath(ownerId); // 기존에 strategyFixture에 airplanePath가 존재해서 제거 후 시작.
+                strategyFixture.removeAirplanePath(
+                    ownerId,
+                    airplanePathFixture.id
+                ); // 기존에 strategyFixture에 airplanePath가 존재해서 제거 후 시작.
 
                 const oldUpdatedAt = strategyFixture.updatedAt;
                 jest.advanceTimersByTime(1000);
@@ -1834,11 +1883,13 @@ describe('Strategy', () => {
                 // when
                 strategyFixture.updateAirplanePath(
                     ownerId,
+                    airplanePathFixture.id,
                     initalStartPosition,
                     initalEndPosition
                 );
                 strategyFixture.updateAirplanePath(
                     editorId,
+                    airplanePathFixture.id,
                     finalStartPosition,
                     finalEndPosition
                 );
@@ -1861,6 +1912,7 @@ describe('Strategy', () => {
                 const initalEndPosition = Position.create(1000, 1000);
                 strategyFixture.updateAirplanePath(
                     ownerId,
+                    airplanePathFixture.id,
                     initalStartPosition,
                     initalEndPosition
                 );
@@ -1871,6 +1923,7 @@ describe('Strategy', () => {
                 // when
                 strategyFixture.updateAirplanePath(
                     ownerId,
+                    airplanePathFixture.id,
                     initalStartPosition,
                     initalEndPosition
                 );
@@ -1889,12 +1942,16 @@ describe('Strategy', () => {
 
             it('비행기 경로가 없는 상태에서 업데이트를 요청하면, 에러를 던진다.', () => {
                 // given
-                strategyFixture.removeAirplanePath(ownerId);
+                strategyFixture.removeAirplanePath(
+                    ownerId,
+                    airplanePathFixture.id
+                );
 
                 // when & then
                 expect(() =>
                     strategyFixture.updateAirplanePath(
                         ownerId,
+                        airplanePathFixture.id,
                         finalStartPosition,
                         finalEndPosition
                     )
@@ -1906,6 +1963,7 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.updateAirplanePath(
                         viewerId,
+                        airplanePathFixture.id,
                         finalStartPosition,
                         finalEndPosition
                     )
@@ -1914,6 +1972,7 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.updateAirplanePath(
                         strangerId,
+                        airplanePathFixture.id,
                         finalStartPosition,
                         finalEndPosition
                     )
@@ -1928,6 +1987,7 @@ describe('Strategy', () => {
                 expect(() =>
                     strategyFixture.updateAirplanePath(
                         ownerId,
+                        airplanePathFixture.id,
                         finalStartPosition,
                         finalEndPosition
                     )
@@ -1936,18 +1996,12 @@ describe('Strategy', () => {
         });
 
         describe('DeleteAirplanePath', () => {
-            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 삭제된다..', () => {
-                // given
-                const initalStartPosition = Position.create(10, 10);
-                const initalEndPosition = Position.create(1000, 1000);
-                strategyFixture.updateAirplanePath(
-                    ownerId,
-                    initalStartPosition,
-                    initalEndPosition
-                );
-
+            it('전략에 대한 편집 권한이 있으면, 비행기 경로가 삭제된다.', () => {
                 // when
-                strategyFixture.removeAirplanePath(editorId);
+                strategyFixture.removeAirplanePath(
+                    editorId,
+                    airplanePathFixture.id
+                );
 
                 // then
                 expect(strategyFixture.airplanePath).toBeNull();
@@ -1956,11 +2010,17 @@ describe('Strategy', () => {
             it('전략에 대한 편집 권한이 없으면, 에러를 던진다.', () => {
                 // when & then
                 expect(() =>
-                    strategyFixture.removeAirplanePath(viewerId)
+                    strategyFixture.removeAirplanePath(
+                        viewerId,
+                        airplanePathFixture.id
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
 
                 expect(() =>
-                    strategyFixture.removeAirplanePath(strangerId)
+                    strategyFixture.removeAirplanePath(
+                        strangerId,
+                        airplanePathFixture.id
+                    )
                 ).toThrow(StrategyEditPermissionDeniedException);
             });
 
@@ -1970,7 +2030,10 @@ describe('Strategy', () => {
 
                 // when & then
                 expect(() =>
-                    strategyFixture.removeAirplanePath(ownerId)
+                    strategyFixture.removeAirplanePath(
+                        ownerId,
+                        airplanePathFixture.id
+                    )
                 ).toThrow(DeletedStrategyException);
             });
         });

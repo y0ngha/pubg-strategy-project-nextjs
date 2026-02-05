@@ -1,5 +1,6 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    AirplanePathNotFoundException,
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -12,6 +13,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { AirplanePathId } from '@domain/strategy/value-objects/airplane-path-id';
 
 describe('UpdateAirplanePathUseCase', () => {
     let useCase: UpdateAirplanePathUseCase;
@@ -22,6 +24,7 @@ describe('UpdateAirplanePathUseCase', () => {
     const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
+    let airplanePathId: AirplanePathId;
 
     const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
@@ -32,12 +35,14 @@ describe('UpdateAirplanePathUseCase', () => {
         useCase = new UpdateAirplanePathUseCase(mockStrategyRepository);
 
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
-        strategyFixture.addAirplanePath(
+        const airplanePath = strategyFixture.addAirplanePath(
             ownerId,
             Position.create(1000, 1000),
             Position.create(5000, 5000)
         );
+
         strategyId = strategyFixture.id;
+        airplanePathId = airplanePath.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -46,6 +51,7 @@ describe('UpdateAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
             startPosition: {
                 x: 10,
                 y: 10,
@@ -63,6 +69,32 @@ describe('UpdateAirplanePathUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
+    it('비행기 동선을 찾지 못하면, 에러를 던진다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = AirplanePathId.generate();
+
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            airplanePathId: randomId.toString(),
+            startPosition: {
+                x: 10,
+                y: 10,
+            },
+            endPosition: {
+                x: 100,
+                y: 100,
+            },
+        };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            AirplanePathNotFoundException
+        );
+        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
     it('비행기 동선이 수정된다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
@@ -70,6 +102,7 @@ describe('UpdateAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
             startPosition: {
                 x: 10,
                 y: 10,
@@ -109,6 +142,7 @@ describe('UpdateAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
             startPosition: {
                 x: 10,
                 y: 10,

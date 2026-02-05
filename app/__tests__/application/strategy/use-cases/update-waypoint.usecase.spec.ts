@@ -15,6 +15,7 @@ import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Position } from '@domain/strategy/value-objects/position';
 import { Email } from '@domain/shared/value-objects/email';
+import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
 
 describe('UpdateWaypointUseCase', () => {
     let useCase: UpdateWaypointUseCase;
@@ -26,6 +27,7 @@ describe('UpdateWaypointUseCase', () => {
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
+    let waypointId: TeamPlayerId;
     const positions = [
         {
             x: 10,
@@ -60,9 +62,18 @@ describe('UpdateWaypointUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTeamPlayer(ownerId, Position.create(1, 1));
+        const teamPlayer = strategyFixture.addTeamPlayer(
+            ownerId,
+            Position.create(1, 1)
+        );
+        teamPlayerId = teamPlayer.id;
 
-        teamPlayerId = strategyFixture.teamPlayers[0].id;
+        const waypoint = strategyFixture.addTeamPlayerWaypoint(
+            ownerId,
+            teamPlayerId,
+            [Position.create(1, 1)]
+        );
+        waypointId = waypoint.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -72,6 +83,7 @@ describe('UpdateWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
             positions: positions,
         };
 
@@ -91,6 +103,7 @@ describe('UpdateWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: randomId.toString(),
+            waypointId: waypointId.toString(),
             positions: positions,
         };
 
@@ -101,14 +114,16 @@ describe('UpdateWaypointUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('웨이포인트가 없으면, 에러를 던진다.', async () => {
+    it('웨이포인트를 못찾으면, 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = WaypointId.generate();
 
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: randomId.toString(),
             positions: positions,
         };
 
@@ -118,7 +133,7 @@ describe('UpdateWaypointUseCase', () => {
         );
     });
 
-    it('웨이포인트가 없을 때 웨이포인트가 추가된다.', async () => {
+    it('웨이포인트가 있을 때 웨이포인트가 수정된다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
 
@@ -126,12 +141,9 @@ describe('UpdateWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
             positions: positions,
         };
-
-        strategyFixture.addTeamPlayerWaypoint(ownerId, teamPlayerId, [
-            Position.create(10, 10),
-        ]);
 
         // when
         await useCase.execute(dto);
@@ -172,6 +184,7 @@ describe('UpdateWaypointUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
             positions: positions,
         };
 
