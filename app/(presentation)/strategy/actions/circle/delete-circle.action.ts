@@ -4,7 +4,11 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function deleteCircleAction(_: unknown, formData: FormData) {
+export type DeleteCircleAction = { circleId: string };
+
+export async function deleteCircleAction(
+    formData: FormData
+): Promise<DeleteCircleAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, circleId } = parseFormData(formData, [

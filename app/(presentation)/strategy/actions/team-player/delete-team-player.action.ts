@@ -4,7 +4,11 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/delete-team-player.usecase';
 
-export async function deleteTeamPlayerAction(_: unknown, formData: FormData) {
+export type DeleteTeamPlayerAction = { teamPlayerId: string };
+
+export async function deleteTeamPlayerAction(
+    formData: FormData
+): Promise<DeleteTeamPlayerAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId } = parseFormData(formData, [

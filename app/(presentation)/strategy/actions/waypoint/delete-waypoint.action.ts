@@ -4,26 +4,38 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
 
-export async function deleteWaypointAction(_: unknown, formData: FormData) {
+export type DeleteWaypointAction = { teamPlayerId: string; waypointId: string };
+
+export async function deleteWaypointAction(
+    formData: FormData
+): Promise<DeleteWaypointAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'strategyId',
-            error: '전략 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-        {
-            key: 'teamPlayerId',
-            error: '팀 플레이어 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-    ] as const);
+    const { userId, strategyId, teamPlayerId, waypointId } = parseFormData(
+        formData,
+        [
+            {
+                key: 'userId',
+                error: '유저 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'strategyId',
+                error: '전략 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'teamPlayerId',
+                error: '팀 플레이어 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'waypointId',
+                error: '웨이포인트 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+        ] as const
+    );
 
     const useCase = getService(DeleteWaypointUseCase);
 
@@ -31,6 +43,7 @@ export async function deleteWaypointAction(_: unknown, formData: FormData) {
         actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
+        waypointId: waypointId,
     };
 
     return await useCase.execute(dto);
