@@ -2,6 +2,7 @@ import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies
 import { useState } from 'react';
 import { useUpdateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTeamPlayerMutation';
 
 export function useTeamPlayerEvent(
     strategyId: string,
@@ -11,6 +12,8 @@ export function useTeamPlayerEvent(
         useCreateTeamPlayerMutation(strategyId);
     const { updateTeamPlayer: updateTeamPlayerMutation } =
         useUpdateTeamPlayerMutation(strategyId);
+    const { deleteTeamPlayer: deleteTeamPlayerMutation } =
+        useDeleteTeamPlayerMutation(strategyId);
 
     const [selectedTeamPlayerId, setSelectedTeamPlayerId] = useState<
         string | undefined

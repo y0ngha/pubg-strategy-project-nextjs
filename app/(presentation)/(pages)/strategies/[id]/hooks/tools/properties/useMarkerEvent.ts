@@ -2,6 +2,7 @@ import { useCreateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id
 import { toast } from 'react-toastify';
 import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
 
 export function useMarkerEvent(
     strategyId: string,
@@ -12,6 +13,8 @@ export function useMarkerEvent(
         useCreateMarkerMutation(strategyId);
     const { updateMarker: updateMarkerMutation } =
         useUpdateMarkerMutation(strategyId);
+    const { deleteMarker: deleteMarkerMutation } =
+        useDeleteMarkerMutation(strategyId);
 
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId

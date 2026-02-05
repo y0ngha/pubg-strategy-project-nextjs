@@ -2,6 +2,7 @@ import { useCreateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/
 import { useState } from 'react';
 import { useUpdateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateEnemyTeamMutation';
 import { EnemyTeamResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteEnemyTeamMutation';
 
 export function useEnemyTeamEvent(
     strategyId: string,
@@ -11,6 +12,8 @@ export function useEnemyTeamEvent(
         useCreateEnemyTeamMutation(strategyId);
     const { updateEnemyTeam: updateEnemyTeamMutation } =
         useUpdateEnemyTeamMutation(strategyId);
+    const { deleteEnemyTeam: deleteEnemyTeamMutation } =
+        useDeleteEnemyTeamMutation(strategyId);
 
     const [isEnterEnemyTeamLabelModalOpen, setIsEnterEnemyTeamLabelModalOpen] =
         useState(false);

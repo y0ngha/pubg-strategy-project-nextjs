@@ -2,6 +2,7 @@ import { useCreateCommentMutation } from '@/(presentation)/(pages)/strategies/[i
 import { useState } from 'react';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
+import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
 
 export function useCommentEvent(
     strategyId: string,
@@ -11,6 +12,8 @@ export function useCommentEvent(
         useCreateCommentMutation(strategyId);
     const { updateComment: updateCommentMutation } =
         useUpdateCommentMutation(strategyId);
+    const { deleteComment: deleteCommentMutation } =
+        useDeleteCommentMutation(strategyId);
 
     const [topCommentId, setTopCommentId] = useState<string | null>(null);
 

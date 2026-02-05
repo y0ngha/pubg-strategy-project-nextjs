@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateWaypointMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useEffect, useEffectEvent, useState } from 'react';
+import { useDeleteWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteWaypointMutation';
 
 export function useWaypointEvent(
     strategyId: string,
@@ -15,6 +16,8 @@ export function useWaypointEvent(
         useCreateWaypointMutation(strategyId);
     const { updateWaypoint: updateWaypointMutation } =
         useUpdateWaypointMutation(strategyId);
+    const { deleteWaypoint: deleteWaypointMutation } =
+        useDeleteWaypointMutation(strategyId);
 
     const [keydownAlt, setKeydownAlt] = useState<boolean>(false);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCreateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateAirplanePathMutation';
 import { useUpdateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateAirplanePathMutation';
 import { AirplanePathResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteAirplanePathMutation';
 
 export function useAirplanePathEvent(
     strategyId: string,
@@ -11,6 +12,8 @@ export function useAirplanePathEvent(
         useCreateAirplanePathMutation(strategyId);
     const { updateAirplanePath: updateAirplanePathMutation } =
         useUpdateAirplanePathMutation(strategyId);
+    const { deleteAirplanePath: deleteAirplanePathMutation } =
+        useDeleteAirplanePathMutation(strategyId);
 
     const [startPosition, setStartPosition] = useState<
         | {

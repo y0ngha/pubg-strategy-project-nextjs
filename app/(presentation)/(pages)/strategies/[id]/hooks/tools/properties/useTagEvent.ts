@@ -2,10 +2,12 @@ import { useCreateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/h
 import { useState } from 'react';
 import { useUpdateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTagMutation';
 import { TagResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTagMutation';
 
 export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
     const { updateTag: updateTagMutation } = useUpdateTagMutation(strategyId);
+    const { deleteTag: deleteTagMutation } = useDeleteTagMutation(strategyId);
 
     const [isEnterTagContentModalOpen, setIsEnterTagContentModalOpen] =
         useState(false);
