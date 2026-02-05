@@ -111,7 +111,10 @@ export function useAirplanePathEvent(
         }
     };
 
-    const moveAirplanePath = (deltaPosition: { x: number; y: number }) => {
+    const moveAirplanePath = (
+        airplanePathId: string,
+        deltaPosition: { x: number; y: number }
+    ) => {
         ensureHaveAirplanePath();
 
         const startPosition = {
@@ -127,14 +130,14 @@ export function useAirplanePathEvent(
         setStartPosition(startPosition);
         setEndPosition(endPosition);
 
-        updateAirplanePath(airplanePath!.id, startPosition, endPosition);
+        updateAirplanePath(airplanePathId, startPosition, endPosition);
     };
 
-    const deleteAirplanePath = () => {
+    const deleteAirplanePath = (airplanePathId: string) => {
         ensureHaveAirplanePath();
 
         const formData = new FormData();
-        formData.set('airplanePathId', airplanePath!.id);
+        formData.set('airplanePathId', airplanePathId);
 
         deleteAirplanePathMutation(formData);
     };
