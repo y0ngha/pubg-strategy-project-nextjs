@@ -31,7 +31,7 @@ export class DeleteAirplanePathUseCase {
             throw new AirplanePathNotFoundException();
         }
 
-        strategy.removeAirplanePath(actorId);
+        strategy.removeAirplanePath(actorId, airplanePathId);
 
         await this.strategyRepository.save(strategy);
 

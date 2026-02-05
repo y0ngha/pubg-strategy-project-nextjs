@@ -14,7 +14,7 @@ export class UpdateMarkerUseCase {
     ) {}
 
     async execute(dto: UpdateMarkerRequestDto) {
-        const { actorId, strategyId, teamPlayerId, position } =
+        const { actorId, strategyId, teamPlayerId, markerId, position } =
             UpdateMarkerRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -26,6 +26,7 @@ export class UpdateMarkerUseCase {
         const marker = strategy.updateTeamPlayerMarker(
             actorId,
             teamPlayerId,
+            markerId,
             position
         )!;
 
