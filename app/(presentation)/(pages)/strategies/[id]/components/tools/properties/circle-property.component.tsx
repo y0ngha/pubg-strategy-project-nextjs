@@ -33,6 +33,7 @@ function CircleProperty({
     isSelected,
     onMove,
     onClick,
+    onDelete,
 }: CirclePropertyProps) {
     const ref = useRef<Konva.Circle>(null);
 
@@ -56,6 +57,10 @@ function CircleProperty({
             onClick(id);
         }
     });
+
+    const handleDelete = () => {
+        onDelete(id);
+    };
 
     return (
         <Group x={0} y={0}>
@@ -107,7 +112,7 @@ function CircleProperty({
                 <SelectionFrame
                     targetRef={ref}
                     isSelected={isSelected}
-                    onDelete={() => {}}
+                    onDelete={handleDelete}
                 />
             </Group>
         </Group>

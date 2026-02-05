@@ -35,6 +35,7 @@ function EnemyTeamProperty({
     isSelectable,
     isSelected,
     onMove,
+    onDelete,
     onClick,
 }: EnemyTeamPropertyProps) {
     const ref = useRef<Konva.Circle>(null);
@@ -69,6 +70,10 @@ function EnemyTeamProperty({
     });
 
     const [enemyImage] = useImage(url ?? '');
+
+    const handleDelete = () => {
+        onDelete(id);
+    };
 
     const radius = 50;
 
@@ -142,7 +147,7 @@ function EnemyTeamProperty({
             <SelectionFrame
                 targetRef={ref}
                 isSelected={isSelected}
-                onDelete={() => {}}
+                onDelete={handleDelete}
             />
         </Group>
     );

@@ -40,6 +40,7 @@ function MarkerProperty({
     isSelected,
     onClick,
     onMove,
+    onDelete,
 }: MarkerPropertyProps) {
     const ref = useRef<Konva.Image>(null);
 
@@ -71,6 +72,10 @@ function MarkerProperty({
     });
 
     const [markerImage] = useImage(url ?? '');
+
+    const handleDelete = () => {
+        onDelete(teamPlayerId, id);
+    };
 
     return (
         <Group
@@ -105,7 +110,7 @@ function MarkerProperty({
             <SelectionFrame
                 targetRef={ref}
                 isSelected={isSelected}
-                onDelete={() => {}}
+                onDelete={handleDelete}
             />
         </Group>
     );

@@ -64,6 +64,7 @@ function TeamPlayerProperty({
     isSelected,
     onClick,
     onMove,
+    onDelete,
 }: TeamPlayerPropertyProps) {
     const ref = useRef<Konva.Circle>(null);
 
@@ -99,6 +100,10 @@ function TeamPlayerProperty({
     const { handleClick } = useKonvaHandleMouseClick(() => {
         onClick(id);
     });
+
+    const handleDelete = () => {
+        onDelete(id);
+    };
 
     return (
         <Group
@@ -171,7 +176,7 @@ function TeamPlayerProperty({
             <SelectionFrame
                 targetRef={ref}
                 isSelected={isSelected}
-                onDelete={() => {}}
+                onDelete={handleDelete}
             />
         </Group>
     );

@@ -37,6 +37,7 @@ function WaypointProperty({
     isSelected,
     onClick,
     onMove,
+    onDelete,
 }: WaypointPropertyProps) {
     const ref = useRef<Konva.Group>(null);
 
@@ -76,6 +77,12 @@ function WaypointProperty({
         const dx = x2 - x1;
         const dy = y2 - y1;
         return Math.atan2(dy, dx) * (180 / Math.PI);
+    };
+
+    const handleDelete = () => {
+        if (id) {
+            onDelete(teamPlayerId, id);
+        }
     };
 
     if (positions.length === 0) {
@@ -180,7 +187,7 @@ function WaypointProperty({
             <SelectionFrame
                 targetRef={ref}
                 isSelected={isSelected}
-                onDelete={() => {}}
+                onDelete={handleDelete}
             />
         </Group>
     );

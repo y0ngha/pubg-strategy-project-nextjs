@@ -33,6 +33,7 @@ function TagProperty({
     isSelected,
     onMove,
     onClick,
+    onDelete,
 }: TagPropertyProps) {
     const ref = useRef<Konva.Image>(null);
 
@@ -69,6 +70,10 @@ function TagProperty({
     });
 
     const [tagImage] = useImage(url ?? '');
+
+    const handleDelete = () => {
+        onDelete(id);
+    };
 
     return (
         <Group
@@ -126,7 +131,7 @@ function TagProperty({
             <SelectionFrame
                 targetRef={ref}
                 isSelected={isSelected}
-                onDelete={() => {}}
+                onDelete={handleDelete}
             />
         </Group>
     );

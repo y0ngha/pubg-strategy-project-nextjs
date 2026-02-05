@@ -33,6 +33,7 @@ function AirplanePathProperty({
     isSelected,
     onMove,
     onClick,
+    onDelete,
 }: AirplanePathPropertyProps) {
     const ref = useRef<Konva.Arrow>(null);
 
@@ -72,6 +73,12 @@ function AirplanePathProperty({
     });
 
     const [planeImage] = useImage(url ?? '');
+
+    const handleDelete = () => {
+        if (id) {
+            onDelete(id);
+        }
+    };
 
     if (isDrawing) {
         return (
@@ -127,7 +134,7 @@ function AirplanePathProperty({
                 <SelectionFrame
                     targetRef={ref}
                     isSelected={isSelected}
-                    onDelete={() => {}}
+                    onDelete={handleDelete}
                 />
             </Group>
         );
