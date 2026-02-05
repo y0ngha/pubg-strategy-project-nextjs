@@ -495,12 +495,14 @@ export class Strategy {
 
     updateAirplanePath(
         actorId: UserId,
+        airplanePathId: AirplanePathId,
         startPosition: Position,
         endPosition: Position
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
         this.ensureHaveAirplanePath(this._airplanePath);
+        this.ensureSameAirplanePathId(this._airplanePath.id, airplanePathId);
 
         const isStartChanged =
             this._airplanePath.updateStartPosition(startPosition);
@@ -514,9 +516,11 @@ export class Strategy {
         return this._airplanePath;
     }
 
-    removeAirplanePath(actorId: UserId) {
+    removeAirplanePath(actorId: UserId, airplanePathId: AirplanePathId) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
+        this.ensureHaveAirplanePath(this._airplanePath);
+        this.ensureSameAirplanePathId(this._airplanePath.id, airplanePathId);
 
         this._airplanePath = null;
         this._updatedAt = new Date();
@@ -911,6 +915,15 @@ export class Strategy {
     private ensureNoHaveAirplanePath() {
         if (this._airplanePath) {
             throw new AirplanePathExistsException();
+        }
+    }
+
+    private ensureSameAirplanePathId(
+        airplanePathId1: AirplanePathId,
+        airplanePathId2: AirplanePathId
+    ) {
+        if (!airplanePathId1.equals(airplanePathId2)) {
+            throw new AirplanePathNotFoundException();
         }
     }
 }
