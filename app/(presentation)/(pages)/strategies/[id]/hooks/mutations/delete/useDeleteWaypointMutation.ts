@@ -91,12 +91,10 @@ export function useDeleteWaypointMutation(strategyId: string) {
 
             return {
                 ...oldStrategy,
-                teamPlayers: [
-                    ...generateNewTeamPlayers(
-                        teamPlayerId,
-                        oldStrategy.teamPlayers
-                    ),
-                ],
+                teamPlayers: generateNewTeamPlayers(
+                    teamPlayerId,
+                    oldStrategy.teamPlayers
+                ),
             };
         });
     };

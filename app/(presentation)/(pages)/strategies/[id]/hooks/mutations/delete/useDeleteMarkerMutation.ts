@@ -90,12 +90,10 @@ export function useDeleteMarkerMutation(strategyId: string) {
 
             return {
                 ...oldStrategy,
-                teamPlayers: [
-                    ...generateNewTeamPlayers(
-                        teamPlayerId,
-                        oldStrategy.teamPlayers
-                    ),
-                ],
+                teamPlayers: generateNewTeamPlayers(
+                    teamPlayerId,
+                    oldStrategy.teamPlayers
+                ),
             };
         });
     };
