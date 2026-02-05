@@ -18,6 +18,7 @@ import {
     CommentNotFoundException,
     DeletedStrategyException,
     EnemyTeamNotFoundException,
+    MarkerNotFoundException,
     StrategyEditPermissionDeniedException,
     StrategyPermissionDeniedException,
     StrategyShareDuplicateException,
@@ -284,12 +285,15 @@ export class Strategy {
     updateTeamPlayerMarker(
         actorId: UserId,
         teamPlayerId: TeamPlayerId,
+        markerId: MarkerId,
         position: Position
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
-
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        this.ensureHaveMarker(teamPlayer.marker);
+        this.ensureSameMarkerId(teamPlayer.marker.id, markerId);
 
         const isChanged = teamPlayer.updateMarkerPosition(position);
 
@@ -300,30 +304,17 @@ export class Strategy {
         return teamPlayer.marker;
     }
 
-    updateTeamPlayerWaypoint(
+    removeTeamPlayerMarker(
         actorId: UserId,
         teamPlayerId: TeamPlayerId,
-        positions: Position[]
+        markerId: MarkerId
     ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
-
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
 
-        const isChanged = teamPlayer.updateWaypointPositions(positions);
-
-        if (isChanged) {
-            this._updatedAt = new Date();
-        }
-
-        return teamPlayer.waypoint;
-    }
-
-    removeTeamPlayerMarker(actorId: UserId, teamPlayerId: TeamPlayerId) {
-        this.ensureNotDeleted();
-        this.ensureEditPermission(actorId);
-
-        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+        this.ensureHaveMarker(teamPlayer.marker);
+        this.ensureSameMarkerId(teamPlayer.marker.id, markerId);
 
         teamPlayer.deleteMarker();
         this._updatedAt = new Date();
@@ -924,6 +915,18 @@ export class Strategy {
     ) {
         if (!airplanePathId1.equals(airplanePathId2)) {
             throw new AirplanePathNotFoundException();
+        }
+    }
+
+    private ensureHaveMarker(marker: Marker | null): asserts marker is Marker {
+        if (!marker) {
+            throw new MarkerNotFoundException();
+        }
+    }
+
+    private ensureSameMarkerId(markerId1: MarkerId, markerId2: MarkerId) {
+        if (!markerId1.equals(markerId2)) {
+            throw new MarkerNotFoundException();
         }
     }
 }
