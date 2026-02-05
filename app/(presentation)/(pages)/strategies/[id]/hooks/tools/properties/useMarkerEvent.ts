@@ -22,6 +22,14 @@ export function useMarkerEvent(
 
     const marker = selectedTeamPlayer?.marker;
 
+    const ensureSelectedTeamPlayerId = () => {
+        if (selectedTeamPlayerId === undefined) {
+            throw new Error(
+                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 마커를 이용해주세요."
+            );
+        }
+    };
+
     const saveMarker = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
@@ -71,21 +79,24 @@ export function useMarkerEvent(
         };
 
         const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
         formData.set('markerId', markerId);
         formData.set('position', JSON.stringify(position));
 
         updateMarkerMutation(formData);
     };
-    const ensureSelectedTeamPlayerId = () => {
-        if (selectedTeamPlayerId === undefined) {
-            throw new Error(
-                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 마커를 이용해주세요."
-            );
-        }
+
+    const deleteMarker = (teamPlayerId: string, markerId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('markerId', markerId);
+
+        deleteMarkerMutation(formData);
     };
 
     return {
         saveMarker,
         moveMarker,
+        deleteMarker,
     };
 }

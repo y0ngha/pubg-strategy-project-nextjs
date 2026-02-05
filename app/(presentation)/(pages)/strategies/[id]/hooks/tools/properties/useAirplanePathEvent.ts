@@ -31,6 +31,12 @@ export function useAirplanePathEvent(
         | undefined
     >(airplanePath?.endPosition);
 
+    const ensureHaveAirplanePath = () => {
+        if (!airplanePath) {
+            throw new Error('비행기 동선이 존재하지 않습니다.');
+        }
+    };
+
     const confirmOnSuccessCallbackHandler = (data: {
         startPosition: { x: number; y: number };
         endPosition: { x: number; y: number };
@@ -77,6 +83,8 @@ export function useAirplanePathEvent(
             y: number;
         }
     ) => {
+        ensureHaveAirplanePath();
+
         const formData = new FormData();
         formData.set('airplanePathId', airplanePathId);
         formData.set('startPosition', JSON.stringify(startPosition));
@@ -104,30 +112,38 @@ export function useAirplanePathEvent(
     };
 
     const moveAirplanePath = (deltaPosition: { x: number; y: number }) => {
-        if (!airplanePath) {
-            throw new Error('비행기 동선이 존재하지 않습니다.');
-        }
+        ensureHaveAirplanePath();
 
         const startPosition = {
-            x: airplanePath.startPosition.x + deltaPosition.x,
-            y: airplanePath.startPosition.y + deltaPosition.y,
+            x: airplanePath!.startPosition.x + deltaPosition.x,
+            y: airplanePath!.startPosition.y + deltaPosition.y,
         };
 
         const endPosition = {
-            x: airplanePath.endPosition.x + deltaPosition.x,
-            y: airplanePath.endPosition.y + deltaPosition.y,
+            x: airplanePath!.endPosition.x + deltaPosition.x,
+            y: airplanePath!.endPosition.y + deltaPosition.y,
         };
 
         setStartPosition(startPosition);
         setEndPosition(endPosition);
 
-        updateAirplanePath(airplanePath.id, startPosition, endPosition);
+        updateAirplanePath(airplanePath!.id, startPosition, endPosition);
+    };
+
+    const deleteAirplanePath = () => {
+        ensureHaveAirplanePath();
+
+        const formData = new FormData();
+        formData.set('airplanePathId', airplanePath!.id);
+
+        deleteAirplanePathMutation(formData);
     };
 
     return {
-        clickAirplanePath,
         startPosition,
         endPosition,
+        clickAirplanePath,
         moveAirplanePath,
+        deleteAirplanePath,
     };
 }

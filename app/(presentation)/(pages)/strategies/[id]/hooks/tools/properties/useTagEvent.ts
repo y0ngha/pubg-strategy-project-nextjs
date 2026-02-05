@@ -58,11 +58,19 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         updateTagMutation(formData);
     };
 
+    const deleteTag = (tagId: string) => {
+        const formData = new FormData();
+        formData.set('tagId', tagId);
+
+        deleteTagMutation(formData);
+    };
+
     return {
         isEnterTagContentModalOpen,
         enterTagContentModalOpen,
         enterTagContentModalClose,
         createTag,
         moveTag,
+        deleteTag,
     };
 }

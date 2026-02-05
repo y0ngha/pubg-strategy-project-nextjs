@@ -69,11 +69,19 @@ export function useEnemyTeamEvent(
         updateEnemyTeamMutation(formData);
     };
 
+    const deleteEnemyTeam = (enemyTeamId: string) => {
+        const formData = new FormData();
+        formData.set('enemyTeamId', enemyTeamId);
+
+        deleteEnemyTeamMutation(formData);
+    };
+
     return {
         isEnterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalClose,
         createEnemyTeam,
         moveEnemyTeam,
+        deleteEnemyTeam,
     };
 }

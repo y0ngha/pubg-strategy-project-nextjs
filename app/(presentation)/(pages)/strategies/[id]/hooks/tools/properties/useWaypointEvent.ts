@@ -138,6 +138,14 @@ export function useWaypointEvent(
         updateWaypointMutation(formData);
     };
 
+    const deleteWaypoint = (teamPlayerId: string, waypointId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('waypointId', waypointId);
+
+        deleteWaypointMutation(formData);
+    };
+
     const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
         if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
             setKeydownAlt(true);
@@ -167,9 +175,10 @@ export function useWaypointEvent(
     }, []);
 
     return {
-        createWaypoint,
         isDrawing,
         clickedPositions,
+        createWaypoint,
         moveWaypoint,
+        deleteWaypoint,
     };
 }

@@ -19,6 +19,16 @@ export function useTeamPlayerEvent(
         string | undefined
     >(undefined);
 
+    const changeSelectedTeamPlayerId = (id: string) => {
+        setSelectedTeamPlayerId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const createTeamPlayer = (position: { x: number; y: number }) => {
         const formData = new FormData();
         formData.set('position', JSON.stringify(position));
@@ -50,20 +60,18 @@ export function useTeamPlayerEvent(
         updateTeamPlayerMutation(formData);
     };
 
-    const changeSelectedTeamPlayerId = (id: string) => {
-        setSelectedTeamPlayerId(prevState => {
-            if (prevState === id) {
-                return undefined;
-            }
+    const deleteTeamPlayer = (teamPlayerId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
 
-            return id;
-        });
+        deleteTeamPlayerMutation(formData);
     };
 
     return {
-        createTeamPlayer,
-        moveTeamPlayer,
         selectedTeamPlayerId,
         changeSelectedTeamPlayerId,
+        createTeamPlayer,
+        moveTeamPlayer,
+        deleteTeamPlayer,
     };
 }

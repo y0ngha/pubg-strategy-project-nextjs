@@ -21,6 +21,16 @@ export function useCircleEvent(
         y: 0,
     });
 
+    const findCircleById = (circleId: string) => {
+        const circle = circles.find(circle => circle.id === circleId);
+
+        if (!circle) {
+            throw new Error('자기장 ID로 자기장을 찾을 수 없습니다.');
+        }
+
+        return circle;
+    };
+
     const phaseSelectModalOpen = (position: { x: number; y: number }) => {
         setIsPhaseSelectModalOpen(true);
         setPosition(position);
@@ -44,11 +54,7 @@ export function useCircleEvent(
         circleId: string,
         deltaPosition: { x: number; y: number }
     ) => {
-        const circle = circles.find(circle => circle.id === circleId);
-
-        if (!circle) {
-            throw new Error('적 팀 ID로 적 팀을 찾을 수 없습니다.');
-        }
+        const circle = findCircleById(circleId);
 
         const position = {
             x: circle.centerPosition.x + deltaPosition.x,
@@ -62,11 +68,19 @@ export function useCircleEvent(
         updateCircleMutation(formData);
     };
 
+    const deleteCircle = (circleId: string) => {
+        const formData = new FormData();
+        formData.set('circleId', circleId);
+
+        deleteCircleMutation(formData);
+    };
+
     return {
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,
         createCircle,
         moveCircle,
+        deleteCircle,
     };
 }

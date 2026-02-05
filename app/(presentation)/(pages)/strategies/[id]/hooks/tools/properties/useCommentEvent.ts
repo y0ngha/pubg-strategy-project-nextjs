@@ -54,6 +54,24 @@ export function useCommentEvent(
         setTopCommentId(null);
     };
 
+    const filterSamePositionComments = (
+        comment: CommentResponseDto,
+        topComment: CommentResponseDto
+    ) => {
+        return (
+            comment.id === topComment.id ||
+            (comment.position.x === topComment.position.x &&
+                comment.position.y === topComment.position.y)
+        );
+    };
+
+    const sortingCreatedAtByAscending = (
+        commentA: CommentResponseDto,
+        commentB: CommentResponseDto
+    ) => {
+        return commentA.createdAt.getTime() - commentB.createdAt.getTime();
+    };
+
     const createComment = (content: string, parentCommentId: string | null) => {
         const formData = new FormData();
         formData.set('content', content);
@@ -99,6 +117,13 @@ export function useCommentEvent(
         updateCommentMutation(formData);
     };
 
+    const deleteComment = (commentId: string) => {
+        const formData = new FormData();
+        formData.set('commentId', commentId);
+
+        deleteCommentMutation(formData);
+    };
+
     const commentClick = (
         commentId: string,
         commentWindowPosition: { x: number; y: number },
@@ -107,24 +132,6 @@ export function useCommentEvent(
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
         setTopCommentId(commentId);
         setIsCommentWindowOpen(true);
-    };
-
-    const filterSamePositionComments = (
-        comment: CommentResponseDto,
-        topComment: CommentResponseDto
-    ) => {
-        return (
-            comment.id === topComment.id ||
-            (comment.position.x === topComment.position.x &&
-                comment.position.y === topComment.position.y)
-        );
-    };
-
-    const sortingCreatedAtByAscending = (
-        commentA: CommentResponseDto,
-        commentB: CommentResponseDto
-    ) => {
-        return commentA.createdAt.getTime() - commentB.createdAt.getTime();
     };
 
     const topComment = comments.find(comment => comment.id === topCommentId);
@@ -141,11 +148,12 @@ export function useCommentEvent(
         isCommentWindowOpen,
         commentWindowOpen,
         commentWindowClose,
+        windowPosition,
         createComment,
         updateComment,
+        deleteComment,
         commentClick,
-        windowPosition,
-        filteredComments,
         moveComment,
+        filteredComments,
     };
 }
