@@ -17,9 +17,8 @@ export async function updateWaypointAction(
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, positions } = parseFormData(
-        formData,
-        [
+    const { userId, strategyId, teamPlayerId, waypointId, positions } =
+        parseFormData(formData, [
             {
                 key: 'userId',
                 error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -36,13 +35,17 @@ export async function updateWaypointAction(
                 type: 'string',
             },
             {
+                key: 'waypointId',
+                error: '웨이포인트 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
                 key: 'positions',
                 error: '웨이포인트 위치를 불러올 수 없습니다.',
                 type: 'position',
                 isArray: true,
             },
-        ] as const
-    );
+        ] as const);
 
     const useCase = getService(UpdateWaypointUseCase);
 
@@ -50,6 +53,7 @@ export async function updateWaypointAction(
         actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
+        waypointId: waypointId,
         positions: positions,
     };
 

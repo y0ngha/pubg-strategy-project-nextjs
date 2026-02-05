@@ -18,9 +18,8 @@ export async function updateMarkerAction(
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, position } = parseFormData(
-        formData,
-        [
+    const { userId, strategyId, teamPlayerId, markerId, position } =
+        parseFormData(formData, [
             {
                 key: 'userId',
                 error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -37,12 +36,16 @@ export async function updateMarkerAction(
                 type: 'string',
             },
             {
+                key: 'markerId',
+                error: '마커 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
                 key: 'position',
                 error: '마커 위치를 불러올 수 없습니다.',
                 type: 'position',
             },
-        ] as const
-    );
+        ] as const);
 
     const useCase = getService(UpdateMarkerUseCase);
 
@@ -50,6 +53,7 @@ export async function updateMarkerAction(
         actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
+        markerId: markerId,
         position: position,
     };
 

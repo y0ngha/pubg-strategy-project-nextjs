@@ -15,9 +15,8 @@ export async function updateAirplanePathAction(
 ): Promise<UpdateAirplanePathAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, startPosition, endPosition } = parseFormData(
-        formData,
-        [
+    const { userId, strategyId, airplanePathId, startPosition, endPosition } =
+        parseFormData(formData, [
             {
                 key: 'userId',
                 error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -26,6 +25,11 @@ export async function updateAirplanePathAction(
             {
                 key: 'strategyId',
                 error: '전략 고유 식별자를 불러올 수 없습니다.',
+                type: 'string',
+            },
+            {
+                key: 'airplanePathId',
+                error: '비행기 동선 고유 식별자를 불러올 수 없습니다.',
                 type: 'string',
             },
             {
@@ -38,8 +42,7 @@ export async function updateAirplanePathAction(
                 error: '비행기 동선 종료 위치를 불러올 수 없습니다.',
                 type: 'position',
             },
-        ] as const
-    );
+        ] as const);
 
     const useCase = getService<UpdateAirplanePathUseCase>(
         UpdateAirplanePathUseCase
@@ -48,6 +51,7 @@ export async function updateAirplanePathAction(
     const dto = {
         actorId: userId,
         strategyId: strategyId,
+        airplanePathId: airplanePathId,
         startPosition: startPosition,
         endPosition: endPosition,
     };
