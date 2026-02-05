@@ -13,7 +13,7 @@ export class DeleteEnemyTeamUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteEnemyTeamRequestDto): Promise<boolean> {
+    async execute(dto: DeleteEnemyTeamRequestDto) {
         const { actorId, strategyId, enemyTeamId } =
             DeleteEnemyTeamRequestSchema.parse(dto);
 
@@ -27,6 +27,8 @@ export class DeleteEnemyTeamUseCase {
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            enemyTeamId: enemyTeamId.toString(),
+        };
     }
 }

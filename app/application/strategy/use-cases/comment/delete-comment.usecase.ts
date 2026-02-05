@@ -13,7 +13,7 @@ export class DeleteCommentUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteCommentRequestDto): Promise<boolean> {
+    async execute(dto: DeleteCommentRequestDto) {
         const { actorId, strategyId, commentId } =
             DeleteCommentRequestSchema.parse(dto);
 
@@ -27,6 +27,8 @@ export class DeleteCommentUseCase {
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            commentId: commentId.toString(),
+        };
     }
 }

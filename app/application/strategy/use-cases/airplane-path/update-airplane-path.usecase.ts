@@ -15,8 +15,13 @@ export class UpdateAirplanePathUseCase {
     ) {}
 
     async execute(dto: UpdateAirplanePathRequestDto) {
-        const { actorId, strategyId, startPosition, endPosition } =
-            UpdateAirplanePathRequestSchema.parse(dto);
+        const {
+            actorId,
+            strategyId,
+            airplanePathId,
+            startPosition,
+            endPosition,
+        } = UpdateAirplanePathRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
 
@@ -26,6 +31,7 @@ export class UpdateAirplanePathUseCase {
 
         const airplanePath = strategy.updateAirplanePath(
             actorId,
+            airplanePathId,
             startPosition,
             endPosition
         );

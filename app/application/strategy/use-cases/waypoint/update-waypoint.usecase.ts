@@ -14,7 +14,7 @@ export class UpdateWaypointUseCase {
     ) {}
 
     async execute(dto: UpdateWaypointRequestDto) {
-        const { actorId, strategyId, teamPlayerId, positions } =
+        const { actorId, strategyId, teamPlayerId, waypointId, positions } =
             UpdateWaypointRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -26,6 +26,7 @@ export class UpdateWaypointUseCase {
         const waypoint = strategy.updateTeamPlayerWaypoint(
             actorId,
             teamPlayerId,
+            waypointId,
             positions
         )!;
 

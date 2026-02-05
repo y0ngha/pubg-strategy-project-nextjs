@@ -1,5 +1,6 @@
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
+    AirplanePathNotFoundException,
     StrategyEditPermissionDeniedException,
     StrategyNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
@@ -12,6 +13,7 @@ import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airp
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Email } from '@domain/shared/value-objects/email';
+import { AirplanePathId } from '@domain/strategy/value-objects/airplane-path-id';
 
 describe('DeleteAirplanePathUseCase', () => {
     let useCase: DeleteAirplanePathUseCase;
@@ -22,6 +24,7 @@ describe('DeleteAirplanePathUseCase', () => {
     const ownerEmail = Email.create('test@domain.com');
 
     let strategyId: StrategyId;
+    let airplanePathId: AirplanePathId;
 
     const title = StrategyTitle.create('전략 제목');
     const map = PubgMap.ERANGEL;
@@ -34,11 +37,13 @@ describe('DeleteAirplanePathUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addAirplanePath(
+        const airplanePath = strategyFixture.addAirplanePath(
             ownerId,
             Position.create(10, 10),
             Position.create(1000, 1000)
         );
+
+        airplanePathId = airplanePath.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -47,11 +52,29 @@ describe('DeleteAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
         };
 
         // when & then
         await expect(() => useCase.execute(dto)).rejects.toThrow(
             StrategyNotFoundException
+        );
+        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+    });
+
+    it('비행기 동선을 찾지 못하면, 에러를 던진다.', async () => {
+        // given
+        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = AirplanePathId.generate();
+        const dto = {
+            actorId: ownerId.toString(),
+            strategyId: strategyId.toString(),
+            airplanePathId: randomId.toString(),
+        };
+
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            AirplanePathNotFoundException
         );
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
@@ -63,6 +86,7 @@ describe('DeleteAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
         };
 
         // when
@@ -88,6 +112,7 @@ describe('DeleteAirplanePathUseCase', () => {
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
+            airplanePathId: airplanePathId.toString(),
         };
 
         // When & Then

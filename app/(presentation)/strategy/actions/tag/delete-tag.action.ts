@@ -4,7 +4,11 @@ import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-ta
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function deleteTagAction(_: unknown, formData: FormData) {
+export type DeleteTagAction = { tagId: string };
+
+export async function deleteTagAction(
+    formData: FormData
+): Promise<DeleteTagAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, tagId } = parseFormData(formData, [

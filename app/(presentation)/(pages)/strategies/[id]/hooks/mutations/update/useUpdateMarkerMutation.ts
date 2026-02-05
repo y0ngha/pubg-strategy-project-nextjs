@@ -47,36 +47,14 @@ export function useUpdateMarkerMutation(strategyId: string) {
         },
     });
 
-    const findTeamPlayerIndexById = (
-        teamPlayers: TeamPlayerResponseDto[],
-        id: string
-    ) => {
-        const index = teamPlayers.findIndex(teamPlayer => teamPlayer.id === id);
-
-        if (index === -1) {
-            return null;
-        }
-
-        return index;
-    };
-
     const generateNewTeamPlayers = (
         data: UpdateMarkerAction,
         teamPlayers: TeamPlayerResponseDto[]
     ) => {
         const { teamPlayerId } = data;
 
-        const teamPlayerIndex = findTeamPlayerIndexById(
-            teamPlayers,
-            teamPlayerId
-        );
-
-        if (teamPlayerIndex === null) {
-            return teamPlayers;
-        }
-
-        return teamPlayers.map((player, index) => {
-            if (index !== teamPlayerIndex) {
+        return teamPlayers.map(player => {
+            if (teamPlayerId !== player.id) {
                 return player;
             }
 

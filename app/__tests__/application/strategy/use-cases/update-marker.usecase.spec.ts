@@ -15,6 +15,7 @@ import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/re
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
 import { Position } from '@domain/strategy/value-objects/position';
 import { Email } from '@domain/shared/value-objects/email';
+import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 
 describe('UpdateMarkerUseCase', () => {
     let useCase: UpdateMarkerUseCase;
@@ -26,6 +27,8 @@ describe('UpdateMarkerUseCase', () => {
 
     let strategyId: StrategyId;
     let teamPlayerId: TeamPlayerId;
+    let markerId: MarkerId;
+
     const positionX = 10;
     const positionY = 200;
     const position = { x: positionX, y: positionY };
@@ -41,9 +44,18 @@ describe('UpdateMarkerUseCase', () => {
         strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
         strategyId = strategyFixture.id;
 
-        strategyFixture.addTeamPlayer(ownerId, Position.create(1, 1));
+        const teamPlayer = strategyFixture.addTeamPlayer(
+            ownerId,
+            Position.create(1, 1)
+        );
+        teamPlayerId = teamPlayer.id;
 
-        teamPlayerId = strategyFixture.teamPlayers[0].id;
+        const marker = strategyFixture.addTeamPlayerMarker(
+            ownerId,
+            teamPlayerId,
+            Position.create(100, 100)
+        );
+        markerId = marker.id;
     });
 
     it('전략을 찾지 못하면, 에러를 던진다.', async () => {
@@ -53,6 +65,7 @@ describe('UpdateMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
             position: position,
         };
 
@@ -72,6 +85,7 @@ describe('UpdateMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: randomId.toString(),
+            markerId: markerId.toString(),
             position: position,
         };
 
@@ -82,14 +96,16 @@ describe('UpdateMarkerUseCase', () => {
         expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('마커가 없으면, 에러를 던진다.', async () => {
+    it('마커를 찾지 못하면, 에러를 던진다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        const randomId = MarkerId.generate();
 
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: randomId.toString(),
             position: position,
         };
 
@@ -102,16 +118,12 @@ describe('UpdateMarkerUseCase', () => {
     it('마커의 위치가 수정된다.', async () => {
         // given
         mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-        strategyFixture.addTeamPlayerMarker(
-            ownerId,
-            teamPlayerId,
-            Position.create(5, 5)
-        );
 
         const dto = {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
             position: position,
         };
 
@@ -144,6 +156,7 @@ describe('UpdateMarkerUseCase', () => {
             actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
             position: position,
         };
 

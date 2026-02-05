@@ -2,11 +2,13 @@ import { z } from 'zod';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
+import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
 
 export interface DeleteWaypointRequestDto {
     actorId: string;
     strategyId: string;
     teamPlayerId: string;
+    waypointId: string;
 }
 
 export const DeleteWaypointRequestSchema = z.object({
@@ -18,5 +20,8 @@ export const DeleteWaypointRequestSchema = z.object({
     }),
     teamPlayerId: z.string().transform(value => {
         return TeamPlayerId.create(value);
+    }),
+    waypointId: z.string().transform(value => {
+        return WaypointId.create(value);
     }),
 });

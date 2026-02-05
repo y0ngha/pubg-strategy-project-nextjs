@@ -14,8 +14,8 @@ export class DeleteAirplanePathUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteAirplanePathRequestDto): Promise<boolean> {
-        const { actorId, strategyId } =
+    async execute(dto: DeleteAirplanePathRequestDto) {
+        const { actorId, strategyId, airplanePathId } =
             DeleteAirplanePathRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -24,10 +24,12 @@ export class DeleteAirplanePathUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.removeAirplanePath(actorId);
+        strategy.removeAirplanePath(actorId, airplanePathId);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            airplanePathId: airplanePathId.toString(),
+        };
     }
 }

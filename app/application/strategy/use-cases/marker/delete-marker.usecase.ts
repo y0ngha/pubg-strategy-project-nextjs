@@ -13,8 +13,8 @@ export class DeleteMarkerUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteMarkerRequestDto): Promise<boolean> {
-        const { actorId, strategyId, teamPlayerId } =
+    async execute(dto: DeleteMarkerRequestDto) {
+        const { actorId, strategyId, teamPlayerId, markerId } =
             DeleteMarkerRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -23,10 +23,13 @@ export class DeleteMarkerUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.removeTeamPlayerMarker(actorId, teamPlayerId);
+        strategy.removeTeamPlayerMarker(actorId, teamPlayerId, markerId);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            teamPlayerId: teamPlayerId.toString(),
+            markerId: markerId.toString(),
+        };
     }
 }

@@ -13,7 +13,7 @@ export class DeleteCircleUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteCircleRequestDto): Promise<boolean> {
+    async execute(dto: DeleteCircleRequestDto) {
         const { actorId, strategyId, circleId } =
             DeleteCircleRequestSchema.parse(dto);
 
@@ -27,6 +27,8 @@ export class DeleteCircleUseCase {
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            circleId: circleId.toString(),
+        };
     }
 }

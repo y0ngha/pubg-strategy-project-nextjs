@@ -17,7 +17,7 @@ export function useMarkerEvent(
         player => player.id === selectedTeamPlayerId
     );
 
-    const existingMarker = selectedTeamPlayer?.marker !== undefined;
+    const marker = selectedTeamPlayer?.marker;
 
     const saveMarker = (position: { x: number; y: number }) => {
         try {
@@ -26,7 +26,9 @@ export function useMarkerEvent(
             const formData = new FormData();
             formData.set('position', JSON.stringify(position));
 
-            if (existingMarker) {
+            if (marker) {
+                formData.set('markerId', marker.id);
+
                 updateMarkerMutation(formData);
             } else {
                 createMarkerMutation(formData);
