@@ -1,7 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import {
+    AirplanePathNotFoundException,
+    StrategyNotFoundException,
+} from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     DeleteAirplanePathRequestDto,
     DeleteAirplanePathRequestSchema,
@@ -14,8 +17,8 @@ export class DeleteAirplanePathUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteAirplanePathRequestDto): Promise<boolean> {
-        const { actorId, strategyId } =
+    async execute(dto: DeleteAirplanePathRequestDto) {
+        const { actorId, strategyId, airplanePathId } =
             DeleteAirplanePathRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -24,10 +27,16 @@ export class DeleteAirplanePathUseCase {
             throw new StrategyNotFoundException();
         }
 
+        if (!strategy.airplanePath?.id.equals(airplanePathId)) {
+            throw new AirplanePathNotFoundException();
+        }
+
         strategy.removeAirplanePath(actorId);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            airplanePathId: airplanePathId.toString(),
+        };
     }
 }
