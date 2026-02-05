@@ -3,6 +3,7 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateWaypointAction = {
     teamPlayerId: string;
@@ -12,6 +13,8 @@ export type UpdateWaypointAction = {
 export async function updateWaypointAction(
     formData: FormData
 ): Promise<UpdateWaypointAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId, positions } = parseFormData(

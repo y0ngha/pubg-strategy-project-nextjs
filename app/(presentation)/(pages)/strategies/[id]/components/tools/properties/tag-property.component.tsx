@@ -1,34 +1,48 @@
-import { Group, Image, Label, Layer, Tag as KonvaTag, Text } from 'react-konva';
+import { Group, Image, Label, Tag as KonvaTag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { Tag } from 'lucide-react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useState } from 'react';
-import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleCursorChange';
-import { KonvaEventObject } from 'konva/lib/Node';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface TagPropertyProps {
+    id: string;
     x: number;
     y: number;
     content: string;
+    isSelectable: boolean;
+    onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
 }
 
-function TagProperty({ x, y, content }: TagPropertyProps) {
+function TagProperty({
+    id,
+    x,
+    y,
+    content,
+    isSelectable,
+    onMove,
+}: TagPropertyProps) {
+    const iconColor = '#A855F7';
+
     const [isOpen, setIsOpen] = useState(false);
 
     const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer', 'default');
-
-    const {
-        isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-    } = useKonvaHandleHover();
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
 
-    const iconColor = '#A855F7';
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,
@@ -39,42 +53,41 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
 
     const [tagImage] = useImage(url ?? '');
 
-    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseEnter();
-        cursorHandleMouseEnter(event);
-    };
-
-    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseLeave();
-        cursorHandleMouseLeave(event);
-    };
-
     const handleClick = () => {
         setIsOpen(prevState => !prevState);
     };
 
     return (
         <Group
-            x={x}
-            y={y}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            x={0}
+            y={0}
+            listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
             onClick={handleClick}
         >
             <Image
                 image={tagImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
-                scaleX={isHovered ? 1.0 : 0.8}
-                scaleY={isHovered ? 1.0 : 0.8}
-                shadowColor={iconColor}
-                shadowBlur={isHovered ? 15 : 0}
-                shadowOpacity={0.8}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowColor={shadowColor}
+                shadowBlur={shadowBlur}
+                shadowOpacity={shadowOpacity}
                 alt={'태그 이미지'}
             />
 
             {isOpen && (
-                <Label y={-60} opacity={0.9}>
+                <Label x={x} y={y - 60} opacity={0.9}>
                     <KonvaTag
                         fill={'#18181b'}
                         stroke={iconColor}
@@ -101,18 +114,26 @@ function TagProperty({ x, y, content }: TagPropertyProps) {
 
 TagProperty.displayName = 'TagProperty';
 
-function TagsLayer({ tags }: Pick<StrategyBodyProps, 'tags'>) {
+function TagsLayer({
+    tags,
+    isSelectable,
+    onMove,
+}: Pick<TagPropertyProps, 'isSelectable' | 'onMove'> &
+    Pick<StrategyBodyProps, 'tags'>) {
     return (
-        <Layer>
+        <>
             {tags.map(field => (
                 <TagProperty
                     key={field.id}
+                    id={field.id}
                     x={field.position.x}
                     y={field.position.y}
                     content={field.content}
+                    isSelectable={isSelectable}
+                    onMove={onMove}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 

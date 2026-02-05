@@ -1,24 +1,49 @@
-import { Arrow, Group, Image, Layer } from 'react-konva';
+import { Arrow, Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface AirplanePathPropertyProps {
+    id?: string;
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
+    isSelectable: boolean;
+    onMove: (deltaPosition: { x: number; y: number }) => void;
 }
 
 function AirplanePathProperty({
     startPosition,
     endPosition,
+    isSelectable,
+    onMove,
 }: AirplanePathPropertyProps) {
     const isDrawing = startPosition !== undefined && endPosition === undefined;
     const isDrawCompleted =
         startPosition !== undefined && endPosition !== undefined;
 
+    const iconColor = '#fbbf24';
+
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
+
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(deltaPosition);
+        }
+    );
+
     const { url, center } = useLucideIconToSvgUrl(Plane, {
-        color: '#fbbf24',
+        color: iconColor,
         size: 128,
         strokeWidth: 1,
         fill: true,
@@ -28,7 +53,7 @@ function AirplanePathProperty({
 
     if (isDrawing) {
         return (
-            <Group>
+            <Group x={0} y={0} listening={false}>
                 <Image
                     image={planeImage}
                     x={startPosition.x}
@@ -43,7 +68,19 @@ function AirplanePathProperty({
 
     if (isDrawCompleted) {
         return (
-            <Group>
+            <Group
+                x={0}
+                y={0}
+                listening={isSelectable}
+                draggable={true}
+                onMouseDown={event => {
+                    event.cancelBubble = true;
+                }}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onMouseLeave={hoverHandleMouseLeave}
+                onMouseEnter={hoverHandleMouseEnter}
+            >
                 <Arrow
                     points={[
                         startPosition.x,
@@ -51,14 +88,16 @@ function AirplanePathProperty({
                         endPosition.x,
                         endPosition.y,
                     ]}
-                    stroke={'#fbbf24'}
-                    fill={'#fbbf24'}
+                    stroke={iconColor}
+                    fill={iconColor}
                     strokeWidth={32}
                     pointerLength={32}
                     pointerWidth={32}
                     dash={[30, 30]}
                     opacity={0.9}
-                    listening={false}
+                    shadowBlur={shadowBlur}
+                    shadowColor={shadowColor}
+                    shadowOpacity={shadowOpacity}
                 />
 
                 {planeImage && (
@@ -69,6 +108,11 @@ function AirplanePathProperty({
                         offsetX={center}
                         offsetY={center}
                         alt={'비행기 동선 시작'}
+                        scaleX={scaleX}
+                        scaleY={scaleY}
+                        shadowBlur={shadowBlur}
+                        shadowColor={shadowColor}
+                        shadowOpacity={shadowOpacity}
                     />
                 )}
             </Group>
@@ -81,19 +125,20 @@ function AirplanePathProperty({
 AirplanePathProperty.displayName = 'AirplanePathProperty';
 
 function AirplanePathLayer({
+    id,
     startPosition,
     endPosition,
-}: {
-    startPosition?: { x: number; y: number };
-    endPosition?: { x: number; y: number };
-}) {
+    isSelectable,
+    onMove,
+}: AirplanePathPropertyProps) {
     return (
-        <Layer>
-            <AirplanePathProperty
-                startPosition={startPosition}
-                endPosition={endPosition}
-            />
-        </Layer>
+        <AirplanePathProperty
+            id={id}
+            startPosition={startPosition}
+            endPosition={endPosition}
+            isSelectable={isSelectable}
+            onMove={onMove}
+        />
     );
 }
 

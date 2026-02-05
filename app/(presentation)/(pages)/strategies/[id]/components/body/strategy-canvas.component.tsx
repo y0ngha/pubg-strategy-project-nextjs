@@ -1,18 +1,17 @@
 'use client';
 
-import { CanvasTool } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolbar';
 import React, { ReactNode, Ref, useRef, useState } from 'react';
-import { Layer, Stage } from 'react-konva';
+import { Stage } from 'react-konva';
 import { useResizeObserver } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useResizeObserver';
 import { useKonvaHandleWheelZoomControl } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleWheelZoomControl';
-import { useKovnaHandleDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKovnaHandleDrag';
+import { useKovnaHandleMapDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKovnaHandleMapDrag';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 interface StrategyCanvasProps {
     stageRef: Ref<Konva.Stage>;
     handleMouseMove: () => void;
-    selectedTool: CanvasTool;
+    isDraggable: boolean;
     map: ReactNode;
     properties: ReactNode;
     onMapClick: (event: KonvaEventObject<MouseEvent>) => void;
@@ -21,7 +20,7 @@ interface StrategyCanvasProps {
 function StrategyCanvas({
     stageRef,
     handleMouseMove,
-    selectedTool,
+    isDraggable,
     map,
     properties,
     onMapClick,
@@ -37,7 +36,7 @@ function StrategyCanvas({
 
     const { scale, handleWheel } = useKonvaHandleWheelZoomControl();
 
-    const { handleDragBound, handleDragEnd } = useKovnaHandleDrag(scale, {
+    const { handleDragBound, handleDragEnd } = useKovnaHandleMapDrag(scale, {
         width,
         height,
     });
@@ -51,7 +50,7 @@ function StrategyCanvas({
                 ref={stageRef}
                 width={width}
                 height={height}
-                draggable={selectedTool === 'select'}
+                draggable={isDraggable}
                 dragBoundFunc={handleDragBound}
                 onWheel={event => {
                     const newStagePosition = handleWheel(event);
@@ -68,7 +67,7 @@ function StrategyCanvas({
                 x={stagePosistion.x}
                 y={stagePosistion.y}
             >
-                <Layer imageSmoothingEnabled={true}>{map}</Layer>
+                {map}
 
                 {properties}
             </Stage>

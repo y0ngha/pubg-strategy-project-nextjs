@@ -11,8 +11,10 @@ export function useWaypointEvent(
 ) {
     const maxWaypoint = 6;
 
-    const { createWaypoint } = useCreateWaypointMutation(strategyId);
-    const { updateWaypoint } = useUpdateWaypointMutation(strategyId);
+    const { createWaypoint: createWaypointMutation } =
+        useCreateWaypointMutation(strategyId);
+    const { updateWaypoint: updateWaypointMutation } =
+        useUpdateWaypointMutation(strategyId);
 
     const [keydownAlt, setKeydownAlt] = useState<boolean>(false);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
@@ -30,7 +32,7 @@ export function useWaypointEvent(
     const windowAltKeyCode = 'Alt';
     const macAltKeyCode = 'Meta';
 
-    const waypointCreate = (position: { x: number; y: number }) => {
+    const createWaypoint = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
             ensurePressAltKey();
@@ -63,10 +65,42 @@ export function useWaypointEvent(
         formData.set('positions', JSON.stringify(positions));
 
         if (existingWaypoint) {
-            updateWaypoint(formData);
+            updateWaypointMutation(formData);
         } else {
-            createWaypoint(formData);
+            createWaypointMutation(formData);
         }
+    };
+
+    const moveWaypoint = (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => {
+        const teamPlayer = teamPlayers.find(
+            teamPlayer => teamPlayer.id === teamPlayerId
+        );
+
+        if (!teamPlayer) {
+            throw new Error('팀 플레이어 ID로 팀 플레이어를 찾을 수 없습니다.');
+        }
+
+        if (!teamPlayer.waypoint) {
+            throw new Error('팀 플레이어의 웨이포인트를 찾을 수 없습니다.');
+        }
+
+        const positions = teamPlayer.waypoint?.positions.map(position => {
+            return {
+                x: position.x + deltaPosition.x,
+                y: position.y + deltaPosition.y,
+            };
+        });
+
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('waypointId', waypointId);
+        formData.set('positions', JSON.stringify(positions));
+
+        updateWaypointMutation(formData);
     };
 
     const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
@@ -112,8 +146,9 @@ export function useWaypointEvent(
     }, []);
 
     return {
-        waypointCreate,
+        createWaypoint,
         isDrawing,
         clickedPositions,
+        moveWaypoint,
     };
 }

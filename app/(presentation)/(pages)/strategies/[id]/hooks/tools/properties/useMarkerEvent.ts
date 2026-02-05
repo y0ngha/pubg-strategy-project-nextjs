@@ -8,8 +8,10 @@ export function useMarkerEvent(
     teamPlayers: TeamPlayerResponseDto[],
     selectedTeamPlayerId?: string
 ) {
-    const { createMarker } = useCreateMarkerMutation(strategyId);
-    const { updateMarker } = useUpdateMarkerMutation(strategyId);
+    const { createMarker: createMarkerMutation } =
+        useCreateMarkerMutation(strategyId);
+    const { updateMarker: updateMarkerMutation } =
+        useUpdateMarkerMutation(strategyId);
 
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
@@ -17,7 +19,7 @@ export function useMarkerEvent(
 
     const existingMarker = selectedTeamPlayer?.marker !== undefined;
 
-    const markerClick = (position: { x: number; y: number }) => {
+    const saveMarker = (position: { x: number; y: number }) => {
         try {
             ensureSelectedTeamPlayerId();
 
@@ -25,9 +27,9 @@ export function useMarkerEvent(
             formData.set('position', JSON.stringify(position));
 
             if (existingMarker) {
-                updateMarker(formData);
+                updateMarkerMutation(formData);
             } else {
-                createMarker(formData);
+                createMarkerMutation(formData);
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -41,6 +43,34 @@ export function useMarkerEvent(
         }
     };
 
+    const moveMarker = (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => {
+        const teamPlayer = teamPlayers.find(
+            teamPlayer => teamPlayer.id === teamPlayerId
+        );
+
+        if (!teamPlayer) {
+            throw new Error('팀 플레이어 ID로 팀 플레이어를 찾을 수 없습니다.');
+        }
+
+        if (!teamPlayer.marker) {
+            throw new Error('팀 플레이어의 마커를 찾을 수 없습니다.');
+        }
+
+        const position = {
+            x: teamPlayer.marker.position.x + deltaPosition.x,
+            y: teamPlayer.marker.position.y + deltaPosition.y,
+        };
+
+        const formData = new FormData();
+        formData.set('markerId', markerId);
+        formData.set('position', JSON.stringify(position));
+
+        updateMarkerMutation(formData);
+    };
     const ensureSelectedTeamPlayerId = () => {
         if (selectedTeamPlayerId === undefined) {
             throw new Error(
@@ -50,6 +80,7 @@ export function useMarkerEvent(
     };
 
     return {
-        markerClick,
+        saveMarker,
+        moveMarker,
     };
 }

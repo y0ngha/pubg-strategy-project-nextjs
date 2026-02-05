@@ -13,7 +13,7 @@ export class UpdateTagUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: UpdateTagRequestDto): Promise<boolean> {
+    async execute(dto: UpdateTagRequestDto) {
         const { actorId, strategyId, tagId, content, position } =
             UpdateTagRequestSchema.parse(dto);
 
@@ -23,10 +23,17 @@ export class UpdateTagUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.updateTag(actorId, tagId, content, position);
+        const tag = strategy.updateTag(actorId, tagId, content, position);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            id: tag.id.toString(),
+            content: tag.content.toString(),
+            position: {
+                x: tag.position.x,
+                y: tag.position.y,
+            },
+        };
     }
 }

@@ -260,6 +260,8 @@ export class Strategy {
         if (isChanged) {
             this._updatedAt = new Date();
         }
+
+        return teamPlayer;
     }
 
     addTeamPlayerMarker(
@@ -402,6 +404,8 @@ export class Strategy {
         if (isTeamLabelChanged || isPositionChanged) {
             this._updatedAt = new Date();
         }
+
+        return enemyTeam;
     }
 
     /**
@@ -467,6 +471,8 @@ export class Strategy {
         if (isPositionChanged || isPhaseChanged) {
             this._updatedAt = new Date();
         }
+
+        return circle;
     }
 
     /**
@@ -570,6 +576,8 @@ export class Strategy {
         if (isContentChanged || isPoisitonChanged) {
             this._updatedAt = new Date();
         }
+
+        return tag;
     }
 
     /**

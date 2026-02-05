@@ -11,7 +11,7 @@ describe('CirclePhase', () => {
 
             // Then
             expect(circlePhase).toBeInstanceOf(CirclePhase);
-            expect(circlePhase.toString()).toBe(validCirclePhase);
+            expect(circlePhase.toNumber()).toBe(validCirclePhase);
         });
 
         it('CirclePhase를 1 미만, 8 초과로 생성하려 할 때 에러를 던진다.', () => {
@@ -60,7 +60,7 @@ describe('CirclePhase', () => {
             const circlePhase = CirclePhase.create(validCirclePhase);
 
             // When
-            const result = circlePhase.toString();
+            const result = circlePhase.toNumber();
 
             // Then
             expect(result).toBe(validCirclePhase);

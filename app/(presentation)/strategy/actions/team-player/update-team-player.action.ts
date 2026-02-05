@@ -4,7 +4,14 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/move-team-player.usecase';
 
-export async function moveTeamPlayerAction(_: unknown, formData: FormData) {
+export type UpdateTeamPlayerAction = {
+    id: string;
+    position: { x: number; y: number };
+};
+
+export async function updateTeamPlayerAction(
+    formData: FormData
+): Promise<UpdateTeamPlayerAction> {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, teamPlayerId, position } = parseFormData(

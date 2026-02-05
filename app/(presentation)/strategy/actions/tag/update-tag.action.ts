@@ -4,7 +4,13 @@ import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-ta
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function updateTagAction(_: unknown, formData: FormData) {
+export type UpdateTagAction = {
+    id: string;
+    content: string;
+    position: { x: number; y: number };
+};
+
+export async function updateTagAction(formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId, strategyId, tagId, content, position } = parseFormData(

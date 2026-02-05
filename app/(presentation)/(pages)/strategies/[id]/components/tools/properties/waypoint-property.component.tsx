@@ -2,20 +2,52 @@
 
 import { Arrow, Circle, Group, Line } from 'react-konva';
 import React from 'react';
+import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface WaypointPropertyProps {
+    id?: string;
+    teamPlayerId: string;
     positions: { x: number; y: number }[];
     priority: number;
     color: string;
     isDrawing: boolean;
+    isSelectable: boolean;
+    onMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function WaypointProperty({
+    id,
+    teamPlayerId,
     positions,
     priority,
     color,
     isDrawing,
+    isSelectable,
+    onMove,
 }: WaypointPropertyProps) {
+    const {
+        handleMouseLeave: hoverHandleMouseLeave,
+        handleMouseEnter: hoverHandleMouseEnter,
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(color);
+
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            if (id) {
+                onMove(teamPlayerId, id, deltaPosition);
+            }
+        }
+    );
+
     const flattenedPoints = positions.flatMap(position => [
         position.x,
         position.y,
@@ -35,7 +67,19 @@ function WaypointProperty({
     }
 
     return (
-        <Group>
+        <Group
+            x={0}
+            y={0}
+            listening={isSelectable}
+            draggable={!isDrawing}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
+        >
             <Line
                 points={flattenedPoints}
                 stroke={color}
@@ -71,6 +115,11 @@ function WaypointProperty({
                             fill={circleBackgroundColor}
                             stroke={color}
                             strokeWidth={4}
+                            scaleX={scaleX}
+                            scaleY={scaleY}
+                            shadowBlur={shadowBlur}
+                            shadowColor={shadowColor}
+                            shadowOpacity={shadowOpacity}
                         />
 
                         {((!isLast && !isDrawing) || isDrawing) && (
@@ -84,11 +133,24 @@ function WaypointProperty({
                                 rotation={rotation}
                                 offsetX={0}
                                 offsetY={0}
+                                scaleX={scaleX}
+                                scaleY={scaleY}
+                                shadowBlur={shadowBlur}
+                                shadowColor={shadowColor}
+                                shadowOpacity={shadowOpacity}
                             />
                         )}
 
                         {isLast && !isDrawing && (
-                            <Circle radius={radius / 2} fill={color} />
+                            <Circle
+                                radius={radius / 2}
+                                fill={color}
+                                scaleX={scaleX}
+                                scaleY={scaleY}
+                                shadowBlur={shadowBlur}
+                                shadowColor={shadowColor}
+                                shadowOpacity={shadowOpacity}
+                            />
                         )}
                     </Group>
                 );

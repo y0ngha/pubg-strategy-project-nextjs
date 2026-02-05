@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateStrategyAction = { title: string; map: string };
 
 export async function updateStrategyAction(
     formData: FormData
 ): Promise<UpdateStrategyAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId, strategyId, title, map } = parseFormData(formData, [

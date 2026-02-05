@@ -1,13 +1,12 @@
-import { Group, Image, Layer } from 'react-konva';
+import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
-import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleCursorChange';
-import { KonvaEventObject } from 'konva/lib/Node';
 import { MessageSquareText } from 'lucide-react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface CommentPropertyProps {
     id: string;
@@ -18,28 +17,44 @@ interface CommentPropertyProps {
         commentWindowPosition: { x: number; y: number },
         mapClickPosition: { x: number; y: number }
     ) => void;
+    isSelectable: boolean;
+    onMove: (
+        commentId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
-function CommentProperty({ id, x, y, onClick }: CommentPropertyProps) {
-    const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer', 'default');
+function CommentProperty({
+    id,
+    x,
+    y,
+    onClick,
+    isSelectable,
+    onMove,
+}: CommentPropertyProps) {
+    const iconColor = '#0EA5E9';
 
     const {
-        isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-    } = useKonvaHandleHover();
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
 
-    const { handleClick } = useKonvaHandleMouseClick(
-        (event, clickPosition, windowPosition) => {
-            event.cancelBubble = true;
-            onClick(id, windowPosition, clickPosition);
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
         }
     );
 
-    const iconColor = '#0EA5E9';
+    const { handleClick } = useKonvaHandleMouseClick(
+        (_, clickPosition, windowPosition) => {
+            onClick(id, windowPosition, clickPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(MessageSquareText, {
         color: iconColor,
@@ -50,33 +65,32 @@ function CommentProperty({ id, x, y, onClick }: CommentPropertyProps) {
 
     const [commentImage] = useImage(url ?? '');
 
-    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseEnter();
-        cursorHandleMouseEnter(event);
-    };
-
-    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseLeave();
-        cursorHandleMouseLeave(event);
-    };
-
     return (
         <Group
-            x={x}
-            y={y}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            x={0}
+            y={0}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
             onClick={handleClick}
+            listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
         >
             <Image
                 image={commentImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
-                scaleX={isHovered ? 1.0 : 0.8}
-                scaleY={isHovered ? 1.0 : 0.8}
-                shadowColor={iconColor}
-                shadowBlur={isHovered ? 15 : 0}
-                shadowOpacity={0.8}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
                 alt={'댓글 이미지'}
             />
         </Group>
@@ -88,15 +102,12 @@ CommentProperty.displayName = 'CommentProperty';
 function CommentsLayer({
     comments,
     onClick,
-}: {
-    onClick: (
-        id: string,
-        commentWindowPosition: { x: number; y: number },
-        mapClickPosition: { x: number; y: number }
-    ) => void;
-} & Pick<StrategyBodyProps, 'comments'>) {
+    isSelectable,
+    onMove,
+}: Pick<CommentPropertyProps, 'onClick' | 'isSelectable' | 'onMove'> &
+    Pick<StrategyBodyProps, 'comments'>) {
     return (
-        <Layer>
+        <>
             {comments.map(field => (
                 <CommentProperty
                     key={field.id}
@@ -104,9 +115,11 @@ function CommentsLayer({
                     x={field.position.x}
                     y={field.position.y}
                     onClick={onClick}
+                    isSelectable={isSelectable}
+                    onMove={onMove}
                 />
             ))}
-        </Layer>
+        </>
     );
 }
 

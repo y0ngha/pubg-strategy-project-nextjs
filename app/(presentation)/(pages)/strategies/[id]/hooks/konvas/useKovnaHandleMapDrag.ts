@@ -1,7 +1,7 @@
 import { KonvaEventObject } from 'konva/lib/Node';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 
-export function useKovnaHandleDrag(
+export function useKovnaHandleMapDrag(
     scale: number,
     stageSize: { width: number; height: number }
 ) {

@@ -7,7 +7,6 @@ import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/
 import StrategyMapImage from '@/(presentation)/(pages)/strategies/[id]/components/body/map/strategy-map-image.component';
 import Konva from 'konva';
 import React, { Ref } from 'react';
-import { useCircleEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useCircleEvent';
 import {
     AirplanePathResponseDto,
     CircleResponseDto,
@@ -18,14 +17,8 @@ import {
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import { useAirplanePathEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useAirplanePathEvent';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
-import { useEnemyTeamEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useEnemyTeamEvent';
-import { useTeamPlayerEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useTeamPlayerEvent';
-import { useMarkerEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useMarkerEvent';
-import { useWaypointEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useWaypointEvent';
 import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
-import { useTagEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useTagEvent';
 import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
@@ -33,7 +26,8 @@ import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/component
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
-import { useCommentEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useCommentEvent';
+import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
+import { Layer } from 'react-konva';
 
 export interface StrategyBodyProps {
     id: string;
@@ -75,58 +69,23 @@ function StrategyBody({
     );
 
     const {
-        isPhaseSelectModalOpen,
-        phaseSelectModalOpen,
-        phaseSelectModalClose,
-        circleCreate,
-    } = useCircleEvent(id);
-
-    const { clickAirplanePath, startPosition, endPosition } =
-        useAirplanePathEvent(id, airplanePath);
-
-    const {
-        isEnterEnemyTeamLabelModalOpen,
-        enterEnemyTeamLabelModalOpen,
-        enterEnemyTeamLabelModalClose,
-        enemyTeamCreate,
-    } = useEnemyTeamEvent(id);
-
-    const {
-        teamPlayerCreate,
-        selectedTeamPlayerId,
-        isClickableTeamPlayer,
-        changeSelectedTeamPlayerId,
-    } = useTeamPlayerEvent(id, selectedTool);
-
-    const {
-        isEnterTagContentModalOpen,
-        enterTagContentModalOpen,
-        enterTagContentModalClose,
-        tagCreate,
-    } = useTagEvent(id);
-
-    const { markerClick } = useMarkerEvent(
-        id,
-        teamPlayers,
-        selectedTeamPlayerId
-    );
-
-    const {
-        waypointCreate,
-        isDrawing: isWaypointDrawing,
-        clickedPositions: waypointClickedPositions,
-    } = useWaypointEvent(id, teamPlayers, selectedTeamPlayerId);
-
-    const {
-        isCommentWindowOpen,
-        commentWindowOpen,
-        commentWindowClose,
-        commentClick,
-        windowPosition: commentWindowPosition,
-        filteredComments,
-        commentCreate,
-        commentUpdate,
-    } = useCommentEvent(id, comments);
+        circle,
+        airplane,
+        enemyTeam,
+        teamPlayer,
+        tag,
+        marker,
+        waypoint,
+        comment,
+        isSelectable,
+    } = useToolEvent(id, selectedTool, {
+        circles: circles,
+        airplanePath: airplanePath,
+        enemyTeams: enemyTeams,
+        teamPlayers: teamPlayers,
+        tags: tags,
+        comments: comments,
+    });
 
     const onMapClick = (
         clickPosition: { x: number; y: number },
@@ -134,21 +93,21 @@ function StrategyBody({
     ) => {
         switch (selectedTool) {
             case 'circle':
-                return phaseSelectModalOpen(clickPosition);
+                return circle.phaseSelectModalOpen(clickPosition);
             case 'airplane':
-                return clickAirplanePath(clickPosition);
+                return airplane.clickAirplanePath(clickPosition);
             case 'enemy':
-                return enterEnemyTeamLabelModalOpen(clickPosition);
+                return enemyTeam.enterEnemyTeamLabelModalOpen(clickPosition);
             case 'team':
-                return teamPlayerCreate(clickPosition);
+                return teamPlayer.createTeamPlayer(clickPosition);
             case 'marker':
-                return markerClick(clickPosition);
+                return marker.saveMarker(clickPosition);
             case 'waypoint':
-                return waypointCreate(clickPosition);
+                return waypoint.createWaypoint(clickPosition);
             case 'tag':
-                return enterTagContentModalOpen(clickPosition);
+                return tag.enterTagContentModalOpen(clickPosition);
             case 'comment':
-                return commentWindowOpen(windowPosition, clickPosition);
+                return comment.commentWindowOpen(windowPosition, clickPosition);
         }
     };
 
@@ -175,62 +134,88 @@ function StrategyBody({
             <StrategyCanvas
                 stageRef={stageRef}
                 handleMouseMove={handleMouseMove}
-                selectedTool={selectedTool}
-                map={<StrategyMapImage src={mapImage} />}
+                isDraggable={selectedTool === 'select'}
+                map={
+                    <Layer imageSmoothingEnabled={true}>
+                        <StrategyMapImage src={mapImage} />
+                    </Layer>
+                }
                 properties={
-                    <>
-                        <CirclesLayer circles={circles} />
+                    <Layer>
+                        <CirclesLayer
+                            isSelectable={isSelectable}
+                            circles={circles}
+                            onMove={circle.moveCircle}
+                        />
                         <AirplanePathLayer
-                            startPosition={startPosition}
-                            endPosition={endPosition}
+                            id={airplanePath?.id}
+                            isSelectable={isSelectable}
+                            startPosition={airplane.startPosition}
+                            endPosition={airplane.endPosition}
+                            onMove={airplane.moveAirplanePath}
                         />
-                        <EnemyTeamsLayer enemyTeams={enemyTeams} />
+                        <EnemyTeamsLayer
+                            isSelectable={isSelectable}
+                            enemyTeams={enemyTeams}
+                            onMove={enemyTeam.moveEnemyTeam}
+                        />
                         <TeamPlayersLayer
+                            isSelectable={isSelectable}
                             teamPlayers={teamPlayers}
-                            clickable={isClickableTeamPlayer}
-                            selectedTeamPlayerId={selectedTeamPlayerId}
-                            changeSelectedTeamPlayerId={
-                                changeSelectedTeamPlayerId
+                            selectedTeamPlayerId={
+                                teamPlayer.selectedTeamPlayerId
                             }
-                            isWaypointDrawing={isWaypointDrawing}
-                            waypointClickedPositions={waypointClickedPositions}
+                            changeSelectedTeamPlayerId={
+                                teamPlayer.changeSelectedTeamPlayerId
+                            }
+                            isWaypointDrawing={waypoint.isDrawing}
+                            waypointClickedPositions={waypoint.clickedPositions}
+                            onMove={teamPlayer.moveTeamPlayer}
+                            onMarkerMove={marker.moveMarker}
+                            onWaypointMove={waypoint.moveWaypoint}
                         />
-                        <TagsLayer tags={tags} />
+                        <TagsLayer
+                            isSelectable={isSelectable}
+                            tags={tags}
+                            onMove={tag.moveTag}
+                        />
                         <CommentsLayer
+                            isSelectable={isSelectable}
                             comments={comments}
-                            onClick={commentClick}
+                            onClick={comment.commentClick}
+                            onMove={comment.moveComment}
                         />
-                    </>
+                    </Layer>
                 }
                 onMapClick={handleClick}
             />
 
             <PhaseSelectModal
-                isOpen={isPhaseSelectModalOpen}
-                onClose={phaseSelectModalClose}
-                onConfirm={circleCreate}
+                isOpen={circle.isPhaseSelectModalOpen}
+                onClose={circle.phaseSelectModalClose}
+                onConfirm={circle.createCircle}
             />
 
             <EnterTeamLabelModal
-                isOpen={isEnterEnemyTeamLabelModalOpen}
-                onClose={enterEnemyTeamLabelModalClose}
-                onConfirm={enemyTeamCreate}
+                isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
+                onClose={enemyTeam.enterEnemyTeamLabelModalClose}
+                onConfirm={enemyTeam.createEnemyTeam}
             />
 
             <EnterTagContentModal
-                isOpen={isEnterTagContentModalOpen}
-                onClose={enterTagContentModalClose}
-                onConfirm={tagCreate}
+                isOpen={tag.isEnterTagContentModalOpen}
+                onClose={tag.enterTagContentModalClose}
+                onConfirm={tag.createTag}
             />
 
             <StrategyCommentWindow
-                key={JSON.stringify(commentWindowPosition)}
-                isOpen={isCommentWindowOpen}
-                onClose={commentWindowClose}
-                comments={filteredComments}
-                onAddComment={commentCreate}
-                onUpdateComment={commentUpdate}
-                position={commentWindowPosition}
+                key={JSON.stringify(comment.windowPosition)}
+                isOpen={comment.isCommentWindowOpen}
+                onClose={comment.commentWindowClose}
+                comments={comment.filteredComments}
+                onAddComment={comment.createComment}
+                onUpdateComment={comment.updateComment}
+                position={comment.windowPosition}
             />
         </div>
     );

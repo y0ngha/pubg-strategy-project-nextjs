@@ -1,14 +1,13 @@
-import { Circle, Group, Image, Label, Layer, Tag, Text } from 'react-konva';
+import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
-import { useKonvaHandleCursorChange } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleCursorChange';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
-import { KonvaEventObject } from 'konva/lib/Node';
+import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -16,9 +15,13 @@ interface TeamPlayerPropertyProps {
     y: number;
     priority: number;
     color: string;
-    clickable: boolean;
     isClicked: boolean;
     onClick: (id: string) => void;
+    isSelectable: boolean;
+    onMove: (
+        teamPlayerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
 }
 
 function TeamPlayerProperty({
@@ -27,22 +30,28 @@ function TeamPlayerProperty({
     y,
     priority,
     color,
-    clickable,
+    isSelectable,
     isClicked,
     onClick,
+    onMove,
 }: TeamPlayerPropertyProps) {
-    const {
-        handleMouseLeave: cursorHandleMouseLeave,
-        handleMouseEnter: cursorHandleMouseEnter,
-    } = useKonvaHandleCursorChange('pointer');
+    const iconColor = '#ffffff';
 
     const {
-        isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-    } = useKonvaHandleHover();
+        scaleX,
+        scaleY,
+        shadowBlur,
+        shadowColor,
+        shadowOpacity,
+    } = useKonvaHandleHover(iconColor);
 
-    const iconColor = '#ffffff';
+    const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
+        deltaPosition => {
+            onMove(id, deltaPosition);
+        }
+    );
 
     const { url, center } = useLucideIconToSvgUrl(User, {
         color: iconColor,
@@ -55,52 +64,55 @@ function TeamPlayerProperty({
 
     const radius = 50;
 
-    const handleMouseEnter = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseEnter();
-        cursorHandleMouseEnter(event);
-    };
-
-    const handleMouseLeave = (event: KonvaEventObject<MouseEvent>) => {
-        hoverHandleMouseLeave();
-        cursorHandleMouseLeave(event);
-    };
-
     const handleClick = () => {
         onClick(id);
     };
 
     return (
         <Group
-            x={x}
-            y={y}
-            listening={clickable}
+            x={0}
+            y={0}
+            listening={isSelectable}
+            draggable={true}
+            onMouseDown={event => {
+                event.cancelBubble = true;
+            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={hoverHandleMouseEnter}
+            onMouseLeave={hoverHandleMouseLeave}
         >
             <Circle
-                radius={radius}
-                fill={isClicked ? '#00000033' : `${color}33`}
-                stroke={isClicked ? '#000000' : color}
-                strokeWidth={1}
-                shadowColor={'black'}
-                shadowBlur={10}
-                shadowOpacity={0.3}
+                x={x}
+                y={y}
+                radius={isClicked ? radius + 20 : radius}
+                fill={`${color}33`}
+                stroke={color}
+                strokeWidth={isClicked ? 3 : 1}
                 dash={isClicked ? [30, 30] : undefined}
+                scaleX={isClicked ? 1.2 : scaleX}
+                scaleY={isClicked ? 1.2 : scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
             />
 
             <Image
                 image={teamPlayerImage}
+                x={x}
+                y={y}
                 offsetX={center}
                 offsetY={center}
-                scaleX={isHovered ? 1.0 : 0.8}
-                scaleY={isHovered ? 1.0 : 0.8}
-                shadowColor={iconColor}
-                shadowBlur={isHovered ? 15 : 0}
+                scaleX={scaleX}
+                scaleY={scaleY}
+                shadowBlur={shadowBlur}
+                shadowColor={shadowColor}
+                shadowOpacity={shadowOpacity}
                 alt={`팀 플레이어 - ${priority}`}
             />
 
-            <Label y={radius + 8}>
+            <Label x={x} y={y + radius + 8}>
                 <Tag
                     fill={'#18181b'}
                     stroke={color}
@@ -127,20 +139,33 @@ TeamPlayerProperty.displayName = 'TeamPlayerProperty';
 
 function TeamPlayersLayer({
     teamPlayers,
-    clickable,
+    isSelectable,
     selectedTeamPlayerId,
     changeSelectedTeamPlayerId,
     isWaypointDrawing,
     waypointClickedPositions,
+    onMove,
+    onMarkerMove,
+    onWaypointMove,
 }: {
-    clickable: boolean;
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
     isWaypointDrawing: boolean;
     waypointClickedPositions: { x: number; y: number }[];
-} & Pick<StrategyBodyProps, 'teamPlayers'>) {
+    onMarkerMove: (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onWaypointMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+} & Pick<TeamPlayerPropertyProps, 'isSelectable' | 'onMove'> &
+    Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
-        <Layer>
+        <>
             {teamPlayers.map(field => {
                 return (
                     <React.Fragment key={`tp-${field.priority}`}>
@@ -150,11 +175,12 @@ function TeamPlayersLayer({
                             y={field.position.y}
                             priority={field.priority}
                             color={field.color}
-                            clickable={clickable}
+                            isSelectable={isSelectable}
                             isClicked={field.id === selectedTeamPlayerId}
                             onClick={id => {
                                 changeSelectedTeamPlayerId(id);
                             }}
+                            onMove={onMove}
                         />
                         {field.marker && (
                             <MarkerProperty
@@ -162,6 +188,10 @@ function TeamPlayersLayer({
                                 priority={field.priority}
                                 x={field.marker.position.x}
                                 y={field.marker.position.y}
+                                isSelectable={isSelectable}
+                                id={field.marker.id}
+                                teamPlayerId={field.id}
+                                onMove={onMarkerMove}
                             />
                         )}
                         <WaypointProperty
@@ -174,11 +204,15 @@ function TeamPlayersLayer({
                             color={field.color}
                             priority={field.priority}
                             isDrawing={isWaypointDrawing}
+                            isSelectable={isSelectable}
+                            id={field.waypoint?.id}
+                            teamPlayerId={field.id}
+                            onMove={onWaypointMove}
                         />
                     </React.Fragment>
                 );
             })}
-        </Layer>
+        </>
     );
 }
 

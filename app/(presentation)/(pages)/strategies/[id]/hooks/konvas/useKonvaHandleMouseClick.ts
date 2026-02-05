@@ -8,6 +8,8 @@ export function useKonvaHandleMouseClick(
     ) => void
 ) {
     const handleClick = (event: KonvaEventObject<MouseEvent>) => {
+        event.cancelBubble = true;
+
         const mousePosition = event.target
             .getStage()
             ?.getRelativePointerPosition();
