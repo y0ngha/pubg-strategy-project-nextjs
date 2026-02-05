@@ -6,7 +6,10 @@ import useImage from 'use-image';
 import { User } from 'lucide-react';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import {
+    PropertyClickPayload,
+    StrategyBodyProps,
+} from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
@@ -21,7 +24,7 @@ interface TeamPlayerPropertyProps {
     priority: number;
     color: string;
     isSelected: boolean;
-    onClick: (id: string) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
     isSelectable: boolean;
     onMove: (
         teamPlayerId: string,
@@ -34,7 +37,7 @@ interface WaypointPropertyProps {
     isWaypointDrawing: boolean;
     waypointClickedPositions: { x: number; y: number }[];
     selectedWaypointId?: { teamPlayerId: string; id: string };
-    onWaypointClick: (data?: { teamPlayerId: string; id: string }) => void;
+    onWaypointClick: ({ type, id }: PropertyClickPayload) => void;
     onWaypointMove: (
         teamPlayerId: string,
         waypointId: string,
@@ -45,7 +48,7 @@ interface WaypointPropertyProps {
 
 interface MarkerPropertyProps {
     selectedMarkerId?: { teamPlayerId: string; id: string };
-    onMarkerClick: (data?: { teamPlayerId: string; id: string }) => void;
+    onMarkerClick: ({ type, id }: PropertyClickPayload) => void;
     onMarkerMove: (
         teamPlayerId: string,
         markerId: string,
@@ -98,7 +101,7 @@ function TeamPlayerProperty({
     const radius = 50;
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
-        onClick(id);
+        onClick({ type: 'team', id });
     });
 
     const handleDelete = () => {

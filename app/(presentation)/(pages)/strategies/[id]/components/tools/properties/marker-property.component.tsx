@@ -10,6 +10,7 @@ import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/
 import Konva from 'konva';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
 import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 
 interface MarkerPropertyProps {
     id: string;
@@ -20,7 +21,7 @@ interface MarkerPropertyProps {
     color: string;
     isSelectable: boolean;
     isSelected: boolean;
-    onClick: (data?: { teamPlayerId: string; id: string }) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
     onMove: (
         teamPlayerId: string,
         markerId: string,
@@ -61,7 +62,7 @@ function MarkerProperty({
     );
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
-        onClick({ teamPlayerId, id });
+        onClick({ type: 'marker', id, teamPlayerId });
     });
 
     const { url, center } = useLucideIconToSvgUrl(MapPin, {

@@ -3,7 +3,10 @@
 import { Circle, Group, Shape } from 'react-konva';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
 import React, { useRef } from 'react';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import {
+    PropertyClickPayload,
+    StrategyBodyProps,
+} from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
@@ -20,7 +23,7 @@ interface CirclePropertyProps {
     isSelected: boolean;
     onMove: (circleId: string, deltaPosition: { x: number; y: number }) => void;
     onDelete: (circleId: string) => void;
-    onClick: (circleId: string) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
 }
 
 function CircleProperty({
@@ -53,9 +56,7 @@ function CircleProperty({
     );
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
-        if (id) {
-            onClick(id);
-        }
+        onClick({ type: 'circle', id });
     });
 
     const handleDelete = () => {

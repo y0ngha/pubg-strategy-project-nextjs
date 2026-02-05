@@ -7,6 +7,7 @@ import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
 import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
 import Konva from 'konva';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 
 interface WaypointPropertyProps {
     id?: string;
@@ -17,7 +18,7 @@ interface WaypointPropertyProps {
     isDrawing: boolean;
     isSelectable: boolean;
     isSelected: boolean;
-    onClick: (data?: { teamPlayerId: string; id: string }) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
     onMove: (
         teamPlayerId: string,
         waypointId: string,
@@ -61,7 +62,7 @@ function WaypointProperty({
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
         if (id) {
-            onClick({ teamPlayerId, id });
+            onClick({ type: 'waypoint', id, teamPlayerId });
         }
     });
 

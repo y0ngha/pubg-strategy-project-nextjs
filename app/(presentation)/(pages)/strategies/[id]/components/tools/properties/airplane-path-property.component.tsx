@@ -10,6 +10,7 @@ import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/
 import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
 import Konva from 'konva';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 
 interface AirplanePathPropertyProps {
     id?: string;
@@ -22,7 +23,7 @@ interface AirplanePathPropertyProps {
         deltaPosition: { x: number; y: number }
     ) => void;
     onDelete: (airplanePathId: string) => void;
-    onClick: (airplanePathId: string) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
 }
 
 function AirplanePathProperty({
@@ -61,7 +62,7 @@ function AirplanePathProperty({
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
         if (id) {
-            onClick(id);
+            onClick({ type: 'airplane', id });
         }
     });
 

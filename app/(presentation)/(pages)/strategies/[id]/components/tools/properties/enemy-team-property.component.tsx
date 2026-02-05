@@ -4,7 +4,10 @@ import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Swords } from 'lucide-react';
 import useImage from 'use-image';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import {
+    PropertyClickPayload,
+    StrategyBodyProps,
+} from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
@@ -24,7 +27,7 @@ interface EnemyTeamPropertyProps {
         deltaPosition: { x: number; y: number }
     ) => void;
     onDelete: (enemyTeamId: string) => void;
-    onClick: (enemyTeamId: string) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
 }
 
 function EnemyTeamProperty({
@@ -59,7 +62,7 @@ function EnemyTeamProperty({
     );
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
-        onClick(id);
+        onClick({ type: 'enemy', id });
     });
 
     const { url, center } = useLucideIconToSvgUrl(Swords, {

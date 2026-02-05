@@ -4,7 +4,10 @@ import { Group, Image, Label, Tag as KonvaTag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { Tag } from 'lucide-react';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import {
+    PropertyClickPayload,
+    StrategyBodyProps,
+} from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import React, { useRef, useState } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
@@ -21,7 +24,7 @@ interface TagPropertyProps {
     isSelected: boolean;
     onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
     onDelete: (tagId: string) => void;
-    onClick: (tagId: string) => void;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
 }
 
 function TagProperty({
@@ -58,7 +61,7 @@ function TagProperty({
     );
 
     const { handleClick } = useKonvaHandleMouseClick(() => {
-        onClick(id);
+        onClick({ type: 'tag', id });
         setIsOpen(prevState => !prevState);
     });
 
