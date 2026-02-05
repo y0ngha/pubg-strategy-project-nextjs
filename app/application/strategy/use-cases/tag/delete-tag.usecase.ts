@@ -13,7 +13,7 @@ export class DeleteTagUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteTagRequestDto): Promise<boolean> {
+    async execute(dto: DeleteTagRequestDto) {
         const { actorId, strategyId, tagId } =
             DeleteTagRequestSchema.parse(dto);
 
@@ -27,6 +27,8 @@ export class DeleteTagUseCase {
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            tagId: tagId.toString(),
+        };
     }
 }
