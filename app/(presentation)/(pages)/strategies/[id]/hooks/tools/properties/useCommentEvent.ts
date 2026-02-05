@@ -15,7 +15,9 @@ export function useCommentEvent(
     const { deleteComment: deleteCommentMutation } =
         useDeleteCommentMutation(strategyId);
 
-    const [topCommentId, setTopCommentId] = useState<string | null>(null);
+    const [selectedCommentId, setSelectedCommentId] = useState<
+        string | undefined
+    >(undefined);
 
     const [isCommentWindowOpen, setIsCommentWindowOpen] = useState(false);
 
@@ -32,6 +34,16 @@ export function useCommentEvent(
         y: 0,
     });
 
+    const toggleSelectedCommentId = (id?: string) => {
+        setSelectedCommentId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const setupCommentWindowPosition = (
         commentWindowPosition: { x: number; y: number },
         commentPosition: { x: number; y: number }
@@ -45,13 +57,13 @@ export function useCommentEvent(
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setTopCommentId(null);
+        setSelectedCommentId(undefined);
         setIsCommentWindowOpen(true);
     };
 
     const commentWindowClose = () => {
         setIsCommentWindowOpen(false);
-        setTopCommentId(null);
+        setSelectedCommentId(undefined);
     };
 
     const filterSamePositionComments = (
@@ -130,11 +142,13 @@ export function useCommentEvent(
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setTopCommentId(commentId);
+        setSelectedCommentId(commentId);
         setIsCommentWindowOpen(true);
     };
 
-    const topComment = comments.find(comment => comment.id === topCommentId);
+    const topComment = comments.find(
+        comment => comment.id === selectedCommentId
+    );
 
     const filteredComments = topComment
         ? comments
@@ -145,6 +159,8 @@ export function useCommentEvent(
         : [];
 
     return {
+        toggleSelectedCommentId,
+        selectedCommentId,
         isCommentWindowOpen,
         commentWindowOpen,
         commentWindowClose,

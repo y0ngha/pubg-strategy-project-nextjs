@@ -19,7 +19,7 @@ export function useTeamPlayerEvent(
         string | undefined
     >(undefined);
 
-    const changeSelectedTeamPlayerId = (id: string) => {
+    const toggleSelectedTeamPlayerId = (id?: string) => {
         setSelectedTeamPlayerId(prevState => {
             if (prevState === id) {
                 return undefined;
@@ -69,7 +69,7 @@ export function useTeamPlayerEvent(
 
     return {
         selectedTeamPlayerId,
-        changeSelectedTeamPlayerId,
+        toggleSelectedTeamPlayerId,
         createTeamPlayer,
         moveTeamPlayer,
         deleteTeamPlayer,

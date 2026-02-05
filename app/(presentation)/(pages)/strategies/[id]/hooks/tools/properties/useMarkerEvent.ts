@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
+import { useState } from 'react';
 
 export function useMarkerEvent(
     strategyId: string,
@@ -16,6 +17,14 @@ export function useMarkerEvent(
     const { deleteMarker: deleteMarkerMutation } =
         useDeleteMarkerMutation(strategyId);
 
+    const [selectedMarkerId, setSelectedMarkerId] = useState<
+        | {
+              teamPlayerId: string;
+              id: string;
+          }
+        | undefined
+    >(undefined);
+
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
     );
@@ -28,6 +37,27 @@ export function useMarkerEvent(
                 "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 마커를 이용해주세요."
             );
         }
+    };
+
+    const toggleSelectedMarkerId = (data?: {
+        teamPlayerId: string;
+        id: string;
+    }) => {
+        console.log(data);
+        setSelectedMarkerId(prevState => {
+            if (data === undefined) {
+                return undefined;
+            }
+
+            if (prevState?.id === data.id) {
+                return undefined;
+            }
+
+            return {
+                teamPlayerId: data.teamPlayerId,
+                id: data.id,
+            };
+        });
     };
 
     const saveMarker = (position: { x: number; y: number }) => {
@@ -95,6 +125,8 @@ export function useMarkerEvent(
     };
 
     return {
+        toggleSelectedMarkerId,
+        selectedMarkerId,
         saveMarker,
         moveMarker,
         deleteMarker,

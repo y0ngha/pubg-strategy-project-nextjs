@@ -15,6 +15,10 @@ export function useAirplanePathEvent(
     const { deleteAirplanePath: deleteAirplanePathMutation } =
         useDeleteAirplanePathMutation(strategyId);
 
+    const [selectedAirplanePathId, setSelectedAirplanePathId] = useState<
+        string | undefined
+    >(undefined);
+
     const [startPosition, setStartPosition] = useState<
         | {
               x: number;
@@ -35,6 +39,16 @@ export function useAirplanePathEvent(
         if (!airplanePath) {
             throw new Error('비행기 동선이 존재하지 않습니다.');
         }
+    };
+
+    const toggleSelectedAirplanePathId = (id?: string) => {
+        setSelectedAirplanePathId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
     };
 
     const confirmOnSuccessCallbackHandler = (data: {
@@ -143,6 +157,8 @@ export function useAirplanePathEvent(
     };
 
     return {
+        toggleSelectedAirplanePathId,
+        selectedAirplanePathId,
         startPosition,
         endPosition,
         clickAirplanePath,

@@ -23,6 +23,20 @@ export function useEnemyTeamEvent(
         y: 0,
     });
 
+    const [selectedEnemyTeamId, setSelectedEnemyTeamId] = useState<
+        string | undefined
+    >(undefined);
+
+    const toggleSelectedEnemyTeamId = (id?: string) => {
+        setSelectedEnemyTeamId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const enterEnemyTeamLabelModalOpen = (position: {
         x: number;
         y: number;
@@ -77,6 +91,8 @@ export function useEnemyTeamEvent(
     };
 
     return {
+        toggleSelectedEnemyTeamId,
+        selectedEnemyTeamId,
         isEnterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalClose,

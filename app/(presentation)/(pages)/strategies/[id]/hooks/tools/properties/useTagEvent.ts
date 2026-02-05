@@ -17,6 +17,20 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         y: 0,
     });
 
+    const [selectedTagId, setSelectedTagId] = useState<string | undefined>(
+        undefined
+    );
+
+    const toggleSelectedTagId = (id?: string) => {
+        setSelectedTagId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const enterTagContentModalOpen = (position: { x: number; y: number }) => {
         setIsEnterTagContentModalOpen(true);
         setPosition(position);
@@ -66,6 +80,8 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     };
 
     return {
+        toggleSelectedTagId,
+        selectedTagId,
         isEnterTagContentModalOpen,
         enterTagContentModalOpen,
         enterTagContentModalClose,

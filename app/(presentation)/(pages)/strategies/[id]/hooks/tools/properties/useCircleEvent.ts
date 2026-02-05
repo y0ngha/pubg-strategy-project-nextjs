@@ -21,6 +21,20 @@ export function useCircleEvent(
         y: 0,
     });
 
+    const [selectedCircleId, setSelectedCircleId] = useState<
+        string | undefined
+    >(undefined);
+
+    const toggleSelectedCircleId = (id?: string) => {
+        setSelectedCircleId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const findCircleById = (circleId: string) => {
         const circle = circles.find(circle => circle.id === circleId);
 
@@ -76,6 +90,8 @@ export function useCircleEvent(
     };
 
     return {
+        toggleSelectedCircleId,
+        selectedCircleId,
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,

@@ -26,6 +26,14 @@ export function useWaypointEvent(
         { x: number; y: number }[]
     >([]);
 
+    const [selectedWaypointId, setSelectedWaypointId] = useState<
+        | {
+              teamPlayerId: string;
+              id: string;
+          }
+        | undefined
+    >(undefined);
+
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
     );
@@ -42,11 +50,30 @@ export function useWaypointEvent(
             );
         }
     };
-
     const ensurePressAltKey = () => {
         if (!keydownAlt) {
             throw new Error('Alt(Command)키를 누르고 웨이포인트를 그려주세요.');
         }
+    };
+
+    const toggleSelectedWaypointId = (data?: {
+        teamPlayerId: string;
+        id: string;
+    }) => {
+        setSelectedWaypointId(prevState => {
+            if (data === undefined) {
+                return undefined;
+            }
+
+            if (prevState?.id === data.id) {
+                return undefined;
+            }
+
+            return {
+                teamPlayerId: data.teamPlayerId,
+                id: data.id,
+            };
+        });
     };
 
     const createWaypoint = (position: { x: number; y: number }) => {
@@ -175,6 +202,8 @@ export function useWaypointEvent(
     }, []);
 
     return {
+        toggleSelectedWaypointId,
+        selectedWaypointId,
         isDrawing,
         clickedPositions,
         createWaypoint,
