@@ -144,20 +144,31 @@ function StrategyBody({
                     <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
+                            selectedCircleId={circle.selectedCircleId}
+                            onClick={circle.toggleSelectedCircleId}
                             circles={circles}
                             onMove={circle.moveCircle}
+                            onDelete={circle.deleteCircle}
                         />
                         <AirplanePathLayer
                             id={airplanePath?.id}
                             isSelectable={isSelectable}
+                            selectedAirplanePathId={
+                                airplane.selectedAirplanePathId
+                            }
+                            onClick={airplane.toggleSelectedAirplanePathId}
                             startPosition={airplane.startPosition}
                             endPosition={airplane.endPosition}
                             onMove={airplane.moveAirplanePath}
+                            onDelete={airplane.deleteAirplanePath}
                         />
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
+                            selectedEnemyTeamId={enemyTeam.selectedEnemyTeamId}
+                            onClick={enemyTeam.toggleSelectedEnemyTeamId}
                             enemyTeams={enemyTeams}
                             onMove={enemyTeam.moveEnemyTeam}
+                            onDelete={enemyTeam.deleteEnemyTeam}
                         />
                         <TeamPlayersLayer
                             isSelectable={isSelectable}
@@ -165,19 +176,27 @@ function StrategyBody({
                             selectedTeamPlayerId={
                                 teamPlayer.selectedTeamPlayerId
                             }
-                            changeSelectedTeamPlayerId={
-                                teamPlayer.changeSelectedTeamPlayerId
-                            }
+                            selectedMarkerId={marker.selectedMarkerId}
+                            selectedWaypointId={waypoint.selectedWaypointId}
                             isWaypointDrawing={waypoint.isDrawing}
                             waypointClickedPositions={waypoint.clickedPositions}
+                            onClick={teamPlayer.toggleSelectedTeamPlayerId}
+                            onMarkerClick={marker.toggleSelectedMarkerId}
+                            onWaypointClick={waypoint.toggleSelectedWaypointId}
                             onMove={teamPlayer.moveTeamPlayer}
                             onMarkerMove={marker.moveMarker}
                             onWaypointMove={waypoint.moveWaypoint}
+                            onDelete={teamPlayer.deleteTeamPlayer}
+                            onMarkerDelete={marker.deleteMarker}
+                            onWaypointDelete={waypoint.deleteWaypoint}
                         />
                         <TagsLayer
                             isSelectable={isSelectable}
+                            selectedTagId={tag.selectedTagId}
+                            onClick={tag.toggleSelectedTagId}
                             tags={tags}
                             onMove={tag.moveTag}
+                            onDelete={tag.deleteTag}
                         />
                         <CommentsLayer
                             isSelectable={isSelectable}
