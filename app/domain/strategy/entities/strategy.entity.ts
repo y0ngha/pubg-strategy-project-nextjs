@@ -27,6 +27,7 @@ import {
     TagNotFoundException,
     TeamPlayerLimitExceededException,
     TeamPlayerNotFoundException,
+    WaypointNotFoundException,
 } from '@domain/strategy/exceptions/strategy.exceptions';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { Position } from '@domain/strategy/value-objects/position';
@@ -42,6 +43,11 @@ import { CommentId } from '@domain/strategy/value-objects/comment-id';
 import { TagContent } from '@domain/strategy/value-objects/tag-content';
 import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
 import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
+import { MarkerId } from '@domain/strategy/value-objects/marker-id';
+import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
+import { AirplanePathId } from '@domain/strategy/value-objects/airplane-path-id';
+import { Marker } from '@domain/strategy/entities/marker.entity';
+import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
 
 interface FindEntity<T> {
     value: T;
@@ -336,11 +342,39 @@ export class Strategy {
         return waypoint;
     }
 
-    removeTeamPlayerWaypoint(actorId: UserId, teamPlayerId: TeamPlayerId) {
+    updateTeamPlayerWaypoint(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        waypointId: WaypointId,
+        positions: Position[]
+    ) {
         this.ensureNotDeleted();
         this.ensureEditPermission(actorId);
-
         const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        this.ensureHaveWaypoint(teamPlayer.waypoint);
+        this.ensureSameWaypointId(teamPlayer.waypoint.id, waypointId);
+
+        const isChanged = teamPlayer.updateWaypointPositions(positions);
+
+        if (isChanged) {
+            this._updatedAt = new Date();
+        }
+
+        return teamPlayer.waypoint;
+    }
+
+    removeTeamPlayerWaypoint(
+        actorId: UserId,
+        teamPlayerId: TeamPlayerId,
+        waypointId: WaypointId
+    ) {
+        this.ensureNotDeleted();
+        this.ensureEditPermission(actorId);
+        const { value: teamPlayer } = this.findTeamPlayer(teamPlayerId);
+
+        this.ensureHaveWaypoint(teamPlayer.waypoint);
+        this.ensureSameWaypointId(teamPlayer.waypoint.id, waypointId);
 
         teamPlayer.deleteWaypoint();
         this._updatedAt = new Date();
@@ -927,6 +961,23 @@ export class Strategy {
     private ensureSameMarkerId(markerId1: MarkerId, markerId2: MarkerId) {
         if (!markerId1.equals(markerId2)) {
             throw new MarkerNotFoundException();
+        }
+    }
+
+    private ensureHaveWaypoint(
+        waypoint: Waypoint | null
+    ): asserts waypoint is Waypoint {
+        if (!waypoint) {
+            throw new WaypointNotFoundException();
+        }
+    }
+
+    private ensureSameWaypointId(
+        waypointId1: WaypointId,
+        waypointId2: WaypointId
+    ) {
+        if (!waypointId1.equals(waypointId2)) {
+            throw new WaypointNotFoundException();
         }
     }
 }
