@@ -13,8 +13,8 @@ export class DeleteWaypointUseCase {
         private readonly strategyRepository: StrategyRepositoryPort
     ) {}
 
-    async execute(dto: DeleteWaypointRequestDto): Promise<boolean> {
-        const { actorId, strategyId, teamPlayerId } =
+    async execute(dto: DeleteWaypointRequestDto) {
+        const { actorId, strategyId, teamPlayerId, waypointId } =
             DeleteWaypointRequestSchema.parse(dto);
 
         const strategy = await this.strategyRepository.findById(strategyId);
@@ -23,10 +23,13 @@ export class DeleteWaypointUseCase {
             throw new StrategyNotFoundException();
         }
 
-        strategy.removeTeamPlayerWaypoint(actorId, teamPlayerId);
+        strategy.removeTeamPlayerWaypoint(actorId, teamPlayerId, waypointId);
 
         await this.strategyRepository.save(strategy);
 
-        return true;
+        return {
+            teamPlayerId: teamPlayerId.toString(),
+            waypointId: waypointId.toString(),
+        };
     }
 }
