@@ -40,14 +40,6 @@ export function useDeleteAirplanePathMutation(strategyId: string) {
                 );
             }
 
-            queryClient.invalidateQueries({
-                queryKey: strategyQueryKey,
-            });
-
-            queryClient.invalidateQueries({
-                queryKey: strategiesQueryKey,
-            });
-
             console.error('useDeleteAirplanePathMutation', error);
             toast.error(
                 error.message ??
