@@ -27,10 +27,24 @@ export function useWaypointEvent(
         player => player.id === selectedTeamPlayerId
     );
 
-    const existingWaypoint = selectedTeamPlayer?.waypoint !== undefined;
+    const waypoint = selectedTeamPlayer?.waypoint;
 
     const windowAltKeyCode = 'Alt';
     const macAltKeyCode = 'Meta';
+
+    const ensureSelectedTeamPlayerId = () => {
+        if (selectedTeamPlayerId === undefined) {
+            throw new Error(
+                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 웨이포인트를 이용해주세요."
+            );
+        }
+    };
+
+    const ensurePressAltKey = () => {
+        if (!keydownAlt) {
+            throw new Error('Alt(Command)키를 누르고 웨이포인트를 그려주세요.');
+        }
+    };
 
     const createWaypoint = (position: { x: number; y: number }) => {
         try {
@@ -60,14 +74,32 @@ export function useWaypointEvent(
         }
     };
 
-    const confirm = (positions: { x: number; y: number }[]) => {
-        const formData = new FormData();
-        formData.set('positions', JSON.stringify(positions));
+    const saveWaypoint = (positions: { x: number; y: number }[]) => {
+        try {
+            ensureSelectedTeamPlayerId();
 
-        if (existingWaypoint) {
-            updateWaypointMutation(formData);
-        } else {
-            createWaypointMutation(formData);
+            const formData = new FormData();
+
+            formData.set('positions', JSON.stringify(positions));
+
+            if (waypoint) {
+                formData.set('waypointId', waypoint.id);
+
+                updateWaypointMutation(formData);
+            } else {
+                createWaypointMutation(formData);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(
+                    error.message ??
+                        '알 수 없는 오류로 웨이포인트 생성에 실패했습니다.'
+                );
+            } else {
+                toast.error(
+                    '알 수 없는 오류로 웨이포인트 생성에 실패했습니다.'
+                );
+            }
         }
     };
 
@@ -116,24 +148,10 @@ export function useWaypointEvent(
             setIsDrawing(false);
 
             if (isDrawing && clickedPositions.length > 0) {
-                confirm(clickedPositions);
+                saveWaypoint(clickedPositions);
             }
         }
     });
-
-    const ensureSelectedTeamPlayerId = () => {
-        if (selectedTeamPlayerId === undefined) {
-            throw new Error(
-                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 웨이포인트를 이용해주세요."
-            );
-        }
-    };
-
-    const ensurePressAltKey = () => {
-        if (!keydownAlt) {
-            throw new Error('Alt(Command)키를 누르고 웨이포인트를 그려주세요.');
-        }
-    };
 
     useEffect(() => {
         window.addEventListener('keydown', altKeydownHandler);
