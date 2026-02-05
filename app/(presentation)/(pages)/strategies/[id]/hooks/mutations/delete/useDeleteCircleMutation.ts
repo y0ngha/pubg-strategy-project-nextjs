@@ -56,11 +56,11 @@ export function useDeleteCircleMutation(strategyId: string) {
         },
         onSettled: () => {
             queryClient.invalidateQueries({
-                queryKey: strategiesQueryKey,
+                queryKey: strategyQueryKey,
             });
 
             queryClient.invalidateQueries({
-                queryKey: strategyQueryKey,
+                queryKey: strategiesQueryKey,
             });
         },
     });
