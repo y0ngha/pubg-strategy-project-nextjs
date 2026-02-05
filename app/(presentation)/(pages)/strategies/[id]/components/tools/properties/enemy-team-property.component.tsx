@@ -17,6 +17,7 @@ interface EnemyTeamPropertyProps {
         enemyTeamId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (enemyTeamId: string) => void;
 }
 
 function EnemyTeamProperty({
@@ -127,7 +128,8 @@ function EnemyTeamsLayer({
     enemyTeams,
     isSelectable,
     onMove,
-}: Pick<EnemyTeamPropertyProps, 'isSelectable' | 'onMove'> &
+    onDelete,
+}: Pick<EnemyTeamPropertyProps, 'isSelectable' | 'onMove' | 'onDelete'> &
     Pick<StrategyBodyProps, 'enemyTeams'>) {
     return (
         <>
@@ -140,6 +142,7 @@ function EnemyTeamsLayer({
                     teamLabel={field.teamLabel}
                     isSelectable={isSelectable}
                     onMove={onMove}
+                    onDelete={onDelete}
                 />
             ))}
         </>

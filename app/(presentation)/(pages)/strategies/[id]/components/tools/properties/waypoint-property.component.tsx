@@ -18,6 +18,7 @@ interface WaypointPropertyProps {
         waypointId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (teamPlayerId: string, waypointId: string) => void;
 }
 
 function WaypointProperty({

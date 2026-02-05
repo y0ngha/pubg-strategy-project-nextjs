@@ -19,6 +19,7 @@ interface MarkerPropertyProps {
         markerId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (teamPlayerId: string, markerId: string) => void;
 }
 
 function MarkerProperty({

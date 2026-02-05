@@ -14,6 +14,7 @@ interface TagPropertyProps {
     content: string;
     isSelectable: boolean;
     onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
+    onDelete: (tagId: string) => void;
 }
 
 function TagProperty({
@@ -118,7 +119,8 @@ function TagsLayer({
     tags,
     isSelectable,
     onMove,
-}: Pick<TagPropertyProps, 'isSelectable' | 'onMove'> &
+    onDelete,
+}: Pick<TagPropertyProps, 'isSelectable' | 'onMove' | 'onDelete'> &
     Pick<StrategyBodyProps, 'tags'>) {
     return (
         <>
@@ -131,6 +133,7 @@ function TagsLayer({
                     content={field.content}
                     isSelectable={isSelectable}
                     onMove={onMove}
+                    onDelete={onDelete}
                 />
             ))}
         </>

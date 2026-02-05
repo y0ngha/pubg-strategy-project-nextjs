@@ -22,6 +22,27 @@ interface TeamPlayerPropertyProps {
         teamPlayerId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (teamPlayerId: string) => void;
+}
+
+interface WaypointPropertyProps {
+    isWaypointDrawing: boolean;
+    waypointClickedPositions: { x: number; y: number }[];
+    onWaypointMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onWaypointDelete: (teamPlayerId: string, waypointId: string) => void;
+}
+
+interface MarkerPropertyProps {
+    onMarkerMove: (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onMarkerDelete: (teamPlayerId: string, markerId: string) => void;
 }
 
 function TeamPlayerProperty({
@@ -147,23 +168,16 @@ function TeamPlayersLayer({
     onMove,
     onMarkerMove,
     onWaypointMove,
+    onDelete,
+    onMarkerDelete,
+    onWaypointDelete,
 }: {
     selectedTeamPlayerId?: string;
     changeSelectedTeamPlayerId: (id: string) => void;
-    isWaypointDrawing: boolean;
-    waypointClickedPositions: { x: number; y: number }[];
-    onMarkerMove: (
-        teamPlayerId: string,
-        markerId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-    onWaypointMove: (
-        teamPlayerId: string,
-        waypointId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-} & Pick<TeamPlayerPropertyProps, 'isSelectable' | 'onMove'> &
-    Pick<StrategyBodyProps, 'teamPlayers'>) {
+} & Pick<TeamPlayerPropertyProps, 'isSelectable' | 'onMove' | 'onDelete'> &
+    Pick<StrategyBodyProps, 'teamPlayers'> &
+    WaypointPropertyProps &
+    MarkerPropertyProps) {
     return (
         <>
             {teamPlayers.map(field => {
@@ -181,6 +195,7 @@ function TeamPlayersLayer({
                                 changeSelectedTeamPlayerId(id);
                             }}
                             onMove={onMove}
+                            onDelete={onDelete}
                         />
                         {field.marker && (
                             <MarkerProperty
@@ -192,6 +207,7 @@ function TeamPlayersLayer({
                                 id={field.marker.id}
                                 teamPlayerId={field.id}
                                 onMove={onMarkerMove}
+                                onDelete={onMarkerDelete}
                             />
                         )}
                         <WaypointProperty
@@ -208,6 +224,7 @@ function TeamPlayersLayer({
                             id={field.waypoint?.id}
                             teamPlayerId={field.id}
                             onMove={onWaypointMove}
+                            onDelete={onWaypointDelete}
                         />
                     </React.Fragment>
                 );

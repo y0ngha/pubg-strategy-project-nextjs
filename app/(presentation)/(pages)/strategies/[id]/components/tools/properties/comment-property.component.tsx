@@ -22,6 +22,7 @@ interface CommentPropertyProps {
         commentId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (commentId: string) => void;
 }
 
 function CommentProperty({
@@ -104,7 +105,11 @@ function CommentsLayer({
     onClick,
     isSelectable,
     onMove,
-}: Pick<CommentPropertyProps, 'onClick' | 'isSelectable' | 'onMove'> &
+    onDelete,
+}: Pick<
+    CommentPropertyProps,
+    'onClick' | 'isSelectable' | 'onMove' | 'onDelete'
+> &
     Pick<StrategyBodyProps, 'comments'>) {
     return (
         <>
@@ -117,6 +122,7 @@ function CommentsLayer({
                     onClick={onClick}
                     isSelectable={isSelectable}
                     onMove={onMove}
+                    onDelete={onDelete}
                 />
             ))}
         </>

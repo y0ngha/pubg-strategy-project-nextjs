@@ -11,10 +11,15 @@ interface AirplanePathPropertyProps {
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
     isSelectable: boolean;
-    onMove: (deltaPosition: { x: number; y: number }) => void;
+    onMove: (
+        airplanePathId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onDelete: (airplanePathId: string) => void;
 }
 
 function AirplanePathProperty({
+    id,
     startPosition,
     endPosition,
     isSelectable,
@@ -38,7 +43,9 @@ function AirplanePathProperty({
 
     const { handleDragStart, handleDragEnd } = useKonvaHandlePropertyDrag(
         deltaPosition => {
-            onMove(deltaPosition);
+            if (id) {
+                onMove(id, deltaPosition);
+            }
         }
     );
 
@@ -130,6 +137,7 @@ function AirplanePathLayer({
     endPosition,
     isSelectable,
     onMove,
+    onDelete,
 }: AirplanePathPropertyProps) {
     return (
         <AirplanePathProperty
@@ -138,6 +146,7 @@ function AirplanePathLayer({
             endPosition={endPosition}
             isSelectable={isSelectable}
             onMove={onMove}
+            onDelete={onDelete}
         />
     );
 }
