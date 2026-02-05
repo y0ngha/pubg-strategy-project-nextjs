@@ -2,10 +2,13 @@
 
 import { Circle, Group, Shape } from 'react-konva';
 import { ORIGINAL_MAP_SIZE } from '@/(presentation)/shared/constants/map';
-import React from 'react';
+import React, { useRef } from 'react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
+import Konva from 'konva';
 
 interface CirclePropertyProps {
     id: string;
@@ -14,8 +17,10 @@ interface CirclePropertyProps {
     radius: number;
     color: string;
     isSelectable: boolean;
+    isSelected: boolean;
     onMove: (circleId: string, deltaPosition: { x: number; y: number }) => void;
     onDelete: (circleId: string) => void;
+    onClick: (circleId: string) => void;
 }
 
 function CircleProperty({
@@ -25,8 +30,12 @@ function CircleProperty({
     radius,
     color,
     isSelectable,
+    isSelected,
     onMove,
+    onClick,
 }: CirclePropertyProps) {
+    const ref = useRef<Konva.Circle>(null);
+
     const {
         isHovered,
         handleMouseLeave: hoverHandleMouseLeave,
@@ -41,6 +50,12 @@ function CircleProperty({
             onMove(id, deltaPosition);
         }
     );
+
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        if (id) {
+            onClick(id);
+        }
+    });
 
     return (
         <Group x={0} y={0}>
@@ -67,11 +82,13 @@ function CircleProperty({
                 draggable={true}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
+                onClick={handleClick}
                 onMouseDown={e => {
                     e.cancelBubble = true;
                 }}
             >
                 <Circle
+                    ref={ref}
                     x={x}
                     y={y}
                     radius={radius}
@@ -86,6 +103,12 @@ function CircleProperty({
                     onMouseLeave={hoverHandleMouseLeave}
                     onMouseEnter={hoverHandleMouseEnter}
                 />
+
+                <SelectionFrame
+                    targetRef={ref}
+                    isSelected={isSelected}
+                    onDelete={() => {}}
+                />
             </Group>
         </Group>
     );
@@ -96,9 +119,14 @@ CircleProperty.displayName = 'CircleProperty';
 function CirclesLayer({
     circles,
     isSelectable,
+    selectedCircleId,
     onMove,
     onDelete,
-}: Pick<CirclePropertyProps, 'isSelectable' | 'onMove' | 'onDelete'> &
+    onClick,
+}: { selectedCircleId?: string } & Pick<
+    CirclePropertyProps,
+    'isSelectable' | 'onMove' | 'onDelete' | 'onClick'
+> &
     Pick<StrategyBodyProps, 'circles'>) {
     return (
         <>
@@ -111,8 +139,10 @@ function CirclesLayer({
                     x={field.centerPosition.x}
                     y={field.centerPosition.y}
                     isSelectable={isSelectable}
+                    isSelected={selectedCircleId === field.id}
                     onMove={onMove}
                     onDelete={onDelete}
+                    onClick={onClick}
                 />
             ))}
         </>

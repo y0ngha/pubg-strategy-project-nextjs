@@ -1,3 +1,5 @@
+'use client';
+
 import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';

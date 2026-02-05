@@ -1,21 +1,28 @@
+'use client';
+
 import { Arrow, Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import { Plane } from 'lucide-react';
 import useImage from 'use-image';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
+import Konva from 'konva';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
 
 interface AirplanePathPropertyProps {
     id?: string;
     startPosition?: { x: number; y: number };
     endPosition?: { x: number; y: number };
     isSelectable: boolean;
+    isSelected: boolean;
     onMove: (
         airplanePathId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
     onDelete: (airplanePathId: string) => void;
+    onClick: (airplanePathId: string) => void;
 }
 
 function AirplanePathProperty({
@@ -23,8 +30,12 @@ function AirplanePathProperty({
     startPosition,
     endPosition,
     isSelectable,
+    isSelected,
     onMove,
+    onClick,
 }: AirplanePathPropertyProps) {
+    const ref = useRef<Konva.Arrow>(null);
+
     const isDrawing = startPosition !== undefined && endPosition === undefined;
     const isDrawCompleted =
         startPosition !== undefined && endPosition !== undefined;
@@ -34,8 +45,6 @@ function AirplanePathProperty({
     const {
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
-        scaleX,
-        scaleY,
         shadowBlur,
         shadowColor,
         shadowOpacity,
@@ -48,6 +57,12 @@ function AirplanePathProperty({
             }
         }
     );
+
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        if (id) {
+            onClick(id);
+        }
+    });
 
     const { url, center } = useLucideIconToSvgUrl(Plane, {
         color: iconColor,
@@ -85,10 +100,9 @@ function AirplanePathProperty({
                 }}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                onMouseLeave={hoverHandleMouseLeave}
-                onMouseEnter={hoverHandleMouseEnter}
             >
                 <Arrow
+                    ref={ref}
                     points={[
                         startPosition.x,
                         startPosition.y,
@@ -105,23 +119,16 @@ function AirplanePathProperty({
                     shadowBlur={shadowBlur}
                     shadowColor={shadowColor}
                     shadowOpacity={shadowOpacity}
+                    onMouseLeave={hoverHandleMouseLeave}
+                    onMouseEnter={hoverHandleMouseEnter}
+                    onClick={handleClick}
                 />
 
-                {planeImage && (
-                    <Image
-                        image={planeImage}
-                        x={startPosition.x}
-                        y={startPosition.y}
-                        offsetX={center}
-                        offsetY={center}
-                        alt={'비행기 동선 시작'}
-                        scaleX={scaleX}
-                        scaleY={scaleY}
-                        shadowBlur={shadowBlur}
-                        shadowColor={shadowColor}
-                        shadowOpacity={shadowOpacity}
-                    />
-                )}
+                <SelectionFrame
+                    targetRef={ref}
+                    isSelected={isSelected}
+                    onDelete={() => {}}
+                />
             </Group>
         );
     }
@@ -136,17 +143,24 @@ function AirplanePathLayer({
     startPosition,
     endPosition,
     isSelectable,
+    selectedAirplanePathId,
     onMove,
     onDelete,
-}: AirplanePathPropertyProps) {
+    onClick,
+}: { selectedAirplanePathId?: string } & Omit<
+    AirplanePathPropertyProps,
+    'isSelected'
+>) {
     return (
         <AirplanePathProperty
             id={id}
             startPosition={startPosition}
             endPosition={endPosition}
             isSelectable={isSelectable}
+            isSelected={selectedAirplanePathId === id}
             onMove={onMove}
             onDelete={onDelete}
+            onClick={onClick}
         />
     );
 }

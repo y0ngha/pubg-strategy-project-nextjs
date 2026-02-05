@@ -1,11 +1,16 @@
+'use client';
+
 import { Group, Image, Label, Tag as KonvaTag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { Tag } from 'lucide-react';
 import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import Konva from 'konva';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
 
 interface TagPropertyProps {
     id: string;
@@ -13,8 +18,10 @@ interface TagPropertyProps {
     y: number;
     content: string;
     isSelectable: boolean;
+    isSelected: boolean;
     onMove: (tagId: string, deltaPosition: { x: number; y: number }) => void;
     onDelete: (tagId: string) => void;
+    onClick: (tagId: string) => void;
 }
 
 function TagProperty({
@@ -23,8 +30,12 @@ function TagProperty({
     y,
     content,
     isSelectable,
+    isSelected,
     onMove,
+    onClick,
 }: TagPropertyProps) {
+    const ref = useRef<Konva.Image>(null);
+
     const iconColor = '#A855F7';
 
     const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +56,11 @@ function TagProperty({
         }
     );
 
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        onClick(id);
+        setIsOpen(prevState => !prevState);
+    });
+
     const { url, center } = useLucideIconToSvgUrl(Tag, {
         color: iconColor,
         size: 128,
@@ -53,10 +69,6 @@ function TagProperty({
     });
 
     const [tagImage] = useImage(url ?? '');
-
-    const handleClick = () => {
-        setIsOpen(prevState => !prevState);
-    };
 
     return (
         <Group
@@ -69,11 +81,9 @@ function TagProperty({
             }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            onMouseEnter={hoverHandleMouseEnter}
-            onMouseLeave={hoverHandleMouseLeave}
-            onClick={handleClick}
         >
             <Image
+                ref={ref}
                 image={tagImage}
                 x={x}
                 y={y}
@@ -84,6 +94,9 @@ function TagProperty({
                 shadowColor={shadowColor}
                 shadowBlur={shadowBlur}
                 shadowOpacity={shadowOpacity}
+                onMouseEnter={hoverHandleMouseEnter}
+                onMouseLeave={hoverHandleMouseLeave}
+                onClick={handleClick}
                 alt={'태그 이미지'}
             />
 
@@ -109,6 +122,12 @@ function TagProperty({
                     />
                 </Label>
             )}
+
+            <SelectionFrame
+                targetRef={ref}
+                isSelected={isSelected}
+                onDelete={() => {}}
+            />
         </Group>
     );
 }
@@ -118,9 +137,14 @@ TagProperty.displayName = 'TagProperty';
 function TagsLayer({
     tags,
     isSelectable,
+    selectedTagId,
     onMove,
     onDelete,
-}: Pick<TagPropertyProps, 'isSelectable' | 'onMove' | 'onDelete'> &
+    onClick,
+}: { selectedTagId?: string } & Pick<
+    TagPropertyProps,
+    'isSelectable' | 'onMove' | 'onDelete' | 'onClick'
+> &
     Pick<StrategyBodyProps, 'tags'>) {
     return (
         <>
@@ -132,8 +156,10 @@ function TagsLayer({
                     y={field.position.y}
                     content={field.content}
                     isSelectable={isSelectable}
+                    isSelected={selectedTagId === field.id}
                     onMove={onMove}
                     onDelete={onDelete}
+                    onClick={onClick}
                 />
             ))}
         </>

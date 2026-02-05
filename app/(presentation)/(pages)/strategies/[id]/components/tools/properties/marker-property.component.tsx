@@ -1,10 +1,15 @@
+'use client';
+
 import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import Konva from 'konva';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
 
 interface MarkerPropertyProps {
     id: string;
@@ -14,6 +19,8 @@ interface MarkerPropertyProps {
     priority: number;
     color: string;
     isSelectable: boolean;
+    isSelected: boolean;
+    onClick: (data?: { teamPlayerId: string; id: string }) => void;
     onMove: (
         teamPlayerId: string,
         markerId: string,
@@ -30,8 +37,12 @@ function MarkerProperty({
     priority,
     color,
     isSelectable,
+    isSelected,
+    onClick,
     onMove,
 }: MarkerPropertyProps) {
+    const ref = useRef<Konva.Image>(null);
+
     const {
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
@@ -47,6 +58,10 @@ function MarkerProperty({
             onMove(teamPlayerId, id, deltaPosition);
         }
     );
+
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        onClick({ teamPlayerId, id });
+    });
 
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
@@ -68,10 +83,9 @@ function MarkerProperty({
             }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            onMouseLeave={hoverHandleMouseLeave}
-            onMouseEnter={hoverHandleMouseEnter}
         >
             <Image
+                ref={ref}
                 x={x}
                 y={y}
                 image={markerImage}
@@ -83,6 +97,15 @@ function MarkerProperty({
                 shadowColor={shadowColor}
                 shadowOpacity={shadowOpacity}
                 alt={`팀 플레이어 마커 - ${priority}`}
+                onMouseLeave={hoverHandleMouseLeave}
+                onMouseEnter={hoverHandleMouseEnter}
+                onClick={handleClick}
+            />
+
+            <SelectionFrame
+                targetRef={ref}
+                isSelected={isSelected}
+                onDelete={() => {}}
             />
         </Group>
     );
