@@ -43,7 +43,6 @@ export function useMarkerEvent(
         teamPlayerId: string;
         id: string;
     }) => {
-        console.log(data);
         setSelectedMarkerId(prevState => {
             if (data === undefined) {
                 return undefined;
