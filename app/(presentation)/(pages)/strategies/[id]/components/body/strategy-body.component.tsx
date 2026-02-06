@@ -173,7 +173,7 @@ function StrategyBody({
     const { handleClick } = useKonvaHandleMouseClick(
         (_, clickPosition, windowPosition) => {
             onMapClick(clickPosition, windowPosition);
-            // disposeAllPropertySelected();
+             disposeAllPropertySelected();
         }
     );
 
