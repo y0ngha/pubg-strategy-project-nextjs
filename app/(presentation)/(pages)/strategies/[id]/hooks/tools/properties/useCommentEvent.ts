@@ -2,6 +2,7 @@ import { useCreateCommentMutation } from '@/(presentation)/(pages)/strategies/[i
 import { useState } from 'react';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
+import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
 
 export function useCommentEvent(
     strategyId: string,
@@ -11,8 +12,12 @@ export function useCommentEvent(
         useCreateCommentMutation(strategyId);
     const { updateComment: updateCommentMutation } =
         useUpdateCommentMutation(strategyId);
+    const { deleteComment: deleteCommentMutation } =
+        useDeleteCommentMutation(strategyId);
 
-    const [topCommentId, setTopCommentId] = useState<string | null>(null);
+    const [selectedCommentId, setSelectedCommentId] = useState<
+        string | undefined
+    >(undefined);
 
     const [isCommentWindowOpen, setIsCommentWindowOpen] = useState(false);
 
@@ -29,6 +34,16 @@ export function useCommentEvent(
         y: 0,
     });
 
+    const toggleSelectedCommentId = (id?: string) => {
+        setSelectedCommentId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
     const setupCommentWindowPosition = (
         commentWindowPosition: { x: number; y: number },
         commentPosition: { x: number; y: number }
@@ -42,13 +57,31 @@ export function useCommentEvent(
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setTopCommentId(null);
+        setSelectedCommentId(undefined);
         setIsCommentWindowOpen(true);
     };
 
     const commentWindowClose = () => {
         setIsCommentWindowOpen(false);
-        setTopCommentId(null);
+        setSelectedCommentId(undefined);
+    };
+
+    const filterSamePositionComments = (
+        comment: CommentResponseDto,
+        topComment: CommentResponseDto
+    ) => {
+        return (
+            comment.id === topComment.id ||
+            (comment.position.x === topComment.position.x &&
+                comment.position.y === topComment.position.y)
+        );
+    };
+
+    const sortingCreatedAtByAscending = (
+        commentA: CommentResponseDto,
+        commentB: CommentResponseDto
+    ) => {
+        return commentA.createdAt.getTime() - commentB.createdAt.getTime();
     };
 
     const createComment = (content: string, parentCommentId: string | null) => {
@@ -96,35 +129,26 @@ export function useCommentEvent(
         updateCommentMutation(formData);
     };
 
+    const deleteComment = (commentId: string) => {
+        const formData = new FormData();
+        formData.set('commentId', commentId);
+
+        deleteCommentMutation(formData);
+    };
+
     const commentClick = (
         commentId: string,
         commentWindowPosition: { x: number; y: number },
         commentPosition: { x: number; y: number }
     ) => {
         setupCommentWindowPosition(commentWindowPosition, commentPosition);
-        setTopCommentId(commentId);
+        setSelectedCommentId(commentId);
         setIsCommentWindowOpen(true);
     };
 
-    const filterSamePositionComments = (
-        comment: CommentResponseDto,
-        topComment: CommentResponseDto
-    ) => {
-        return (
-            comment.id === topComment.id ||
-            (comment.position.x === topComment.position.x &&
-                comment.position.y === topComment.position.y)
-        );
-    };
-
-    const sortingCreatedAtByAscending = (
-        commentA: CommentResponseDto,
-        commentB: CommentResponseDto
-    ) => {
-        return commentA.createdAt.getTime() - commentB.createdAt.getTime();
-    };
-
-    const topComment = comments.find(comment => comment.id === topCommentId);
+    const topComment = comments.find(
+        comment => comment.id === selectedCommentId
+    );
 
     const filteredComments = topComment
         ? comments
@@ -135,14 +159,17 @@ export function useCommentEvent(
         : [];
 
     return {
+        toggleSelectedCommentId,
+        selectedCommentId,
         isCommentWindowOpen,
         commentWindowOpen,
         commentWindowClose,
+        windowPosition,
         createComment,
         updateComment,
+        deleteComment,
         commentClick,
-        windowPosition,
-        filteredComments,
         moveComment,
+        filteredComments,
     };
 }

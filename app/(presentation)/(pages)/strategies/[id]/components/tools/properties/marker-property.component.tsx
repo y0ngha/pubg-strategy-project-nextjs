@@ -1,10 +1,16 @@
+'use client';
+
 import { Group, Image } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { MapPin } from 'lucide-react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import Konva from 'konva';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 
 interface MarkerPropertyProps {
     id: string;
@@ -14,11 +20,14 @@ interface MarkerPropertyProps {
     priority: number;
     color: string;
     isSelectable: boolean;
+    isSelected: boolean;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
     onMove: (
         teamPlayerId: string,
         markerId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (teamPlayerId: string, markerId: string) => void;
 }
 
 function MarkerProperty({
@@ -29,8 +38,13 @@ function MarkerProperty({
     priority,
     color,
     isSelectable,
+    isSelected,
+    onClick,
     onMove,
+    onDelete,
 }: MarkerPropertyProps) {
+    const ref = useRef<Konva.Image>(null);
+
     const {
         handleMouseLeave: hoverHandleMouseLeave,
         handleMouseEnter: hoverHandleMouseEnter,
@@ -47,6 +61,10 @@ function MarkerProperty({
         }
     );
 
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        onClick({ type: 'marker', id, teamPlayerId });
+    });
+
     const { url, center } = useLucideIconToSvgUrl(MapPin, {
         color: color,
         size: 112,
@@ -55,6 +73,10 @@ function MarkerProperty({
     });
 
     const [markerImage] = useImage(url ?? '');
+
+    const handleDelete = () => {
+        onDelete(teamPlayerId, id);
+    };
 
     return (
         <Group
@@ -67,10 +89,9 @@ function MarkerProperty({
             }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            onMouseLeave={hoverHandleMouseLeave}
-            onMouseEnter={hoverHandleMouseEnter}
         >
             <Image
+                ref={ref}
                 x={x}
                 y={y}
                 image={markerImage}
@@ -82,6 +103,15 @@ function MarkerProperty({
                 shadowColor={shadowColor}
                 shadowOpacity={shadowOpacity}
                 alt={`팀 플레이어 마커 - ${priority}`}
+                onMouseLeave={hoverHandleMouseLeave}
+                onMouseEnter={hoverHandleMouseEnter}
+                onClick={handleClick}
+            />
+
+            <SelectionFrame
+                targetRef={ref}
+                isSelected={isSelected}
+                onDelete={handleDelete}
             />
         </Group>
     );

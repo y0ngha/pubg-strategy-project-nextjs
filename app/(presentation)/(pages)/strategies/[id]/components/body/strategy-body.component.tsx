@@ -1,6 +1,10 @@
 'use client';
 
-import { useToolbar } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolbar';
+import {
+    CANVAS_TOOLS,
+    CanvasTool,
+    useToolbar,
+} from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolbar';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import StrategyToolbar from '@/(presentation)/(pages)/strategies/[id]/components/tools/strategy-toolbar.component';
 import StrategyCanvas from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-canvas.component';
@@ -28,6 +32,27 @@ import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/t
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
+
+interface SimplePropertyClickProps {
+    id: string;
+}
+
+interface InTeamPlayerPropertyClickProps {
+    teamPlayerId: string;
+    id: string;
+}
+
+type InTeamPlayerProperties =
+    | typeof CANVAS_TOOLS.marker
+    | typeof CANVAS_TOOLS.waypoint;
+
+type PropertyClickProps<T extends CanvasTool> = T extends InTeamPlayerProperties
+    ? InTeamPlayerPropertyClickProps
+    : SimplePropertyClickProps;
+
+export type PropertyClickPayload = {
+    [K in CanvasTool]: { type: K } & PropertyClickProps<K>;
+}[CanvasTool];
 
 export interface StrategyBodyProps {
     id: string;
@@ -111,9 +136,44 @@ function StrategyBody({
         }
     };
 
+    const disposeAllPropertySelected = () => {
+        circle.toggleSelectedCircleId(undefined);
+        airplane.toggleSelectedAirplanePathId(undefined);
+        enemyTeam.toggleSelectedEnemyTeamId(undefined);
+        teamPlayer.toggleSelectedTeamPlayerId(undefined);
+        marker.toggleSelectedMarkerId(undefined);
+        waypoint.toggleSelectedWaypointId(undefined);
+        tag.toggleSelectedTagId(undefined);
+        comment.toggleSelectedCommentId(undefined);
+    };
+
+    const handlePropertyClick = (props: PropertyClickPayload) => {
+        disposeAllPropertySelected();
+
+        switch (props.type) {
+            case 'circle':
+                return circle.toggleSelectedCircleId(props.id);
+            case 'airplane':
+                return airplane.toggleSelectedAirplanePathId(props.id);
+            case 'enemy':
+                return enemyTeam.toggleSelectedEnemyTeamId(props.id);
+            case 'team':
+                return teamPlayer.toggleSelectedTeamPlayerId(props.id);
+            case 'marker':
+                return marker.toggleSelectedMarkerId(props);
+            case 'waypoint':
+                return waypoint.toggleSelectedWaypointId(props);
+            case 'tag':
+                return tag.toggleSelectedTagId(props.id);
+            case 'comment':
+                return comment.toggleSelectedCommentId(props.id);
+        }
+    };
+
     const { handleClick } = useKonvaHandleMouseClick(
         (_, clickPosition, windowPosition) => {
             onMapClick(clickPosition, windowPosition);
+             disposeAllPropertySelected();
         }
     );
 
@@ -144,20 +204,31 @@ function StrategyBody({
                     <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
+                            selectedCircleId={circle.selectedCircleId}
+                            onClick={handlePropertyClick}
                             circles={circles}
                             onMove={circle.moveCircle}
+                            onDelete={circle.deleteCircle}
                         />
                         <AirplanePathLayer
                             id={airplanePath?.id}
                             isSelectable={isSelectable}
+                            selectedAirplanePathId={
+                                airplane.selectedAirplanePathId
+                            }
+                            onClick={handlePropertyClick}
                             startPosition={airplane.startPosition}
                             endPosition={airplane.endPosition}
                             onMove={airplane.moveAirplanePath}
+                            onDelete={airplane.deleteAirplanePath}
                         />
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
+                            selectedEnemyTeamId={enemyTeam.selectedEnemyTeamId}
+                            onClick={handlePropertyClick}
                             enemyTeams={enemyTeams}
                             onMove={enemyTeam.moveEnemyTeam}
+                            onDelete={enemyTeam.deleteEnemyTeam}
                         />
                         <TeamPlayersLayer
                             isSelectable={isSelectable}
@@ -165,19 +236,27 @@ function StrategyBody({
                             selectedTeamPlayerId={
                                 teamPlayer.selectedTeamPlayerId
                             }
-                            changeSelectedTeamPlayerId={
-                                teamPlayer.changeSelectedTeamPlayerId
-                            }
+                            selectedMarkerId={marker.selectedMarkerId}
+                            selectedWaypointId={waypoint.selectedWaypointId}
                             isWaypointDrawing={waypoint.isDrawing}
                             waypointClickedPositions={waypoint.clickedPositions}
+                            onClick={handlePropertyClick}
+                            onMarkerClick={handlePropertyClick}
+                            onWaypointClick={handlePropertyClick}
                             onMove={teamPlayer.moveTeamPlayer}
                             onMarkerMove={marker.moveMarker}
                             onWaypointMove={waypoint.moveWaypoint}
+                            onDelete={teamPlayer.deleteTeamPlayer}
+                            onMarkerDelete={marker.deleteMarker}
+                            onWaypointDelete={waypoint.deleteWaypoint}
                         />
                         <TagsLayer
                             isSelectable={isSelectable}
+                            selectedTagId={tag.selectedTagId}
+                            onClick={handlePropertyClick}
                             tags={tags}
                             onMove={tag.moveTag}
+                            onDelete={tag.deleteTag}
                         />
                         <CommentsLayer
                             isSelectable={isSelectable}

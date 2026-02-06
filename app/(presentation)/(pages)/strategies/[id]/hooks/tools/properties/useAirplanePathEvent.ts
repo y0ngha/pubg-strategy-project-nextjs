@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCreateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateAirplanePathMutation';
 import { useUpdateAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateAirplanePathMutation';
 import { AirplanePathResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteAirplanePathMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteAirplanePathMutation';
 
 export function useAirplanePathEvent(
     strategyId: string,
@@ -11,6 +12,12 @@ export function useAirplanePathEvent(
         useCreateAirplanePathMutation(strategyId);
     const { updateAirplanePath: updateAirplanePathMutation } =
         useUpdateAirplanePathMutation(strategyId);
+    const { deleteAirplanePath: deleteAirplanePathMutation } =
+        useDeleteAirplanePathMutation(strategyId);
+
+    const [selectedAirplanePathId, setSelectedAirplanePathId] = useState<
+        string | undefined
+    >(undefined);
 
     const [startPosition, setStartPosition] = useState<
         | {
@@ -27,6 +34,22 @@ export function useAirplanePathEvent(
           }
         | undefined
     >(airplanePath?.endPosition);
+
+    const ensureHaveAirplanePath = () => {
+        if (!airplanePath) {
+            throw new Error('비행기 동선이 존재하지 않습니다.');
+        }
+    };
+
+    const toggleSelectedAirplanePathId = (id?: string) => {
+        setSelectedAirplanePathId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
 
     const confirmOnSuccessCallbackHandler = (data: {
         startPosition: { x: number; y: number };
@@ -74,6 +97,8 @@ export function useAirplanePathEvent(
             y: number;
         }
     ) => {
+        ensureHaveAirplanePath();
+
         const formData = new FormData();
         formData.set('airplanePathId', airplanePathId);
         formData.set('startPosition', JSON.stringify(startPosition));
@@ -100,31 +125,44 @@ export function useAirplanePathEvent(
         }
     };
 
-    const moveAirplanePath = (deltaPosition: { x: number; y: number }) => {
-        if (!airplanePath) {
-            throw new Error('비행기 동선이 존재하지 않습니다.');
-        }
+    const moveAirplanePath = (
+        airplanePathId: string,
+        deltaPosition: { x: number; y: number }
+    ) => {
+        ensureHaveAirplanePath();
 
         const startPosition = {
-            x: airplanePath.startPosition.x + deltaPosition.x,
-            y: airplanePath.startPosition.y + deltaPosition.y,
+            x: airplanePath!.startPosition.x + deltaPosition.x,
+            y: airplanePath!.startPosition.y + deltaPosition.y,
         };
 
         const endPosition = {
-            x: airplanePath.endPosition.x + deltaPosition.x,
-            y: airplanePath.endPosition.y + deltaPosition.y,
+            x: airplanePath!.endPosition.x + deltaPosition.x,
+            y: airplanePath!.endPosition.y + deltaPosition.y,
         };
 
         setStartPosition(startPosition);
         setEndPosition(endPosition);
 
-        updateAirplanePath(airplanePath.id, startPosition, endPosition);
+        updateAirplanePath(airplanePathId, startPosition, endPosition);
+    };
+
+    const deleteAirplanePath = (airplanePathId: string) => {
+        ensureHaveAirplanePath();
+
+        const formData = new FormData();
+        formData.set('airplanePathId', airplanePathId);
+
+        deleteAirplanePathMutation(formData);
     };
 
     return {
-        clickAirplanePath,
+        toggleSelectedAirplanePathId,
+        selectedAirplanePathId,
         startPosition,
         endPosition,
+        clickAirplanePath,
         moveAirplanePath,
+        deleteAirplanePath,
     };
 }

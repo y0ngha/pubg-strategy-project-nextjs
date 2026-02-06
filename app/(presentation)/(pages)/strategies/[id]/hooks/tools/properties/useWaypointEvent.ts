@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateWaypointMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useEffect, useEffectEvent, useState } from 'react';
+import { useDeleteWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteWaypointMutation';
 
 export function useWaypointEvent(
     strategyId: string,
@@ -15,6 +16,8 @@ export function useWaypointEvent(
         useCreateWaypointMutation(strategyId);
     const { updateWaypoint: updateWaypointMutation } =
         useUpdateWaypointMutation(strategyId);
+    const { deleteWaypoint: deleteWaypointMutation } =
+        useDeleteWaypointMutation(strategyId);
 
     const [keydownAlt, setKeydownAlt] = useState<boolean>(false);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
@@ -22,6 +25,14 @@ export function useWaypointEvent(
     const [clickedPositions, setClickedPositions] = useState<
         { x: number; y: number }[]
     >([]);
+
+    const [selectedWaypointId, setSelectedWaypointId] = useState<
+        | {
+              teamPlayerId: string;
+              id: string;
+          }
+        | undefined
+    >(undefined);
 
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
@@ -39,11 +50,30 @@ export function useWaypointEvent(
             );
         }
     };
-
     const ensurePressAltKey = () => {
         if (!keydownAlt) {
             throw new Error('Alt(Command)키를 누르고 웨이포인트를 그려주세요.');
         }
+    };
+
+    const toggleSelectedWaypointId = (data?: {
+        teamPlayerId: string;
+        id: string;
+    }) => {
+        setSelectedWaypointId(prevState => {
+            if (data === undefined) {
+                return undefined;
+            }
+
+            if (prevState?.id === data.id) {
+                return undefined;
+            }
+
+            return {
+                teamPlayerId: data.teamPlayerId,
+                id: data.id,
+            };
+        });
     };
 
     const createWaypoint = (position: { x: number; y: number }) => {
@@ -135,6 +165,14 @@ export function useWaypointEvent(
         updateWaypointMutation(formData);
     };
 
+    const deleteWaypoint = (teamPlayerId: string, waypointId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('waypointId', waypointId);
+
+        deleteWaypointMutation(formData);
+    };
+
     const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
         if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
             setKeydownAlt(true);
@@ -164,9 +202,12 @@ export function useWaypointEvent(
     }, []);
 
     return {
-        createWaypoint,
+        toggleSelectedWaypointId,
+        selectedWaypointId,
         isDrawing,
         clickedPositions,
+        createWaypoint,
         moveWaypoint,
+        deleteWaypoint,
     };
 }

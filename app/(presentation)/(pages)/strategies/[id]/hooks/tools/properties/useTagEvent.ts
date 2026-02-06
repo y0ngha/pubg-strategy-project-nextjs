@@ -2,10 +2,12 @@ import { useCreateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/h
 import { useState } from 'react';
 import { useUpdateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTagMutation';
 import { TagResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTagMutation';
 
 export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
     const { updateTag: updateTagMutation } = useUpdateTagMutation(strategyId);
+    const { deleteTag: deleteTagMutation } = useDeleteTagMutation(strategyId);
 
     const [isEnterTagContentModalOpen, setIsEnterTagContentModalOpen] =
         useState(false);
@@ -14,6 +16,20 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         x: 0,
         y: 0,
     });
+
+    const [selectedTagId, setSelectedTagId] = useState<string | undefined>(
+        undefined
+    );
+
+    const toggleSelectedTagId = (id?: string) => {
+        setSelectedTagId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
 
     const enterTagContentModalOpen = (position: { x: number; y: number }) => {
         setIsEnterTagContentModalOpen(true);
@@ -56,11 +72,21 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         updateTagMutation(formData);
     };
 
+    const deleteTag = (tagId: string) => {
+        const formData = new FormData();
+        formData.set('tagId', tagId);
+
+        deleteTagMutation(formData);
+    };
+
     return {
+        toggleSelectedTagId,
+        selectedTagId,
         isEnterTagContentModalOpen,
         enterTagContentModalOpen,
         enterTagContentModalClose,
         createTag,
         moveTag,
+        deleteTag,
     };
 }

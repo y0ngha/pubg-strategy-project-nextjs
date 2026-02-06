@@ -2,6 +2,7 @@ import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies
 import { useState } from 'react';
 import { useUpdateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTeamPlayerMutation';
 
 export function useTeamPlayerEvent(
     strategyId: string,
@@ -11,10 +12,22 @@ export function useTeamPlayerEvent(
         useCreateTeamPlayerMutation(strategyId);
     const { updateTeamPlayer: updateTeamPlayerMutation } =
         useUpdateTeamPlayerMutation(strategyId);
+    const { deleteTeamPlayer: deleteTeamPlayerMutation } =
+        useDeleteTeamPlayerMutation(strategyId);
 
     const [selectedTeamPlayerId, setSelectedTeamPlayerId] = useState<
         string | undefined
     >(undefined);
+
+    const toggleSelectedTeamPlayerId = (id?: string) => {
+        setSelectedTeamPlayerId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
 
     const createTeamPlayer = (position: { x: number; y: number }) => {
         const formData = new FormData();
@@ -47,20 +60,18 @@ export function useTeamPlayerEvent(
         updateTeamPlayerMutation(formData);
     };
 
-    const changeSelectedTeamPlayerId = (id: string) => {
-        setSelectedTeamPlayerId(prevState => {
-            if (prevState === id) {
-                return undefined;
-            }
+    const deleteTeamPlayer = (teamPlayerId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
 
-            return id;
-        });
+        deleteTeamPlayerMutation(formData);
     };
 
     return {
+        selectedTeamPlayerId,
+        toggleSelectedTeamPlayerId,
         createTeamPlayer,
         moveTeamPlayer,
-        selectedTeamPlayerId,
-        changeSelectedTeamPlayerId,
+        deleteTeamPlayer,
     };
 }

@@ -2,6 +2,7 @@ import { useCreateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/
 import { useState } from 'react';
 import { useUpdateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateEnemyTeamMutation';
 import { EnemyTeamResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteEnemyTeamMutation';
 
 export function useEnemyTeamEvent(
     strategyId: string,
@@ -11,6 +12,8 @@ export function useEnemyTeamEvent(
         useCreateEnemyTeamMutation(strategyId);
     const { updateEnemyTeam: updateEnemyTeamMutation } =
         useUpdateEnemyTeamMutation(strategyId);
+    const { deleteEnemyTeam: deleteEnemyTeamMutation } =
+        useDeleteEnemyTeamMutation(strategyId);
 
     const [isEnterEnemyTeamLabelModalOpen, setIsEnterEnemyTeamLabelModalOpen] =
         useState(false);
@@ -19,6 +22,20 @@ export function useEnemyTeamEvent(
         x: 0,
         y: 0,
     });
+
+    const [selectedEnemyTeamId, setSelectedEnemyTeamId] = useState<
+        string | undefined
+    >(undefined);
+
+    const toggleSelectedEnemyTeamId = (id?: string) => {
+        setSelectedEnemyTeamId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
 
     const enterEnemyTeamLabelModalOpen = (position: {
         x: number;
@@ -66,11 +83,21 @@ export function useEnemyTeamEvent(
         updateEnemyTeamMutation(formData);
     };
 
+    const deleteEnemyTeam = (enemyTeamId: string) => {
+        const formData = new FormData();
+        formData.set('enemyTeamId', enemyTeamId);
+
+        deleteEnemyTeamMutation(formData);
+    };
+
     return {
+        toggleSelectedEnemyTeamId,
+        selectedEnemyTeamId,
         isEnterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalClose,
         createEnemyTeam,
         moveEnemyTeam,
+        deleteEnemyTeam,
     };
 }

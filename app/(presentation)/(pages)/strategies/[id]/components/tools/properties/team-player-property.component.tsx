@@ -1,13 +1,21 @@
+'use client';
+
 import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
-import { StrategyBodyProps } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
-import React from 'react';
+import {
+    PropertyClickPayload,
+    StrategyBodyProps,
+} from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import React, { useRef } from 'react';
 import { useKonvaHandleHover } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleHover';
 import { useKonvaHandlePropertyDrag } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandlePropertyDrag';
+import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
+import Konva from 'konva';
+import SelectionFrame from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/selection-frame.component';
 
 interface TeamPlayerPropertyProps {
     id: string;
@@ -15,13 +23,38 @@ interface TeamPlayerPropertyProps {
     y: number;
     priority: number;
     color: string;
-    isClicked: boolean;
-    onClick: (id: string) => void;
+    isSelected: boolean;
+    onClick: ({ type, id }: PropertyClickPayload) => void;
     isSelectable: boolean;
     onMove: (
         teamPlayerId: string,
         deltaPosition: { x: number; y: number }
     ) => void;
+    onDelete: (teamPlayerId: string) => void;
+}
+
+interface WaypointPropertyProps {
+    isWaypointDrawing: boolean;
+    waypointClickedPositions: { x: number; y: number }[];
+    selectedWaypointId?: { teamPlayerId: string; id: string };
+    onWaypointClick: ({ type, id }: PropertyClickPayload) => void;
+    onWaypointMove: (
+        teamPlayerId: string,
+        waypointId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onWaypointDelete: (teamPlayerId: string, waypointId: string) => void;
+}
+
+interface MarkerPropertyProps {
+    selectedMarkerId?: { teamPlayerId: string; id: string };
+    onMarkerClick: ({ type, id }: PropertyClickPayload) => void;
+    onMarkerMove: (
+        teamPlayerId: string,
+        markerId: string,
+        deltaPosition: { x: number; y: number }
+    ) => void;
+    onMarkerDelete: (teamPlayerId: string, markerId: string) => void;
 }
 
 function TeamPlayerProperty({
@@ -31,10 +64,13 @@ function TeamPlayerProperty({
     priority,
     color,
     isSelectable,
-    isClicked,
+    isSelected,
     onClick,
     onMove,
+    onDelete,
 }: TeamPlayerPropertyProps) {
+    const ref = useRef<Konva.Circle>(null);
+
     const iconColor = '#ffffff';
 
     const {
@@ -64,8 +100,12 @@ function TeamPlayerProperty({
 
     const radius = 50;
 
-    const handleClick = () => {
-        onClick(id);
+    const { handleClick } = useKonvaHandleMouseClick(() => {
+        onClick({ type: 'team', id });
+    });
+
+    const handleDelete = () => {
+        onDelete(id);
     };
 
     return (
@@ -79,58 +119,68 @@ function TeamPlayerProperty({
             }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            onClick={handleClick}
-            onMouseEnter={hoverHandleMouseEnter}
-            onMouseLeave={hoverHandleMouseLeave}
         >
-            <Circle
-                x={x}
-                y={y}
-                radius={isClicked ? radius + 20 : radius}
-                fill={`${color}33`}
-                stroke={color}
-                strokeWidth={isClicked ? 3 : 1}
-                dash={isClicked ? [30, 30] : undefined}
-                scaleX={isClicked ? 1.2 : scaleX}
-                scaleY={isClicked ? 1.2 : scaleY}
-                shadowBlur={shadowBlur}
-                shadowColor={shadowColor}
-                shadowOpacity={shadowOpacity}
-            />
-
-            <Image
-                image={teamPlayerImage}
-                x={x}
-                y={y}
-                offsetX={center}
-                offsetY={center}
-                scaleX={scaleX}
-                scaleY={scaleY}
-                shadowBlur={shadowBlur}
-                shadowColor={shadowColor}
-                shadowOpacity={shadowOpacity}
-                alt={`팀 플레이어 - ${priority}`}
-            />
-
-            <Label x={x} y={y + radius + 8}>
-                <Tag
-                    fill={'#18181b'}
+            <Group
+                onClick={handleClick}
+                onMouseEnter={hoverHandleMouseEnter}
+                onMouseLeave={hoverHandleMouseLeave}
+            >
+                <Circle
+                    ref={ref}
+                    x={x}
+                    y={y}
+                    radius={isSelected ? radius + 20 : radius}
+                    fill={`${color}33`}
                     stroke={color}
-                    strokeWidth={1}
-                    cornerRadius={4}
-                    opacity={0.8}
-                    pointerDirection={'up'}
-                    pointerWidth={10}
-                    pointerHeight={5}
+                    strokeWidth={isSelected ? 3 : 1}
+                    dash={isSelected ? [30, 30] : undefined}
+                    scaleX={isSelected ? 1.2 : scaleX}
+                    scaleY={isSelected ? 1.2 : scaleY}
+                    shadowBlur={shadowBlur}
+                    shadowColor={shadowColor}
+                    shadowOpacity={shadowOpacity}
                 />
-                <Text
-                    text={priority.toString()}
-                    fontSize={32}
-                    padding={6}
-                    fill={'white'}
-                    align={'center'}
+
+                <Image
+                    image={teamPlayerImage}
+                    x={x}
+                    y={y}
+                    offsetX={center}
+                    offsetY={center}
+                    scaleX={scaleX}
+                    scaleY={scaleY}
+                    shadowBlur={shadowBlur}
+                    shadowColor={shadowColor}
+                    shadowOpacity={shadowOpacity}
+                    alt={`팀 플레이어 - ${priority}`}
                 />
-            </Label>
+
+                <Label x={x} y={y + radius + 8}>
+                    <Tag
+                        fill={'#18181b'}
+                        stroke={color}
+                        strokeWidth={1}
+                        cornerRadius={4}
+                        opacity={0.8}
+                        pointerDirection={'up'}
+                        pointerWidth={10}
+                        pointerHeight={5}
+                    />
+                    <Text
+                        text={priority.toString()}
+                        fontSize={32}
+                        padding={6}
+                        fill={'white'}
+                        align={'center'}
+                    />
+                </Label>
+            </Group>
+
+            <SelectionFrame
+                targetRef={ref}
+                isSelected={isSelected}
+                onDelete={handleDelete}
+            />
         </Group>
     );
 }
@@ -141,32 +191,39 @@ function TeamPlayersLayer({
     teamPlayers,
     isSelectable,
     selectedTeamPlayerId,
-    changeSelectedTeamPlayerId,
+    selectedWaypointId,
+    selectedMarkerId,
+    onClick,
     isWaypointDrawing,
     waypointClickedPositions,
     onMove,
     onMarkerMove,
     onWaypointMove,
-}: {
-    selectedTeamPlayerId?: string;
-    changeSelectedTeamPlayerId: (id: string) => void;
-    isWaypointDrawing: boolean;
-    waypointClickedPositions: { x: number; y: number }[];
-    onMarkerMove: (
-        teamPlayerId: string,
-        markerId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-    onWaypointMove: (
-        teamPlayerId: string,
-        waypointId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-} & Pick<TeamPlayerPropertyProps, 'isSelectable' | 'onMove'> &
-    Pick<StrategyBodyProps, 'teamPlayers'>) {
+    onDelete,
+    onMarkerDelete,
+    onWaypointDelete,
+    onMarkerClick,
+    onWaypointClick,
+}: { selectedTeamPlayerId?: string } & Pick<
+    TeamPlayerPropertyProps,
+    'isSelectable' | 'onMove' | 'onDelete' | 'onClick'
+> &
+    Pick<StrategyBodyProps, 'teamPlayers'> &
+    WaypointPropertyProps &
+    MarkerPropertyProps) {
     return (
         <>
             {teamPlayers.map(field => {
+                const isTeamPlayerSelected = selectedTeamPlayerId === field.id;
+
+                const isMarkerSelected =
+                    selectedMarkerId?.teamPlayerId === field.id &&
+                    selectedMarkerId.id === field.marker?.id;
+
+                const isWaypointSelected =
+                    selectedWaypointId?.teamPlayerId === field.id &&
+                    selectedWaypointId.id === field.waypoint?.id;
+
                 return (
                     <React.Fragment key={`tp-${field.priority}`}>
                         <TeamPlayerProperty
@@ -176,11 +233,10 @@ function TeamPlayersLayer({
                             priority={field.priority}
                             color={field.color}
                             isSelectable={isSelectable}
-                            isClicked={field.id === selectedTeamPlayerId}
-                            onClick={id => {
-                                changeSelectedTeamPlayerId(id);
-                            }}
+                            isSelected={isTeamPlayerSelected}
+                            onClick={onClick}
                             onMove={onMove}
+                            onDelete={onDelete}
                         />
                         {field.marker && (
                             <MarkerProperty
@@ -189,9 +245,12 @@ function TeamPlayersLayer({
                                 x={field.marker.position.x}
                                 y={field.marker.position.y}
                                 isSelectable={isSelectable}
+                                isSelected={isMarkerSelected}
                                 id={field.marker.id}
                                 teamPlayerId={field.id}
                                 onMove={onMarkerMove}
+                                onDelete={onMarkerDelete}
+                                onClick={onMarkerClick}
                             />
                         )}
                         <WaypointProperty
@@ -205,9 +264,12 @@ function TeamPlayersLayer({
                             priority={field.priority}
                             isDrawing={isWaypointDrawing}
                             isSelectable={isSelectable}
+                            isSelected={isWaypointSelected}
                             id={field.waypoint?.id}
                             teamPlayerId={field.id}
                             onMove={onWaypointMove}
+                            onDelete={onWaypointDelete}
+                            onClick={onWaypointClick}
                         />
                     </React.Fragment>
                 );

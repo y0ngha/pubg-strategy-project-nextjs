@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCircleMutation';
 import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCircleMutation';
 import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCircleMutation';
 
 export function useCircleEvent(
     strategyId: string,
@@ -11,12 +12,38 @@ export function useCircleEvent(
         useCreateCircleMutation(strategyId);
     const { updateCircle: updateCircleMutation } =
         useUpdateCircleMutation(strategyId);
+    const { deleteCircle: deleteCircleMutation } =
+        useDeleteCircleMutation(strategyId);
 
     const [isPhaseSelectModalOpen, setIsPhaseSelectModalOpen] = useState(false);
     const [position, setPosition] = useState<{ x: number; y: number }>({
         x: 0,
         y: 0,
     });
+
+    const [selectedCircleId, setSelectedCircleId] = useState<
+        string | undefined
+    >(undefined);
+
+    const toggleSelectedCircleId = (id?: string) => {
+        setSelectedCircleId(prevState => {
+            if (prevState === id) {
+                return undefined;
+            }
+
+            return id;
+        });
+    };
+
+    const findCircleById = (circleId: string) => {
+        const circle = circles.find(circle => circle.id === circleId);
+
+        if (!circle) {
+            throw new Error('자기장 ID로 자기장을 찾을 수 없습니다.');
+        }
+
+        return circle;
+    };
 
     const phaseSelectModalOpen = (position: { x: number; y: number }) => {
         setIsPhaseSelectModalOpen(true);
@@ -41,11 +68,7 @@ export function useCircleEvent(
         circleId: string,
         deltaPosition: { x: number; y: number }
     ) => {
-        const circle = circles.find(circle => circle.id === circleId);
-
-        if (!circle) {
-            throw new Error('적 팀 ID로 적 팀을 찾을 수 없습니다.');
-        }
+        const circle = findCircleById(circleId);
 
         const position = {
             x: circle.centerPosition.x + deltaPosition.x,
@@ -59,11 +82,21 @@ export function useCircleEvent(
         updateCircleMutation(formData);
     };
 
+    const deleteCircle = (circleId: string) => {
+        const formData = new FormData();
+        formData.set('circleId', circleId);
+
+        deleteCircleMutation(formData);
+    };
+
     return {
+        toggleSelectedCircleId,
+        selectedCircleId,
         isPhaseSelectModalOpen,
         phaseSelectModalOpen,
         phaseSelectModalClose,
         createCircle,
         moveCircle,
+        deleteCircle,
     };
 }

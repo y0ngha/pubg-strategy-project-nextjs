@@ -2,6 +2,8 @@ import { useCreateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id
 import { toast } from 'react-toastify';
 import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
+import { useState } from 'react';
 
 export function useMarkerEvent(
     strategyId: string,
@@ -12,12 +14,50 @@ export function useMarkerEvent(
         useCreateMarkerMutation(strategyId);
     const { updateMarker: updateMarkerMutation } =
         useUpdateMarkerMutation(strategyId);
+    const { deleteMarker: deleteMarkerMutation } =
+        useDeleteMarkerMutation(strategyId);
+
+    const [selectedMarkerId, setSelectedMarkerId] = useState<
+        | {
+              teamPlayerId: string;
+              id: string;
+          }
+        | undefined
+    >(undefined);
 
     const selectedTeamPlayer = teamPlayers.find(
         player => player.id === selectedTeamPlayerId
     );
 
     const marker = selectedTeamPlayer?.marker;
+
+    const ensureSelectedTeamPlayerId = () => {
+        if (selectedTeamPlayerId === undefined) {
+            throw new Error(
+                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 마커를 이용해주세요."
+            );
+        }
+    };
+
+    const toggleSelectedMarkerId = (data?: {
+        teamPlayerId: string;
+        id: string;
+    }) => {
+        setSelectedMarkerId(prevState => {
+            if (data === undefined) {
+                return undefined;
+            }
+
+            if (prevState?.id === data.id) {
+                return undefined;
+            }
+
+            return {
+                teamPlayerId: data.teamPlayerId,
+                id: data.id,
+            };
+        });
+    };
 
     const saveMarker = (position: { x: number; y: number }) => {
         try {
@@ -68,21 +108,26 @@ export function useMarkerEvent(
         };
 
         const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
         formData.set('markerId', markerId);
         formData.set('position', JSON.stringify(position));
 
         updateMarkerMutation(formData);
     };
-    const ensureSelectedTeamPlayerId = () => {
-        if (selectedTeamPlayerId === undefined) {
-            throw new Error(
-                "'선택 및 이동' 도구로 팀 플레이어를 먼저 선택하고, 마커를 이용해주세요."
-            );
-        }
+
+    const deleteMarker = (teamPlayerId: string, markerId: string) => {
+        const formData = new FormData();
+        formData.set('teamPlayerId', teamPlayerId);
+        formData.set('markerId', markerId);
+
+        deleteMarkerMutation(formData);
     };
 
     return {
+        toggleSelectedMarkerId,
+        selectedMarkerId,
         saveMarker,
         moveMarker,
+        deleteMarker,
     };
 }
