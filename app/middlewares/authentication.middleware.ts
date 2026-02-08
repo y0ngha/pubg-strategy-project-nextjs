@@ -6,7 +6,6 @@ import { CookieKeys } from '@/application/constants/cookie-keys';
 const NEED_AUTHENTICATION_PATHNAMES = [
     Route.MYPAGE,
     Route.STRATEGIES,
-    Route.MYPAGE,
     Route.FRIENDS,
 ];
 
