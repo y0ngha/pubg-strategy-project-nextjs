@@ -12,7 +12,7 @@ import {
     useState,
     useSyncExternalStore,
 } from 'react';
-import { CornerDownRight, Pencil, Send, Trash2, User, X } from 'lucide-react';
+import { CornerDownRight, Pencil, Send, Trash2, X } from 'lucide-react';
 import {
     ChildCommentResponseDto,
     CommentResponseDto,
@@ -20,6 +20,7 @@ import {
 import Button from '@/(presentation)/shared/components/button.component';
 import { toYyyyMmDdHhMmString } from '@/(presentation)/shared/helpers/date.helper';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
+import UserAvatar from '@/(presentation)/shared/components/user-avatar.component';
 
 interface StrategyCommentWindowProps {
     isOpen: boolean;
@@ -54,18 +55,6 @@ function CommentAuthorInformation({
         <div className={'flex items-center gap-2'}>
             <span className={'font-semibold text-zinc-200'}>{author}</span>
             <span className={'text-xs text-zinc-500'}>{createdDate}</span>
-        </div>
-    );
-}
-
-function CommentAvatar() {
-    return (
-        <div
-            className={
-                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-zinc-400'
-            }
-        >
-            <User className={'h-4 w-4'} />
         </div>
     );
 }
@@ -143,7 +132,13 @@ function Comment({
 
     return (
         <div className={'group relative flex gap-3 text-sm'}>
-            <CommentAvatar />
+            <div className={'h-8 w-8'}>
+                <UserAvatar
+                    className={
+                        'rounded-full border border-zinc-700 bg-zinc-800 text-zinc-400'
+                    }
+                />
+            </div>
 
             <div className={'flex-1'}>
                 <CommentAuthorInformation
@@ -568,7 +563,6 @@ CommentActionInformation.displayName =
     'StrategyCommentWindow-CommentActionInformation';
 CommentInput.displayName = 'StrategyCommentWindow-CommentInput';
 CommentConfirm.displayName = 'StrategyCommentWindow-CommentConfirm';
-CommentAvatar.displayName = 'StrategyCommentWindow-CommentAvatar';
 CommentContent.displayName = 'StrategyCommentWindow-CommentContent';
 CommentAuthorMenuButton.displayName =
     'StrategyCommentWindow-CommentAuthorMenuButton';
