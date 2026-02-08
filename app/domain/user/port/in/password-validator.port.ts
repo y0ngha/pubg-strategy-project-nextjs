@@ -4,12 +4,12 @@ import { Password } from '@domain/user/value-objects/password';
 export abstract class PasswordValidatorPort {
     abstract emailIncludedValidate(email: Email, password: Password): boolean;
 
-    abstract currentPasswordMatchValidate(
+    abstract passwordMatchValidate(
         userPassword: Password,
         password: Password
     ): boolean;
 
-    abstract changePasswordDifferentValidate(
+    abstract passwordDifferentValidate(
         oldPassword: Password,
         newPassword: Password
     ): boolean;

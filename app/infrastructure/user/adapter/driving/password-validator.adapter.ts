@@ -17,10 +17,7 @@ export class PasswordValidatorAdapter extends PasswordValidatorPort {
         return !password.contains(email.localPart);
     }
 
-    currentPasswordMatchValidate(
-        userPassword: Password,
-        password: Password
-    ): boolean {
+    passwordMatchValidate(userPassword: Password, password: Password): boolean {
         const decryptedUserPassword = Password.reconstruct(
             this.passwordCipher.decrypt(userPassword.toString())
         );
@@ -28,7 +25,7 @@ export class PasswordValidatorAdapter extends PasswordValidatorPort {
         return decryptedUserPassword.equals(password);
     }
 
-    changePasswordDifferentValidate(
+    passwordDifferentValidate(
         oldPassword: Password,
         newPassword: Password
     ): boolean {
