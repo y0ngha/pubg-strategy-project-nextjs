@@ -4,8 +4,8 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-email.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import {
-    saveTokens,
-    saveUserId,
+    saveTokensByCookieStore,
+    saveUserIdByCookieStore,
 } from '@/(presentation)/user/services/authentication-save.service';
 
 export type LoginWithEmailAction = { id: string; email: string };
@@ -38,8 +38,8 @@ export async function loginWithEmailAction(
     try {
         const { accessToken, refreshToken, user } = await useCase.execute(dto);
 
-        await saveTokens(accessToken, refreshToken);
-        await saveUserId(user.id);
+        await saveTokensByCookieStore(accessToken, refreshToken);
+        await saveUserIdByCookieStore(user.id);
 
         return {
             id: user.id,

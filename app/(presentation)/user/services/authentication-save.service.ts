@@ -1,7 +1,7 @@
 import { CookieKeys } from '@/application/constants/cookie-keys';
 import { cookies } from 'next/headers';
 
-export async function saveTokens(
+export async function saveTokensByCookieStore(
     accessToken: string,
     refreshToken: string
 ): Promise<boolean> {
@@ -21,7 +21,9 @@ export async function saveTokens(
     return true;
 }
 
-export async function saveUserId(userId: string): Promise<boolean> {
+export async function saveUserIdByCookieStore(
+    userId: string
+): Promise<boolean> {
     const cookieStore = await cookies();
 
     cookieStore.set(CookieKeys.USER_ID, userId, {
@@ -33,7 +35,7 @@ export async function saveUserId(userId: string): Promise<boolean> {
     return true;
 }
 
-export async function deleteTokens(): Promise<boolean> {
+export async function deleteTokensByCookieStore(): Promise<boolean> {
     const cookieStore = await cookies();
 
     cookieStore.delete(CookieKeys.ACCESS_TOKEN);
@@ -42,7 +44,7 @@ export async function deleteTokens(): Promise<boolean> {
     return true;
 }
 
-export async function deleteUserId(): Promise<boolean> {
+export async function deleteUserIdByCookieStore(): Promise<boolean> {
     const cookieStore = await cookies();
 
     cookieStore.delete(CookieKeys.USER_ID);
