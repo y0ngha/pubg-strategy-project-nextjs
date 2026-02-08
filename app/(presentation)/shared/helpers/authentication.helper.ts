@@ -10,5 +10,5 @@ export async function ensureAuthentication() {
 export async function isAuthenticationComplete() {
     const cookieStore = await cookies();
     const token = cookieStore.get(CookieKeys.ACCESS_TOKEN);
-    return token?.value != null;
+    return !!token?.value;
 }
