@@ -2,11 +2,11 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { z } from 'zod';
 
 export interface LogoutRequestDto {
-    id: string;
+    userId: string;
 }
 
 export const LogoutRequestSchema = z.object({
-    id: z.string().transform(value => {
+    userId: z.string().transform(value => {
         return UserId.create(value);
     }),
 });

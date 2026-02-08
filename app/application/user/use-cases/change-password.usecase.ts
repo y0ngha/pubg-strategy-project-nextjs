@@ -25,13 +25,13 @@ export class ChangePasswordUseCase {
     ) {}
 
     async execute(dto: ChangePasswordRequestDto): Promise<boolean> {
-        const { id, currentPassword, newPassword } =
+        const { userId, currentPassword, newPassword } =
             ChangePasswordRequestSchema.parse(dto);
 
-        const user = await this.userRepository.findByUserId(id);
+        const user = await this.userRepository.findByUserId(userId);
 
         if (!user) {
-            throw new UserNotFoundException(id.toString());
+            throw new UserNotFoundException(userId.toString());
         }
 
         if (!this.passwordValidatorService.validate(user.email, newPassword)) {
