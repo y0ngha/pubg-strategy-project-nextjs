@@ -3,8 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import {
+    deleteTokensByCookieStore,
+    deleteUserIdByCookieStore,
+} from '@/(presentation)/user/services/authentication-save.service';
 
-export async function logoutAction(_: unknown, formData: FormData) {
+export async function logoutAction(formData: FormData) {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { userId } = parseFormData(formData, [
@@ -21,5 +28,14 @@ export async function logoutAction(_: unknown, formData: FormData) {
 
     const useCase = getService<LogoutUseCase>(LogoutUseCase);
 
-    return await useCase.execute(dto);
+    try {
+        await useCase.execute(dto);
+
+        await deleteTokensByCookieStore();
+        await deleteUserIdByCookieStore();
+
+        return true;
+    } catch (e) {
+        throw e;
+    }
 }
