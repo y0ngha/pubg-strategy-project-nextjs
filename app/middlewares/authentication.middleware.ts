@@ -3,7 +3,11 @@ import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authen
 import { NextRequest, NextResponse } from 'next/server';
 import { CookieKeys } from '@/application/constants/cookie-keys';
 
-const NEED_AUTHENTICATION_PATHNAMES = [Route.MYPAGE, Route.STRATEGIES];
+const NEED_AUTHENTICATION_PATHNAMES = [
+    Route.MYPAGE,
+    Route.STRATEGIES,
+    Route.FRIENDS,
+];
 
 export async function authenticationMiddleware(
     request: NextRequest,

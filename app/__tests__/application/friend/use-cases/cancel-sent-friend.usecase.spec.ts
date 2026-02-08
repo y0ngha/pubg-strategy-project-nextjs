@@ -2,17 +2,17 @@ import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.
 import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
-import { FriendshipStatus } from '@domain/friend/enum/friendship-status.enum';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import {
     FriendNotFoundException,
-    FriendshipUpdateInvalidPermission,
-    FriendshipUpdateInvalidStatus,
+    FriendUpdateInvalidPermission,
+    FriendUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
-import { CancelSentFriendshipUseCase } from '@/application/friend/use-cases/cancel-sent-friendship.usecase';
+import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
 import { getFriendRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
-describe('CancelSentFriendshipUseCase', () => {
-    let useCase: CancelSentFriendshipUseCase;
+describe('CancelSentFriendUseCase', () => {
+    let useCase: CancelSentFriendUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
 
     const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
@@ -33,7 +33,7 @@ describe('CancelSentFriendshipUseCase', () => {
             Email.create(recipientUserEmail)
         );
 
-        useCase = new CancelSentFriendshipUseCase(mockFriendRepository);
+        useCase = new CancelSentFriendUseCase(mockFriendRepository);
     });
 
     describe('성공 테스트', () => {
@@ -55,7 +55,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             const savedFriend = mockFriendRepository.save.mock.calls[0][0];
 
-            expect(savedFriend.status).toBe(FriendshipStatus.CANCELED);
+            expect(savedFriend.status).toBe(FriendStatus.CANCELED);
             expect(savedFriend.respondedAt).toBeNull();
         });
     });
@@ -89,7 +89,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidPermission
+                FriendUpdateInvalidPermission
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -108,7 +108,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -127,7 +127,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -146,7 +146,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -157,7 +157,7 @@ describe('CancelSentFriendshipUseCase', () => {
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
         // given
         jest.spyOn(friendFixture, 'cancel').mockImplementation(() => {
-            throw new FriendshipUpdateInvalidPermission();
+            throw new FriendUpdateInvalidPermission();
         });
 
         mockFriendRepository.findById.mockResolvedValue(friendFixture);
@@ -169,7 +169,7 @@ describe('CancelSentFriendshipUseCase', () => {
 
         //when & then
         await expect(() => useCase.execute(dto)).rejects.toThrow(
-            FriendshipUpdateInvalidPermission
+            FriendUpdateInvalidPermission
         );
     });
 });

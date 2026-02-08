@@ -1,13 +1,21 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-friendship-list.usecase';
+import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function getFriendshipListAction(_: unknown, formData: FormData) {
+export async function cancelSentFriendRequestAction(
+    _: unknown,
+    formData: FormData
+) {
     const getService = initializeRequestServices();
 
-    const { userId } = parseFormData(formData, [
+    const { id, userId } = parseFormData(formData, [
+        {
+            key: 'id',
+            error: '친구 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
         {
             key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
@@ -16,11 +24,12 @@ export async function getFriendshipListAction(_: unknown, formData: FormData) {
     ] as const);
 
     const dto = {
+        id: id,
         userId: userId,
     };
 
-    const useCase = getService<GetFriendshipListUseCase>(
-        GetFriendshipListUseCase
+    const useCase = getService<CancelSentFriendUseCase>(
+        CancelSentFriendUseCase
     );
 
     return await useCase.execute(dto);

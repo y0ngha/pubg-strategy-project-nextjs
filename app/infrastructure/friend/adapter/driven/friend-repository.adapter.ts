@@ -8,10 +8,7 @@ export class FriendRepositoryAdapter extends FriendRepositoryPort {
         throw new Error('Not Implemented.');
     }
 
-    existsFriendshipBetween(
-        userId1: UserId,
-        userId2: UserId
-    ): Promise<boolean> {
+    existsFriendBetween(userId1: UserId, userId2: UserId): Promise<boolean> {
         throw new Error('Not Implemented.');
     }
 
@@ -23,15 +20,13 @@ export class FriendRepositoryAdapter extends FriendRepositoryPort {
         throw new Error('Not Implemented.');
     }
 
-    findReceivedFriendshipRequestsByRecipientUserId(
+    findReceivedFriendRequestsByRecipientUserId(
         userId: UserId
     ): Promise<Friend[]> {
         throw new Error('Not Implemented.');
     }
 
-    findSentFriendshipRequestsByRequesterUserId(
-        userId: UserId
-    ): Promise<Friend[]> {
+    findSentFriendRequestsByRequesterUserId(userId: UserId): Promise<Friend[]> {
         throw new Error('Not Implemented.');
     }
 

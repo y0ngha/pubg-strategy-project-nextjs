@@ -4,15 +4,14 @@ import { getOwnedStrategiesAction } from '@/(presentation)/strategy/actions/get-
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { getSharedStrategiesAction } from '@/(presentation)/strategy/actions/get-shared-strategies.action';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { cookies } from 'next/headers';
+import { getUserIdByCookieStore } from '@/(presentation)/dehydrate-components/utils/get-user-id.util';
 
 export default async function StrategiesDehydrate({
     children,
 }: {
     children: ReactNode;
 }) {
-    const cookieStore = await cookies();
-    const userId = cookieStore.get('userId')?.value;
+    const userId = await getUserIdByCookieStore();
 
     if (!userId) {
         return children;

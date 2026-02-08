@@ -1,10 +1,10 @@
 import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
-import { FriendshipStatus } from '@domain/friend/enum/friendship-status.enum';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import {
-    FriendshipUpdateInvalidPermission,
-    FriendshipUpdateInvalidStatus,
+    FriendUpdateInvalidPermission,
+    FriendUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 
@@ -31,7 +31,7 @@ describe('FriendEntity', () => {
             expect(friend.requesterUserEmail).toBe(requesterUserEmail);
             expect(friend.recipientUserId).toBe(recipientUserId);
             expect(friend.recipientUserEmail).toBe(recipientUserEmail);
-            expect(friend.status).toBe(FriendshipStatus.PENDING);
+            expect(friend.status).toBe(FriendStatus.PENDING);
         });
     });
 
@@ -41,7 +41,7 @@ describe('FriendEntity', () => {
             const id = FriendId.generate();
             const requesterUserId = UserId.generate();
             const requesterUserEmail = Email.create('test@domain.com');
-            const status = FriendshipStatus.REJECTED;
+            const status = FriendStatus.REJECTED;
             const recipientUserId = UserId.generate();
             const recipientUserEmail = Email.create('now@domain.com');
             const requestedAt = new Date();
@@ -92,7 +92,7 @@ describe('FriendEntity', () => {
                 friend.accept(recipientUserId);
 
                 // then
-                expect(friend.status).toBe(FriendshipStatus.ACCEPTED);
+                expect(friend.status).toBe(FriendStatus.ACCEPTED);
                 expect(friend.respondedAt).not.toBeNull();
             });
 
@@ -114,7 +114,7 @@ describe('FriendEntity', () => {
                 friend.reject(recipientUserId);
 
                 // then
-                expect(friend.status).toBe(FriendshipStatus.REJECTED);
+                expect(friend.status).toBe(FriendStatus.REJECTED);
                 expect(friend.respondedAt).not.toBeNull();
             });
 
@@ -136,7 +136,7 @@ describe('FriendEntity', () => {
                 friend.cancel(requesterUserId);
 
                 // then
-                expect(friend.status).toBe(FriendshipStatus.CANCELED);
+                expect(friend.status).toBe(FriendStatus.CANCELED);
                 expect(friend.respondedAt).toBeNull();
             });
         });
@@ -159,11 +159,11 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.accept(requesterUserId);
-                }).toThrow(FriendshipUpdateInvalidPermission);
+                }).toThrow(FriendUpdateInvalidPermission);
 
                 expect(() => {
                     friend.reject(requesterUserId);
-                }).toThrow(FriendshipUpdateInvalidPermission);
+                }).toThrow(FriendUpdateInvalidPermission);
             });
 
             it('내가 보낸 친구 요청이 아닌데, 취소 하려 할 경우 에러를 던진다.', () => {
@@ -183,7 +183,7 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.cancel(recipientUserId);
-                }).toThrow(FriendshipUpdateInvalidPermission);
+                }).toThrow(FriendUpdateInvalidPermission);
             });
 
             it('이미 수락/거절한 상태의 친구 관계를 또 업데이트 하려 할 경우 에러를 던진다.', () => {
@@ -205,15 +205,15 @@ describe('FriendEntity', () => {
                 // when & then
                 expect(() => {
                     friend.accept(recipientUserId);
-                }).toThrow(FriendshipUpdateInvalidStatus);
+                }).toThrow(FriendUpdateInvalidStatus);
 
                 expect(() => {
                     friend.reject(recipientUserId);
-                }).toThrow(FriendshipUpdateInvalidStatus);
+                }).toThrow(FriendUpdateInvalidStatus);
 
                 expect(() => {
                     friend.cancel(requesterUserId);
-                }).toThrow(FriendshipUpdateInvalidStatus);
+                }).toThrow(FriendUpdateInvalidStatus);
             });
         });
     });

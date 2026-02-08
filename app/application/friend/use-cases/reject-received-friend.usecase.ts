@@ -1,20 +1,21 @@
 import { inject, injectable } from 'inversify';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import {
-    AcceptReceivedFriendshipRequestDto,
-    AcceptReceivedFriendshipRequestSchema,
-} from '@/application/friend/dto/accept-received-friendship.dto';
+
 import { FriendNotFoundException } from '@domain/friend/exceptions/friend.exceptions';
+import {
+    RejectReceivedFriendRequestDto,
+    RejectReceivedFriendRequestSchema,
+} from '@/application/friend/dto/reject-received-friend.dto';
 
 @injectable()
-export class AcceptReceivedFriendshipUseCase {
+export class RejectReceivedFriendUseCase {
     constructor(
         @inject(FriendRepositoryPort)
         private readonly friendRepository: FriendRepositoryPort
     ) {}
 
-    async execute(dto: AcceptReceivedFriendshipRequestDto): Promise<boolean> {
-        const { id, userId } = AcceptReceivedFriendshipRequestSchema.parse(dto);
+    async execute(dto: RejectReceivedFriendRequestDto): Promise<boolean> {
+        const { id, userId } = RejectReceivedFriendRequestSchema.parse(dto);
 
         const friend = await this.friendRepository.findById(id);
 
@@ -22,7 +23,7 @@ export class AcceptReceivedFriendshipUseCase {
             throw new FriendNotFoundException(id.toString());
         }
 
-        friend.accept(userId);
+        friend.reject(userId);
 
         await this.friendRepository.save(friend);
 

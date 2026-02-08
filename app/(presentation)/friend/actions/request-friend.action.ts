@@ -1,10 +1,10 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
+import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function requestFriendshipAction(_: unknown, formData: FormData) {
+export async function requestFriendAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId, recipientUserId } = parseFormData(formData, [
@@ -25,9 +25,7 @@ export async function requestFriendshipAction(_: unknown, formData: FormData) {
         recipientUserId: recipientUserId,
     };
 
-    const useCase = getService<RequestFriendshipUseCase>(
-        RequestFriendshipUseCase
-    );
+    const useCase = getService<RequestFriendUseCase>(RequestFriendUseCase);
 
     return await useCase.execute(dto);
 }

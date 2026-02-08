@@ -1,18 +1,18 @@
-import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
 import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
-import { FriendshipStatus } from '@domain/friend/enum/friendship-status.enum';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import {
     FriendNotFoundException,
-    FriendshipUpdateInvalidPermission,
-    FriendshipUpdateInvalidStatus,
+    FriendUpdateInvalidPermission,
+    FriendUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
+import { RejectReceivedFriendUseCase } from '@/application/friend/use-cases/reject-received-friend.usecase';
 import { getFriendRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
-describe('AcceptReceivedFriendshipUseCase', () => {
-    let useCase: AcceptReceivedFriendshipUseCase;
+describe('RejectReceivedFriendUseCase', () => {
+    let useCase: RejectReceivedFriendUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
 
     const requesterUserId = 'a0f01e35-f96b-4dee-a75b-89cea500ce50';
@@ -33,7 +33,7 @@ describe('AcceptReceivedFriendshipUseCase', () => {
             Email.create(recipientUserEmail)
         );
 
-        useCase = new AcceptReceivedFriendshipUseCase(mockFriendRepository);
+        useCase = new RejectReceivedFriendUseCase(mockFriendRepository);
     });
 
     describe('성공 테스트', () => {
@@ -55,7 +55,7 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
             const savedFriend = mockFriendRepository.save.mock.calls[0][0];
 
-            expect(savedFriend.status).toBe(FriendshipStatus.ACCEPTED);
+            expect(savedFriend.status).toBe(FriendStatus.REJECTED);
             expect(savedFriend.respondedAt).not.toBeNull();
         });
     });
@@ -89,7 +89,7 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidPermission
+                FriendUpdateInvalidPermission
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -108,7 +108,7 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -127,7 +127,7 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
@@ -146,30 +146,30 @@ describe('AcceptReceivedFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                FriendshipUpdateInvalidStatus
+                FriendUpdateInvalidStatus
             );
 
             expect(mockFriendRepository.findById).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
         });
-    });
 
-    it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
-        // given
-        jest.spyOn(friendFixture, 'accept').mockImplementation(() => {
-            throw new FriendshipUpdateInvalidPermission();
+        it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+            // given
+            jest.spyOn(friendFixture, 'reject').mockImplementation(() => {
+                throw new FriendUpdateInvalidPermission();
+            });
+
+            mockFriendRepository.findById.mockResolvedValue(friendFixture);
+
+            const dto = {
+                id: '869215ed-3baf-4abb-a511-b164f0cc716e',
+                userId: recipientUserId,
+            };
+
+            //when & then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(
+                FriendUpdateInvalidPermission
+            );
         });
-
-        mockFriendRepository.findById.mockResolvedValue(friendFixture);
-
-        const dto = {
-            id: '869215ed-3baf-4abb-a511-b164f0cc716e',
-            userId: recipientUserId,
-        };
-
-        //when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(
-            FriendshipUpdateInvalidPermission
-        );
     });
 });

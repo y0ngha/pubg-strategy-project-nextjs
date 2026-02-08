@@ -1,19 +1,19 @@
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { FriendshipStatus } from '@domain/friend/enum/friendship-status.enum';
-import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
+import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { User } from '@domain/user/entities/user.entity';
 import { Email } from '@domain/shared/value-objects/email';
 import { UserId } from '@domain/shared/value-objects/user-id';
-import { AlreadyBecameFriendshipException } from '@domain/friend/exceptions/friend.exceptions';
+import { AlreadyBecameFriendException } from '@domain/friend/exceptions/friend.exceptions';
 import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
 import {
     getFriendRepositoryMocking,
     getUserRepositoryMocking,
 } from '@/__tests__/application/helpers/repository-mocking.helpers';
 
-describe('RequestFriendshipUseCase', () => {
-    let useCase: RequestFriendshipUseCase;
+describe('RequestFriendUseCase', () => {
+    let useCase: RequestFriendUseCase;
     let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
@@ -39,7 +39,7 @@ describe('RequestFriendshipUseCase', () => {
             }
         );
 
-        useCase = new RequestFriendshipUseCase(
+        useCase = new RequestFriendUseCase(
             mockFriendRepository,
             mockUserRepository
         );
@@ -48,9 +48,7 @@ describe('RequestFriendshipUseCase', () => {
     describe('성공 테스트', () => {
         it('친구 관계가 맺어져있지 않고, 두 유저 모두 존재할 때 친구 요청 보내기는 성공한다.', async () => {
             // give
-            mockFriendRepository.existsFriendshipBetween.mockResolvedValue(
-                false
-            );
+            mockFriendRepository.existsFriendBetween.mockResolvedValue(false);
 
             const dto = {
                 requesterUserId: requester.id.toString(),
@@ -63,13 +61,13 @@ describe('RequestFriendshipUseCase', () => {
             // then
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(2);
             expect(
-                mockFriendRepository.existsFriendshipBetween
+                mockFriendRepository.existsFriendBetween
             ).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(1);
 
             const savedFriend = mockFriendRepository.save.mock.calls[0][0];
 
-            expect(savedFriend.status).toBe(FriendshipStatus.PENDING);
+            expect(savedFriend.status).toBe(FriendStatus.PENDING);
             expect(savedFriend.recipientUserId).toBe(recipient.id);
             expect(savedFriend.requesterUserId).toBe(requester.id);
         });
@@ -95,9 +93,7 @@ describe('RequestFriendshipUseCase', () => {
 
         it('이미 친구 관계일 때 에러를 던진다.', async () => {
             // give
-            mockFriendRepository.existsFriendshipBetween.mockResolvedValue(
-                true
-            );
+            mockFriendRepository.existsFriendBetween.mockResolvedValue(true);
 
             const dto = {
                 requesterUserId: requester.id.toString(),
@@ -106,18 +102,18 @@ describe('RequestFriendshipUseCase', () => {
 
             // when & then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                AlreadyBecameFriendshipException
+                AlreadyBecameFriendException
             );
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(2);
             expect(
-                mockFriendRepository.existsFriendshipBetween
+                mockFriendRepository.existsFriendBetween
             ).toHaveBeenCalledTimes(1);
             expect(mockFriendRepository.save).toHaveBeenCalledTimes(0);
         });
 
         it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
             // given
-            mockFriendRepository.existsFriendshipBetween.mockRejectedValue(
+            mockFriendRepository.existsFriendBetween.mockRejectedValue(
                 new Error()
             );
 

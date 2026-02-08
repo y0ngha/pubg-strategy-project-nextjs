@@ -137,37 +137,37 @@
 
 ## 🔠 유비쿼터스 언어 (Ubiquitous Language)
 
-| 용어               | 설명                                      |
-|------------------|-----------------------------------------|
-| Friendship       | 두 사용자 간의 친구 관계                          |
-| FriendshipStatus | PENDING(대기), ACCEPTED(수락), REJECTED(거절) |
-| Requester        | 친구 요청을 보낸 사용자                           |
-| Accepter         | 친구 요청을 받은 사용자                           |
+| 용어           | 설명                                      |
+|--------------|-----------------------------------------|
+| Friend       | 두 사용자 간의 친구 관계                          |
+| FriendStatus | PENDING(대기), ACCEPTED(수락), REJECTED(거절) |
+| Requester    | 친구 요청을 보낸 사용자                           |
+| Accepter     | 친구 요청을 받은 사용자                           |
 
 ## 🚴‍♂️ 주요 Use Case (Use Cases)
 
-1. 친구 목록 조회 (`GetFriendshipList`)
-2. 받은 친구 요청 조회 (`GetReceiveFriendshipRequests`)
-3. 보낸 친구 요청 조회 (`GetSentFriendshipRequests`)
-4. 친구 추가 (`RequestFriendship`)
-5. 친구 삭제 (`DeleteFriendship`)
+1. 친구 목록 조회 (`GetFriendList`)
+2. 받은 친구 요청 조회 (`GetReceiveFriendRequests`)
+3. 보낸 친구 요청 조회 (`GetSentFriendRequests`)
+4. 친구 추가 (`RequestFriend`)
+5. 친구 삭제 (`DeleteFriend`)
 6. 보낸 친구 요청 취소 (`CancelFriendRequest`)
 7. 친구 요청 수락 (`AcceptFriendRequest`)
 8. 친구 요청 거절 (`RejectFriendRequest`)
 
 ## 👍 루트 애그리거트 (Aggregate Root) - Friend
 
-| 필드명                  | 타입               | 설명                     |
-|----------------------|------------------|------------------------|
-| id                   | FriendshipId?    | 친구 관계 고유 식별자           
+| 필드명                  | 타입           | 설명                     |
+|----------------------|--------------|------------------------|
+| id                   | FriendId?    | 친구 관계 고유 식별자           
 | 최초 생성시에는 Null을 허용한다. |
-| requesterId          | UserId           | 친구 관계 요청자 유저 고유 식별자    |
-| accepterId           | UserId           | 친구 관계 요청을 받은 유저 고유 식별자 |
-| status               | FriendshipStatus | 친구 관계 상태               |
-| requesterEmail       | string           | 요청자 이메일                |
-| accepterEmail        | string           | 요청을 받은 자 이메일           |
-| requestedAt          | Date             | 요청 일시                  |
-| respondedAt          | Date?            | 응답 일시                  |
+| requesterId          | UserId       | 친구 관계 요청자 유저 고유 식별자    |
+| accepterId           | UserId       | 친구 관계 요청을 받은 유저 고유 식별자 |
+| status               | FriendStatus | 친구 관계 상태               |
+| requesterEmail       | string       | 요청자 이메일                |
+| accepterEmail        | string       | 요청을 받은 자 이메일           |
+| requestedAt          | Date         | 요청 일시                  |
+| respondedAt          | Date?        | 응답 일시                  |
 
 ### ⚙️ Domain Entity
 
@@ -176,7 +176,7 @@
 > 불변 객체, 동등성 비교로 관리
 >
 
-[FriendshipId]
+[FriendId]
 
 ---
 
@@ -187,13 +187,13 @@
 ---
 
 1. 원시 값 반환에 대한 함수를 제공한다.
-2. 백엔드에서 부터 받은 ID값을 string → FriendshipId로 변환한다.
+2. 백엔드에서 부터 받은 ID값을 string → FriendId로 변환한다.
 
 ### ⛓️ Service
 
 ### 📑 Enum
 
-[FriendshipStatus]
+[FriendStatus]
 
 > 친구 관계에 대한 Enum Class.
 >
