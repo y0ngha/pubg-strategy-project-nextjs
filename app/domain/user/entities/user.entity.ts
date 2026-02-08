@@ -116,7 +116,7 @@ export class User {
 
     private ensureCurrentPasswordProvided(
         currentPassword: Password | null
-    ): void {
+    ): asserts currentPassword is Password {
         if (currentPassword === null) {
             throw new ChangePasswordException(
                 '기존 비밀번호를 입력해야 합니다.'
