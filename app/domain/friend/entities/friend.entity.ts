@@ -1,10 +1,10 @@
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 import { UserId } from '@domain/shared/value-objects/user-id';
-import { FriendshipStatus } from '@domain/friend/enum/friendship-status.enum';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import { Email } from '@domain/shared/value-objects/email';
 import {
-    FriendshipUpdateInvalidPermission,
-    FriendshipUpdateInvalidStatus,
+    FriendUpdateInvalidPermission,
+    FriendUpdateInvalidStatus,
 } from '@domain/friend/exceptions/friend.exceptions';
 
 export class Friend {
@@ -12,7 +12,7 @@ export class Friend {
         public readonly id: FriendId,
         public readonly requesterUserId: UserId,
         public readonly recipientUserId: UserId,
-        private _status: FriendshipStatus,
+        private _status: FriendStatus,
         public readonly requesterUserEmail: Email,
         public readonly recipientUserEmail: Email,
         public readonly requestedAt: Date,
@@ -37,7 +37,7 @@ export class Friend {
             FriendId.generate(),
             requesterUserId,
             recipientUserId,
-            FriendshipStatus.PENDING,
+            FriendStatus.PENDING,
             requesterUserEmail,
             recipientUserEmail,
             new Date(),
@@ -49,7 +49,7 @@ export class Friend {
         id: FriendId,
         requesterUserId: UserId,
         recipientUserId: UserId,
-        status: FriendshipStatus,
+        status: FriendStatus,
         requesterUserEmail: Email,
         recipientUserEmail: Email,
         requestedAt: Date,
@@ -70,44 +70,44 @@ export class Friend {
     accept(userId: UserId) {
         this.ensureRecipientAuthority(userId);
 
-        this.ensureFriendshipStatusUpdateAvailable();
+        this.ensureFriendStatusUpdateAvailable();
 
-        this._status = FriendshipStatus.ACCEPTED;
+        this._status = FriendStatus.ACCEPTED;
         this._respondedAt = new Date();
     }
 
     reject(userId: UserId) {
         this.ensureRecipientAuthority(userId);
 
-        this.ensureFriendshipStatusUpdateAvailable();
+        this.ensureFriendStatusUpdateAvailable();
 
-        this._status = FriendshipStatus.REJECTED;
+        this._status = FriendStatus.REJECTED;
         this._respondedAt = new Date();
     }
 
     cancel(userId: UserId) {
         this.ensureRequesterAuthority(userId);
 
-        this.ensureFriendshipStatusUpdateAvailable();
+        this.ensureFriendStatusUpdateAvailable();
 
-        this._status = FriendshipStatus.CANCELED;
+        this._status = FriendStatus.CANCELED;
     }
 
     private ensureRequesterAuthority(userId: UserId) {
         if (!this.requesterUserId.equals(userId)) {
-            throw new FriendshipUpdateInvalidPermission();
+            throw new FriendUpdateInvalidPermission();
         }
     }
 
     private ensureRecipientAuthority(userId: UserId) {
         if (!this.recipientUserId.equals(userId)) {
-            throw new FriendshipUpdateInvalidPermission();
+            throw new FriendUpdateInvalidPermission();
         }
     }
 
-    private ensureFriendshipStatusUpdateAvailable() {
-        if (this._status !== FriendshipStatus.PENDING) {
-            throw new FriendshipUpdateInvalidStatus(this._status);
+    private ensureFriendStatusUpdateAvailable() {
+        if (this._status !== FriendStatus.PENDING) {
+            throw new FriendUpdateInvalidStatus(this._status);
         }
     }
 }

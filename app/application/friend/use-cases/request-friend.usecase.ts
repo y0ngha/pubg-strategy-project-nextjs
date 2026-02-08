@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
 import {
-    RequestFriendshipRequestDto,
-    RequestFriendshipRequestSchema,
-} from '@/application/friend/dto/request-friendship.dto';
+    RequestFriendRequestDto,
+    RequestFriendRequestSchema,
+} from '@/application/friend/dto/request-friend.dto';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
-import { AlreadyBecameFriendshipException } from '@domain/friend/exceptions/friend.exceptions';
+import { AlreadyBecameFriendException } from '@domain/friend/exceptions/friend.exceptions';
 import { Friend } from '@domain/friend/entities/friend.entity';
 
 @injectable()
-export class RequestFriendshipUseCase {
+export class RequestFriendUseCase {
     constructor(
         @inject(FriendRepositoryPort)
         private readonly friendRepository: FriendRepositoryPort,
@@ -18,9 +18,9 @@ export class RequestFriendshipUseCase {
         private readonly userRepository: UserRepositoryPort
     ) {}
 
-    async execute(dto: RequestFriendshipRequestDto): Promise<boolean> {
+    async execute(dto: RequestFriendRequestDto): Promise<boolean> {
         const { requesterUserId, recipientUserId } =
-            RequestFriendshipRequestSchema.parse(dto);
+            RequestFriendRequestSchema.parse(dto);
 
         const [requester, recipient] = await Promise.all([
             this.userRepository.findByUserId(requesterUserId),
@@ -35,14 +35,13 @@ export class RequestFriendshipUseCase {
             throw new UserNotFoundException(recipientUserId.toString());
         }
 
-        const existsFriendship =
-            await this.friendRepository.existsFriendshipBetween(
-                recipientUserId,
-                requesterUserId
-            );
+        const existsFriend = await this.friendRepository.existsFriendBetween(
+            recipientUserId,
+            requesterUserId
+        );
 
-        if (existsFriendship) {
-            throw new AlreadyBecameFriendshipException();
+        if (existsFriend) {
+            throw new AlreadyBecameFriendException();
         }
 
         const friend = Friend.create(

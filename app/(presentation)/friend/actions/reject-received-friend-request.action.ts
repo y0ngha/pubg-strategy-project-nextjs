@@ -1,10 +1,10 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
+import { RejectReceivedFriendUseCase } from '@/application/friend/use-cases/reject-received-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function acceptReceivedFriendshipAction(
+export async function rejectReceivedFriendRequestAction(
     _: unknown,
     formData: FormData
 ) {
@@ -28,8 +28,8 @@ export async function acceptReceivedFriendshipAction(
         userId: userId,
     };
 
-    const useCase = getService<AcceptReceivedFriendshipUseCase>(
-        AcceptReceivedFriendshipUseCase
+    const useCase = getService<RejectReceivedFriendUseCase>(
+        RejectReceivedFriendUseCase
     );
 
     return await useCase.execute(dto);

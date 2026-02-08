@@ -7,7 +7,7 @@ export abstract class FriendRepositoryPort {
 
     abstract delete(id: FriendId): Promise<void>;
 
-    abstract existsFriendshipBetween(
+    abstract existsFriendBetween(
         userId1: UserId,
         userId2: UserId
     ): Promise<boolean>;
@@ -16,11 +16,11 @@ export abstract class FriendRepositoryPort {
 
     abstract findAcceptedFriendsByUserId(userId: UserId): Promise<Friend[]>;
 
-    abstract findReceivedFriendshipRequestsByRecipientUserId(
+    abstract findReceivedFriendRequestsByRecipientUserId(
         userId: UserId
     ): Promise<Friend[]>;
 
-    abstract findSentFriendshipRequestsByRequesterUserId(
+    abstract findSentFriendRequestsByRequesterUserId(
         userId: UserId
     ): Promise<Friend[]>;
 }

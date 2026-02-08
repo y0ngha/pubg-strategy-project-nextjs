@@ -1,18 +1,18 @@
 import { DomainException } from '@domain/shared/exceptions/domain.exception';
 import {
-    FriendshipStatus,
-    FriendshipStatusLabels,
-} from '@domain/friend/enum/friendship-status.enum';
+    FriendStatus,
+    FriendStatusLabels,
+} from '@domain/friend/enum/friend-status.enum';
 
-export class FriendshipUpdateInvalidPermission extends DomainException {
+export class FriendUpdateInvalidPermission extends DomainException {
     constructor() {
         super('친구 관계를 업데이트할 권한이 없습니다.');
     }
 }
 
-export class FriendshipUpdateInvalidStatus extends DomainException {
-    constructor(friendshipStatus: FriendshipStatus) {
-        super(`이미 ${FriendshipStatusLabels[friendshipStatus]} 상태 입니다.`);
+export class FriendUpdateInvalidStatus extends DomainException {
+    constructor(friendStatus: FriendStatus) {
+        super(`이미 ${FriendStatusLabels[friendStatus]} 상태 입니다.`);
     }
 }
 
@@ -26,7 +26,7 @@ export class FriendNotFoundException extends DomainException {
     }
 }
 
-export class AlreadyBecameFriendshipException extends DomainException {
+export class AlreadyBecameFriendException extends DomainException {
     constructor() {
         super('이미 두 분은 친구 관계입니다.');
     }

@@ -2,12 +2,12 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { z } from 'zod';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 
-export interface AcceptReceivedFriendshipRequestDto {
+export interface RejectReceivedFriendRequestDto {
     id: string;
     userId: string;
 }
 
-export const AcceptReceivedFriendshipRequestSchema = z.object({
+export const RejectReceivedFriendRequestSchema = z.object({
     id: z.string().transform(value => {
         return FriendId.create(value);
     }),

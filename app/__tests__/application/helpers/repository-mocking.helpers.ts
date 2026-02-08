@@ -6,11 +6,11 @@ export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> 
     return {
         save: jest.fn(),
         delete: jest.fn(),
-        existsFriendshipBetween: jest.fn(),
+        existsFriendBetween: jest.fn(),
         findById: jest.fn(),
         findAcceptedFriendsByUserId: jest.fn(),
-        findReceivedFriendshipRequestsByRecipientUserId: jest.fn(),
-        findSentFriendshipRequestsByRequesterUserId: jest.fn(),
+        findReceivedFriendRequestsByRecipientUserId: jest.fn(),
+        findSentFriendRequestsByRequesterUserId: jest.fn(),
     };
 }
 

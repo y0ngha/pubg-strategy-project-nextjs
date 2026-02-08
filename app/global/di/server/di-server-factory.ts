@@ -23,11 +23,11 @@ import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-e
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
 import { FriendRepositoryAdapter } from '@infrastructure/friend/adapter/driven/friend-repository.adapter';
-import { CancelSentFriendshipUseCase } from '@/application/friend/use-cases/cancel-sent-friendship.usecase';
-import { AcceptReceivedFriendshipUseCase } from '@/application/friend/use-cases/accept-received-friendship.usecase';
-import { GetFriendshipListUseCase } from '@/application/friend/use-cases/get-friendship-list.usecase';
-import { RejectReceivedFriendshipUseCase } from '@/application/friend/use-cases/reject-received-friendship.usecase';
-import { RequestFriendshipUseCase } from '@/application/friend/use-cases/request-friendship.usecase';
+import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
+import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/accept-received-friend.usecase';
+import { GetFriendListUseCase } from '@/application/friend/use-cases/get-friend-list.usecase';
+import { RejectReceivedFriendUseCase } from '@/application/friend/use-cases/reject-received-friend.usecase';
+import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
 import { StrategyRepositoryAdapter } from '@infrastructure/strategy/adapter/driven/strategy-repository.adapter';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import { AddAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/add-airplane-path.usecase';
@@ -47,9 +47,7 @@ import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/del
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
 import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
-import {
-    UpdateStrategySharePermissionUseCase
-} from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
@@ -66,6 +64,7 @@ import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-s
 import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
 import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
 import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
+import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
 
 /**
  * User
@@ -114,12 +113,13 @@ const friendRepositories: ClassDependency[] = [
     },
 ];
 const friendUseCases: ClassDependency[] = [
-    { class: AcceptReceivedFriendshipUseCase },
-    { class: CancelSentFriendshipUseCase },
-    { class: GetFriendshipListUseCase },
-    { class: RejectReceivedFriendshipUseCase },
-    { class: RequestFriendshipUseCase },
+    { class: AcceptReceivedFriendUseCase },
+    { class: CancelSentFriendUseCase },
+    { class: GetFriendListUseCase },
+    { class: RejectReceivedFriendUseCase },
+    { class: RequestFriendUseCase },
 ];
+const friendServices: ClassDependency[] = [{ class: FriendMapper }];
 
 /**
  * Strategy
@@ -173,6 +173,7 @@ const dependencyInjectedClasses: ClassDependency[] = [
     ...userUseCases,
     ...friendRepositories,
     ...friendUseCases,
+    ...friendServices,
     ...strategyRepositories,
     ...strategyUseCases,
     ...strategyServices,
