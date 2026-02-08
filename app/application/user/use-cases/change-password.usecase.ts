@@ -1,10 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { Password } from '@domain/user/value-objects/password';
-import {
-    ChangePasswordRequestDto,
-    ChangePasswordRequestSchema,
-} from '@/application/user/dto/change-password.dto';
+import { ChangePasswordRequestDto, ChangePasswordRequestSchema, } from '@/application/user/dto/change-password.dto';
 import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 import {
     ChangePasswordException,
@@ -12,6 +9,7 @@ import {
     UserNotFoundException,
 } from '@domain/user/exceptions/user.exceptions';
 import { PasswordValidatorService } from '@domain/user/services/password-validator.service';
+import { Email } from '@domain/shared/value-objects/email';
 
 @injectable()
 export class ChangePasswordUseCase {
@@ -34,21 +32,14 @@ export class ChangePasswordUseCase {
             throw new UserNotFoundException(userId.toString());
         }
 
-        if (!this.passwordValidatorService.validate(user.email, newPassword)) {
-            throw new InvalidPasswordException(
-                '신규 비밀번호에 이메일이 포함될 수 없습니다.'
-            );
-        }
-
-        const encryptedCurrentPassword = Password.reconstruct(
-            this.passwordCipher.encrypt(currentPassword.toString())
-        );
+        this.ensurePasswordEmailValidate(user.email, newPassword);
+        this.ensurePasswordIsDifferent(currentPassword, newPassword);
 
         const encryptedNewPassword = Password.reconstruct(
             this.passwordCipher.encrypt(newPassword.toString())
         );
 
-        user.changePassword(encryptedCurrentPassword, encryptedNewPassword);
+        user.changePassword(encryptedNewPassword);
 
         try {
             await this.userRepository.save(user);
@@ -59,6 +50,25 @@ export class ChangePasswordUseCase {
             }
 
             throw error;
+        }
+    }
+
+    private ensurePasswordEmailValidate(email: Email, password: Password) {
+        if (!this.passwordValidatorService.validate(email, password)) {
+            throw new InvalidPasswordException(
+                '신규 비밀번호에 이메일이 포함될 수 없습니다.'
+            );
+        }
+    }
+
+    private ensurePasswordIsDifferent(
+        currentPassword: Password,
+        newPassword: Password
+    ): void {
+        if (currentPassword.equals(newPassword)) {
+            throw new ChangePasswordException(
+                '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
+            );
         }
     }
 }

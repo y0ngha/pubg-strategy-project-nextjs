@@ -2,7 +2,6 @@ import { Email } from '@/domain/shared/value-objects/email';
 import { UserId } from '@/domain/shared/value-objects/user-id';
 import { Password } from '../value-objects/password';
 import { AuthProvider } from '../enums/auth-provider.enum';
-import { ChangePasswordException } from '../exceptions/user.exceptions';
 
 export class User {
     private constructor(
@@ -62,12 +61,7 @@ export class User {
         );
     }
 
-    changePassword(
-        currentPassword: Password | null,
-        newPassword: Password
-    ): void {
-        this.validatePasswordChange(currentPassword, newPassword);
-
+    changePassword(newPassword: Password): void {
         this._password = newPassword;
         this._updatedAt = new Date();
     }
@@ -101,36 +95,5 @@ export class User {
 
     hasPassword(): boolean {
         return this._password != null;
-    }
-
-    private validatePasswordChange(
-        currentPassword: Password | null,
-        newPassword: Password
-    ): void {
-        if (!this.hasPassword()) return;
-
-        this.ensureCurrentPasswordProvided(currentPassword);
-        this.ensurePasswordIsDifferent(currentPassword, newPassword);
-    }
-
-    private ensureCurrentPasswordProvided(
-        currentPassword: Password | null
-    ): asserts currentPassword is Password {
-        if (currentPassword === null) {
-            throw new ChangePasswordException(
-                '기존 비밀번호를 입력해야 합니다.'
-            );
-        }
-    }
-
-    private ensurePasswordIsDifferent(
-        currentPassword: Password,
-        newPassword: Password
-    ): void {
-        if (currentPassword.equals(newPassword)) {
-            throw new ChangePasswordException(
-                '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
-            );
-        }
     }
 }
