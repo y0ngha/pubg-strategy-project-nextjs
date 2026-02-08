@@ -7,16 +7,16 @@ import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper'
 export async function logoutAction(_: unknown, formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { id } = parseFormData(formData, [
+    const { userId } = parseFormData(formData, [
         {
-            key: 'id',
+            key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
     ] as const);
 
     const dto = {
-        id: id,
+        userId: userId,
     };
 
     const useCase = getService<LogoutUseCase>(LogoutUseCase);
