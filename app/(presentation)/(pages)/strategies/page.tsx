@@ -1,6 +1,6 @@
 import StrategiesTabs from '@/(presentation)/(pages)/strategies/components/tabs/strategies-tabs.component';
 import MyStrategies from '@/(presentation)/(pages)/strategies/components/tables/my-strategies.component';
-import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
+import StrategiesDehydrate from '@/(presentation)/dehydrate-components/strategies-dehydrate.component';
 import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
 import SharedStrategies from '@/(presentation)/(pages)/strategies/components/tables/shared-strategies.component';
 import StrategiesTabContent from './components/tabs/strategies-tab-content.component';

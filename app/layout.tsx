@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import ReactQueryProviders from '@/react-query-provider';
 import { ReactNode } from 'react';
-import UserDehydrate from '@/dehydrate-components/user-dehydrate.component';
+import UserDehydrate from '@/(presentation)/dehydrate-components/user-dehydrate.component';
 import Footer from '@/footer';
 import Navigation from '@/navigation';
 import AuthFeedbackListner from '@/auth-feedback-listner';

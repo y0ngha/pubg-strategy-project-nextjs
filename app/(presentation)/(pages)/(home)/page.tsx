@@ -2,7 +2,7 @@ import HomePageLayout from '@/(presentation)/(pages)/(home)/components/home-page
 import HomeHero from '@/(presentation)/(pages)/(home)/components/home-hero.component';
 import RankerBoard from '@/(presentation)/(pages)/(home)/components/ranker-board.component';
 import StrategiesBoard from '@/(presentation)/(pages)/(home)/components/strategies-board.component';
-import StrategiesDehydrate from '@/dehydrate-components/strategies-dehydrate.component';
+import StrategiesDehydrate from '@/(presentation)/dehydrate-components/strategies-dehydrate.component';
 
 /**
  * Test용 Fixture
