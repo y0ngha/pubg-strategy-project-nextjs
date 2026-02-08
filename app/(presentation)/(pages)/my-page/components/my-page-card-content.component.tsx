@@ -11,6 +11,6 @@ function MyPageCardContent({ children }: { children: ReactNode }) {
     );
 }
 
-MyPageCardContent.displayName = 'MyPageCardContainer';
+MyPageCardContent.displayName = 'MyPageCardContent';
 
 export default MyPageCardContent;
