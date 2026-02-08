@@ -2,18 +2,25 @@ import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.hel
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { getCurrentUserAction } from '@/(presentation)/user/actions/get-current-user.action';
+import { getUserIdByCookieStore } from '@/(presentation)/dehydrate-components/utils/get-user-id.util';
+import { getFriendListAction } from '@/(presentation)/friend/actions/get-friend-list.action';
 
-export default async function UserDehydrate({
+export default async function FriendsDehydrate({
     children,
 }: {
     children: ReactNode;
 }) {
+    const userId = await getUserIdByCookieStore();
+
+    if (!userId) {
+        return children;
+    }
+
     const queryClient = getQueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: [ReactQueryKeys.GET_CURRENT_USER],
-        queryFn: async () => await getCurrentUserAction(),
+        queryKey: [userId, ReactQueryKeys.FRIENDS],
+        queryFn: async () => await getFriendListAction(userId),
     });
 
     const dehydratedState = dehydrate(queryClient);
