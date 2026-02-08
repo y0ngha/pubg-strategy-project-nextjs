@@ -16,21 +16,21 @@ function MyPageProfile() {
             <MyPageCardContent>
                 {isPending && <Skeleton />}
                 {!isPending && data !== undefined && (
-                    <>
+                    <div className={'flex items-center gap-4'}>
                         <MyPageIcon>
                             <UserAvatar />
                         </MyPageIcon>
                         <div>
                             <h2
                                 className={
-                                    'flex items-center text-xl font-bold'
+                                    'flex items-center gap-2 text-xl font-bold'
                                 }
                             >
-                                <Mail className={'mr-2 h-4 w-4'} />
+                                <Mail />
                                 <span>{data?.email}</span>
                             </h2>
                         </div>
-                    </>
+                    </div>
                 )}
             </MyPageCardContent>
         </Card>
