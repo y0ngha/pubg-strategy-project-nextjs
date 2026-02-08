@@ -110,8 +110,7 @@ export class User {
         if (!this.hasPassword()) return;
 
         this.ensureCurrentPasswordProvided(currentPassword);
-        this.ensurePasswordMatches(currentPassword!);
-        this.ensurePasswordIsDifferent(currentPassword!, newPassword);
+        this.ensurePasswordIsDifferent(currentPassword, newPassword);
     }
 
     private ensureCurrentPasswordProvided(
@@ -124,12 +123,6 @@ export class User {
         }
     }
 
-    private ensurePasswordMatches(currentPassword: Password): void {
-        if (!this.verifyPassword(currentPassword)) {
-            throw new ChangePasswordException('비밀번호가 일치하지 않습니다.');
-        }
-    }
-
     private ensurePasswordIsDifferent(
         currentPassword: Password,
         newPassword: Password
@@ -139,13 +132,5 @@ export class User {
                 '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
             );
         }
-    }
-
-    private verifyPassword(inputPassword: Password): boolean {
-        if (this._password == null) {
-            return false;
-        }
-
-        return this._password.equals(inputPassword);
     }
 }
