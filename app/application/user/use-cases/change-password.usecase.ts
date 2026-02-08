@@ -1,7 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
 import { Password } from '@domain/user/value-objects/password';
-import { ChangePasswordRequestDto, ChangePasswordRequestSchema, } from '@/application/user/dto/change-password.dto';
+import {
+    ChangePasswordRequestDto,
+    ChangePasswordRequestSchema,
+} from '@/application/user/dto/change-password.dto';
 import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 import {
     ChangePasswordException,
@@ -32,8 +35,19 @@ export class ChangePasswordUseCase {
             throw new UserNotFoundException(userId.toString());
         }
 
+        if (user.password) {
+            const decryptedUserPassword = this.passwordCipher.decrypt(
+                user.password.toString()
+            );
+
+            this.ensurePasswordMatches(
+                Password.reconstruct(decryptedUserPassword),
+                currentPassword
+            );
+            this.ensurePasswordIsDifferent(currentPassword, newPassword);
+        }
+
         this.ensurePasswordEmailValidate(user.email, newPassword);
-        this.ensurePasswordIsDifferent(currentPassword, newPassword);
 
         const encryptedNewPassword = Password.reconstruct(
             this.passwordCipher.encrypt(newPassword.toString())
@@ -57,6 +71,17 @@ export class ChangePasswordUseCase {
         if (!this.passwordValidatorService.validate(email, password)) {
             throw new InvalidPasswordException(
                 '신규 비밀번호에 이메일이 포함될 수 없습니다.'
+            );
+        }
+    }
+
+    private ensurePasswordMatches(
+        userPassword: Password,
+        currentPassword: Password
+    ): void {
+        if (!userPassword.equals(currentPassword)) {
+            throw new ChangePasswordException(
+                '현재 비밀번호가 일치하지 않습니다.'
             );
         }
     }

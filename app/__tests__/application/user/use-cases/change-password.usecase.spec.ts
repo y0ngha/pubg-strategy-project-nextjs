@@ -5,7 +5,10 @@ import { PasswordValidatorService } from '@domain/user/services/password-validat
 import { ChangePasswordRequestSchema } from '@/application/user/dto/change-password.dto';
 import { User } from '@domain/user/entities/user.entity';
 import { Email } from '@domain/shared/value-objects/email';
-import { InvalidPasswordException } from '@domain/user/exceptions/user.exceptions';
+import {
+    ChangePasswordException,
+    InvalidPasswordException,
+} from '@domain/user/exceptions/user.exceptions';
 import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import {
     getPasswordCipherMocking,
@@ -42,6 +45,13 @@ describe('ChangePasswordUseCase', () => {
         mockPasswordCipher.encrypt.mockImplementation(value => {
             return `encrypted:${value}`;
         });
+        mockPasswordCipher.decrypt.mockImplementation(value => {
+            if (value.indexOf('encrypted:') === -1) {
+                return value;
+            }
+
+            return value.split('encrypted:')[1];
+        });
     });
 
     describe('정상 변경', () => {
@@ -76,6 +86,21 @@ describe('ChangePasswordUseCase', () => {
     });
 
     describe('변경 실패', () => {
+        it('현재 비밀번호가 같지 않을 경우 에러를 던진다.', async () => {
+            // Give
+            const dto = {
+                userId: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
+                currentPassword: 'Wrong1234@',
+                newPassword: 'Abcd1234!',
+            };
+
+            // When & Then
+            await expect(useCase.execute(dto)).rejects.toThrow(
+                ChangePasswordException
+            );
+            expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
+        });
+
         it('현재 비밀번호가 같지만, 비밀번호 유효성 정책(이메일과 같은 경우) 에 실패했을 경우 에러를 던진다.', async () => {
             // Give
             const dto = {
@@ -115,15 +140,12 @@ describe('ChangePasswordUseCase', () => {
             const dto = {
                 userId: '836397c9-06ae-4fe0-82ec-5bd7d1f22700',
                 currentPassword: 'Abcd1234@',
-                newPassword: 'Abcd1234!',
+                newPassword: 'Abcd1234@',
             };
 
             // When & Then
             await expect(useCase.execute(dto)).rejects.toThrow(
-                InvalidPasswordException
-            );
-            expect(mockPasswordValidatorService.validate).toHaveBeenCalledTimes(
-                1
+                ChangePasswordException
             );
             expect(mockUserRepository.findByUserId).toHaveBeenCalledTimes(1);
         });
