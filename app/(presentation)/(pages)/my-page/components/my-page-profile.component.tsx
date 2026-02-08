@@ -1,0 +1,42 @@
+'use client';
+
+import UserAvatar from '@/(presentation)/shared/components/user-avatar.component';
+import Card from '@/(presentation)/shared/components/card.component';
+import { Mail } from 'lucide-react';
+import MyPageIcon from '@/(presentation)/(pages)/my-page/components/my-page-icon.component';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
+import Skeleton from '@/(presentation)/shared/components/skeleton.component';
+import MyPageCardContent from '@/(presentation)/(pages)/my-page/components/my-page-card-content.component';
+
+function MyPageProfile() {
+    const { data, isPending } = useGetCurrentUser();
+
+    return (
+        <Card>
+            <MyPageCardContent>
+                {isPending && <Skeleton />}
+                {!isPending && data !== undefined && (
+                    <>
+                        <MyPageIcon>
+                            <UserAvatar />
+                        </MyPageIcon>
+                        <div>
+                            <h2
+                                className={
+                                    'flex items-center text-xl font-bold'
+                                }
+                            >
+                                <Mail className={'mr-2 h-4 w-4'} />
+                                <span>{data?.email}</span>
+                            </h2>
+                        </div>
+                    </>
+                )}
+            </MyPageCardContent>
+        </Card>
+    );
+}
+
+MyPageProfile.displayName = 'MyPageProfile';
+
+export default MyPageProfile;
