@@ -21,6 +21,6 @@ function MyPageFriendMenu() {
     );
 }
 
-MyPageFriendMenu.displayName = 'myPageFriendMenu';
+MyPageFriendMenu.displayName = 'MyPageFriendMenu';
 
 export default MyPageFriendMenu;
