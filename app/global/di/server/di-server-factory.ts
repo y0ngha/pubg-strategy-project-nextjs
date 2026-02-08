@@ -2,7 +2,6 @@ import { AuthenticationServicePort } from '@/domain/user/port/out/authentication
 import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { AuthenticationServiceAdapter } from '@/infrastructure/user/adapter/driven/authentication-service.adapter';
 import { GoogleAuthServiceAdapter } from '@/infrastructure/user/adapter/driven/google-auth-service.adapter';
 import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
@@ -47,7 +46,9 @@ import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/del
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
 import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
-import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import {
+    UpdateStrategySharePermissionUseCase
+} from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
@@ -65,6 +66,8 @@ import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-s
 import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
 import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
 import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
+import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
+import { PasswordValidatorAdapter } from '@infrastructure/user/adapter/driving/password-validator.adapter';
 
 /**
  * User
@@ -81,7 +84,8 @@ const userServices: ClassDependency[] = [
         abstract: PasswordCipherPort,
     },
     {
-        class: PasswordValidatorService,
+        class: PasswordValidatorAdapter,
+        abstract: PasswordValidatorPort,
     },
     {
         class: AuthenticationServiceAdapter,
