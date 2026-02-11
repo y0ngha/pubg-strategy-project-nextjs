@@ -4,6 +4,8 @@ import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id
 import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCircleMutation';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 
 export function useCircleEvent(
     strategyId: string,
@@ -98,12 +100,27 @@ export function useCircleEvent(
         />
     );
 
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) => (
+        <CirclesLayer
+            isSelectable={isSelectable}
+            selectedCircleId={selectedCircleId}
+            onClick={handlePropertyClick}
+            circles={circles}
+            onMove={moveCircle}
+            onDelete={deleteCircle}
+        />
+    );
+
     return {
         toggleSelectedCircleId,
-        selectedCircleId,
         phaseSelectModalOpen,
         PhaseSelectModal: Modal,
-        moveCircle,
-        deleteCircle,
+        CirclesLayer: Layer,
     };
 }

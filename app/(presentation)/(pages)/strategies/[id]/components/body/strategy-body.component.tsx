@@ -20,7 +20,6 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
@@ -109,7 +108,7 @@ function StrategyBody({
     });
 
     const { EnterTagContentModal } = tag;
-    const { PhaseSelectModal } = circle;
+    const { PhaseSelectModal, CirclesLayer } = circle;
     const { EnterTeamLabelModal } = enemyTeam;
     const { StrategyCommentWindow } = comment;
 
@@ -205,12 +204,9 @@ function StrategyBody({
                     <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
-                            selectedCircleId={circle.selectedCircleId}
-                            onClick={handlePropertyClick}
-                            circles={circles}
-                            onMove={circle.moveCircle}
-                            onDelete={circle.deleteCircle}
+                            handlePropertyClick={handlePropertyClick}
                         />
+
                         <AirplanePathLayer
                             id={airplanePath?.id}
                             isSelectable={isSelectable}
