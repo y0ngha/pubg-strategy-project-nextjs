@@ -23,7 +23,6 @@ import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[i
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
-import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 
 interface SimplePropertyClickProps {
     id: string;
@@ -108,7 +107,7 @@ function StrategyBody({
     const { AirplanePathLayer } = airplane;
     const { EnterTeamLabelModal, EnemyTeamsLayer } = enemyTeam;
     const { TeamPlayersLayer } = teamPlayer;
-    const { EnterTagContentModal } = tag;
+    const { EnterTagContentModal, TagsLayer } = tag;
     const { MarkersLayer } = marker;
     const { WaypointsLayer } = waypoint;
     const { StrategyCommentWindow } = comment;
@@ -227,15 +226,11 @@ function StrategyBody({
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
-
                         <TagsLayer
                             isSelectable={isSelectable}
-                            selectedTagId={tag.selectedTagId}
-                            onClick={handlePropertyClick}
-                            tags={tags}
-                            onMove={tag.moveTag}
-                            onDelete={tag.deleteTag}
+                            handlePropertyClick={handlePropertyClick}
                         />
+
                         <CommentsLayer
                             isSelectable={isSelectable}
                             comments={comments}
