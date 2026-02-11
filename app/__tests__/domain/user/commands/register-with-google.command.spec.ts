@@ -10,6 +10,7 @@ describe('RegisterWithGoogleCommand', () => {
         // when
         const command = RegisterWithGoogleCommand.create(email, token);
 
+        // then
         expect(command.email).toEqual(email);
         expect(command.token).toEqual(token);
     });

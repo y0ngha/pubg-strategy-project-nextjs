@@ -11,6 +11,7 @@ describe('RegisterWithEmailCommand', () => {
         // when
         const command = RegisterWithEmailCommand.create(email, password);
 
+        // then
         expect(command.email).toEqual(email);
         expect(command.password).toEqual(password);
     });
