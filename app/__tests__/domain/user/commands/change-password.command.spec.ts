@@ -1,16 +1,26 @@
 import { ChangePasswordCommand } from '@domain/user/commands/change-password.command';
 import { ChangePasswordException } from '@domain/user/exceptions/user.exceptions';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
-import { getPasswordValidatorServiceMocking } from '@/__tests__/application/helpers/service-mocking.helpers';
+import {
+    getPasswordCipherMocking,
+    getPasswordValidatorServiceMocking,
+} from '@/__tests__/application/helpers/service-mocking.helpers';
 import { Password } from '@domain/user/value-objects/password';
+import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 
 describe('ChangePasswordCommand', () => {
     let passwordValidator: jest.Mocked<PasswordValidatorPort>;
+    let passwordCipher: jest.Mocked<PasswordCipherPort>;
 
     const currentPassword = Password.create('Abcd1234@');
 
     beforeEach(() => {
         passwordValidator = getPasswordValidatorServiceMocking();
+        passwordCipher = getPasswordCipherMocking();
+
+        passwordCipher.encrypt.mockImplementation((value: string) => {
+            return `encrypted:${value}`;
+        });
     });
 
     it('기존 비밀번호와 새 비밀번호가 다르면 생성된다.', () => {
@@ -22,10 +32,16 @@ describe('ChangePasswordCommand', () => {
         const command = ChangePasswordCommand.create(
             currentPassword,
             newPassword,
-            passwordValidator
+            passwordValidator,
+            passwordCipher
         );
 
-        expect(command.newPassword).toEqual(newPassword);
+        expect(command.currentPassword.toString()).toEqual(
+            `encrypted:${currentPassword.toString()}`
+        );
+        expect(command.newPassword.toString()).toEqual(
+            `encrypted:${newPassword.toString()}`
+        );
     });
 
     it('기존 비밀번호와 새 비밀번호가 같으면 에러를 던진다', () => {
@@ -39,7 +55,8 @@ describe('ChangePasswordCommand', () => {
                 ChangePasswordCommand.create(
                     currentPassword,
                     newPassword,
-                    passwordValidator
+                    passwordValidator,
+                    passwordCipher
                 )
             ).toThrow(ChangePasswordException);
         });

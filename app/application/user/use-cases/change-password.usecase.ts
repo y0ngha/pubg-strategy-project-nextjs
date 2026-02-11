@@ -6,6 +6,7 @@ import {
 import { ChangePasswordCommand } from '@domain/user/commands/change-password.command';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
+import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 
 @injectable()
 export class ChangePasswordUseCase {
@@ -13,7 +14,9 @@ export class ChangePasswordUseCase {
         @inject(UserCommandRepositoryPort)
         private readonly userCommandRepository: UserCommandRepositoryPort,
         @inject(PasswordValidatorPort)
-        private readonly passwordValidator: PasswordValidatorPort
+        private readonly passwordValidator: PasswordValidatorPort,
+        @inject(PasswordCipherPort)
+        private readonly passwordCipher: PasswordCipherPort
     ) {}
 
     async execute(dto: ChangePasswordRequestDto): Promise<boolean> {
@@ -23,7 +26,8 @@ export class ChangePasswordUseCase {
         const command = ChangePasswordCommand.create(
             currentPassword,
             newPassword,
-            this.passwordValidator
+            this.passwordValidator,
+            this.passwordCipher
         );
 
         await this.userCommandRepository.changePassword(command);

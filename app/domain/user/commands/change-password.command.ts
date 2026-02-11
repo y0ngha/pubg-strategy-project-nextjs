@@ -1,6 +1,7 @@
 import { Password } from '@domain/user/value-objects/password';
 import { ChangePasswordException } from '@domain/user/exceptions/user.exceptions';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
+import { PasswordCipherPort } from '@domain/user/port/out/password-cipher.port';
 
 export class ChangePasswordCommand {
     private constructor(
@@ -11,7 +12,8 @@ export class ChangePasswordCommand {
     static create(
         currentPassword: Password,
         newPassword: Password,
-        passwordValidator: PasswordValidatorPort
+        passwordValidator: PasswordValidatorPort,
+        passwordCipher: PasswordCipherPort
     ): ChangePasswordCommand {
         this.ensurePasswordIsDifferent(
             currentPassword,
@@ -19,7 +21,12 @@ export class ChangePasswordCommand {
             passwordValidator
         );
 
-        return new ChangePasswordCommand(currentPassword, newPassword);
+        return new ChangePasswordCommand(
+            Password.reconstruct(
+                passwordCipher.encrypt(currentPassword.toString())
+            ),
+            Password.reconstruct(passwordCipher.encrypt(newPassword.toString()))
+        );
     }
 
     private static ensurePasswordIsDifferent(
