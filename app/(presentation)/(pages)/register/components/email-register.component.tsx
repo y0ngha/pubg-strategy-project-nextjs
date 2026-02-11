@@ -2,7 +2,6 @@
 
 import Input from '@/(presentation)/shared/components/input.component';
 import Button from '@/(presentation)/shared/components/button.component';
-import { usePasswordMatchChecker } from '@/(presentation)/(pages)/register/hooks/usePasswordMatchChecker';
 import { useEmailRegisterMutation } from '@/(presentation)/(pages)/register/hooks/useEmailRegisterMutation';
 import Checkbox from '@/(presentation)/shared/components/checkbox.component';
 import { Route } from '@/(presentation)/shared/constants/route';
@@ -17,11 +16,14 @@ interface RegisterFormInputs {
 }
 
 function EmailRegister() {
-    const { isMatch, onPasswordChangeHandler, onConfirmPasswordChangeHandler } =
-        usePasswordMatchChecker();
     const { register: registerAction, isPending } = useEmailRegisterMutation();
-    const { register, handleSubmit, resetField } =
+    const { register, handleSubmit, resetField, watch } =
         useForm<RegisterFormInputs>();
+
+    const confirmPassword = watch('confirmPassword');
+    const password = watch('password');
+
+    const isMatch = !confirmPassword || password === confirmPassword;
 
     const onSubmit: SubmitHandler<RegisterFormInputs> = (
         data: RegisterFormInputs
@@ -53,14 +55,12 @@ function EmailRegister() {
                 type={'password'}
                 label={'Password'}
                 disabled={isPending}
-                onChange={onPasswordChangeHandler}
             />
             <Input
                 {...register('confirmPassword')}
                 type={'password'}
                 label={'Confirm Password'}
                 disabled={isPending}
-                onChange={onConfirmPasswordChangeHandler}
                 error={!isMatch ? '비밀번호가 일치하지 않습니다.' : undefined}
             />
 

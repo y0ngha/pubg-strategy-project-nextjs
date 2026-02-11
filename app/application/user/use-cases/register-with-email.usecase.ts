@@ -5,21 +5,21 @@ import {
 } from '@/domain/user/exceptions/user.exceptions';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { Password } from '@/domain/user/value-objects/password';
 import { inject, injectable } from 'inversify';
 import {
     RegisterWithEmailRequestDto,
     RegisterWithEmailRequestSchema,
 } from '../dto/register-with-email.dto';
+import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 
 @injectable()
 export class RegisterWithEmailUseCase {
     constructor(
         @inject(UserRepositoryPort)
         private readonly userRepository: UserRepositoryPort,
-        @inject(PasswordValidatorService)
-        private readonly passwordValidatorService: PasswordValidatorService,
+        @inject(PasswordValidatorPort)
+        private readonly passwordValidator: PasswordValidatorPort,
         @inject(PasswordCipherPort)
         private readonly passwordCipher: PasswordCipherPort
     ) {}
@@ -33,7 +33,7 @@ export class RegisterWithEmailUseCase {
             throw new EmailAlreadyExistsException(email.toString());
         }
 
-        if (!this.passwordValidatorService.validate(email, password)) {
+        if (!this.passwordValidator.emailIncludedValidate(email, password)) {
             throw new InvalidPasswordException(
                 '비밀번호에 이메일이 포함될 수 없습니다.'
             );

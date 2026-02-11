@@ -3,13 +3,16 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { ChangePasswordUseCase } from '@/application/user/use-cases/change-password.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function changePasswordAction(_: unknown, formData: FormData) {
+export async function changePasswordAction(formData: FormData) {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
-    const { id, currentPassword, newPassword } = parseFormData(formData, [
+    const { userId, currentPassword, newPassword } = parseFormData(formData, [
         {
-            key: 'id',
+            key: 'userId',
             error: '유저 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
@@ -26,7 +29,7 @@ export async function changePasswordAction(_: unknown, formData: FormData) {
     ] as const);
 
     const dto = {
-        id: id,
+        userId: userId,
         currentPassword: currentPassword,
         newPassword: newPassword,
     };

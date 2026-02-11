@@ -2,28 +2,31 @@ import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-
 import { User } from '@/domain/user/entities/user.entity';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { PasswordValidatorService } from '@/domain/user/services/password-validator.service';
 import { EmailAlreadyExistsException } from '@domain/user/exceptions/user.exceptions';
 import { getUserRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
-import { getPasswordCipherMocking } from '@/__tests__/application/helpers/service-mocking.helpers';
+import {
+    getPasswordCipherMocking,
+    getPasswordValidatorServiceMocking,
+} from '@/__tests__/application/helpers/service-mocking.helpers';
+import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 
 describe('RegisterWithEmailUseCase', () => {
     let useCase: RegisterWithEmailUseCase;
     let mockUserRepository: jest.Mocked<UserRepositoryPort>;
-    let passwordValidatorService: PasswordValidatorService;
-    let passwordCipher: jest.Mocked<PasswordCipherPort>;
+    let mockPasswordValidatorService: jest.Mocked<PasswordValidatorPort>;
+    let mockPasswordCipher: jest.Mocked<PasswordCipherPort>;
 
     beforeEach(() => {
         mockUserRepository = getUserRepositoryMocking();
 
-        passwordValidatorService = new PasswordValidatorService();
+        mockPasswordValidatorService = getPasswordValidatorServiceMocking();
 
-        passwordCipher = getPasswordCipherMocking();
+        mockPasswordCipher = getPasswordCipherMocking();
 
         useCase = new RegisterWithEmailUseCase(
             mockUserRepository,
-            passwordValidatorService,
-            passwordCipher
+            mockPasswordValidatorService,
+            mockPasswordCipher
         );
     });
 
@@ -35,6 +38,9 @@ describe('RegisterWithEmailUseCase', () => {
                 password: 'Asdf1234!',
             };
 
+            mockPasswordValidatorService.emailIncludedValidate.mockReturnValue(
+                true
+            );
             mockUserRepository.existsByEmail.mockResolvedValue(false);
             mockUserRepository.save.mockImplementation(
                 async (user: User): Promise<User> => {
@@ -83,6 +89,9 @@ describe('RegisterWithEmailUseCase', () => {
                     password: 'Asdf1234!',
                 };
 
+                mockPasswordValidatorService.emailIncludedValidate.mockReturnValue(
+                    true
+                );
                 mockUserRepository.existsByEmail.mockResolvedValue(false);
                 mockUserRepository.save.mockImplementation(
                     async (user: User): Promise<User> => {
@@ -112,6 +121,9 @@ describe('RegisterWithEmailUseCase', () => {
                     password: 'Asdf1234!',
                 };
 
+                mockPasswordValidatorService.emailIncludedValidate.mockReturnValue(
+                    true
+                );
                 mockUserRepository.existsByEmail.mockResolvedValue(false);
                 mockUserRepository.save.mockImplementation(
                     async (user: User): Promise<User> => {

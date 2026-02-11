@@ -3,7 +3,6 @@ import { UserId } from '@/domain/shared/value-objects/user-id';
 import { User } from '@/domain/user/entities/user.entity';
 import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 import { Password } from '@/domain/user/value-objects/password';
-import { ChangePasswordException } from '@domain/user/exceptions/user.exceptions';
 
 describe('User Entity', () => {
     const validEmail = Email.create('test@example.com');
@@ -122,7 +121,7 @@ describe('User Entity', () => {
             jest.advanceTimersByTime(1000);
 
             // When
-            user.changePassword(validPassword, newPassword);
+            user.changePassword(newPassword);
 
             // Then
             expect(user.password).toBe(newPassword);
@@ -142,7 +141,7 @@ describe('User Entity', () => {
             jest.advanceTimersByTime(1000);
 
             // When
-            user.changePassword(null, newPassword);
+            user.changePassword(newPassword);
 
             // Then
             expect(user.password).toBe(newPassword);
@@ -151,39 +150,6 @@ describe('User Entity', () => {
             );
 
             jest.useRealTimers();
-        });
-
-        it('현재 비밀번호가 있는 User 객체인데, changePassword에서 currentPassword를 null로 호출할 경우 에러를 던진다.', () => {
-            // Given
-            const user = User.createWithEmail(validEmail, validPassword);
-            const newPassword = Password.create('NewPass1234!');
-
-            // When & Then
-            expect(() => user.changePassword(null, newPassword)).toThrow(
-                ChangePasswordException
-            );
-        });
-
-        it('현재 비밀번호가 일치하지 않으면 에러를 던진다', () => {
-            // Given
-            const user = User.createWithEmail(validEmail, validPassword);
-            const wrongPassword = Password.create('Wrong1234!');
-            const newPassword = Password.create('NewPass1234!');
-
-            // When & Then
-            expect(() =>
-                user.changePassword(wrongPassword, newPassword)
-            ).toThrow(ChangePasswordException);
-        });
-
-        it('새 비밀번호가 현재 비밀번호와 같으면 에러를 던진다', () => {
-            // Given
-            const user = User.createWithEmail(validEmail, validPassword);
-
-            // When & Then
-            expect(() =>
-                user.changePassword(validPassword, validPassword)
-            ).toThrow(ChangePasswordException);
         });
     });
 

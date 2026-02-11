@@ -11,7 +11,8 @@ import {
     InvalidPasswordException,
     UserNotFoundException,
 } from '@domain/user/exceptions/user.exceptions';
-import { PasswordValidatorService } from '@domain/user/services/password-validator.service';
+import { Email } from '@domain/shared/value-objects/email';
+import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 
 @injectable()
 export class ChangePasswordUseCase {
@@ -20,35 +21,32 @@ export class ChangePasswordUseCase {
         private readonly userRepository: UserRepositoryPort,
         @inject(PasswordCipherPort)
         private readonly passwordCipher: PasswordCipherPort,
-        @inject(PasswordValidatorService)
-        private readonly passwordValidatorService: PasswordValidatorService
+        @inject(PasswordValidatorPort)
+        private readonly passwordValidator: PasswordValidatorPort
     ) {}
 
     async execute(dto: ChangePasswordRequestDto): Promise<boolean> {
-        const { id, currentPassword, newPassword } =
+        const { userId, currentPassword, newPassword } =
             ChangePasswordRequestSchema.parse(dto);
 
-        const user = await this.userRepository.findByUserId(id);
+        const user = await this.userRepository.findByUserId(userId);
 
         if (!user) {
-            throw new UserNotFoundException(id.toString());
+            throw new UserNotFoundException(userId.toString());
         }
 
-        if (!this.passwordValidatorService.validate(user.email, newPassword)) {
-            throw new InvalidPasswordException(
-                '신규 비밀번호에 이메일이 포함될 수 없습니다.'
-            );
+        if (user.password) {
+            this.ensurePasswordMatches(user.password, currentPassword);
+            this.ensurePasswordIsDifferent(currentPassword, newPassword);
         }
 
-        const encryptedCurrentPassword = Password.reconstruct(
-            this.passwordCipher.encrypt(currentPassword.toString())
-        );
+        this.ensurePasswordEmailValidate(user.email, newPassword);
 
         const encryptedNewPassword = Password.reconstruct(
             this.passwordCipher.encrypt(newPassword.toString())
         );
 
-        user.changePassword(encryptedCurrentPassword, encryptedNewPassword);
+        user.changePassword(encryptedNewPassword);
 
         try {
             await this.userRepository.save(user);
@@ -59,6 +57,46 @@ export class ChangePasswordUseCase {
             }
 
             throw error;
+        }
+    }
+
+    private ensurePasswordEmailValidate(email: Email, password: Password) {
+        if (!this.passwordValidator.emailIncludedValidate(email, password)) {
+            throw new InvalidPasswordException(
+                '신규 비밀번호에 이메일이 포함될 수 없습니다.'
+            );
+        }
+    }
+
+    private ensurePasswordMatches(
+        userPassword: Password,
+        currentPassword: Password
+    ): void {
+        if (
+            !this.passwordValidator.passwordMatchValidate(
+                userPassword,
+                currentPassword
+            )
+        ) {
+            throw new ChangePasswordException(
+                '현재 비밀번호가 일치하지 않습니다.'
+            );
+        }
+    }
+
+    private ensurePasswordIsDifferent(
+        currentPassword: Password,
+        newPassword: Password
+    ): void {
+        if (
+            !this.passwordValidator.passwordDifferentValidate(
+                currentPassword,
+                newPassword
+            )
+        ) {
+            throw new ChangePasswordException(
+                '기존 비밀번호와 새로운 비밀번호는 일치할 수 없습니다.'
+            );
         }
     }
 }

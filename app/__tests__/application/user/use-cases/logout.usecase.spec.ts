@@ -16,7 +16,7 @@ describe('LogoutUseCase', () => {
         it('어떤 조건이던 로그아웃을 진행한다.', async () => {
             // Given
             const dto = {
-                id: '550e8400-e29b-41d4-a716-446655440000',
+                userId: '550e8400-e29b-41d4-a716-446655440000',
             };
 
             mockAuthenticationService.logout.mockResolvedValue(true);
@@ -33,7 +33,7 @@ describe('LogoutUseCase', () => {
         it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
             // Given
             const dto = {
-                id: '550e8400-e29b-41d4-a716-446655440000',
+                userId: '550e8400-e29b-41d4-a716-446655440000',
             };
 
             mockAuthenticationService.logout.mockRejectedValue(new Error());
