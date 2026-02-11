@@ -2,7 +2,7 @@ import { useCreateWaypointMutation } from '@/(presentation)/(pages)/strategies/[
 import { toast } from 'react-toastify';
 import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateWaypointMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import { useEffect, useEffectEvent, useState } from 'react';
+import { Fragment, useEffect, useEffectEvent, useState } from 'react';
 import { useDeleteWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteWaypointMutation';
 import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
@@ -190,8 +190,10 @@ export function useWaypointEvent(
         handlePropertyClick: (props: PropertyClickPayload) => void;
     }) =>
         teamPlayers.map(({ id, color, priority, waypoint }) => {
+            const componentKey = `tp-${id}-waypoint`;
+
             if (!waypoint) {
-                return <></>;
+                return <Fragment key={componentKey}></Fragment>;
             }
 
             const positions =

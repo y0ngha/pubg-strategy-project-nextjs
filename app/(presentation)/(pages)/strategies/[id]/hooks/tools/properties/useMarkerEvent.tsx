@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
 
@@ -140,13 +140,15 @@ export function useMarkerEvent(
         handlePropertyClick: (props: PropertyClickPayload) => void;
     }) =>
         teamPlayers.map(({ id, color, priority, marker }) => {
+            const componentKey = `tp-${id}-marker`;
+
             if (!marker) {
-                return <></>;
+                return <Fragment key={componentKey}></Fragment>;
             }
 
             return (
                 <MarkerProperty
-                    key={`tp-${id}-marker`}
+                    key={componentKey}
                     color={color}
                     priority={priority}
                     x={marker.position.x}
