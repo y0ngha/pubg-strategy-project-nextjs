@@ -109,7 +109,7 @@ export function useAirplanePathEvent(
         updateAirplanePathMutation(formData, callbackOption);
     };
 
-    const clickAirplanePath = (position: { x: number; y: number }) => {
+    const drawAirplanePathPoint = (position: { x: number; y: number }) => {
         if (!startPosition || (startPosition && endPosition)) {
             setEndPosition(undefined);
             setStartPosition(position);
@@ -179,7 +179,7 @@ export function useAirplanePathEvent(
 
     return {
         toggleSelectedAirplanePathId,
-        clickAirplanePath,
+        drawAirplanePathPoint,
         AirplanePathLayer: Layer,
     };
 }

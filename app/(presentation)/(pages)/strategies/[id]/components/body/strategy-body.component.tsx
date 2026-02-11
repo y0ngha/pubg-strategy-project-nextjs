@@ -120,7 +120,7 @@ function StrategyBody({
             case 'circle':
                 return circle.phaseSelectModalOpen(clickPosition);
             case 'airplane':
-                return airplane.clickAirplanePath(clickPosition);
+                return airplane.drawAirplanePathPoint(clickPosition);
             case 'enemy':
                 return enemyTeam.enterEnemyTeamLabelModalOpen(clickPosition);
             case 'team':
