@@ -13,13 +13,18 @@ export class RegisterWithEmailUseCase {
         private readonly userCommandRepository: UserCommandRepositoryPort
     ) {}
 
-    async execute(dto: RegisterWithEmailRequestDto): Promise<boolean> {
+    async execute(
+        dto: RegisterWithEmailRequestDto
+    ): Promise<{ email: string }> {
         const { email, password } = RegisterWithEmailRequestSchema.parse(dto);
 
         const command = RegisterWithEmailCommand.create(email, password);
 
-        await this.userCommandRepository.registerWithEmail(command);
+        const user =
+            await this.userCommandRepository.registerWithEmail(command);
 
-        return true;
+        return {
+            email: user.email,
+        };
     }
 }
