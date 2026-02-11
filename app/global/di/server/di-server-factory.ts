@@ -1,11 +1,11 @@
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { GoogleAuthServicePort } from '@/domain/user/port/out/google-auth-service.port';
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
-import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
+import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
 import { AuthenticationServiceAdapter } from '@/infrastructure/user/adapter/driven/authentication-service.adapter';
 import { GoogleAuthServiceAdapter } from '@/infrastructure/user/adapter/driven/google-auth-service.adapter';
 import { PasswordCipherAdapter } from '@/infrastructure/user/adapter/driven/password-cipher.adapter';
-import { UserRepositoryAdapter } from '@/infrastructure/user/adapter/driven/user-repository.adapter';
+import { UserQueryRepositoryAdapter } from '@infrastructure/user/adapter/repositories/user-query-repository.adapter';
 import { Container } from 'inversify';
 import { ClassDependency, ValueDependency } from '../types/di-types';
 import {
@@ -18,7 +18,6 @@ import { LoginWithEmailUseCase } from '@/application/user/use-cases/login-with-e
 import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-google.usecase';
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
-import { CheckEmailDuplicateUsecase } from '@/application/user/use-cases/check-email-duplicate.usecase';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
 import { FriendRepositoryAdapter } from '@infrastructure/friend/adapter/driven/friend-repository.adapter';
@@ -78,8 +77,8 @@ import {
  */
 const userRepositories: ClassDependency[] = [
     {
-        class: UserRepositoryAdapter,
-        abstract: UserRepositoryPort,
+        class: UserQueryRepositoryAdapter,
+        abstract: UserQueryRepositoryPort,
     },
     {
         class: UserCommandRepositoryAdapter,
@@ -111,7 +110,6 @@ const userUseCases: ClassDependency[] = [
     { class: LoginWithGoogleUseCase },
     { class: LogoutUseCase },
     { class: RegisterWithEmailUseCase },
-    { class: CheckEmailDuplicateUsecase },
     { class: WithdrawalUseCase },
 ];
 
