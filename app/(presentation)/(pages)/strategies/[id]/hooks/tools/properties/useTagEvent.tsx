@@ -1,8 +1,9 @@
 import { useCreateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateTagMutation';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useUpdateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTagMutation';
 import { TagResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTagMutation';
+import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
 
 export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
@@ -79,14 +80,20 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         deleteTagMutation(formData);
     };
 
+    const Modal = () => (
+        <EnterTagContentModal
+            isOpen={isEnterTagContentModalOpen}
+            onClose={enterTagContentModalClose}
+            onConfirm={createTag}
+        />
+    );
+
     return {
         toggleSelectedTagId,
         selectedTagId,
-        isEnterTagContentModalOpen,
         enterTagContentModalOpen,
-        enterTagContentModalClose,
-        createTag,
         moveTag,
         deleteTag,
+        EnterTagContentModal: Modal,
     };
 }

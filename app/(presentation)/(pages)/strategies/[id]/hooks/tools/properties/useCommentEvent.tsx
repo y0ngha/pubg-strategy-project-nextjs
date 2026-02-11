@@ -1,8 +1,9 @@
 import { useCreateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCommentMutation';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
 import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
+import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 
 export function useCommentEvent(
     strategyId: string,
@@ -158,18 +159,24 @@ export function useCommentEvent(
               .sort(sortingCreatedAtByAscending)
         : [];
 
+    const Window = () => (
+        <StrategyCommentWindow
+            key={JSON.stringify(windowPosition)}
+            isOpen={isCommentWindowOpen}
+            onClose={commentWindowClose}
+            comments={filteredComments}
+            onAddComment={createComment}
+            onUpdateComment={updateComment}
+            onDeleteComment={deleteComment}
+            position={windowPosition}
+        />
+    );
+
     return {
         toggleSelectedCommentId,
-        selectedCommentId,
-        isCommentWindowOpen,
         commentWindowOpen,
-        commentWindowClose,
-        windowPosition,
-        createComment,
-        updateComment,
-        deleteComment,
         commentClick,
         moveComment,
-        filteredComments,
+        StrategyCommentWindow: Window,
     };
 }

@@ -28,6 +28,7 @@ interface StrategyCommentWindowProps {
     comments: CommentResponseDto[];
     onAddComment: (content: string, parentId: string | null) => void;
     onUpdateComment: (commentId: string, content: string) => void;
+    onDeleteComment: (commentId: string) => void;
     position: { x: number; y: number };
 }
 
@@ -381,6 +382,7 @@ function StrategyCommentWindow({
     comments,
     onAddComment,
     onUpdateComment,
+    onDeleteComment,
     position,
 }: StrategyCommentWindowProps) {
     const mounted = useSyncExternalStore(

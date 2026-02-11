@@ -19,17 +19,13 @@ import {
     TagResponseDto,
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
-import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
 import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
-import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
 
@@ -111,6 +107,11 @@ function StrategyBody({
         tags: tags,
         comments: comments,
     });
+
+    const { EnterTagContentModal } = tag;
+    const { PhaseSelectModal } = circle;
+    const { EnterTeamLabelModal } = enemyTeam;
+    const { StrategyCommentWindow } = comment;
 
     const onMapClick = (
         clickPosition: { x: number; y: number },
@@ -269,33 +270,10 @@ function StrategyBody({
                 onMapClick={handleClick}
             />
 
-            <PhaseSelectModal
-                isOpen={circle.isPhaseSelectModalOpen}
-                onClose={circle.phaseSelectModalClose}
-                onConfirm={circle.createCircle}
-            />
-
-            <EnterTeamLabelModal
-                isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
-                onClose={enemyTeam.enterEnemyTeamLabelModalClose}
-                onConfirm={enemyTeam.createEnemyTeam}
-            />
-
-            <EnterTagContentModal
-                isOpen={tag.isEnterTagContentModalOpen}
-                onClose={tag.enterTagContentModalClose}
-                onConfirm={tag.createTag}
-            />
-
-            <StrategyCommentWindow
-                key={JSON.stringify(comment.windowPosition)}
-                isOpen={comment.isCommentWindowOpen}
-                onClose={comment.commentWindowClose}
-                comments={comment.filteredComments}
-                onAddComment={comment.createComment}
-                onUpdateComment={comment.updateComment}
-                position={comment.windowPosition}
-            />
+            <EnterTagContentModal />
+            <PhaseSelectModal />
+            <EnterTeamLabelModal />
+            <StrategyCommentWindow />
         </div>
     );
 }
