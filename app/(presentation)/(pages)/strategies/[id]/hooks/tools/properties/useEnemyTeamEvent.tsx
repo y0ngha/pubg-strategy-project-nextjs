@@ -1,8 +1,9 @@
 import { useCreateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateEnemyTeamMutation';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useUpdateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateEnemyTeamMutation';
 import { EnemyTeamResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteEnemyTeamMutation';
+import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 
 export function useEnemyTeamEvent(
     strategyId: string,
@@ -90,13 +91,19 @@ export function useEnemyTeamEvent(
         deleteEnemyTeamMutation(formData);
     };
 
+    const Modal = () => (
+        <EnterTeamLabelModal
+            isOpen={isEnterEnemyTeamLabelModalOpen}
+            onClose={enterEnemyTeamLabelModalClose}
+            onConfirm={createEnemyTeam}
+        />
+    );
+
     return {
         toggleSelectedEnemyTeamId,
         selectedEnemyTeamId,
-        isEnterEnemyTeamLabelModalOpen,
         enterEnemyTeamLabelModalOpen,
-        enterEnemyTeamLabelModalClose,
-        createEnemyTeam,
+        EnterTeamLabelModal: Modal,
         moveEnemyTeam,
         deleteEnemyTeam,
     };

@@ -20,7 +20,6 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
@@ -127,6 +126,8 @@ function StrategyBody({
         toggleSelectedCircleId,
         selectedCircleId,
     } = circle;
+
+    const { EnterTeamLabelModal } = enemyTeam;
 
     const onMapClick = (
         clickPosition: { x: number; y: number },
@@ -287,12 +288,7 @@ function StrategyBody({
 
             <EnterTagContentModal />
             <PhaseSelectModal />
-
-            <EnterTeamLabelModal
-                isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
-                onClose={enemyTeam.enterEnemyTeamLabelModalClose}
-                onConfirm={enemyTeam.createEnemyTeam}
-            />
+            <EnterTeamLabelModal />
 
             <StrategyCommentWindow
                 key={JSON.stringify(comment.windowPosition)}
