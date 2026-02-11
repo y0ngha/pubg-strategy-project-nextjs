@@ -28,14 +28,12 @@ export async function logoutAction(formData: FormData) {
 
     const useCase = getService<LogoutUseCase>(LogoutUseCase);
 
-    try {
-        await useCase.execute(dto);
+    await useCase.execute(dto);
 
-        await deleteTokensByCookieStore();
-        await deleteUserIdByCookieStore();
+    await Promise.all([
+        deleteTokensByCookieStore(),
+        deleteUserIdByCookieStore(),
+    ]);
 
-        return true;
-    } catch (e) {
-        throw e;
-    }
+    return true;
 }
