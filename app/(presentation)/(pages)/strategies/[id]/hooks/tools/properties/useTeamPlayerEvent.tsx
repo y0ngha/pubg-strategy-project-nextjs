@@ -1,8 +1,10 @@
 import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateTeamPlayerMutation';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useUpdateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTeamPlayerMutation';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
 
 export function useTeamPlayerEvent(
     strategyId: string,
@@ -67,11 +69,29 @@ export function useTeamPlayerEvent(
         deleteTeamPlayerMutation(formData);
     };
 
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) => (
+        <TeamPlayersLayer
+            isSelectable={isSelectable}
+            teamPlayers={teamPlayers}
+            selectedTeamPlayerId={selectedTeamPlayerId}
+            onClick={handlePropertyClick}
+            onMove={moveTeamPlayer}
+            onDelete={deleteTeamPlayer}
+        />
+    );
+
     return {
         selectedTeamPlayerId,
         toggleSelectedTeamPlayerId,
         createTeamPlayer,
         moveTeamPlayer,
         deleteTeamPlayer,
+        TeamPlayersLayer: Layer,
     };
 }

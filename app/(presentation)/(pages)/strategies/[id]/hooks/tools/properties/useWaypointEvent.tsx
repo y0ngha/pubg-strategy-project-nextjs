@@ -4,6 +4,8 @@ import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useEffect, useEffectEvent, useState } from 'react';
 import { useDeleteWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteWaypointMutation';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
 
 export function useWaypointEvent(
     strategyId: string,
@@ -173,6 +175,48 @@ export function useWaypointEvent(
         deleteWaypointMutation(formData);
     };
 
+    const isWaypointSelected = (teamPlayerId: string, waypointId: string) => {
+        return (
+            selectedWaypointId?.teamPlayerId === teamPlayerId &&
+            selectedWaypointId?.id === waypointId
+        );
+    };
+
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) =>
+        teamPlayers.map(({ id, color, priority, waypoint }) => {
+            if (!waypoint) {
+                return <></>;
+            }
+
+            const positions =
+                isDrawing && selectedTeamPlayerId === id
+                    ? clickedPositions
+                    : (waypoint.positions ?? []);
+
+            return (
+                <WaypointProperty
+                    key={`tp-${id}-waypoint`}
+                    positions={positions}
+                    color={color}
+                    priority={priority}
+                    isDrawing={isDrawing}
+                    isSelectable={isSelectable}
+                    isSelected={isWaypointSelected(id, waypoint.id)}
+                    id={waypoint.id}
+                    teamPlayerId={id}
+                    onMove={moveWaypoint}
+                    onDelete={deleteWaypoint}
+                    onClick={handlePropertyClick}
+                />
+            );
+        });
+
     const altKeydownHandler = useEffectEvent((event: KeyboardEvent) => {
         if (event.key === windowAltKeyCode || event.key === macAltKeyCode) {
             setKeydownAlt(true);
@@ -209,5 +253,6 @@ export function useWaypointEvent(
         createWaypoint,
         moveWaypoint,
         deleteWaypoint,
+        WaypointsLayer: Layer,
     };
 }

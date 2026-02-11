@@ -20,11 +20,10 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
-import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
+import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 
 interface SimplePropertyClickProps {
     id: string;
@@ -107,8 +106,11 @@ function StrategyBody({
 
     const { PhaseSelectModal, CirclesLayer } = circle;
     const { AirplanePathLayer } = airplane;
-    const { EnterTagContentModal } = tag;
     const { EnterTeamLabelModal, EnemyTeamsLayer } = enemyTeam;
+    const { TeamPlayersLayer } = teamPlayer;
+    const { EnterTagContentModal } = tag;
+    const { MarkersLayer } = marker;
+    const { WaypointsLayer } = waypoint;
     const { StrategyCommentWindow } = comment;
 
     const onMapClick = (
@@ -209,32 +211,23 @@ function StrategyBody({
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
-
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
-
                         <TeamPlayersLayer
                             isSelectable={isSelectable}
-                            teamPlayers={teamPlayers}
-                            selectedTeamPlayerId={
-                                teamPlayer.selectedTeamPlayerId
-                            }
-                            selectedMarkerId={marker.selectedMarkerId}
-                            selectedWaypointId={waypoint.selectedWaypointId}
-                            isWaypointDrawing={waypoint.isDrawing}
-                            waypointClickedPositions={waypoint.clickedPositions}
-                            onClick={handlePropertyClick}
-                            onMarkerClick={handlePropertyClick}
-                            onWaypointClick={handlePropertyClick}
-                            onMove={teamPlayer.moveTeamPlayer}
-                            onMarkerMove={marker.moveMarker}
-                            onWaypointMove={waypoint.moveWaypoint}
-                            onDelete={teamPlayer.deleteTeamPlayer}
-                            onMarkerDelete={marker.deleteMarker}
-                            onWaypointDelete={waypoint.deleteWaypoint}
+                            handlePropertyClick={handlePropertyClick}
                         />
+                        <MarkersLayer
+                            isSelectable={isSelectable}
+                            handlePropertyClick={handlePropertyClick}
+                        />
+                        <WaypointsLayer
+                            isSelectable={isSelectable}
+                            handlePropertyClick={handlePropertyClick}
+                        />
+
                         <TagsLayer
                             isSelectable={isSelectable}
                             selectedTagId={tag.selectedTagId}

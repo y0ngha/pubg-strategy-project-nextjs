@@ -4,6 +4,8 @@ import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
 import { useState } from 'react';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
 
 export function useMarkerEvent(
     strategyId: string,
@@ -123,11 +125,49 @@ export function useMarkerEvent(
         deleteMarkerMutation(formData);
     };
 
+    const isMarkerSelected = (teamPlayerId: string, markerId: string) => {
+        return (
+            selectedMarkerId?.teamPlayerId === teamPlayerId &&
+            selectedMarkerId?.id === markerId
+        );
+    };
+
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) =>
+        teamPlayers.map(({ id, color, priority, marker }) => {
+            if (!marker) {
+                return <></>;
+            }
+
+            return (
+                <MarkerProperty
+                    key={`tp-${id}-marker`}
+                    color={color}
+                    priority={priority}
+                    x={marker.position.x}
+                    y={marker.position.y}
+                    isSelectable={isSelectable}
+                    isSelected={isMarkerSelected(id, marker.id)}
+                    id={marker.id}
+                    teamPlayerId={id}
+                    onMove={moveMarker}
+                    onDelete={deleteMarker}
+                    onClick={handlePropertyClick}
+                />
+            );
+        });
+
     return {
         toggleSelectedMarkerId,
         selectedMarkerId,
         saveMarker,
         moveMarker,
         deleteMarker,
+        MarkersLayer: Layer,
     };
 }
