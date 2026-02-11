@@ -22,7 +22,6 @@ import {
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
-import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
 import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
 import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
@@ -112,6 +111,15 @@ function StrategyBody({
         comments: comments,
     });
 
+    const {
+        enterTagContentModalOpen,
+        moveTag,
+        deleteTag,
+        EnterTagContentModal,
+        toggleSelectedTagId,
+        selectedTagId,
+    } = tag;
+
     const onMapClick = (
         clickPosition: { x: number; y: number },
         windowPosition: { x: number; y: number }
@@ -130,7 +138,7 @@ function StrategyBody({
             case 'waypoint':
                 return waypoint.createWaypoint(clickPosition);
             case 'tag':
-                return tag.enterTagContentModalOpen(clickPosition);
+                return enterTagContentModalOpen(clickPosition);
             case 'comment':
                 return comment.commentWindowOpen(windowPosition, clickPosition);
         }
@@ -143,7 +151,7 @@ function StrategyBody({
         teamPlayer.toggleSelectedTeamPlayerId(undefined);
         marker.toggleSelectedMarkerId(undefined);
         waypoint.toggleSelectedWaypointId(undefined);
-        tag.toggleSelectedTagId(undefined);
+        toggleSelectedTagId(undefined);
         comment.toggleSelectedCommentId(undefined);
     };
 
@@ -164,7 +172,7 @@ function StrategyBody({
             case 'waypoint':
                 return waypoint.toggleSelectedWaypointId(props);
             case 'tag':
-                return tag.toggleSelectedTagId(props.id);
+                return toggleSelectedTagId(props.id);
             case 'comment':
                 return comment.toggleSelectedCommentId(props.id);
         }
@@ -252,11 +260,11 @@ function StrategyBody({
                         />
                         <TagsLayer
                             isSelectable={isSelectable}
-                            selectedTagId={tag.selectedTagId}
+                            selectedTagId={selectedTagId}
                             onClick={handlePropertyClick}
                             tags={tags}
-                            onMove={tag.moveTag}
-                            onDelete={tag.deleteTag}
+                            onMove={moveTag}
+                            onDelete={deleteTag}
                         />
                         <CommentsLayer
                             isSelectable={isSelectable}
@@ -269,6 +277,8 @@ function StrategyBody({
                 onMapClick={handleClick}
             />
 
+            <EnterTagContentModal />
+
             <PhaseSelectModal
                 isOpen={circle.isPhaseSelectModalOpen}
                 onClose={circle.phaseSelectModalClose}
@@ -279,12 +289,6 @@ function StrategyBody({
                 isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
                 onClose={enemyTeam.enterEnemyTeamLabelModalClose}
                 onConfirm={enemyTeam.createEnemyTeam}
-            />
-
-            <EnterTagContentModal
-                isOpen={tag.isEnterTagContentModalOpen}
-                onClose={tag.enterTagContentModalClose}
-                onConfirm={tag.createTag}
             />
 
             <StrategyCommentWindow
