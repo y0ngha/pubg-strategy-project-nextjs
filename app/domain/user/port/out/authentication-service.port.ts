@@ -1,6 +1,6 @@
 import { Email } from '@/domain/shared/value-objects/email';
 import { Password } from '../../value-objects/password';
-import { UserId } from '@/domain/shared/value-objects/user-id';
+import { LogoutCommand } from '@domain/user/commands/logout.command';
 
 export abstract class AuthenticationServicePort {
     abstract login(
@@ -13,5 +13,5 @@ export abstract class AuthenticationServicePort {
         token: string
     ): Promise<{ accessToken: string; refreshToken: string }>;
 
-    abstract logout(userId: UserId): Promise<boolean>;
+    abstract logout(command: LogoutCommand): Promise<boolean>;
 }
