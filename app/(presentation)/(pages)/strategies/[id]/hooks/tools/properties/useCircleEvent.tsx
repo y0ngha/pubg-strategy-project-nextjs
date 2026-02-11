@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCircleMutation';
 import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCircleMutation';
 import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCircleMutation';
+import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 
 export function useCircleEvent(
     strategyId: string,
@@ -89,13 +90,19 @@ export function useCircleEvent(
         deleteCircleMutation(formData);
     };
 
+    const Modal = () => (
+        <PhaseSelectModal
+            isOpen={isPhaseSelectModalOpen}
+            onClose={phaseSelectModalClose}
+            onConfirm={createCircle}
+        />
+    );
+
     return {
         toggleSelectedCircleId,
         selectedCircleId,
-        isPhaseSelectModalOpen,
         phaseSelectModalOpen,
-        phaseSelectModalClose,
-        createCircle,
+        PhaseSelectModal: Modal,
         moveCircle,
         deleteCircle,
     };

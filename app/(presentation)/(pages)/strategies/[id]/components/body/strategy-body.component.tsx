@@ -19,7 +19,6 @@ import {
     TagResponseDto,
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 import CirclesLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/circle-property.component';
@@ -120,13 +119,22 @@ function StrategyBody({
         selectedTagId,
     } = tag;
 
+    const {
+        phaseSelectModalOpen,
+        moveCircle,
+        deleteCircle,
+        PhaseSelectModal,
+        toggleSelectedCircleId,
+        selectedCircleId,
+    } = circle;
+
     const onMapClick = (
         clickPosition: { x: number; y: number },
         windowPosition: { x: number; y: number }
     ) => {
         switch (selectedTool) {
             case 'circle':
-                return circle.phaseSelectModalOpen(clickPosition);
+                return phaseSelectModalOpen(clickPosition);
             case 'airplane':
                 return airplane.clickAirplanePath(clickPosition);
             case 'enemy':
@@ -145,7 +153,7 @@ function StrategyBody({
     };
 
     const disposeAllPropertySelected = () => {
-        circle.toggleSelectedCircleId(undefined);
+        toggleSelectedCircleId(undefined);
         airplane.toggleSelectedAirplanePathId(undefined);
         enemyTeam.toggleSelectedEnemyTeamId(undefined);
         teamPlayer.toggleSelectedTeamPlayerId(undefined);
@@ -160,7 +168,7 @@ function StrategyBody({
 
         switch (props.type) {
             case 'circle':
-                return circle.toggleSelectedCircleId(props.id);
+                return toggleSelectedCircleId(props.id);
             case 'airplane':
                 return airplane.toggleSelectedAirplanePathId(props.id);
             case 'enemy':
@@ -212,11 +220,11 @@ function StrategyBody({
                     <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
-                            selectedCircleId={circle.selectedCircleId}
+                            selectedCircleId={selectedCircleId}
                             onClick={handlePropertyClick}
                             circles={circles}
-                            onMove={circle.moveCircle}
-                            onDelete={circle.deleteCircle}
+                            onMove={moveCircle}
+                            onDelete={deleteCircle}
                         />
                         <AirplanePathLayer
                             id={airplanePath?.id}
@@ -278,12 +286,7 @@ function StrategyBody({
             />
 
             <EnterTagContentModal />
-
-            <PhaseSelectModal
-                isOpen={circle.isPhaseSelectModalOpen}
-                onClose={circle.phaseSelectModalClose}
-                onConfirm={circle.createCircle}
-            />
+            <PhaseSelectModal />
 
             <EnterTeamLabelModal
                 isOpen={enemyTeam.isEnterEnemyTeamLabelModalOpen}
