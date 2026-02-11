@@ -185,8 +185,6 @@ export function useCommentEvent(
     return {
         toggleSelectedCommentId,
         commentWindowOpen,
-        commentClick,
-        moveComment,
         StrategyCommentWindow: Window,
         CommentsLayer: Layer,
     };

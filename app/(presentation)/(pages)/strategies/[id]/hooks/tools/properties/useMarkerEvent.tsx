@@ -166,10 +166,7 @@ export function useMarkerEvent(
 
     return {
         toggleSelectedMarkerId,
-        selectedMarkerId,
         saveMarker,
-        moveMarker,
-        deleteMarker,
         MarkersLayer: Layer,
     };
 }

@@ -120,10 +120,7 @@ export function useEnemyTeamEvent(
 
     return {
         toggleSelectedEnemyTeamId,
-        selectedEnemyTeamId,
         enterEnemyTeamLabelModalOpen,
-        moveEnemyTeam,
-        deleteEnemyTeam,
         EnterTeamLabelModal: Modal,
         EnemyTeamsLayer: Layer,
     };

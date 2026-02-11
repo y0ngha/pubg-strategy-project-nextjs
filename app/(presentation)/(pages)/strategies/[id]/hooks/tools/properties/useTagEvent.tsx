@@ -109,10 +109,7 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
 
     return {
         toggleSelectedTagId,
-        selectedTagId,
         enterTagContentModalOpen,
-        moveTag,
-        deleteTag,
         EnterTagContentModal: Modal,
         TagsLayer: Layer,
     };

@@ -249,12 +249,7 @@ export function useWaypointEvent(
 
     return {
         toggleSelectedWaypointId,
-        selectedWaypointId,
-        isDrawing,
-        clickedPositions,
         createWaypoint,
-        moveWaypoint,
-        deleteWaypoint,
         WaypointsLayer: Layer,
     };
 }

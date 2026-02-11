@@ -87,11 +87,8 @@ export function useTeamPlayerEvent(
     );
 
     return {
-        selectedTeamPlayerId,
         toggleSelectedTeamPlayerId,
         createTeamPlayer,
-        moveTeamPlayer,
-        deleteTeamPlayer,
         TeamPlayersLayer: Layer,
     };
 }
