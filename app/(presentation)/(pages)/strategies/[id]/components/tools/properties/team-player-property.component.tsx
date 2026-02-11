@@ -4,8 +4,6 @@ import { Circle, Group, Image, Label, Tag, Text } from 'react-konva';
 import { useLucideIconToSvgUrl } from '@/(presentation)/(pages)/strategies/[id]/hooks/utils/useLucideIconToSvgUrl';
 import useImage from 'use-image';
 import { User } from 'lucide-react';
-import WaypointProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/waypoint-property.component';
-import MarkerProperty from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/marker-property.component';
 import {
     PropertyClickPayload,
     StrategyBodyProps,
@@ -31,30 +29,6 @@ interface TeamPlayerPropertyProps {
         deltaPosition: { x: number; y: number }
     ) => void;
     onDelete: (teamPlayerId: string) => void;
-}
-
-interface WaypointPropertyProps {
-    isWaypointDrawing: boolean;
-    waypointClickedPositions: { x: number; y: number }[];
-    selectedWaypointId?: { teamPlayerId: string; id: string };
-    onWaypointClick: ({ type, id }: PropertyClickPayload) => void;
-    onWaypointMove: (
-        teamPlayerId: string,
-        waypointId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-    onWaypointDelete: (teamPlayerId: string, waypointId: string) => void;
-}
-
-interface MarkerPropertyProps {
-    selectedMarkerId?: { teamPlayerId: string; id: string };
-    onMarkerClick: ({ type, id }: PropertyClickPayload) => void;
-    onMarkerMove: (
-        teamPlayerId: string,
-        markerId: string,
-        deltaPosition: { x: number; y: number }
-    ) => void;
-    onMarkerDelete: (teamPlayerId: string, markerId: string) => void;
 }
 
 function TeamPlayerProperty({
@@ -191,87 +165,33 @@ function TeamPlayersLayer({
     teamPlayers,
     isSelectable,
     selectedTeamPlayerId,
-    selectedWaypointId,
-    selectedMarkerId,
     onClick,
-    isWaypointDrawing,
-    waypointClickedPositions,
     onMove,
-    onMarkerMove,
-    onWaypointMove,
     onDelete,
-    onMarkerDelete,
-    onWaypointDelete,
-    onMarkerClick,
-    onWaypointClick,
 }: { selectedTeamPlayerId?: string } & Pick<
     TeamPlayerPropertyProps,
     'isSelectable' | 'onMove' | 'onDelete' | 'onClick'
 > &
-    Pick<StrategyBodyProps, 'teamPlayers'> &
-    WaypointPropertyProps &
-    MarkerPropertyProps) {
+    Pick<StrategyBodyProps, 'teamPlayers'>) {
     return (
         <>
             {teamPlayers.map(field => {
                 const isTeamPlayerSelected = selectedTeamPlayerId === field.id;
 
-                const isMarkerSelected =
-                    selectedMarkerId?.teamPlayerId === field.id &&
-                    selectedMarkerId.id === field.marker?.id;
-
-                const isWaypointSelected =
-                    selectedWaypointId?.teamPlayerId === field.id &&
-                    selectedWaypointId.id === field.waypoint?.id;
-
                 return (
-                    <React.Fragment key={`tp-${field.priority}`}>
-                        <TeamPlayerProperty
-                            id={field.id}
-                            x={field.position.x}
-                            y={field.position.y}
-                            priority={field.priority}
-                            color={field.color}
-                            isSelectable={isSelectable}
-                            isSelected={isTeamPlayerSelected}
-                            onClick={onClick}
-                            onMove={onMove}
-                            onDelete={onDelete}
-                        />
-                        {field.marker && (
-                            <MarkerProperty
-                                color={field.color}
-                                priority={field.priority}
-                                x={field.marker.position.x}
-                                y={field.marker.position.y}
-                                isSelectable={isSelectable}
-                                isSelected={isMarkerSelected}
-                                id={field.marker.id}
-                                teamPlayerId={field.id}
-                                onMove={onMarkerMove}
-                                onDelete={onMarkerDelete}
-                                onClick={onMarkerClick}
-                            />
-                        )}
-                        <WaypointProperty
-                            positions={
-                                isWaypointDrawing &&
-                                selectedTeamPlayerId === field.id
-                                    ? waypointClickedPositions
-                                    : (field.waypoint?.positions ?? [])
-                            }
-                            color={field.color}
-                            priority={field.priority}
-                            isDrawing={isWaypointDrawing}
-                            isSelectable={isSelectable}
-                            isSelected={isWaypointSelected}
-                            id={field.waypoint?.id}
-                            teamPlayerId={field.id}
-                            onMove={onWaypointMove}
-                            onDelete={onWaypointDelete}
-                            onClick={onWaypointClick}
-                        />
-                    </React.Fragment>
+                    <TeamPlayerProperty
+                        key={`tp-${field.id}`}
+                        id={field.id}
+                        x={field.position.x}
+                        y={field.position.y}
+                        priority={field.priority}
+                        color={field.color}
+                        isSelectable={isSelectable}
+                        isSelected={isTeamPlayerSelected}
+                        onClick={onClick}
+                        onMove={onMove}
+                        onDelete={onDelete}
+                    />
                 );
             })}
         </>

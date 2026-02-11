@@ -4,6 +4,8 @@ import { useUpdateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/h
 import { TagResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTagMutation';
 import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 
 export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
@@ -88,12 +90,27 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         />
     );
 
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) => (
+        <TagsLayer
+            isSelectable={isSelectable}
+            selectedTagId={selectedTagId}
+            onClick={handlePropertyClick}
+            tags={tags}
+            onMove={moveTag}
+            onDelete={deleteTag}
+        />
+    );
+
     return {
         toggleSelectedTagId,
-        selectedTagId,
         enterTagContentModalOpen,
-        moveTag,
-        deleteTag,
         EnterTagContentModal: Modal,
+        TagsLayer: Layer,
     };
 }
