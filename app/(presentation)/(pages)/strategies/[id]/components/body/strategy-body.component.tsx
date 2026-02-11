@@ -26,7 +26,6 @@ import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
-import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
 
@@ -112,6 +111,7 @@ function StrategyBody({
     const { EnterTagContentModal } = tag;
     const { PhaseSelectModal } = circle;
     const { EnterTeamLabelModal } = enemyTeam;
+    const { StrategyCommentWindow } = comment;
 
     const onMapClick = (
         clickPosition: { x: number; y: number },
@@ -273,16 +273,7 @@ function StrategyBody({
             <EnterTagContentModal />
             <PhaseSelectModal />
             <EnterTeamLabelModal />
-
-            <StrategyCommentWindow
-                key={JSON.stringify(comment.windowPosition)}
-                isOpen={comment.isCommentWindowOpen}
-                onClose={comment.commentWindowClose}
-                comments={comment.filteredComments}
-                onAddComment={comment.createComment}
-                onUpdateComment={comment.updateComment}
-                position={comment.windowPosition}
-            />
+            <StrategyCommentWindow />
         </div>
     );
 }
