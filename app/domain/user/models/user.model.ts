@@ -5,6 +5,6 @@ export interface User {
     email: string;
     authProvider: AuthProvider;
     hasPassword: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
