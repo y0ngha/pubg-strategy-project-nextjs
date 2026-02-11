@@ -20,7 +20,6 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
@@ -109,7 +108,7 @@ function StrategyBody({
     const { PhaseSelectModal, CirclesLayer } = circle;
     const { AirplanePathLayer } = airplane;
     const { EnterTagContentModal } = tag;
-    const { EnterTeamLabelModal } = enemyTeam;
+    const { EnterTeamLabelModal, EnemyTeamsLayer } = enemyTeam;
     const { StrategyCommentWindow } = comment;
 
     const onMapClick = (
@@ -210,14 +209,12 @@ function StrategyBody({
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
+
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
-                            selectedEnemyTeamId={enemyTeam.selectedEnemyTeamId}
-                            onClick={handlePropertyClick}
-                            enemyTeams={enemyTeams}
-                            onMove={enemyTeam.moveEnemyTeam}
-                            onDelete={enemyTeam.deleteEnemyTeam}
+                            handlePropertyClick={handlePropertyClick}
                         />
+
                         <TeamPlayersLayer
                             isSelectable={isSelectable}
                             teamPlayers={teamPlayers}

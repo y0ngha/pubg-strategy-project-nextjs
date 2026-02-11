@@ -4,6 +4,8 @@ import { useUpdateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/
 import { EnemyTeamResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteEnemyTeamMutation';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
+import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
+import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
 
 export function useEnemyTeamEvent(
     strategyId: string,
@@ -99,12 +101,30 @@ export function useEnemyTeamEvent(
         />
     );
 
+    const Layer = ({
+        isSelectable,
+        handlePropertyClick,
+    }: {
+        isSelectable: boolean;
+        handlePropertyClick: (props: PropertyClickPayload) => void;
+    }) => (
+        <EnemyTeamsLayer
+            isSelectable={isSelectable}
+            selectedEnemyTeamId={selectedEnemyTeamId}
+            onClick={handlePropertyClick}
+            enemyTeams={enemyTeams}
+            onMove={moveEnemyTeam}
+            onDelete={deleteEnemyTeam}
+        />
+    );
+
     return {
         toggleSelectedEnemyTeamId,
         selectedEnemyTeamId,
         enterEnemyTeamLabelModalOpen,
-        EnterTeamLabelModal: Modal,
         moveEnemyTeam,
         deleteEnemyTeam,
+        EnterTeamLabelModal: Modal,
+        EnemyTeamsLayer: Layer,
     };
 }
