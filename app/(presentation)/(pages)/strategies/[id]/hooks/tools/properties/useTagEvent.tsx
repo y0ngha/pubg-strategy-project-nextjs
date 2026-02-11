@@ -92,7 +92,6 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         toggleSelectedTagId,
         selectedTagId,
         enterTagContentModalOpen,
-        enterTagContentModalClose,
         moveTag,
         deleteTag,
         EnterTagContentModal: Modal,
