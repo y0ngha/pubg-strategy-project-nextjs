@@ -68,6 +68,10 @@ import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-s
 import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 import { PasswordValidatorAdapter } from '@infrastructure/user/adapter/driving/password-validator.adapter';
+import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
+import {
+    UserCommandRepositoryAdapter
+} from '@infrastructure/user/adapter/repositories/user-command-repository.adapter';
 
 /**
  * User
@@ -76,6 +80,10 @@ const userRepositories: ClassDependency[] = [
     {
         class: UserRepositoryAdapter,
         abstract: UserRepositoryPort,
+    },
+    {
+        class: UserCommandRepositoryAdapter,
+        abstract: UserCommandRepositoryPort,
     },
 ];
 const userServices: ClassDependency[] = [
