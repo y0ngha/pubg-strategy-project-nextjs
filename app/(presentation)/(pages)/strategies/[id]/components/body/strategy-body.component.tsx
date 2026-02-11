@@ -109,24 +109,8 @@ function StrategyBody({
         comments: comments,
     });
 
-    const {
-        enterTagContentModalOpen,
-        moveTag,
-        deleteTag,
-        EnterTagContentModal,
-        toggleSelectedTagId,
-        selectedTagId,
-    } = tag;
-
-    const {
-        phaseSelectModalOpen,
-        moveCircle,
-        deleteCircle,
-        PhaseSelectModal,
-        toggleSelectedCircleId,
-        selectedCircleId,
-    } = circle;
-
+    const { EnterTagContentModal } = tag;
+    const { PhaseSelectModal } = circle;
     const { EnterTeamLabelModal } = enemyTeam;
 
     const onMapClick = (
@@ -135,7 +119,7 @@ function StrategyBody({
     ) => {
         switch (selectedTool) {
             case 'circle':
-                return phaseSelectModalOpen(clickPosition);
+                return circle.phaseSelectModalOpen(clickPosition);
             case 'airplane':
                 return airplane.clickAirplanePath(clickPosition);
             case 'enemy':
@@ -147,20 +131,20 @@ function StrategyBody({
             case 'waypoint':
                 return waypoint.createWaypoint(clickPosition);
             case 'tag':
-                return enterTagContentModalOpen(clickPosition);
+                return tag.enterTagContentModalOpen(clickPosition);
             case 'comment':
                 return comment.commentWindowOpen(windowPosition, clickPosition);
         }
     };
 
     const disposeAllPropertySelected = () => {
-        toggleSelectedCircleId(undefined);
+        circle.toggleSelectedCircleId(undefined);
         airplane.toggleSelectedAirplanePathId(undefined);
         enemyTeam.toggleSelectedEnemyTeamId(undefined);
         teamPlayer.toggleSelectedTeamPlayerId(undefined);
         marker.toggleSelectedMarkerId(undefined);
         waypoint.toggleSelectedWaypointId(undefined);
-        toggleSelectedTagId(undefined);
+        tag.toggleSelectedTagId(undefined);
         comment.toggleSelectedCommentId(undefined);
     };
 
@@ -169,7 +153,7 @@ function StrategyBody({
 
         switch (props.type) {
             case 'circle':
-                return toggleSelectedCircleId(props.id);
+                return circle.toggleSelectedCircleId(props.id);
             case 'airplane':
                 return airplane.toggleSelectedAirplanePathId(props.id);
             case 'enemy':
@@ -181,7 +165,7 @@ function StrategyBody({
             case 'waypoint':
                 return waypoint.toggleSelectedWaypointId(props);
             case 'tag':
-                return toggleSelectedTagId(props.id);
+                return tag.toggleSelectedTagId(props.id);
             case 'comment':
                 return comment.toggleSelectedCommentId(props.id);
         }
@@ -221,11 +205,11 @@ function StrategyBody({
                     <Layer>
                         <CirclesLayer
                             isSelectable={isSelectable}
-                            selectedCircleId={selectedCircleId}
+                            selectedCircleId={circle.selectedCircleId}
                             onClick={handlePropertyClick}
                             circles={circles}
-                            onMove={moveCircle}
-                            onDelete={deleteCircle}
+                            onMove={circle.moveCircle}
+                            onDelete={circle.deleteCircle}
                         />
                         <AirplanePathLayer
                             id={airplanePath?.id}
@@ -269,11 +253,11 @@ function StrategyBody({
                         />
                         <TagsLayer
                             isSelectable={isSelectable}
-                            selectedTagId={selectedTagId}
+                            selectedTagId={tag.selectedTagId}
                             onClick={handlePropertyClick}
                             tags={tags}
-                            onMove={moveTag}
-                            onDelete={deleteTag}
+                            onMove={tag.moveTag}
+                            onDelete={tag.deleteTag}
                         />
                         <CommentsLayer
                             isSelectable={isSelectable}
