@@ -20,7 +20,6 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import AirplanePathLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/airplane-path-property.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
 import TeamPlayersLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/team-player-property.component';
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
@@ -107,8 +106,9 @@ function StrategyBody({
         comments: comments,
     });
 
-    const { EnterTagContentModal } = tag;
     const { PhaseSelectModal, CirclesLayer } = circle;
+    const { AirplanePathLayer } = airplane;
+    const { EnterTagContentModal } = tag;
     const { EnterTeamLabelModal } = enemyTeam;
     const { StrategyCommentWindow } = comment;
 
@@ -206,18 +206,9 @@ function StrategyBody({
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
-
                         <AirplanePathLayer
-                            id={airplanePath?.id}
                             isSelectable={isSelectable}
-                            selectedAirplanePathId={
-                                airplane.selectedAirplanePathId
-                            }
-                            onClick={handlePropertyClick}
-                            startPosition={airplane.startPosition}
-                            endPosition={airplane.endPosition}
-                            onMove={airplane.moveAirplanePath}
-                            onDelete={airplane.deleteAirplanePath}
+                            handlePropertyClick={handlePropertyClick}
                         />
                         <EnemyTeamsLayer
                             isSelectable={isSelectable}
