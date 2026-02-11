@@ -4,6 +4,7 @@ import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-stra
 import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
 import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
+import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 
 export function useCommentEvent(
     strategyId: string,
@@ -172,11 +173,21 @@ export function useCommentEvent(
         />
     );
 
+    const Layer = ({ isSelectable }: { isSelectable: boolean }) => (
+        <CommentsLayer
+            isSelectable={isSelectable}
+            comments={comments}
+            onClick={commentClick}
+            onMove={moveComment}
+        />
+    );
+
     return {
         toggleSelectedCommentId,
         commentWindowOpen,
         commentClick,
         moveComment,
         StrategyCommentWindow: Window,
+        CommentsLayer: Layer,
     };
 }

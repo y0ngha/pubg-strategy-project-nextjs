@@ -20,7 +20,6 @@ import {
     TeamPlayerResponseDto,
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useKonvaHandleMouseClick } from '@/(presentation)/(pages)/strategies/[id]/hooks/konvas/useKonvaHandleMouseClick';
-import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import { useToolEvent } from '@/(presentation)/(pages)/strategies/[id]/hooks/tools/useToolEvent';
 import { Layer } from 'react-konva';
 
@@ -110,7 +109,7 @@ function StrategyBody({
     const { EnterTagContentModal, TagsLayer } = tag;
     const { MarkersLayer } = marker;
     const { WaypointsLayer } = waypoint;
-    const { StrategyCommentWindow } = comment;
+    const { StrategyCommentWindow, CommentsLayer } = comment;
 
     const onMapClick = (
         clickPosition: { x: number; y: number },
@@ -230,13 +229,7 @@ function StrategyBody({
                             isSelectable={isSelectable}
                             handlePropertyClick={handlePropertyClick}
                         />
-
-                        <CommentsLayer
-                            isSelectable={isSelectable}
-                            comments={comments}
-                            onClick={comment.commentClick}
-                            onMove={comment.moveComment}
-                        />
+                        <CommentsLayer isSelectable={isSelectable} />
                     </Layer>
                 }
                 onMapClick={handleClick}
