@@ -1,7 +1,7 @@
 import { Email } from '@/domain/shared/value-objects/email';
-import { UserId } from '@/domain/shared/value-objects/user-id';
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { Password } from '@/domain/user/value-objects/password';
+import { LogoutCommand } from '@domain/user/commands/logout.command';
 
 export class AuthenticationServiceAdapter extends AuthenticationServicePort {
     async login(
@@ -11,7 +11,7 @@ export class AuthenticationServiceAdapter extends AuthenticationServicePort {
         throw new Error('Not Implemented.');
     }
 
-    async logout(userId: UserId): Promise<boolean> {
+    async logout(command: LogoutCommand): Promise<boolean> {
         throw new Error('Not Implemented.');
     }
 

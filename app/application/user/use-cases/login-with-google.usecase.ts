@@ -5,6 +5,7 @@ import {
     LoginWithGoogleRequestDto,
     LoginWithGoogleRequestSchema,
 } from '../dto/login-with-google.dto';
+import { LoginWithGoogleCommand } from '@domain/user/commands/login-with-google.command';
 
 @injectable()
 export class LoginWithGoogleUseCase {
@@ -20,9 +21,10 @@ export class LoginWithGoogleUseCase {
     ): Promise<{ accessToken: string; refreshToken: string }> {
         const { email, token } = LoginWithGoogleRequestSchema.parse(dto);
 
-        // TODO 이후 googleAuthService 구현시 액션 추가
         // this.googleAuthService.getToken()
 
-        return await this.authenticationService.googleLogin(email, token);
+        const command = LoginWithGoogleCommand.create(email, token);
+
+        return await this.authenticationService.googleLogin(command);
     }
 }

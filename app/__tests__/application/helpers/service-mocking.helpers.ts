@@ -12,8 +12,6 @@ export function getPasswordCipherMocking(): jest.Mocked<PasswordCipherPort> {
 
 export function getPasswordValidatorServiceMocking(): jest.Mocked<PasswordValidatorPort> {
     return {
-        emailIncludedValidate: jest.fn(),
-        passwordMatchValidate: jest.fn(),
         passwordDifferentValidate: jest.fn(),
     };
 }

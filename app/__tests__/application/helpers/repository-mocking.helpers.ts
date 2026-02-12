@@ -1,6 +1,7 @@
 import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
+import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
 
 export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> {
     return {
@@ -14,13 +15,19 @@ export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> 
     };
 }
 
-export function getUserRepositoryMocking(): jest.Mocked<UserRepositoryPort> {
+export function getUserQueryRepositoryMocking(): jest.Mocked<UserQueryRepositoryPort> {
     return {
-        save: jest.fn(),
         findByUserId: jest.fn(),
-        delete: jest.fn(),
-        existsByEmail: jest.fn(),
         findByAccessToken: jest.fn(),
+    };
+}
+
+export function getUserCommandRepositoryMocking(): jest.Mocked<UserCommandRepositoryPort> {
+    return {
+        changePassword: jest.fn(),
+        registerWithEmail: jest.fn(),
+        registerWithGoogle: jest.fn(),
+        withdrawal: jest.fn(),
     };
 }
 

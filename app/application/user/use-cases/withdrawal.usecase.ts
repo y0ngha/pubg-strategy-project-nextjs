@@ -1,26 +1,18 @@
 import { inject, injectable } from 'inversify';
-import {
-    WithdrawalRequestDto,
-    WithdrawalRequestSchema,
-} from '@/application/user/dto/withdrawal.dto';
-import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
-import { AuthenticationServicePort } from '@domain/user/port/out/authentication-service.port';
+import { WithdrawalCommand } from '@domain/user/commands/withdrawal.command';
+import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
 
 @injectable()
 export class WithdrawalUseCase {
     constructor(
-        @inject(UserRepositoryPort)
-        private readonly userRepository: UserRepositoryPort,
-        @inject(AuthenticationServicePort)
-        private readonly authenticationService: AuthenticationServicePort
+        @inject(UserCommandRepositoryPort)
+        private readonly userCommandRepository: UserCommandRepositoryPort
     ) {}
 
-    async execute(dto: WithdrawalRequestDto): Promise<boolean> {
-        const { id } = WithdrawalRequestSchema.parse(dto);
+    async execute(): Promise<boolean> {
+        const command = WithdrawalCommand.create();
 
-        await this.authenticationService.logout(id);
-
-        await this.userRepository.delete(id);
+        await this.userCommandRepository.withdrawal(command);
 
         return true;
     }

@@ -1,17 +1,12 @@
-import { UserId } from '@/domain/shared/value-objects/user-id';
 import { Password } from '@/domain/user/value-objects/password';
 import { z } from 'zod';
 
 export interface ChangePasswordRequestDto {
-    userId: string;
     currentPassword: string;
     newPassword: string;
 }
 
 export const ChangePasswordRequestSchema = z.object({
-    userId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
     currentPassword: z.string().transform(value => {
         return Password.create(value);
     }),

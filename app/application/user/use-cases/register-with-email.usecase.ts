@@ -1,52 +1,30 @@
-import { User } from '@/domain/user/entities/user.entity';
-import {
-    EmailAlreadyExistsException,
-    InvalidPasswordException,
-} from '@/domain/user/exceptions/user.exceptions';
-import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
-import { UserRepositoryPort } from '@/domain/user/port/out/user-repository.port';
-import { Password } from '@/domain/user/value-objects/password';
 import { inject, injectable } from 'inversify';
 import {
     RegisterWithEmailRequestDto,
     RegisterWithEmailRequestSchema,
 } from '../dto/register-with-email.dto';
-import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
+import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
+import { RegisterWithEmailCommand } from '@domain/user/commands/register-with-email.command';
 
 @injectable()
 export class RegisterWithEmailUseCase {
     constructor(
-        @inject(UserRepositoryPort)
-        private readonly userRepository: UserRepositoryPort,
-        @inject(PasswordValidatorPort)
-        private readonly passwordValidator: PasswordValidatorPort,
-        @inject(PasswordCipherPort)
-        private readonly passwordCipher: PasswordCipherPort
+        @inject(UserCommandRepositoryPort)
+        private readonly userCommandRepository: UserCommandRepositoryPort
     ) {}
 
-    async execute(dto: RegisterWithEmailRequestDto): Promise<boolean> {
+    async execute(
+        dto: RegisterWithEmailRequestDto
+    ): Promise<{ email: string }> {
         const { email, password } = RegisterWithEmailRequestSchema.parse(dto);
 
-        const existingUser = await this.userRepository.existsByEmail(email);
+        const command = RegisterWithEmailCommand.create(email, password);
 
-        if (existingUser) {
-            throw new EmailAlreadyExistsException(email.toString());
-        }
+        const user =
+            await this.userCommandRepository.registerWithEmail(command);
 
-        if (!this.passwordValidator.emailIncludedValidate(email, password)) {
-            throw new InvalidPasswordException(
-                '비밀번호에 이메일이 포함될 수 없습니다.'
-            );
-        }
-
-        const encryptedPassword = Password.reconstruct(
-            this.passwordCipher.encrypt(password.toString())
-        );
-
-        const user = User.createWithEmail(email, encryptedPassword);
-
-        await this.userRepository.save(user);
-
-        return true;
+        return {
+            email: user.email,
+        };
     }
 }
