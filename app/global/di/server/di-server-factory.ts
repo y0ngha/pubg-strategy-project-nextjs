@@ -28,8 +28,10 @@ import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/acce
 import { GetFriendListUseCase } from '@/application/friend/use-cases/get-friend-list.usecase';
 import { RejectReceivedFriendUseCase } from '@/application/friend/use-cases/reject-received-friend.usecase';
 import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
-import { StrategyRepositoryAdapter } from '@infrastructure/strategy/adapter/driven/strategy-repository.adapter';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import {
+    StrategyQueryRepositoryAdapter
+} from '@infrastructure/strategy/adapter/repositories/strategy-query-repository.adapter';
+import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
 import { AddAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/add-airplane-path.usecase';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
@@ -76,6 +78,10 @@ import {
     FriendCommandRepositoryAdapter
 } from '@infrastructure/friend/adapter/repositories/friend-command-repository.adapter';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import {
+    StrategyCommandRepositoryAdapter
+} from '@infrastructure/strategy/adapter/repositories/strategy-command-repository.adapter';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 
 /**
  * User
@@ -144,8 +150,12 @@ const friendUseCases: ClassDependency[] = [
  */
 const strategyRepositories: ClassDependency[] = [
     {
-        class: StrategyRepositoryAdapter,
-        abstract: StrategyRepositoryPort,
+        class: StrategyQueryRepositoryAdapter,
+        abstract: StrategyQueryRepositoryPort,
+    },
+    {
+        class: StrategyCommandRepositoryAdapter,
+        abstract: StrategyCommandRepositoryPort,
     },
 ];
 const strategyUseCases: ClassDependency[] = [

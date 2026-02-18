@@ -1,18 +1,10 @@
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 
-export class StrategyRepositoryAdapter extends StrategyRepositoryPort {
-    delete(id: StrategyId): Promise<void> {
-        throw new Error('Not Implemented.');
-    }
-
+export class StrategyQueryRepositoryAdapter extends StrategyQueryRepositoryPort {
     findById(id: StrategyId): Promise<Strategy | null> {
-        throw new Error('Not Implemented.');
-    }
-
-    save(strategy: Strategy): Promise<Strategy> {
         throw new Error('Not Implemented.');
     }
 

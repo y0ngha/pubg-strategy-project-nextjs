@@ -1,31 +1,29 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     DeleteMarkerRequestDto,
     DeleteMarkerRequestSchema,
 } from '@/application/strategy/dto/marker/delete-marker.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteMarkerCommand } from '@domain/strategy/commands/marker/delete-marker.command';
 
 @injectable()
 export class DeleteMarkerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteMarkerRequestDto) {
-        const { actorId, strategyId, teamPlayerId, markerId } =
+        const { strategyId, teamPlayerId, markerId } =
             DeleteMarkerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteMarkerCommand.create(
+            strategyId,
+            teamPlayerId,
+            markerId
+        );
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeTeamPlayerMarker(actorId, teamPlayerId, markerId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepository.deleteMarker(command);
 
         return {
             teamPlayerId: teamPlayerId.toString(),
