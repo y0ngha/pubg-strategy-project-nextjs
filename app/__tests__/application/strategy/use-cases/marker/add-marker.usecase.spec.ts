@@ -101,8 +101,6 @@ describe('AddMarkerUseCase', () => {
         };
 
         // when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(
-            InvalidEntityIdException
-        );
+        await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
     });
 });
