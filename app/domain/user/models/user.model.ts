@@ -1,10 +1,10 @@
 import { AuthProvider } from '@domain/user/enums/auth-provider.enum';
 
 export interface User {
-    id: string;
-    email: string;
-    authProvider: AuthProvider;
-    hasPassword: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    readonly id: string;
+    readonly email: string;
+    readonly authProvider: AuthProvider;
+    readonly hasPassword: boolean;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }
