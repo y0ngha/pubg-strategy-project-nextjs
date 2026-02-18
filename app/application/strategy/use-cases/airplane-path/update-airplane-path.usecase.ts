@@ -1,51 +1,41 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import {
     UpdateAirplanePathRequestDto,
     UpdateAirplanePathRequestSchema,
 } from '@/application/strategy/dto/airplane-path/update-airplane-path.dto';
+import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
 
 @injectable()
 export class UpdateAirplanePathUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: UpdateAirplanePathRequestDto) {
-        const {
-            actorId,
+        const { strategyId, airplanePathId, startPosition, endPosition } =
+            UpdateAirplanePathRequestSchema.parse(dto);
+
+        const command = UpdateAirplanePathPositionCommand.create(
             strategyId,
-            airplanePathId,
-            startPosition,
-            endPosition,
-        } = UpdateAirplanePathRequestSchema.parse(dto);
-
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const airplanePath = strategy.updateAirplanePath(
-            actorId,
             airplanePathId,
             startPosition,
             endPosition
         );
 
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepository.updateAirplanePathPosition(
+            command
+        );
 
         return {
             startPosition: {
-                x: airplanePath.startPosition.x,
-                y: airplanePath.startPosition.y,
+                x: startPosition.x,
+                y: startPosition.y,
             },
             endPosition: {
-                x: airplanePath.endPosition.x,
-                y: airplanePath.endPosition.y,
+                x: endPosition.x,
+                y: endPosition.y,
             },
         };
     }
