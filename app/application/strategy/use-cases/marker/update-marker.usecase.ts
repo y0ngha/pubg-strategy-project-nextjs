@@ -1,42 +1,36 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     UpdateMarkerRequestDto,
     UpdateMarkerRequestSchema,
 } from '@/application/strategy/dto/marker/update-marker.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { UpdateMarkerPositionCommand } from '@domain/strategy/commands/marker/update-marker-position.command';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 
 @injectable()
 export class UpdateMarkerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: UpdateMarkerRequestDto) {
-        const { actorId, strategyId, teamPlayerId, markerId, position } =
+        const { strategyId, teamPlayerId, markerId, position } =
             UpdateMarkerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const marker = strategy.updateTeamPlayerMarker(
-            actorId,
+        const command = UpdateMarkerPositionCommand.create(
+            strategyId,
             teamPlayerId,
             markerId,
             position
-        )!;
+        );
 
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepository.updateMarkerPosition(command);
 
         return {
             teamPlayerId: teamPlayerId.toString(),
             position: {
-                x: marker.position.x,
-                y: marker.position.y,
+                x: position.x,
+                y: position.y,
             },
         };
     }
