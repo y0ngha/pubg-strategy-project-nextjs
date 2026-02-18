@@ -4,7 +4,7 @@ import {
     AcceptReceivedFriendRequestSchema,
 } from '@/application/friend/dto/accept-received-friend.dto';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
-import { AcceptFriendRequestCommand } from '@domain/friend/commands/accept-friend-request.command';
+import { AcceptReceivedFriendRequestCommand } from '@domain/friend/commands/accept-received-friend-request.command';
 
 @injectable()
 export class AcceptReceivedFriendUseCase {
@@ -17,7 +17,10 @@ export class AcceptReceivedFriendUseCase {
         const { id, currentStatus } =
             AcceptReceivedFriendRequestSchema.parse(dto);
 
-        const command = AcceptFriendRequestCommand.create(id, currentStatus);
+        const command = AcceptReceivedFriendRequestCommand.create(
+            id,
+            currentStatus
+        );
 
         await this.friendCommandRepository.accept(command);
 
