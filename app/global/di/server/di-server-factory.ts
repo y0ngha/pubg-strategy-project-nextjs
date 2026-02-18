@@ -66,7 +66,6 @@ import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-s
 import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
 import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
 import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
-import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 import { PasswordValidatorAdapter } from '@infrastructure/user/adapter/driving/password-validator.adapter';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
@@ -139,7 +138,6 @@ const friendUseCases: ClassDependency[] = [
     { class: RejectReceivedFriendUseCase },
     { class: RequestFriendUseCase },
 ];
-const friendServices: ClassDependency[] = [{ class: FriendMapper }];
 
 /**
  * Strategy
@@ -193,7 +191,6 @@ const dependencyInjectedClasses: ClassDependency[] = [
     ...userUseCases,
     ...friendRepositories,
     ...friendUseCases,
-    ...friendServices,
     ...strategyRepositories,
     ...strategyUseCases,
     ...strategyServices,
