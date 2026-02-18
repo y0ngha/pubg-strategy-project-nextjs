@@ -3,12 +3,13 @@ import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import { FriendUpdateInvalidStatus } from '@domain/friend/exceptions/friend.exceptions';
 import { getFriendCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import { FriendId } from '@domain/friend/value-objects/friend-id';
 
 describe('AcceptReceivedFriendUseCase', () => {
     let useCase: AcceptReceivedFriendUseCase;
     let mockFriendCommandRepository: jest.Mocked<FriendCommandRepositoryPort>;
 
-    const friendId = 'c92c6abc-82aa-423f-83e9-9e2823c1bcf7';
+    const friendId = FriendId.generate();
 
     beforeEach(() => {
         mockFriendCommandRepository = getFriendCommandRepositoryMocking();
@@ -21,7 +22,7 @@ describe('AcceptReceivedFriendUseCase', () => {
             // give
             const currentStatus = FriendStatus.PENDING;
             const dto = {
-                id: friendId,
+                id: friendId.toString(),
                 currentStatus: currentStatus,
             };
 
@@ -31,7 +32,10 @@ describe('AcceptReceivedFriendUseCase', () => {
             // then
             expect(mockFriendCommandRepository.accept).toHaveBeenCalledTimes(1);
             expect(mockFriendCommandRepository.accept).toHaveBeenCalledWith(
-                expect.objectContaining(dto)
+                expect.objectContaining({
+                    friendId: friendId,
+                    currentStatus: currentStatus,
+                })
             );
         });
     });
@@ -41,7 +45,7 @@ describe('AcceptReceivedFriendUseCase', () => {
             // give
             const currentStatus = FriendStatus.CANCELED;
             const dto = {
-                id: friendId,
+                id: friendId.toString(),
                 currentStatus: currentStatus,
             };
 
@@ -63,7 +67,7 @@ describe('AcceptReceivedFriendUseCase', () => {
 
         const currentStatus = FriendStatus.PENDING;
         const dto = {
-            id: friendId,
+            id: friendId.toString(),
             currentStatus: currentStatus,
         };
 
