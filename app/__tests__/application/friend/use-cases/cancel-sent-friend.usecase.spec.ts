@@ -53,7 +53,7 @@ describe('CancelSentFriendUseCase', () => {
             await expect(useCase.execute(dto)).rejects.toThrow(
                 FriendUpdateInvalidStatus
             );
-            expect(mockFriendCommandRepository.accept).toHaveBeenCalledTimes(0);
+            expect(mockFriendCommandRepository.cancel).toHaveBeenCalledTimes(0);
         });
     });
 
