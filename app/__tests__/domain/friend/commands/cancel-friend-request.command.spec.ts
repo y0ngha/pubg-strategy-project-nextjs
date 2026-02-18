@@ -1,7 +1,7 @@
 import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 import { FriendUpdateInvalidStatus } from '@domain/friend/exceptions/friend.exceptions';
-import { CancelFriendRequestCommand } from '@domain/friend/commands/cancel-friend-request.command';
+import { CancelSentFriendRequestCommand } from '@domain/friend/commands/cancel-sent-friend-request.command';
 
 describe('CancelFriendRequest', () => {
     const friendId = FriendId.generate();
@@ -10,13 +10,13 @@ describe('CancelFriendRequest', () => {
         const currentStatus = FriendStatus.PENDING;
 
         //when
-        const command = CancelFriendRequestCommand.create(
+        const command = CancelSentFriendRequestCommand.create(
             friendId,
             currentStatus
         );
 
         // then
-        expect(command).toBeInstanceOf(CancelFriendRequestCommand);
+        expect(command).toBeInstanceOf(CancelSentFriendRequestCommand);
     });
 
     it('기존 상태값이 PENDING이 아니라면 에러를 던진다.', () => {
@@ -25,7 +25,7 @@ describe('CancelFriendRequest', () => {
 
         //when & then
         expect(() =>
-            CancelFriendRequestCommand.create(friendId, currentStatus)
+            CancelSentFriendRequestCommand.create(friendId, currentStatus)
         ).toThrow(FriendUpdateInvalidStatus);
     });
 });
