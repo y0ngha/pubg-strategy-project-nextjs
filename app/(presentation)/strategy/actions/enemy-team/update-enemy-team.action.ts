@@ -2,7 +2,7 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team.usecase';
+import { UpdateEnemyTeamPositionUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateEnemyTeamAction = {
@@ -43,7 +43,7 @@ export async function updateEnemyTeamAction(
             { key: 'position', type: 'position', allowUndefined: true },
         ] as const);
 
-    const useCase = getService(UpdateEnemyTeamUseCase);
+    const useCase = getService(UpdateEnemyTeamPositionUsecase);
 
     const dto = {
         actorId: userId,
