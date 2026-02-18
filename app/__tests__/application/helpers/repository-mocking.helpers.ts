@@ -1,12 +1,12 @@
 import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
 import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 
 export function getFriendQueryRepositoryMocking(): jest.Mocked<FriendQueryRepositoryPort> {
     return {
-        existsFriendBetween: jest.fn(),
         findById: jest.fn(),
         findAcceptedFriendsByUserId: jest.fn(),
         findReceivedFriendRequestsByRecipientUserId: jest.fn(),
@@ -39,12 +39,18 @@ export function getUserCommandRepositoryMocking(): jest.Mocked<UserCommandReposi
     };
 }
 
-export function getStrategyRepositoryMocking(): jest.Mocked<StrategyRepositoryPort> {
+export function getStrategyQueryRepositoryMocking(): jest.Mocked<StrategyQueryRepositoryPort> {
     return {
-        save: jest.fn(),
-        delete: jest.fn(),
         findById: jest.fn(),
         findOwnedStrategiesByUserID: jest.fn(),
         findSharedStrategiesByUserID: jest.fn(),
+    };
+}
+
+export function getStrategyCommandRepositoryMocking(): jest.Mocked<StrategyCommandRepositoryPort> {
+    return {
+        createMarker: jest.fn(),
+        deleteMarker: jest.fn(),
+        updateMarkerPosition: jest.fn(),
     };
 }
