@@ -1,31 +1,25 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import {
     DeleteEnemyTeamRequestDto,
     DeleteEnemyTeamRequestSchema,
 } from '@/application/strategy/dto/enemy-team/delete-enemy-team.dto';
+import { DeleteEnemyTeamCommand } from '@domain/strategy/commands/enemy-team/delete-enemy-team.command';
 
 @injectable()
 export class DeleteEnemyTeamUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteEnemyTeamRequestDto) {
-        const { actorId, strategyId, enemyTeamId } =
+        const { strategyId, enemyTeamId } =
             DeleteEnemyTeamRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteEnemyTeamCommand.create(strategyId, enemyTeamId);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeEnemyTeam(actorId, enemyTeamId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepository.deleteEnemyTeam(command);
 
         return {
             enemyTeamId: enemyTeamId.toString(),
