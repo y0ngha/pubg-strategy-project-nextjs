@@ -1,49 +1,49 @@
 import { inject, injectable } from 'inversify';
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
 import {
-    GetFriendListRequestDto,
-    GetFriendListRequestSchema,
     GetFriendListResponseDto,
+    GetFriendResponseDto,
 } from '@/application/friend/dto/get-friend-list.dto';
-import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
+import { FriendStatusLabels } from '@domain/friend/enum/friend-status.enum';
+import { Friend } from '@domain/friend/models/friend.model';
 
 @injectable()
 export class GetFriendListUseCase {
     constructor(
-        @inject(FriendRepositoryPort)
-        private readonly friendRepository: FriendRepositoryPort,
-        @inject(FriendMapper)
-        private readonly friendMapper: FriendMapper
+        @inject(FriendQueryRepositoryPort)
+        private readonly friendRepository: FriendQueryRepositoryPort
     ) {}
 
-    async execute(
-        dto: GetFriendListRequestDto
-    ): Promise<GetFriendListResponseDto> {
-        const { userId } = GetFriendListRequestSchema.parse(dto);
-
+    async execute(): Promise<GetFriendListResponseDto> {
         const [friends, receivedFriendRequests, sentFriendRequests] =
             await Promise.all([
-                this.friendRepository.findAcceptedFriendsByUserId(userId),
-                this.friendRepository.findReceivedFriendRequestsByRecipientUserId(
-                    userId
-                ),
-                this.friendRepository.findSentFriendRequestsByRequesterUserId(
-                    userId
-                ),
+                this.friendRepository.findAcceptedFriendsByUserId(),
+                this.friendRepository.findReceivedFriendRequestsByRecipientUserId(),
+                this.friendRepository.findSentFriendRequestsByRequesterUserId(),
             ]);
 
         return {
-            friends: friends.map(friend =>
-                this.friendMapper.toResponse(friend)
-            ),
+            friends: friends.map(friend => this.modelToResponseDto(friend)),
             receivedFriendRequests: receivedFriendRequests.map(friend =>
-                this.friendMapper.toResponse(friend)
+                this.modelToResponseDto(friend)
             ),
             sentFriendRequests: sentFriendRequests.map(friend =>
-                this.friendMapper.toResponse(friend)
+                this.modelToResponseDto(friend)
             ),
             friendCount: friends.length,
             receivedFriendRequestCount: receivedFriendRequests.length,
+        };
+    }
+
+    private modelToResponseDto(friend: Friend): GetFriendResponseDto {
+        return {
+            id: friend.id,
+            requesterUserId: friend.requesterUserId,
+            recipientUserId: friend.recipientUserId,
+            status: friend.status,
+            statusLabel: FriendStatusLabels[friend.status],
+            requesterUserEmail: friend.requesterUserEmail,
+            recipientUserEmail: friend.recipientUserEmail,
         };
     }
 }
