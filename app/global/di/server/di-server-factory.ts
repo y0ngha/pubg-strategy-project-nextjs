@@ -19,8 +19,10 @@ import { LoginWithGoogleUseCase } from '@/application/user/use-cases/login-with-
 import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { FriendRepositoryAdapter } from '@infrastructure/friend/adapter/driven/friend-repository.adapter';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
+import {
+    FriendQueryRepositoryAdapter
+} from '@infrastructure/friend/adapter/repositories/friend-query-repository.adapter';
 import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
 import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/accept-received-friend.usecase';
 import { GetFriendListUseCase } from '@/application/friend/use-cases/get-friend-list.usecase';
@@ -71,6 +73,10 @@ import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-c
 import {
     UserCommandRepositoryAdapter
 } from '@infrastructure/user/adapter/repositories/user-command-repository.adapter';
+import {
+    FriendCommandRepositoryAdapter
+} from '@infrastructure/friend/adapter/repositories/friend-command-repository.adapter';
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
 
 /**
  * User
@@ -118,8 +124,12 @@ const userUseCases: ClassDependency[] = [
  */
 const friendRepositories: ClassDependency[] = [
     {
-        class: FriendRepositoryAdapter,
-        abstract: FriendRepositoryPort,
+        class: FriendQueryRepositoryAdapter,
+        abstract: FriendQueryRepositoryPort,
+    },
+    {
+        class: FriendCommandRepositoryAdapter,
+        abstract: FriendCommandRepositoryPort,
     },
 ];
 const friendUseCases: ClassDependency[] = [

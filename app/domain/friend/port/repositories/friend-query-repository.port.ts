@@ -1,12 +1,8 @@
-import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
+import { Friend } from '@domain/friend/models/friend.model';
 
-export abstract class FriendRepositoryPort {
-    abstract save(friend: Friend): Promise<void>;
-
-    abstract delete(id: FriendId): Promise<void>;
-
+export abstract class FriendQueryRepositoryPort {
     abstract existsFriendBetween(
         userId1: UserId,
         userId2: UserId

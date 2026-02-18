@@ -1,13 +1,9 @@
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 import { UserId } from '@domain/shared/value-objects/user-id';
-import { Friend } from '@domain/friend/entities/friend.entity';
+import { Friend } from '@domain/friend/models/friend.model';
 
-export class FriendRepositoryAdapter extends FriendRepositoryPort {
-    delete(id: FriendId): Promise<void> {
-        throw new Error('Not Implemented.');
-    }
-
+export class FriendQueryRepositoryAdapter extends FriendQueryRepositoryPort {
     existsFriendBetween(userId1: UserId, userId2: UserId): Promise<boolean> {
         throw new Error('Not Implemented.');
     }
@@ -27,10 +23,6 @@ export class FriendRepositoryAdapter extends FriendRepositoryPort {
     }
 
     findSentFriendRequestsByRequesterUserId(userId: UserId): Promise<Friend[]> {
-        throw new Error('Not Implemented.');
-    }
-
-    save(friend: Friend): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }
