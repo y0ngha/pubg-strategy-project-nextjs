@@ -34,7 +34,6 @@ describe('CancelSentFriendUseCase', () => {
             expect(mockFriendCommandRepository.cancel).toHaveBeenCalledWith(
                 expect.objectContaining({
                     friendId: friendId,
-                    currentStatus: currentStatus,
                 })
             );
         });

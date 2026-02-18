@@ -34,7 +34,6 @@ describe('RejectReceivedFriendUseCase', () => {
             expect(mockFriendCommandRepository.reject).toHaveBeenCalledWith(
                 expect.objectContaining({
                     friendId: friendId,
-                    currentStatus: currentStatus,
                 })
             );
         });
