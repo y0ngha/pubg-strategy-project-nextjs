@@ -1,133 +1,108 @@
 import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import {
-    StrategyEditPermissionDeniedException,
-    StrategyNotFoundException,
-    TeamPlayerNotFoundException,
-} from '@domain/strategy/exceptions/strategy.exceptions';
-import { Strategy } from '@domain/strategy/entities/strategy.entity';
-import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
-import { PubgMap } from '@domain/strategy/enums/map.enum';
-import { StrategyTitle } from '@domain/strategy/value-objects/strategy-title';
-import { getStrategyRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
-import { Email } from '@domain/shared/value-objects/email';
+import { getStrategyCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { Position } from '@domain/strategy/value-objects/position';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.exceptions';
+import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 
 describe('AddMarkerUseCase', () => {
     let useCase: AddMarkerUseCase;
-    let mockStrategyRepository: jest.Mocked<StrategyRepositoryPort>;
-    let strategyFixture: Strategy;
+    let mockStrategyCommandRepository: jest.Mocked<StrategyCommandRepositoryPort>;
 
-    const ownerId = UserId.generate();
-    const ownerEmail = Email.create('test@domain.com');
-
-    let strategyId: StrategyId;
-    let teamPlayerId: TeamPlayerId;
-    const positionX = 10;
-    const positionY = 200;
-    const position = { x: positionX, y: positionY };
-
-    const title = StrategyTitle.create('전략 제목');
-    const map = PubgMap.ERANGEL;
+    const strategyId = StrategyId.generate();
+    const teamPlayerId = TeamPlayerId.generate();
+    const position = Position.create(10, 10);
 
     beforeEach(() => {
-        mockStrategyRepository = getStrategyRepositoryMocking();
+        mockStrategyCommandRepository = getStrategyCommandRepositoryMocking();
 
-        useCase = new AddMarkerUseCase(mockStrategyRepository);
-
-        strategyFixture = Strategy.create(ownerId, ownerEmail, title, map);
-        strategyId = strategyFixture.id;
-
-        strategyFixture.addTeamPlayer(ownerId, Position.create(1, 1));
-
-        teamPlayerId = strategyFixture.teamPlayers[0].id;
+        useCase = new AddMarkerUseCase(mockStrategyCommandRepository);
     });
 
-    it('전략을 찾지 못하면, 에러를 던진다.', async () => {
-        // given
-        mockStrategyRepository.findById.mockResolvedValue(null);
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: teamPlayerId.toString(),
-            position: position,
-        };
+    describe('성공 테스트', () => {
+        it('Command를 생성하여 Repository에 전달한다.', async () => {
+            // given
+            const dto = {
+                strategyId: strategyId.toString(),
+                teamPlayerId: teamPlayerId.toString(),
+                position: {
+                    x: position.x,
+                    y: position.y,
+                },
+            };
 
-        // when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(
-            StrategyNotFoundException
-        );
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
+            mockStrategyCommandRepository.createMarker.mockResolvedValue({
+                id: MarkerId.generate().toString(),
+                position: dto.position,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+
+            // when
+            await useCase.execute(dto);
+
+            // then
+            expect(
+                mockStrategyCommandRepository.createMarker
+            ).toHaveBeenCalledTimes(1);
+            expect(
+                mockStrategyCommandRepository.createMarker
+            ).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    strategyId: strategyId,
+                    teamPlayerId: teamPlayerId,
+                    position: position,
+                })
+            );
+        });
     });
 
-    it('팀 플레이어를 찾지 못하면, 에러를 던진다.', async () => {
-        // given
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-        const randomId = TeamPlayerId.generate();
+    describe('실패 테스트', () => {
+        it('DTO 파싱과정에서 실패하면 에러가 발생하여 Repository에 전달하지도 않는다.', async () => {
+            // give
+            const dto = {
+                strategyId: 'asdf-1234',
+                teamPlayerId: teamPlayerId.toString(),
+                position: {
+                    x: position.x,
+                    y: position.y,
+                },
+            };
 
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: randomId.toString(),
-            position: position,
-        };
+            // when & then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(
+                InvalidEntityIdException
+            );
 
-        // when & then
-        await expect(() => useCase.execute(dto)).rejects.toThrow(
-            TeamPlayerNotFoundException
-        );
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-    });
-
-    it('마커가 없을 때 마커가 추가된다.', async () => {
-        // given
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
-
-        const dto = {
-            actorId: ownerId.toString(),
-            strategyId: strategyId.toString(),
-            teamPlayerId: teamPlayerId.toString(),
-            position: position,
-        };
-
-        // when
-        await useCase.execute(dto);
-
-        // then
-        expect(mockStrategyRepository.findById).toHaveBeenCalledTimes(1);
-        expect(mockStrategyRepository.save).toHaveBeenCalledTimes(1);
-
-        const teamPlayer = strategyFixture.teamPlayers.find(teamPlayer =>
-            teamPlayer.id.equals(teamPlayerId)
-        );
-
-        expect(teamPlayer?.marker).not.toBeNull();
-        expect(teamPlayer?.marker).not.toBeUndefined();
-        expect(teamPlayer?.marker?.position).toEqual(position);
+            expect(
+                mockStrategyCommandRepository.createMarker
+            ).toHaveBeenCalledTimes(0);
+        });
     });
 
     it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
-        // Given
-        jest.spyOn(strategyFixture, 'addTeamPlayerMarker').mockImplementation(
-            () => {
-                throw new StrategyEditPermissionDeniedException();
-            }
-        );
-
-        mockStrategyRepository.findById.mockResolvedValue(strategyFixture);
+        // given
+        jest.spyOn(
+            mockStrategyCommandRepository,
+            'createMarker'
+        ).mockImplementation(() => {
+            throw new Error();
+        });
 
         const dto = {
-            actorId: ownerId.toString(),
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
-            position: position,
+            position: {
+                x: position.x,
+                y: position.y,
+            },
         };
 
-        // When & Then
-        await expect(useCase.execute(dto)).rejects.toThrow(
-            StrategyEditPermissionDeniedException
+        // when & then
+        await expect(() => useCase.execute(dto)).rejects.toThrow(
+            InvalidEntityIdException
         );
     });
 });
