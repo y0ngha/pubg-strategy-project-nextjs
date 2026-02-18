@@ -63,7 +63,7 @@ describe('DeleteMarkerUseCase', () => {
             );
 
             expect(
-                mockStrategyCommandRepository.createMarker
+                mockStrategyCommandRepository.deleteMarker
             ).toHaveBeenCalledTimes(0);
         });
     });
