@@ -1,17 +1,15 @@
-import { UserId } from '@/domain/shared/value-objects/user-id';
 import { z } from 'zod';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 
 export interface CancelSentFriendRequestDto {
     id: string;
-    userId: string;
+    currentStatus: string;
 }
 
 export const CancelSentFriendRequestSchema = z.object({
     id: z.string().transform(value => {
         return FriendId.create(value);
     }),
-    userId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
+    currentStatus: z.enum(FriendStatus),
 });

@@ -1,17 +1,25 @@
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
 import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
 import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
 
-export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> {
+export function getFriendQueryRepositoryMocking(): jest.Mocked<FriendQueryRepositoryPort> {
     return {
-        save: jest.fn(),
-        delete: jest.fn(),
         existsFriendBetween: jest.fn(),
         findById: jest.fn(),
         findAcceptedFriendsByUserId: jest.fn(),
         findReceivedFriendRequestsByRecipientUserId: jest.fn(),
         findSentFriendRequestsByRequesterUserId: jest.fn(),
+    };
+}
+
+export function getFriendCommandRepositoryMocking(): jest.Mocked<FriendCommandRepositoryPort> {
+    return {
+        accept: jest.fn(),
+        reject: jest.fn(),
+        cancel: jest.fn(),
+        request: jest.fn(),
     };
 }
 

@@ -1,21 +1,11 @@
-import { UserId } from '@/domain/shared/value-objects/user-id';
-import { z } from 'zod';
-
-export interface GetFriendListRequestDto {
-    userId: string;
-}
-
-export const GetFriendListRequestSchema = z.object({
-    userId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
-});
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 
 export interface GetFriendResponseDto {
     id: string;
     requesterUserId: string;
     recipientUserId: string;
-    status: string;
+    status: FriendStatus;
+    statusLabel: string;
     requesterUserEmail: string;
     recipientUserEmail: string;
 }
