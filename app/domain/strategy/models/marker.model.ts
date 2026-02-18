@@ -1,10 +1,8 @@
-import { MarkerId } from '@domain/strategy/value-objects/marker-id';
-import { Position } from '@domain/strategy/value-objects/position';
+import { Position } from '@domain/strategy/models/position.model';
 
 export interface Marker {
-    readonly id: MarkerId;
+    readonly id: string;
     readonly position: Position;
-    readonly isDeleted: boolean;
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }
