@@ -54,9 +54,7 @@ describe('Get', () => {
                 1
             );
             expect(mockStrategyQueryRepository.findById).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    strategyId: strategyId,
-                })
+                strategyId
             );
         });
     });

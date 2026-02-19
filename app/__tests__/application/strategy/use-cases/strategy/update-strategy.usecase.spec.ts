@@ -37,8 +37,8 @@ describe('UpdateStrategyUseCase', () => {
                 mockStrategyCommandRepository.updateStrategyTitle
             ).toHaveBeenCalledWith(
                 expect.objectContaining({
+                    strategyId: strategyId,
                     title: title,
-                    map: strategyId,
                 })
             );
         });
