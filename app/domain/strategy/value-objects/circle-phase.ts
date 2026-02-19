@@ -1,39 +1,21 @@
 import { InvalidCirclePhaseException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { CircleColor } from '@domain/strategy/enums/circle-color.enum';
+import {
+    CIRCLE_COLOR_MAP,
+    CIRCLE_MAX_PHASE,
+    CIRCLE_MIN_PHASE,
+    CIRCLE_RADIUS_MAP,
+} from '@domain/strategy/constants/circle-phase.constants';
 
 export class CirclePhase {
-    private static readonly MAX_PHASE_NUMBER = 8;
-    private static readonly MIN_PHASE_NUMBER = 1;
-
-    private static readonly COLOR_MAP: Record<number, CircleColor> = {
-        1: CircleColor.PHASE_1,
-        2: CircleColor.PHASE_2,
-        3: CircleColor.PHASE_3,
-        4: CircleColor.PHASE_4,
-        5: CircleColor.PHASE_5,
-        6: CircleColor.PHASE_6,
-        7: CircleColor.PHASE_7,
-        8: CircleColor.PHASE_8,
-    };
-    private static readonly RADIUS_MAP: Record<number, number> = {
-        1: 1997.05,
-        2: 1198.25,
-        3: 659.05,
-        4: 362.45,
-        5: 181.25,
-        6: 90.6,
-        7: 45.3,
-        8: 22.6,
-    };
-
     constructor(public readonly value: number) {}
 
     get radius(): number {
-        return CirclePhase.RADIUS_MAP[this.value];
+        return CIRCLE_RADIUS_MAP[this.value];
     }
 
     get color(): CircleColor {
-        return CirclePhase.COLOR_MAP[this.value];
+        return CIRCLE_COLOR_MAP[this.value];
     }
 
     static create(value: number) {
@@ -47,11 +29,11 @@ export class CirclePhase {
     }
 
     private static ensureValidPhase(phase: number) {
-        if (phase > CirclePhase.MAX_PHASE_NUMBER) {
+        if (phase > CIRCLE_MAX_PHASE) {
             throw new InvalidCirclePhaseException();
         }
 
-        if (phase < CirclePhase.MIN_PHASE_NUMBER) {
+        if (phase < CIRCLE_MIN_PHASE) {
             throw new InvalidCirclePhaseException();
         }
     }
