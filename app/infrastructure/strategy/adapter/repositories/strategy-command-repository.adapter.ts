@@ -8,6 +8,10 @@ import { DeleteEnemyTeamCommand } from '@domain/strategy/commands/enemy-team/del
 import { EnemyTeam } from '@domain/strategy/models/enemy-team.model';
 import { UpdateEnemyTeamPositionCommand } from '@domain/strategy/commands/enemy-team/update-enemy-team-position.command';
 import { UpdateEnemyTeamLabelCommand } from '@domain/strategy/commands/enemy-team/update-enemy-team-label.command';
+import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-path/create-airplane-path.command';
+import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
+import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
+import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -37,6 +41,22 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     }
 
     updateEnemyTeamLabel(command: UpdateEnemyTeamLabelCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createAirplanePath(
+        command: CreateAirplanePathCommand
+    ): Promise<AirplanePath> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteAirplanePath(command: DeleteAirplanePathCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateAirplanePathPosition(
+        command: UpdateAirplanePathPositionCommand
+    ): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

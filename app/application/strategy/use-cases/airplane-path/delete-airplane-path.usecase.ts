@@ -1,32 +1,28 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import {
     DeleteAirplanePathRequestDto,
     DeleteAirplanePathRequestSchema,
 } from '@/application/strategy/dto/airplane-path/delete-airplane-path.dto';
+import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
 
 @injectable()
 export class DeleteAirplanePathUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteAirplanePathRequestDto) {
-        const { actorId, strategyId, airplanePathId } =
+        const { strategyId, airplanePathId } =
             DeleteAirplanePathRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteAirplanePathCommand.create(
+            strategyId,
+            airplanePathId
+        );
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeAirplanePath(actorId, airplanePathId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepository.deleteAirplanePath(command);
 
         return {
             airplanePathId: airplanePathId.toString(),

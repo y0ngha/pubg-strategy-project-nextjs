@@ -7,6 +7,10 @@ import { UpdateEnemyTeamPositionCommand } from '@domain/strategy/commands/enemy-
 import { DeleteEnemyTeamCommand } from '@domain/strategy/commands/enemy-team/delete-enemy-team.command';
 import { CreateEnemyTeamCommand } from '@domain/strategy/commands/enemy-team/create-enemy-team.command';
 import { EnemyTeam } from '@domain/strategy/models/enemy-team.model';
+import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
+import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-path/create-airplane-path.command';
+import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
+import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -29,5 +33,17 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateEnemyTeamLabel(
         command: UpdateEnemyTeamLabelCommand
+    ): Promise<void>;
+
+    abstract createAirplanePath(
+        command: CreateAirplanePathCommand
+    ): Promise<AirplanePath>;
+
+    abstract deleteAirplanePath(
+        command: DeleteAirplanePathCommand
+    ): Promise<void>;
+
+    abstract updateAirplanePathPosition(
+        command: UpdateAirplanePathPositionCommand
     ): Promise<void>;
 }

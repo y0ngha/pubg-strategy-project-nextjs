@@ -1,36 +1,30 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import {
     AddAirplanePathRequestDto,
     AddAirplanePathRequestSchema,
 } from '@/application/strategy/dto/airplane-path/add-airplane-path.dto';
+import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-path/create-airplane-path.command';
 
 @injectable()
 export class AddAirplanePathUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: AddAirplanePathRequestDto) {
-        const { actorId, strategyId, startPosition, endPosition } =
+        const { strategyId, startPosition, endPosition } =
             AddAirplanePathRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const airplanePath = strategy.addAirplanePath(
-            actorId,
+        const command = CreateAirplanePathCommand.create(
+            strategyId,
             startPosition,
             endPosition
         );
 
-        await this.strategyRepository.save(strategy);
+        const airplanePath =
+            await this.strategyCommandRepository.createAirplanePath(command);
 
         return {
             id: airplanePath.id.toString(),
