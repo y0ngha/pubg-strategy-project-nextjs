@@ -16,6 +16,7 @@ import { CreateChildCommentCommand } from '@domain/strategy/commands/comment/cre
 import { Comment } from '@domain/strategy/models/comment.model';
 import { UpdateCommentPositionCommand } from '@domain/strategy/commands/comment/update-comment-position.command';
 import { UpdateCommentContentCommand } from '@domain/strategy/commands/comment/update-comment-content.command';
+import { DeleteCommentCommand } from '@domain/strategy/commands/comment/delete-comment.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -60,9 +61,7 @@ export abstract class StrategyCommandRepositoryPort {
         command: CreateChildCommentCommand
     ): Promise<Comment>;
 
-    abstract deleteComment(
-        command: UpdateAirplanePathPositionCommand
-    ): Promise<void>;
+    abstract deleteComment(command: DeleteCommentCommand): Promise<void>;
 
     abstract updateCommentPosition(
         command: UpdateCommentPositionCommand
