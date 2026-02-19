@@ -1,31 +1,25 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     CreateTagRequestDto,
     CreateTagRequestSchema,
 } from '@/application/strategy/dto/tag/create-tag.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
 
 @injectable()
 export class CreateTagUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: CreateTagRequestDto) {
-        const { actorId, strategyId, content, position } =
+        const { strategyId, position, content } =
             CreateTagRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = CreateTagCommand.create(strategyId, position, content);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const tag = strategy.addTag(actorId, content, position);
-
-        await this.strategyRepository.save(strategy);
+        const tag = await this.strategyCommandRepositoryPort.createTag(command);
 
         return {
             id: tag.id.toString(),

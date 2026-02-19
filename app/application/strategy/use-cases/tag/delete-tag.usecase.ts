@@ -1,31 +1,24 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     DeleteTagRequestDto,
     DeleteTagRequestSchema,
 } from '@/application/strategy/dto/tag/delete-tag.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
 
 @injectable()
 export class DeleteTagUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteTagRequestDto) {
-        const { actorId, strategyId, tagId } =
-            DeleteTagRequestSchema.parse(dto);
+        const { strategyId, tagId } = DeleteTagRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteTagCommand.create(strategyId, tagId);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeTag(actorId, tagId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteTag(command);
 
         return {
             tagId: tagId.toString(),

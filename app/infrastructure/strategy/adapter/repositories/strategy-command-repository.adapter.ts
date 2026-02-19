@@ -27,6 +27,11 @@ import { Waypoint } from '@domain/strategy/models/waypoint.model';
 import { CreateWaypointCommand } from '@domain/strategy/commands/waypoint/create-waypoint.command';
 import { DeleteWaypointCommand } from '@domain/strategy/commands/waypoint/delete-waypoint.command';
 import { UpdateWaypointPositionsCommand } from '@domain/strategy/commands/waypoint/update-waypoint-positions.command';
+import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
+import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
+import { Tag } from '@domain/strategy/models/tag.model';
+import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
+import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -124,6 +129,22 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     updateWaypointPositions(
         command: UpdateWaypointPositionsCommand
     ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createTag(command: CreateTagCommand): Promise<Tag> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteTag(command: DeleteTagCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateTagContent(command: UpdateTagContentCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateTagPosition(command: UpdateTagPositionCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

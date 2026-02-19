@@ -1,21 +1,21 @@
 import { z } from 'zod';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
-import { TagContent } from '@domain/strategy/value-objects/tag-content';
-import { Position as PositionInterface } from '@/application/strategy/types/position';
+import { TagId } from '@domain/strategy/value-objects/tag-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
-export interface CreateTagRequestDto {
+export interface UpdateTagPositionRequestDto {
     strategyId: string;
-    content: string;
+    tagId: string;
     position: PositionInterface;
 }
 
-export const CreateTagRequestSchema = z.object({
+export const UpdateTagPositionRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    content: z.string().transform(value => {
-        return TagContent.create(value);
+    tagId: z.string().transform(value => {
+        return TagId.create(value);
     }),
     position: z
         .object({

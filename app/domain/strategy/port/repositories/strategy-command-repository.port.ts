@@ -26,6 +26,11 @@ import { CreateWaypointCommand } from '@domain/strategy/commands/waypoint/create
 import { Waypoint } from '@domain/strategy/models/waypoint.model';
 import { DeleteWaypointCommand } from '@domain/strategy/commands/waypoint/delete-waypoint.command';
 import { UpdateWaypointPositionsCommand } from '@domain/strategy/commands/waypoint/update-waypoint-positions.command';
+import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
+import { Tag } from '@domain/strategy/models/tag.model';
+import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
+import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
+import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -99,4 +104,14 @@ export abstract class StrategyCommandRepositoryPort {
     abstract updateWaypointPositions(
         command: UpdateWaypointPositionsCommand
     ): Promise<void>;
+
+    abstract createTag(command: CreateTagCommand): Promise<Tag>;
+
+    abstract deleteTag(command: DeleteTagCommand): Promise<void>;
+
+    abstract updateTagPosition(
+        command: UpdateTagPositionCommand
+    ): Promise<void>;
+
+    abstract updateTagContent(command: UpdateTagContentCommand): Promise<void>;
 }
