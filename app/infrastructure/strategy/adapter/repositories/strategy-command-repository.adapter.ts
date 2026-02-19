@@ -36,6 +36,10 @@ import { CreateTeamPlayerCommand } from '@domain/strategy/commands/team-player/c
 import { TeamPlayer } from '@domain/strategy/models/team-player.model';
 import { DeleteTeamPlayerCommand } from '@domain/strategy/commands/team-player/delete-team-player.command';
 import { UpdateTeamPlayerPositionCommand } from '@domain/strategy/commands/team-player/update-team-player-position.command';
+import { DeleteStrategyShareCommand } from '@domain/strategy/commands/strategy-share/delete-strategy-share.command';
+import { CreateStrategyShareCommand } from '@domain/strategy/commands/strategy-share/create-strategy-share.command';
+import { StrategyShare } from '@domain/strategy/models/strategy-share.model';
+import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/strategy-share/update-strategy-share-permission.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -162,6 +166,22 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
 
     updateTeamPlayerPosition(
         command: UpdateTeamPlayerPositionCommand
+    ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createStrategyShare(
+        command: CreateStrategyShareCommand
+    ): Promise<StrategyShare> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteStrategyShare(command: DeleteStrategyShareCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateStrategySharePermission(
+        command: UpdateStrategySharePermissionCommand
     ): Promise<void> {
         throw new Error('Not Implemented.');
     }
