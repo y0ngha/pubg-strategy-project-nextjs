@@ -1,31 +1,24 @@
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import { inject, injectable } from 'inversify';
 import {
     DeleteCircleRequestDto,
     DeleteCircleRequestSchema,
 } from '@/application/strategy/dto/circle/delete-circle.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
 
 @injectable()
 export class DeleteCircleUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteCircleRequestDto) {
-        const { actorId, strategyId, circleId } =
-            DeleteCircleRequestSchema.parse(dto);
+        const { strategyId, circleId } = DeleteCircleRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteCircleCommand.create(strategyId, circleId);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeCircle(actorId, circleId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteCircle(command);
 
         return {
             circleId: circleId.toString(),
