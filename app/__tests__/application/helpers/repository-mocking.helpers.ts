@@ -43,8 +43,8 @@ export function getUserCommandRepositoryMocking(): jest.Mocked<UserCommandReposi
 export function getStrategyQueryRepositoryMocking(): jest.Mocked<StrategyQueryRepositoryPort> {
     return {
         findById: jest.fn(),
-        findOwnedStrategiesByUserID: jest.fn(),
-        findSharedStrategiesByUserID: jest.fn(),
+        findOwnedStrategies: jest.fn(),
+        findSharedStrategies: jest.fn(),
     };
 }
 
