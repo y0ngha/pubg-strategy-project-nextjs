@@ -4,7 +4,6 @@ export interface Circle {
     readonly id: string;
     readonly centerPosition: Position;
     readonly phase: number;
-    readonly isDeleted: boolean;
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }
