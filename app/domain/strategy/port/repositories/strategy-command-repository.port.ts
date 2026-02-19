@@ -11,6 +11,11 @@ import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
 import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-path/create-airplane-path.command';
 import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
 import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
+import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
+import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-circle.command';
+import { Circle } from '@domain/strategy/models/circle.model';
+import { UpdateCirclePositionCommand } from '@domain/strategy/commands/circle/update-circle-position.command';
+import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -45,5 +50,17 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateAirplanePathPosition(
         command: UpdateAirplanePathPositionCommand
+    ): Promise<void>;
+
+    abstract createCircle(command: CreateCircleCommand): Promise<Circle>;
+
+    abstract deleteCircle(command: DeleteCircleCommand): Promise<void>;
+
+    abstract updateCirclePosition(
+        command: UpdateCirclePositionCommand
+    ): Promise<void>;
+
+    abstract updateCirclePhase(
+        command: UpdateCirclePhaseCommand
     ): Promise<void>;
 }
