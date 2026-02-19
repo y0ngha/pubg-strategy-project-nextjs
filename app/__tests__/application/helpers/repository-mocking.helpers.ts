@@ -75,5 +75,8 @@ export function getStrategyCommandRepositoryMocking(): jest.Mocked<StrategyComma
         updateTagContent: jest.fn(),
         createTag: jest.fn(),
         updateTagPosition: jest.fn(),
+        createTeamPlayer: jest.fn(),
+        deleteTeamPlayer: jest.fn(),
+        updateTeamPlayerPosition: jest.fn(),
     };
 }
