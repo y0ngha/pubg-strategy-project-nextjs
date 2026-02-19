@@ -32,6 +32,10 @@ import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.comma
 import { Tag } from '@domain/strategy/models/tag.model';
 import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
 import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
+import { CreateTeamPlayerCommand } from '@domain/strategy/commands/team-player/create-team-player.command';
+import { TeamPlayer } from '@domain/strategy/models/team-player.model';
+import { DeleteTeamPlayerCommand } from '@domain/strategy/commands/team-player/delete-team-player.command';
+import { UpdateTeamPlayerPositionCommand } from '@domain/strategy/commands/team-player/update-team-player-position.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -145,6 +149,20 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     }
 
     updateTagPosition(command: UpdateTagPositionCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createTeamPlayer(command: CreateTeamPlayerCommand): Promise<TeamPlayer> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteTeamPlayer(command: DeleteTeamPlayerCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateTeamPlayerPosition(
+        command: UpdateTeamPlayerPositionCommand
+    ): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

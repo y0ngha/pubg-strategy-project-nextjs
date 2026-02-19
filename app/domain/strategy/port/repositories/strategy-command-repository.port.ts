@@ -31,6 +31,10 @@ import { Tag } from '@domain/strategy/models/tag.model';
 import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
 import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
 import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
+import { CreateTeamPlayerCommand } from '@domain/strategy/commands/team-player/create-team-player.command';
+import { TeamPlayer } from '@domain/strategy/models/team-player.model';
+import { DeleteTeamPlayerCommand } from '@domain/strategy/commands/team-player/delete-team-player.command';
+import { UpdateTeamPlayerPositionCommand } from '@domain/strategy/commands/team-player/update-team-player-position.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -114,4 +118,14 @@ export abstract class StrategyCommandRepositoryPort {
     ): Promise<void>;
 
     abstract updateTagContent(command: UpdateTagContentCommand): Promise<void>;
+
+    abstract createTeamPlayer(
+        command: CreateTeamPlayerCommand
+    ): Promise<TeamPlayer>;
+
+    abstract deleteTeamPlayer(command: DeleteTeamPlayerCommand): Promise<void>;
+
+    abstract updateTeamPlayerPosition(
+        command: UpdateTeamPlayerPositionCommand
+    ): Promise<void>;
 }
