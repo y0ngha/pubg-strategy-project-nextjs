@@ -39,6 +39,10 @@ import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/
 import { DeleteStrategyShareCommand } from '@domain/strategy/commands/strategy-share/delete-strategy-share.command';
 import { CreateStrategyShareCommand } from '@domain/strategy/commands/strategy-share/create-strategy-share.command';
 import { StrategyShare } from '@domain/strategy/models/strategy-share.model';
+import { CreateStrategyCommand } from '@domain/strategy/commands/strategy/create-strategy.command';
+import { Strategy } from '@domain/strategy/models/strategy.model';
+import { DeleteStrategyCommand } from '@domain/strategy/commands/strategy/delete-strategy.command';
+import { UpdateStrategyTitleCommand } from '@domain/strategy/commands/strategy/update-strategy-title.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -143,5 +147,13 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateStrategySharePermission(
         command: UpdateStrategySharePermissionCommand
+    ): Promise<void>;
+
+    abstract createStrategy(command: CreateStrategyCommand): Promise<Strategy>;
+
+    abstract deleteStrategy(command: DeleteStrategyCommand): Promise<void>;
+
+    abstract updateStrategyTitle(
+        command: UpdateStrategyTitleCommand
     ): Promise<void>;
 }

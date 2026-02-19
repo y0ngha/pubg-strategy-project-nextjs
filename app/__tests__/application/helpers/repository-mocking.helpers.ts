@@ -82,5 +82,8 @@ export function getStrategyCommandRepositoryMocking(): jest.Mocked<StrategyComma
         createStrategyShare: jest.fn(),
         deleteStrategyShare: jest.fn(),
         updateStrategySharePermission: jest.fn(),
+        createStrategy: jest.fn(),
+        deleteStrategy: jest.fn(),
+        updateStrategyTitle: jest.fn(),
     };
 }
