@@ -37,10 +37,12 @@ import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airp
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
+import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
+import { CreateParentCommentUseCase } from '@/application/strategy/use-cases/comment/create-parent-comment.usecase';
 import { UpdateCirclePositionUseCase } from '@/application/strategy/use-cases/circle/update-circle-position.usecase';
 import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
-import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
+import { UpdateCommentPositionUseCase } from '@/application/strategy/use-cases/comment/update-comment-position.usecase';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
 import { DeleteEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/delete-enemy-team.usecase';
 import {
@@ -87,6 +89,8 @@ import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositorie
 import {
     UpdateEnemyTeamLabelUsecase
 } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
+import { CreateChildCommentUseCase } from '@/application/strategy/use-cases/comment/create-child-comment.usecase';
+import { UpdateCommentContentUseCase } from '@/application/strategy/use-cases/comment/update-comment-content.usecase';
 import { UpdateCirclePhaseUseCase } from '@/application/strategy/use-cases/circle/update-circle-phase.usecase';
 
 /**
@@ -173,8 +177,12 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateCirclePositionUseCase },
     { class: UpdateCirclePhaseUseCase },
     { class: CreateCommentUseCase },
+    { class: UpdateCircleUseCase },
+    { class: CreateParentCommentUseCase },
+    { class: CreateChildCommentUseCase },
     { class: DeleteCommentUseCase },
-    { class: UpdateCommentUseCase },
+    { class: UpdateCommentPositionUseCase },
+    { class: UpdateCommentContentUseCase },
     { class: AddEnemyTeamUseCase },
     { class: DeleteEnemyTeamUseCase },
     { class: UpdateEnemyTeamPositionUsecase },
