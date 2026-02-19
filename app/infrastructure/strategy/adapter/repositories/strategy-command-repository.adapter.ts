@@ -23,6 +23,11 @@ import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-cir
 import { Circle } from '@domain/strategy/models/circle.model';
 import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
 import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
+import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
+import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
+import { Tag } from '@domain/strategy/models/tag.model';
+import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
+import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -106,6 +111,22 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     updateCommentPosition(
         command: UpdateCommentPositionCommand
     ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createTag(command: CreateTagCommand): Promise<Tag> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteTag(command: DeleteTagCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateTagContent(command: UpdateTagContentCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateTagPosition(command: UpdateTagPositionCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

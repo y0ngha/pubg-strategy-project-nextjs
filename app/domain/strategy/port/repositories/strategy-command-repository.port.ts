@@ -22,6 +22,11 @@ import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-cir
 import { Circle } from '@domain/strategy/models/circle.model';
 import { UpdateCirclePositionCommand } from '@domain/strategy/commands/circle/update-circle-position.command';
 import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
+import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
+import { Tag } from '@domain/strategy/models/tag.model';
+import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
+import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
+import { UpdateTagContentCommand } from '@domain/strategy/commands/tag/update-tag-content.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -87,4 +92,14 @@ export abstract class StrategyCommandRepositoryPort {
     abstract updateCirclePhase(
         command: UpdateCirclePhaseCommand
     ): Promise<void>;
+
+    abstract createTag(command: CreateTagCommand): Promise<Tag>;
+
+    abstract deleteTag(command: DeleteTagCommand): Promise<void>;
+
+    abstract updateTagPosition(
+        command: UpdateTagPositionCommand
+    ): Promise<void>;
+
+    abstract updateTagContent(command: UpdateTagContentCommand): Promise<void>;
 }
