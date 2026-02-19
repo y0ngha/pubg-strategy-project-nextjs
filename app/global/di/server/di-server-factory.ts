@@ -37,10 +37,8 @@ import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airp
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
-import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
 import { CreateParentCommentUseCase } from '@/application/strategy/use-cases/comment/create-parent-comment.usecase';
 import { UpdateCirclePositionUseCase } from '@/application/strategy/use-cases/circle/update-circle-position.usecase';
-import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
 import { UpdateCommentPositionUseCase } from '@/application/strategy/use-cases/comment/update-comment-position.usecase';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
@@ -58,7 +56,7 @@ import {
 } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
-import { UpdateTagUseCase } from '@/application/strategy/use-cases/tag/update-tag.usecase';
+import { UpdateTagPositionUseCase } from '@/application/strategy/use-cases/tag/update-tag-position.usecase';
 import { AddTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/add-team-player.usecase';
 import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/delete-team-player.usecase';
 import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/move-team-player.usecase';
@@ -92,6 +90,7 @@ import {
 import { CreateChildCommentUseCase } from '@/application/strategy/use-cases/comment/create-child-comment.usecase';
 import { UpdateCommentContentUseCase } from '@/application/strategy/use-cases/comment/update-comment-content.usecase';
 import { UpdateCirclePhaseUseCase } from '@/application/strategy/use-cases/circle/update-circle-phase.usecase';
+import { UpdateTagContentUseCase } from '@/application/strategy/use-cases/tag/update-tag-content.usecase';
 
 /**
  * User
@@ -176,8 +175,6 @@ const strategyUseCases: ClassDependency[] = [
     { class: DeleteCircleUseCase },
     { class: UpdateCirclePositionUseCase },
     { class: UpdateCirclePhaseUseCase },
-    { class: CreateCommentUseCase },
-    { class: UpdateCircleUseCase },
     { class: CreateParentCommentUseCase },
     { class: CreateChildCommentUseCase },
     { class: DeleteCommentUseCase },
@@ -195,7 +192,8 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateStrategySharePermissionUseCase },
     { class: CreateTagUseCase },
     { class: DeleteTagUseCase },
-    { class: UpdateTagUseCase },
+    { class: UpdateTagPositionUseCase },
+    { class: UpdateTagContentUseCase },
     { class: AddTeamPlayerUseCase },
     { class: DeleteTeamPlayerUseCase },
     { class: MoveTeamPlayerUseCase },
