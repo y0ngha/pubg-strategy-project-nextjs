@@ -10,4 +10,5 @@ export interface Comment {
     readonly createdAt: Date;
     readonly updatedAt: Date;
     readonly isAuthor: boolean;
+    readonly isParent: boolean;
 }

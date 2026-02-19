@@ -46,6 +46,7 @@ describe('CreateParentCommentUseCase', () => {
                     authorEmail: Email.create('test@domain.com').toString(),
                     parentCommentId: null,
                     isAuthor: true,
+                    isParent: true,
                 }
             );
 

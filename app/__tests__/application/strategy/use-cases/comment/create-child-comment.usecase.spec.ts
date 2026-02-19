@@ -41,6 +41,7 @@ describe('CreateChildCommentUseCase', () => {
                 authorEmail: Email.create('test@domain.com').toString(),
                 parentCommentId: dto.parentCommentId,
                 isAuthor: true,
+                isParent: false,
             });
 
             // when
