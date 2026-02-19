@@ -12,6 +12,11 @@ import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-pa
 import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
 import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
 import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
+import { UpdateCirclePositionCommand } from '@domain/strategy/commands/circle/update-circle-position.command';
+import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-circle.command';
+import { Circle } from '@domain/strategy/models/circle.model';
+import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
+import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -57,6 +62,22 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     updateAirplanePathPosition(
         command: UpdateAirplanePathPositionCommand
     ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createCircle(command: CreateCircleCommand): Promise<Circle> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteCircle(command: DeleteCircleCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateCirclePhase(command: UpdateCirclePhaseCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateCirclePosition(command: UpdateCirclePositionCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

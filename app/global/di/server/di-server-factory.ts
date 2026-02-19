@@ -37,7 +37,7 @@ import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airp
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
 import { CreateCircleUseCase } from '@/application/strategy/use-cases/circle/create-circle.usecase';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
-import { UpdateCircleUseCase } from '@/application/strategy/use-cases/circle/update-circle.usecase';
+import { UpdateCirclePositionUseCase } from '@/application/strategy/use-cases/circle/update-circle-position.usecase';
 import { CreateCommentUseCase } from '@/application/strategy/use-cases/comment/create-comment.usecase';
 import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
 import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
@@ -87,6 +87,7 @@ import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositorie
 import {
     UpdateEnemyTeamLabelUsecase
 } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
+import { UpdateCirclePhaseUseCase } from '@/application/strategy/use-cases/circle/update-circle-phase.usecase';
 
 /**
  * User
@@ -169,7 +170,8 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateAirplanePathUseCase },
     { class: CreateCircleUseCase },
     { class: DeleteCircleUseCase },
-    { class: UpdateCircleUseCase },
+    { class: UpdateCirclePositionUseCase },
+    { class: UpdateCirclePhaseUseCase },
     { class: CreateCommentUseCase },
     { class: DeleteCommentUseCase },
     { class: UpdateCommentUseCase },
