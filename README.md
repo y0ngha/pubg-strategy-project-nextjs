@@ -78,9 +78,9 @@
 > 문서
 > [Domain Design](docs/Domain_Design.md)
 
-# 폴더 구조(2026-02-03)
+# 폴더 구조(2026-02-19)
 
-> [Folder Structure](docs/Folder_Structure_20260111.md)
+> [Folder Structure](docs/Folder_Structure_20260219.md)
 
 # 테스트 커버리지 (2026-02-19)
 
