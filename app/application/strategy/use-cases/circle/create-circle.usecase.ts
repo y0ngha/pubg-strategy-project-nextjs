@@ -1,31 +1,30 @@
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import { inject, injectable } from 'inversify';
 import {
     CreateCircleRequestDto,
     CreateCircleRequestSchema,
 } from '@/application/strategy/dto/circle/create-circle.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-circle.command';
+import {
+    CIRCLE_COLOR_MAP,
+    CIRCLE_RADIUS_MAP,
+} from '@domain/strategy/constants/circle-phase.constants';
 
 @injectable()
 export class CreateCircleUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: CreateCircleRequestDto) {
-        const { actorId, strategyId, phase, position } =
+        const { strategyId, phase, position } =
             CreateCircleRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = CreateCircleCommand.create(strategyId, phase, position);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const circle = strategy.addCircle(actorId, phase, position);
-
-        await this.strategyRepository.save(strategy);
+        const circle =
+            await this.strategyCommandRepository.createCircle(command);
 
         return {
             id: circle.id.toString(),
@@ -33,9 +32,9 @@ export class CreateCircleUseCase {
                 x: circle.centerPosition.x,
                 y: circle.centerPosition.y,
             },
-            phase: circle.phase.toNumber(),
-            radius: circle.phase.radius,
-            color: circle.phase.color,
+            phase: circle.phase,
+            radius: CIRCLE_RADIUS_MAP[circle.phase],
+            color: CIRCLE_COLOR_MAP[circle.phase],
         };
     }
 }
