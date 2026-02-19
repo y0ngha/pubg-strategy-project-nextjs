@@ -3,6 +3,7 @@ import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { Position as PositionInterface } from '@/application/strategy/types/position';
+import { WaypointPositions } from '@domain/strategy/value-objects/waypoint-positions';
 
 export interface AddWaypointRequestDto {
     strategyId: string;
@@ -19,12 +20,16 @@ export const AddWaypointRequestSchema = z.object({
     }),
     positions: z
         .array(
-            z.object({
-                x: z.number(),
-                y: z.number(),
-            })
+            z
+                .object({
+                    x: z.number(),
+                    y: z.number(),
+                })
+                .transform(({ x, y }) => {
+                    return Position.create(x, y);
+                })
         )
         .transform(values => {
-            return values.map(({ x, y }) => Position.create(x, y));
+            return WaypointPositions.create(values);
         }),
 });

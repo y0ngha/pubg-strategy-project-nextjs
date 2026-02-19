@@ -30,7 +30,7 @@ export class UpdateWaypointPositionsUseCase {
 
         return {
             teamPlayerId: teamPlayerId.toString(),
-            positions: positions.map(position => {
+            positions: positions.values.map(position => {
                 return {
                     x: position.x,
                     y: position.y,

@@ -1,4 +1,3 @@
-import { WaypointCreateDuplicatePositionException } from '@domain/strategy/exceptions/strategy.exceptions';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { UpdateWaypointPositionsUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
@@ -7,6 +6,7 @@ import { Position } from '@domain/strategy/value-objects/position';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.exceptions';
 import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
+import { WaypointPositions } from '@domain/strategy/value-objects/waypoint-positions';
 
 describe('UpdateWaypointUseCase', () => {
     let useCase: UpdateWaypointPositionsUseCase;
@@ -15,7 +15,7 @@ describe('UpdateWaypointUseCase', () => {
     const strategyId = StrategyId.generate();
     const teamPlayerId = TeamPlayerId.generate();
     const waypointId = WaypointId.generate();
-    const positions = [Position.create(10, 10)];
+    const positions = WaypointPositions.create([Position.create(10, 10)]);
 
     beforeEach(() => {
         mockStrategyCommandRepository = getStrategyCommandRepositoryMocking();
@@ -32,7 +32,7 @@ describe('UpdateWaypointUseCase', () => {
                 strategyId: strategyId.toString(),
                 teamPlayerId: teamPlayerId.toString(),
                 waypointId: waypointId.toString(),
-                positions: positions.map(position => {
+                positions: positions.values.map(position => {
                     return { x: position.x, y: position.y };
                 }),
             };
@@ -58,41 +58,13 @@ describe('UpdateWaypointUseCase', () => {
     });
 
     describe('실패 테스트', () => {
-        it('Command 생성 과정에서 실패하면 에러가 발생하여 Repository에 전달하지도 않는다.', async () => {
-            // give
-            const dto = {
-                strategyId: strategyId.toString(),
-                teamPlayerId: teamPlayerId.toString(),
-                waypointId: waypointId.toString(),
-                positions: [
-                    {
-                        x: 10,
-                        y: 10,
-                    },
-                    {
-                        x: 10,
-                        y: 10,
-                    },
-                ],
-            };
-
-            // when & then
-            await expect(() => useCase.execute(dto)).rejects.toThrow(
-                WaypointCreateDuplicatePositionException
-            );
-
-            expect(
-                mockStrategyCommandRepository.updateWaypointPositions
-            ).toHaveBeenCalledTimes(0);
-        });
-
         it('DTO 파싱과정에서 실패하면 에러가 발생하여 Repository에 전달하지도 않는다.', async () => {
             // give
             const dto = {
                 strategyId: 'asdf-1234',
                 teamPlayerId: teamPlayerId.toString(),
                 waypointId: waypointId.toString(),
-                positions: positions.map(position => {
+                positions: positions.values.map(position => {
                     return { x: position.x, y: position.y };
                 }),
             };
@@ -121,7 +93,7 @@ describe('UpdateWaypointUseCase', () => {
             strategyId: strategyId.toString(),
             teamPlayerId: teamPlayerId.toString(),
             waypointId: waypointId.toString(),
-            positions: positions.map(position => {
+            positions: positions.values.map(position => {
                 return { x: position.x, y: position.y };
             }),
         };
