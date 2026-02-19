@@ -23,7 +23,7 @@ export class AddTeamPlayerUseCase {
             await this.strategyCommandRepositoryPort.createTeamPlayer(command);
 
         return {
-            id: teamPlayer.id.toString(),
+            id: teamPlayer.id,
             color: TEAM_PLAYER_COLOR_MAP[teamPlayer.priority],
             priority: teamPlayer.priority,
             position: {
