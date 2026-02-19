@@ -4,6 +4,7 @@ import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { jest } from '@jest/globals';
 
 export function getFriendQueryRepositoryMocking(): jest.Mocked<FriendQueryRepositoryPort> {
     return {
@@ -78,5 +79,8 @@ export function getStrategyCommandRepositoryMocking(): jest.Mocked<StrategyComma
         createTeamPlayer: jest.fn(),
         deleteTeamPlayer: jest.fn(),
         updateTeamPlayerPosition: jest.fn(),
+        createStrategyShare: jest.fn(),
+        deleteStrategyShare: jest.fn(),
+        updateStrategySharePermission: jest.fn(),
     };
 }

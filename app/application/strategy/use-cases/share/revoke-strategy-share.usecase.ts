@@ -1,36 +1,28 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     RevokeStrategyShareRequestDto,
     RevokeStrategyShareRequestSchema,
 } from '@/application/strategy/dto/share/revoke-strategy-share.dto';
-import { StrategySharePermission } from '@domain/strategy/enums/strategy-share-permission.enum';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteStrategyShareCommand } from '@domain/strategy/commands/strategy-share/delete-strategy-share.command';
 
 @injectable()
 export class RevokeStrategyShareUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: RevokeStrategyShareRequestDto): Promise<boolean> {
-        const { actorId, strategyId, strategyShareId } =
+        const { strategyId, strategyShareId } =
             RevokeStrategyShareRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.updateStrategySharePermission(
-            actorId,
-            strategyShareId,
-            StrategySharePermission.ACCESS_DENIED
+        const command = DeleteStrategyShareCommand.create(
+            strategyId,
+            strategyShareId
         );
 
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteStrategyShare(command);
 
         return true;
     }

@@ -35,6 +35,10 @@ import { CreateTeamPlayerCommand } from '@domain/strategy/commands/team-player/c
 import { TeamPlayer } from '@domain/strategy/models/team-player.model';
 import { DeleteTeamPlayerCommand } from '@domain/strategy/commands/team-player/delete-team-player.command';
 import { UpdateTeamPlayerPositionCommand } from '@domain/strategy/commands/team-player/update-team-player-position.command';
+import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/strategy-share/update-strategy-share-permission.command';
+import { DeleteStrategyShareCommand } from '@domain/strategy/commands/strategy-share/delete-strategy-share.command';
+import { CreateStrategyShareCommand } from '@domain/strategy/commands/strategy-share/create-strategy-share.command';
+import { StrategyShare } from '@domain/strategy/models/strategy-share.model';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -127,5 +131,17 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateTeamPlayerPosition(
         command: UpdateTeamPlayerPositionCommand
+    ): Promise<void>;
+
+    abstract createStrategyShare(
+        command: CreateStrategyShareCommand
+    ): Promise<StrategyShare>;
+
+    abstract deleteStrategyShare(
+        command: DeleteStrategyShareCommand
+    ): Promise<void>;
+
+    abstract updateStrategySharePermission(
+        command: UpdateStrategySharePermissionCommand
     ): Promise<void>;
 }
