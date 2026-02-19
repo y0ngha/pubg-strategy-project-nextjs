@@ -27,7 +27,7 @@ export class AddWaypointUseCase {
             await this.strategyCommandRepository.createWaypoint(command);
 
         return {
-            id: waypoint.id.toString(),
+            id: waypoint.id,
             teamPlayerId: teamPlayerId.toString(),
             positions: waypoint.positions.map(position => {
                 return {
