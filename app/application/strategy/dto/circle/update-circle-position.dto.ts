@@ -1,23 +1,23 @@
 import { z } from 'zod';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
-import { CirclePhase } from '@domain/strategy/value-objects/circle-phase';
-import { Position as PositionInterface } from '@/application/strategy/types/position';
+import { CircleId } from '@domain/strategy/value-objects/circle-id';
 import { Position } from '@domain/strategy/value-objects/position';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
-export interface CreateCircleRequestDto {
+export interface UpdateCirclePositionRequestDto {
     strategyId: string;
-    phase: number;
-    position: PositionInterface;
+    circleId: string;
+    centerPosition: PositionInterface;
 }
 
-export const CreateCircleRequestSchema = z.object({
+export const UpdateCirclePositionRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    phase: z.number().transform(value => {
-        return CirclePhase.create(value);
+    circleId: z.string().transform(value => {
+        return CircleId.create(value);
     }),
-    position: z
+    centerPosition: z
         .object({
             x: z.number(),
             y: z.number(),

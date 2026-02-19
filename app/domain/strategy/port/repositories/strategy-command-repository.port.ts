@@ -17,6 +17,11 @@ import { Comment } from '@domain/strategy/models/comment.model';
 import { UpdateCommentPositionCommand } from '@domain/strategy/commands/comment/update-comment-position.command';
 import { UpdateCommentContentCommand } from '@domain/strategy/commands/comment/update-comment-content.command';
 import { DeleteCommentCommand } from '@domain/strategy/commands/comment/delete-comment.command';
+import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
+import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-circle.command';
+import { Circle } from '@domain/strategy/models/circle.model';
+import { UpdateCirclePositionCommand } from '@domain/strategy/commands/circle/update-circle-position.command';
+import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -69,5 +74,17 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateCommentContent(
         command: UpdateCommentContentCommand
+    ): Promise<void>;
+
+    abstract createCircle(command: CreateCircleCommand): Promise<Circle>;
+
+    abstract deleteCircle(command: DeleteCircleCommand): Promise<void>;
+
+    abstract updateCirclePosition(
+        command: UpdateCirclePositionCommand
+    ): Promise<void>;
+
+    abstract updateCirclePhase(
+        command: UpdateCirclePhaseCommand
     ): Promise<void>;
 }
