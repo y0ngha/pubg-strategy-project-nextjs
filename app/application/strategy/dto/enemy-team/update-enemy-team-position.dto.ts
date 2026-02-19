@@ -1,21 +1,21 @@
 import { z } from 'zod';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
-import { TeamLabel } from '@domain/strategy/value-objects/team-label';
-import { Position as PositionInterface } from '@/application/strategy/types/position';
 import { Position } from '@domain/strategy/value-objects/position';
+import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
+import { Position as PositionInterface } from '@/application/strategy/types/position';
 
-export interface AddEnemyTeamRequestDto {
+export interface UpdateEnemyTeamPositionRequestDto {
     strategyId: string;
-    teamLabel: string;
+    enemyTeamId: string;
     position: PositionInterface;
 }
 
-export const AddEnemyTeamRequestSchema = z.object({
+export const UpdateEnemyTeamPositionRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
-    teamLabel: z.string().transform(value => {
-        return TeamLabel.create(value);
+    enemyTeamId: z.string().transform(value => {
+        return EnemyTeamId.create(value);
     }),
     position: z
         .object({

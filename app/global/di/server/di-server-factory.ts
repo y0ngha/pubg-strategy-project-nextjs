@@ -43,7 +43,9 @@ import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/d
 import { UpdateCommentUseCase } from '@/application/strategy/use-cases/comment/update-comment.usecase';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
 import { DeleteEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/delete-enemy-team.usecase';
-import { UpdateEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team.usecase';
+import {
+    UpdateEnemyTeamPositionUsecase
+} from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
 import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/delete-marker.usecase';
 import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
@@ -82,6 +84,9 @@ import {
     StrategyCommandRepositoryAdapter
 } from '@infrastructure/strategy/adapter/repositories/strategy-command-repository.adapter';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import {
+    UpdateEnemyTeamLabelUsecase
+} from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
 
 /**
  * User
@@ -170,7 +175,8 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateCommentUseCase },
     { class: AddEnemyTeamUseCase },
     { class: DeleteEnemyTeamUseCase },
-    { class: UpdateEnemyTeamUseCase },
+    { class: UpdateEnemyTeamPositionUsecase },
+    { class: UpdateEnemyTeamLabelUsecase },
     { class: AddMarkerUseCase },
     { class: DeleteMarkerUseCase },
     { class: UpdateMarkerUseCase },

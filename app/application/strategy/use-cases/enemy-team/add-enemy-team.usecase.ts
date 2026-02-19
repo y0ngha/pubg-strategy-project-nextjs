@@ -1,31 +1,30 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     AddEnemyTeamRequestDto,
     AddEnemyTeamRequestSchema,
 } from '@/application/strategy/dto/enemy-team/add-enemy-team.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateEnemyTeamCommand } from '@domain/strategy/commands/enemy-team/create-enemy-team.command';
 
 @injectable()
 export class AddEnemyTeamUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: AddEnemyTeamRequestDto) {
-        const { actorId, strategyId, teamLabel, position } =
+        const { strategyId, teamLabel, position } =
             AddEnemyTeamRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = CreateEnemyTeamCommand.create(
+            strategyId,
+            teamLabel,
+            position
+        );
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const enemyTeam = strategy.addEnemyTeam(actorId, teamLabel, position);
-
-        await this.strategyRepository.save(strategy);
+        const enemyTeam =
+            await this.strategyCommandRepository.createEnemyTeam(command);
 
         return {
             id: enemyTeam.id.toString(),
