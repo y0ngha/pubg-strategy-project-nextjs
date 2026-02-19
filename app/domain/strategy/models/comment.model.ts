@@ -9,4 +9,5 @@ export interface Comment {
     readonly parentCommentId: string | null;
     readonly createdAt: Date;
     readonly updatedAt: Date;
+    readonly isAuthor: boolean;
 }
