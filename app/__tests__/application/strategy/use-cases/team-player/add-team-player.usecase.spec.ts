@@ -3,8 +3,8 @@ import { AddTeamPlayerUseCase } from '@/application/strategy/use-cases/team-play
 import { getStrategyCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import { Position } from '@domain/strategy/value-objects/position';
-import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.exceptions';
+import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 
 describe('AddTeamPlayerUseCase', () => {
     let useCase: AddTeamPlayerUseCase;
@@ -31,7 +31,7 @@ describe('AddTeamPlayerUseCase', () => {
             };
 
             mockStrategyCommandRepository.createTeamPlayer.mockResolvedValue({
-                id: MarkerId.generate().toString(),
+                id: TeamPlayerId.generate().toString(),
                 priority: 1,
                 marker: null,
                 waypoint: null,
