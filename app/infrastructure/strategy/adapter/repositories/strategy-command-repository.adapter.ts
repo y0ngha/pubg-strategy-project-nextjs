@@ -23,6 +23,10 @@ import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-cir
 import { Circle } from '@domain/strategy/models/circle.model';
 import { DeleteCircleCommand } from '@domain/strategy/commands/circle/delete-circle.command';
 import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
+import { Waypoint } from '@domain/strategy/models/waypoint.model';
+import { CreateWaypointCommand } from '@domain/strategy/commands/waypoint/create-waypoint.command';
+import { DeleteWaypointCommand } from '@domain/strategy/commands/waypoint/delete-waypoint.command';
+import { UpdateWaypointPositionsCommand } from '@domain/strategy/commands/waypoint/update-waypoint-positions.command';
 import { UpdateTagPositionCommand } from '@domain/strategy/commands/tag/update-tag-position.command';
 import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
 import { Tag } from '@domain/strategy/models/tag.model';
@@ -110,6 +114,20 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
 
     updateCommentPosition(
         command: UpdateCommentPositionCommand
+    ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createWaypoint(command: CreateWaypointCommand): Promise<Waypoint> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteWaypoint(command: DeleteWaypointCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateWaypointPositions(
+        command: UpdateWaypointPositionsCommand
     ): Promise<void> {
         throw new Error('Not Implemented.');
     }

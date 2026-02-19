@@ -22,6 +22,10 @@ import { CreateCircleCommand } from '@domain/strategy/commands/circle/create-cir
 import { Circle } from '@domain/strategy/models/circle.model';
 import { UpdateCirclePositionCommand } from '@domain/strategy/commands/circle/update-circle-position.command';
 import { UpdateCirclePhaseCommand } from '@domain/strategy/commands/circle/update-circle-phase.command';
+import { CreateWaypointCommand } from '@domain/strategy/commands/waypoint/create-waypoint.command';
+import { Waypoint } from '@domain/strategy/models/waypoint.model';
+import { DeleteWaypointCommand } from '@domain/strategy/commands/waypoint/delete-waypoint.command';
+import { UpdateWaypointPositionsCommand } from '@domain/strategy/commands/waypoint/update-waypoint-positions.command';
 import { CreateTagCommand } from '@domain/strategy/commands/tag/create-tag.command';
 import { Tag } from '@domain/strategy/models/tag.model';
 import { DeleteTagCommand } from '@domain/strategy/commands/tag/delete-tag.command';
@@ -91,6 +95,14 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateCirclePhase(
         command: UpdateCirclePhaseCommand
+    ): Promise<void>;
+
+    abstract createWaypoint(command: CreateWaypointCommand): Promise<Waypoint>;
+
+    abstract deleteWaypoint(command: DeleteWaypointCommand): Promise<void>;
+
+    abstract updateWaypointPositions(
+        command: UpdateWaypointPositionsCommand
     ): Promise<void>;
 
     abstract createTag(command: CreateTagCommand): Promise<Tag>;

@@ -1,23 +1,19 @@
 import { z } from 'zod';
-import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@domain/strategy/value-objects/position';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { Position as PositionInterface } from '@/application/strategy/types/position';
 import { WaypointId } from '@domain/strategy/value-objects/waypoint-id';
+import { WaypointPositions } from '@domain/strategy/value-objects/waypoint-positions';
 
-export interface UpdateWaypointRequestDto {
-    actorId: string;
+export interface UpdateWaypointPositionsRequestDto {
     strategyId: string;
     teamPlayerId: string;
     waypointId: string;
     positions: PositionInterface[];
 }
 
-export const UpdateWaypointRequestSchema = z.object({
-    actorId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
+export const UpdateWaypointPositionsRequestSchema = z.object({
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
@@ -29,12 +25,16 @@ export const UpdateWaypointRequestSchema = z.object({
     }),
     positions: z
         .array(
-            z.object({
-                x: z.number(),
-                y: z.number(),
-            })
+            z
+                .object({
+                    x: z.number(),
+                    y: z.number(),
+                })
+                .transform(({ x, y }) => {
+                    return Position.create(x, y);
+                })
         )
         .transform(values => {
-            return values.map(({ x, y }) => Position.create(x, y));
+            return WaypointPositions.create(values);
         }),
 });

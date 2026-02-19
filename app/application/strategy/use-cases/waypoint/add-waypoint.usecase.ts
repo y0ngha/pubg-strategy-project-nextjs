@@ -1,38 +1,33 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     AddWaypointRequestDto,
     AddWaypointRequestSchema,
 } from '@/application/strategy/dto/waypoint/add-waypoint.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateWaypointCommand } from '@domain/strategy/commands/waypoint/create-waypoint.command';
 
 @injectable()
 export class AddWaypointUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: AddWaypointRequestDto) {
-        const { actorId, strategyId, teamPlayerId, positions } =
+        const { strategyId, teamPlayerId, positions } =
             AddWaypointRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const waypoint = strategy.addTeamPlayerWaypoint(
-            actorId,
+        const command = CreateWaypointCommand.create(
+            strategyId,
             teamPlayerId,
             positions
         );
 
-        await this.strategyRepository.save(strategy);
+        const waypoint =
+            await this.strategyCommandRepository.createWaypoint(command);
 
         return {
-            id: waypoint.id.toString(),
+            id: waypoint.id,
             teamPlayerId: teamPlayerId.toString(),
             positions: waypoint.positions.map(position => {
                 return {

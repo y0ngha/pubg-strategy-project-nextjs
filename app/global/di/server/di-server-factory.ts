@@ -62,7 +62,9 @@ import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-p
 import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/move-team-player.usecase';
 import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/add-waypoint.usecase';
 import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
-import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
+import {
+    UpdateWaypointPositionsUseCase
+} from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
 import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
@@ -199,7 +201,7 @@ const strategyUseCases: ClassDependency[] = [
     { class: MoveTeamPlayerUseCase },
     { class: AddWaypointUseCase },
     { class: DeleteWaypointUseCase },
-    { class: UpdateWaypointUseCase },
+    { class: UpdateWaypointPositionsUseCase },
     { class: GetOwnedStrategiesUseCase },
     { class: GetSharedStrategiesUseCase },
     { class: CreateStrategyUseCase },

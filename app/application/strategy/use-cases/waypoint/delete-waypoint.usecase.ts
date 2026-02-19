@@ -1,31 +1,29 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     DeleteWaypointRequestDto,
     DeleteWaypointRequestSchema,
 } from '@/application/strategy/dto/waypoint/delete-waypoint.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteWaypointCommand } from '@domain/strategy/commands/waypoint/delete-waypoint.command';
 
 @injectable()
 export class DeleteWaypointUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteWaypointRequestDto) {
-        const { actorId, strategyId, teamPlayerId, waypointId } =
+        const { strategyId, teamPlayerId, waypointId } =
             DeleteWaypointRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteWaypointCommand.create(
+            strategyId,
+            teamPlayerId,
+            waypointId
+        );
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeTeamPlayerWaypoint(actorId, teamPlayerId, waypointId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteWaypoint(command);
 
         return {
             teamPlayerId: teamPlayerId.toString(),
