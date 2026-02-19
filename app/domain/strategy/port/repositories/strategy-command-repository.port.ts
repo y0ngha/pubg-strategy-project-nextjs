@@ -11,6 +11,11 @@ import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
 import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-path/create-airplane-path.command';
 import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
 import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
+import { CreateParentCommentCommand } from '@domain/strategy/commands/comment/create-parent-comment.command';
+import { CreateChildCommentCommand } from '@domain/strategy/commands/comment/create-child-comment.command';
+import { Comment } from '@domain/strategy/models/comment.model';
+import { UpdateCommentPositionCommand } from '@domain/strategy/commands/comment/update-comment-position.command';
+import { UpdateCommentContentCommand } from '@domain/strategy/commands/comment/update-comment-content.command';
 
 export abstract class StrategyCommandRepositoryPort {
     abstract createMarker(command: CreateMarkerCommand): Promise<Marker>;
@@ -45,5 +50,25 @@ export abstract class StrategyCommandRepositoryPort {
 
     abstract updateAirplanePathPosition(
         command: UpdateAirplanePathPositionCommand
+    ): Promise<void>;
+
+    abstract createParentComment(
+        command: CreateParentCommentCommand
+    ): Promise<Comment>;
+
+    abstract createChildComment(
+        command: CreateChildCommentCommand
+    ): Promise<Comment>;
+
+    abstract deleteComment(
+        command: UpdateAirplanePathPositionCommand
+    ): Promise<void>;
+
+    abstract updateCommentPosition(
+        command: UpdateCommentPositionCommand
+    ): Promise<void>;
+
+    abstract updateCommentContent(
+        command: UpdateCommentContentCommand
     ): Promise<void>;
 }

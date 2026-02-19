@@ -12,6 +12,11 @@ import { CreateAirplanePathCommand } from '@domain/strategy/commands/airplane-pa
 import { DeleteAirplanePathCommand } from '@domain/strategy/commands/airplane-path/delete-airplane-path.command';
 import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
 import { UpdateAirplanePathPositionCommand } from '@domain/strategy/commands/airplane-path/update-airplane-path-position.command';
+import { CreateChildCommentCommand } from '@domain/strategy/commands/comment/create-child-comment.command';
+import { CreateParentCommentCommand } from '@domain/strategy/commands/comment/create-parent-comment.command';
+import { UpdateCommentContentCommand } from '@domain/strategy/commands/comment/update-comment-content.command';
+import { UpdateCommentPositionCommand } from '@domain/strategy/commands/comment/update-comment-position.command';
+import { Comment } from '@domain/strategy/models/comment.model';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -56,6 +61,28 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
 
     updateAirplanePathPosition(
         command: UpdateAirplanePathPositionCommand
+    ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createChildComment(command: CreateChildCommentCommand): Promise<Comment> {
+        throw new Error('Not Implemented.');
+    }
+
+    createParentComment(command: CreateParentCommentCommand): Promise<Comment> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteComment(command: UpdateAirplanePathPositionCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateCommentContent(command: UpdateCommentContentCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateCommentPosition(
+        command: UpdateCommentPositionCommand
     ): Promise<void> {
         throw new Error('Not Implemented.');
     }
