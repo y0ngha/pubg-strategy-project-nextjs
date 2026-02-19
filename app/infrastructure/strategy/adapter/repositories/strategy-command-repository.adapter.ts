@@ -17,6 +17,7 @@ import { CreateParentCommentCommand } from '@domain/strategy/commands/comment/cr
 import { UpdateCommentContentCommand } from '@domain/strategy/commands/comment/update-comment-content.command';
 import { UpdateCommentPositionCommand } from '@domain/strategy/commands/comment/update-comment-position.command';
 import { Comment } from '@domain/strategy/models/comment.model';
+import { DeleteCommentCommand } from '@domain/strategy/commands/comment/delete-comment.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -73,7 +74,7 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
         throw new Error('Not Implemented.');
     }
 
-    deleteComment(command: UpdateAirplanePathPositionCommand): Promise<void> {
+    deleteComment(command: DeleteCommentCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 
