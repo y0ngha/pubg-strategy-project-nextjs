@@ -65,13 +65,13 @@ import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint
 import {
     UpdateWaypointPositionsUseCase
 } from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
-import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
-import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
+import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-owned-strategies.usecase';
+import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-shared-strategies.usecase';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
-import { CreateStrategyUseCase } from '@/application/strategy/use-cases/create-strategy.usecase';
-import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/delete-strategy.usecase';
-import { GetStrategyUseCase } from '@/application/strategy/use-cases/get-strategy.usecase';
-import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
+import { CreateStrategyUseCase } from '@/application/strategy/use-cases/strategy/create-strategy.usecase';
+import { DeleteStrategyUseCase } from '@/application/strategy/use-cases/strategy/delete-strategy.usecase';
+import { GetStrategyUseCase } from '@/application/strategy/use-cases/strategy/get-strategy.usecase';
+import { UpdateStrategyTitleUseCase } from '@/application/strategy/use-cases/strategy/update-strategy-title.usecase';
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 import { PasswordValidatorAdapter } from '@infrastructure/user/adapter/driving/password-validator.adapter';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
@@ -207,7 +207,7 @@ const strategyUseCases: ClassDependency[] = [
     { class: CreateStrategyUseCase },
     { class: DeleteStrategyUseCase },
     { class: GetStrategyUseCase },
-    { class: UpdateStrategyUseCase },
+    { class: UpdateStrategyTitleUseCase },
 ];
 const strategyServices: ClassDependency[] = [{ class: StrategyMapper }];
 

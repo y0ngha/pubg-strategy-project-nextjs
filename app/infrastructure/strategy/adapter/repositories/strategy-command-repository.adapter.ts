@@ -40,6 +40,10 @@ import { DeleteStrategyShareCommand } from '@domain/strategy/commands/strategy-s
 import { CreateStrategyShareCommand } from '@domain/strategy/commands/strategy-share/create-strategy-share.command';
 import { StrategyShare } from '@domain/strategy/models/strategy-share.model';
 import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/strategy-share/update-strategy-share-permission.command';
+import { CreateStrategyCommand } from '@domain/strategy/commands/strategy/create-strategy.command';
+import { Strategy } from '@domain/strategy/models/strategy.model';
+import { DeleteStrategyCommand } from '@domain/strategy/commands/strategy/delete-strategy.command';
+import { UpdateStrategyTitleCommand } from '@domain/strategy/commands/strategy/update-strategy-title.command';
 
 export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryPort {
     createMarker(command: CreateMarkerCommand): Promise<Marker> {
@@ -183,6 +187,18 @@ export class StrategyCommandRepositoryAdapter extends StrategyCommandRepositoryP
     updateStrategySharePermission(
         command: UpdateStrategySharePermissionCommand
     ): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    createStrategy(command: CreateStrategyCommand): Promise<Strategy> {
+        throw new Error('Not Implemented.');
+    }
+
+    deleteStrategy(command: DeleteStrategyCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    updateStrategyTitle(command: UpdateStrategyTitleCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }

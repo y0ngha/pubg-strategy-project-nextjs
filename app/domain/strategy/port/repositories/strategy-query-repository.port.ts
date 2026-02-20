@@ -1,12 +1,10 @@
-import { UserId } from '@domain/shared/value-objects/user-id';
-import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
+import { Strategy } from '@domain/strategy/models/strategy.model';
 
 export abstract class StrategyQueryRepositoryPort {
     abstract findById(id: StrategyId): Promise<Strategy | null>;
 
-    abstract findOwnedStrategiesByUserID(
-        userId: UserId,
+    abstract findOwnedStrategies(
         page: number,
         limit: number
     ): Promise<{
@@ -14,8 +12,7 @@ export abstract class StrategyQueryRepositoryPort {
         data: Strategy[];
     }>;
 
-    abstract findSharedStrategiesByUserID(
-        userId: UserId,
+    abstract findSharedStrategies(
         page: number,
         limit: number
     ): Promise<{
