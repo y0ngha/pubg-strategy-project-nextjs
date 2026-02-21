@@ -1,7 +1,6 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
 import { logoutAction } from '@/(presentation)/user/actions/logout.action';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { useRouter } from 'next/navigation';
@@ -9,14 +8,11 @@ import { Route } from '@/(presentation)/shared/constants/route';
 
 export function useLogoutMutation() {
     const router = useRouter();
-    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: async () => {
-            const formData = new FormData();
-            formData.set('userId', user?.id ?? '');
-            return await logoutAction(formData);
+            return await logoutAction();
         },
         onSuccess: () => {
             queryClient.clear();
