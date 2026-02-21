@@ -7,12 +7,7 @@ import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper'
 export async function requestFriendAction(formData: FormData) {
     const getService = initializeRequestServices();
 
-    const { userId, recipientUserId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { recipientUserId } = parseFormData(formData, [
         {
             key: 'recipientUserId',
             error: '친구 요청을 받는 유저 고유 식별자를 불러올 수 없습니다.',
@@ -21,7 +16,6 @@ export async function requestFriendAction(formData: FormData) {
     ] as const);
 
     const dto = {
-        requesterUserId: userId,
         recipientUserId: recipientUserId,
     };
 
