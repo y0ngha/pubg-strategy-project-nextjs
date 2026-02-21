@@ -11,12 +11,7 @@ export async function deleteCommentAction(
 ): Promise<DeleteCommentAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, commentId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, commentId } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -32,7 +27,6 @@ export async function deleteCommentAction(
     const useCase = getService(DeleteCommentUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         commentId: commentId,
     };
