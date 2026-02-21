@@ -2,28 +2,24 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { UpdateWaypointUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint.usecase';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateWaypointPositionsUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
 
-export type UpdateWaypointAction = {
+export type UpdateWaypointPositionsAction = {
     teamPlayerId: string;
     positions: { x: number; y: number }[];
 };
 
-export async function updateWaypointAction(
+export async function updateWaypointPositionsAction(
     formData: FormData
-): Promise<UpdateWaypointAction> {
+): Promise<UpdateWaypointPositionsAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, waypointId, positions } =
-        parseFormData(formData, [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
+    const { strategyId, teamPlayerId, waypointId, positions } = parseFormData(
+        formData,
+        [
             {
                 key: 'strategyId',
                 error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -45,12 +41,12 @@ export async function updateWaypointAction(
                 type: 'position',
                 isArray: true,
             },
-        ] as const);
+        ] as const
+    );
 
-    const useCase = getService(UpdateWaypointUseCase);
+    const useCase = getService(UpdateWaypointPositionsUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
         waypointId: waypointId,

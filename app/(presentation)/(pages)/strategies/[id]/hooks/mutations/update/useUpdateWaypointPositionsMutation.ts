@@ -6,12 +6,12 @@ import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import {
-    UpdateWaypointAction,
-    updateWaypointAction,
-} from '@/(presentation)/strategy/actions/waypoint/update-waypoint.action';
+    UpdateWaypointPositionsAction,
+    updateWaypointPositionsAction,
+} from '@/(presentation)/strategy/actions/waypoint/update-waypoint-positions.action';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
-export function useUpdateWaypointMutation(strategyId: string) {
+export function useUpdateWaypointPositionsMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -26,7 +26,7 @@ export function useUpdateWaypointMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateWaypointAction(formData);
+            return await updateWaypointPositionsAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,7 +40,7 @@ export function useUpdateWaypointMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateWaypointMutation', error);
+            console.error('useUpdateWaypointPositionsMutation', error);
             toast.error(
                 error.message ??
                     '알 수 없는 오류로 웨이포인트 생성에 실패했습니다.'
@@ -49,7 +49,7 @@ export function useUpdateWaypointMutation(strategyId: string) {
     });
 
     const generateNewTeamPlayers = (
-        data: UpdateWaypointAction,
+        data: UpdateWaypointPositionsAction,
         teamPlayers: TeamPlayerResponseDto[]
     ) => {
         const { teamPlayerId } = data;
@@ -73,7 +73,10 @@ export function useUpdateWaypointMutation(strategyId: string) {
         });
     };
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateWaypointAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateWaypointPositionsAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -89,6 +92,6 @@ export function useUpdateWaypointMutation(strategyId: string) {
     };
 
     return {
-        updateWaypoint: mutate,
+        updateWaypointPositions: mutate,
     };
 }
