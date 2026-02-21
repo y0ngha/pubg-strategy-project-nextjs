@@ -3,14 +3,14 @@ import { z } from 'zod';
 
 export interface LoginWithGoogleRequestDto {
     email: string;
-    token: string;
+    googleToken: string;
 }
 
 export const LoginWithGoogleRequestSchema = z.object({
     email: z.string().transform(value => {
         return Email.create(value);
     }),
-    token: z.string(),
+    googleToken: z.string(),
 });
 
 export type LoginWithGoogleRequestObject = z.infer<
