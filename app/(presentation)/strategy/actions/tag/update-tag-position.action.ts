@@ -1,33 +1,29 @@
 'use server';
 
-import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { Position } from '@/application/strategy/types/position';
-import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateTagPositionUseCase } from '@/application/strategy/use-cases/tag/update-tag-position.usecase';
+import { Position } from '@domain/strategy/models/position.model';
 
-export type CreateTagAction = {
+export type UpdateTagPositionAction = {
     id: string;
-    content: string;
     position: Position;
 };
 
-export async function createTagAction(
+export async function updateTagPositionAction(
     formData: FormData
-): Promise<CreateTagAction> {
-    await ensureAuthentication();
-
+): Promise<UpdateTagPositionAction> {
     const getService = initializeRequestServices();
 
-    const { strategyId, content, position } = parseFormData(formData, [
+    const { strategyId, tagId, position } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
-            key: 'content',
-            error: '태그 내용을 불러올 수 없습니다.',
+            key: 'tagId',
+            error: '태그 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
@@ -37,11 +33,11 @@ export async function createTagAction(
         },
     ] as const);
 
-    const useCase = getService(CreateTagUseCase);
+    const useCase = getService(UpdateTagPositionUseCase);
 
     const dto = {
         strategyId: strategyId,
-        content: content,
+        tagId: tagId,
         position: position,
     };
 

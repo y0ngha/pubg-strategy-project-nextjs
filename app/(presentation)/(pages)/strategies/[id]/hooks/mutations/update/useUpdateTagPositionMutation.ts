@@ -4,13 +4,13 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { toast } from 'react-toastify';
-import {
-    UpdateTagAction,
-    updateTagAction,
-} from '@/(presentation)/strategy/actions/tag/update-tag.action';
 import { QueryKey } from '@tanstack/query-core';
+import {
+    UpdateTagPositionAction,
+    updateTagPositionAction,
+} from '@/(presentation)/strategy/actions/tag/update-tag-position.action';
 
-export function useUpdateTagMutation(strategyId: string) {
+export function useUpdateTagPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -25,7 +25,7 @@ export function useUpdateTagMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateTagAction(formData);
+            return await updateTagPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -39,14 +39,14 @@ export function useUpdateTagMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateTagMutation', error);
+            console.error('useUpdateTagPositionMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 태그 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateTagAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: UpdateTagPositionAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -57,8 +57,8 @@ export function useUpdateTagMutation(strategyId: string) {
                 tags: oldStrategy.tags.map(tag => {
                     if (tag.id === data.id) {
                         return {
+                            ...tag,
                             id: data.id,
-                            content: data.content,
                             position: data.position,
                         };
                     }
@@ -70,6 +70,6 @@ export function useUpdateTagMutation(strategyId: string) {
     };
 
     return {
-        updateTag: mutate,
+        updateTagPosition: mutate,
     };
 }
