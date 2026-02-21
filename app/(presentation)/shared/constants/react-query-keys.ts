@@ -5,6 +5,7 @@ export const ReactQueryKeys = {
     SHARED_STRATIGES: 'SHARED_STRATIGES',
     SHARED_STRATIGES_ALL: 'SHARED_STRATIGES_ALL',
     FRIENDS: 'FRIENDS',
+    FRIENDS_ALL: 'FRIENDS_ALL',
 } as const;
 
 export type ReactQueryKeys =
