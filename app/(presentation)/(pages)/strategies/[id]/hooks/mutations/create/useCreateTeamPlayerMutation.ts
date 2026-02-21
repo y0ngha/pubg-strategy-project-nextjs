@@ -4,7 +4,6 @@ import {
     AddTeamPlayerAction,
     addTeamPlayerAction,
 } from '@/(presentation)/strategy/actions/team-player/add-team-player.action';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
@@ -12,14 +11,12 @@ import { QueryKey } from '@tanstack/query-core';
 
 export function useCreateTeamPlayerMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
     const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
             return await addTeamPlayerAction(formData);

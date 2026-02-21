@@ -1,5 +1,4 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { useMutation } from '@tanstack/react-query';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { toast } from 'react-toastify';
@@ -13,14 +12,12 @@ import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-s
 
 export function useUpdateWaypointPositionsMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
     const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
             return await updateWaypointPositionsAction(formData);
