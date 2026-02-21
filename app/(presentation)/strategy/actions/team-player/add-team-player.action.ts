@@ -7,6 +7,7 @@ import { Position } from '@/application/strategy/types/position';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type AddTeamPlayerAction = {
+    id: string;
     color: string;
     position: Position;
     priority: number;
