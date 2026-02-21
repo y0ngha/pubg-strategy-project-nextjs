@@ -3,7 +3,7 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/get-shared-strategies.usecase';
+import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-shared-strategies.usecase';
 
 export type GetSharedStrategiesAction = {
     hasNextPage: boolean;
@@ -11,7 +11,6 @@ export type GetSharedStrategiesAction = {
 };
 
 export async function getSharedStrategiesAction(
-    userId: string,
     page: number,
     limit: number
 ): Promise<GetSharedStrategiesAction> {
@@ -23,7 +22,6 @@ export async function getSharedStrategiesAction(
         const useCase = getService(GetSharedStrategiesUseCase);
 
         const dto = {
-            actorId: userId,
             page,
             limit,
         };

@@ -1,9 +1,9 @@
 'use server';
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/get-owned-strategies.usecase';
 import { GetStrategyResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-owned-strategies.usecase';
 
 export type GetOwnedStrategiesAction = {
     hasNextPage: boolean;
@@ -11,7 +11,6 @@ export type GetOwnedStrategiesAction = {
 };
 
 export async function getOwnedStrategiesAction(
-    userId: string,
     page: number,
     limit: number
 ): Promise<GetOwnedStrategiesAction> {
@@ -23,7 +22,6 @@ export async function getOwnedStrategiesAction(
         const useCase = getService(GetOwnedStrategiesUseCase);
 
         const dto = {
-            actorId: userId,
             page,
             limit,
         };
