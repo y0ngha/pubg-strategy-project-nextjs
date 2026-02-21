@@ -4,24 +4,21 @@ import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUs
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { toast } from 'react-toastify';
 import {
-    UpdateStrategyAction,
-    updateStrategyAction,
-} from '@/(presentation)/strategy/actions/update-strategy.action';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+    UpdateStrategyTitleAction,
+    updateStrategyTitleAction,
+} from '@/(presentation)/strategy/actions/strategy/update-strategy-title.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { QueryKey } from '@tanstack/query-core';
 
-export function useUpdateStrategyMutation(strategyId: string) {
+export function useUpdateStrategyTitleMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, 'ALL'];
 
     const {
-        mutate: updateStrategy,
+        mutate: updateStrategyTitle,
         data,
         isError,
         isPending,
@@ -31,7 +28,7 @@ export function useUpdateStrategyMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateStrategyAction(formData);
+            return await updateStrategyTitleAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -47,14 +44,17 @@ export function useUpdateStrategyMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateStrategyMutation', error);
+            console.error('useUpdateStrategyTitleMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 전략 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateStrategyAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateStrategyTitleAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -63,13 +63,12 @@ export function useUpdateStrategyMutation(strategyId: string) {
             return {
                 ...oldStrategy,
                 title: data.title,
-                map: data.map,
             };
         });
     };
 
     return {
-        updateStrategy,
+        updateStrategyTitle,
         data,
         isError,
         isPending,

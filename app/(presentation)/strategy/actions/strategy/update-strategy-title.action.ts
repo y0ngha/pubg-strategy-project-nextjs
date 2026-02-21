@@ -2,24 +2,19 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateStrategyTitleUseCase } from '@/application/strategy/use-cases/strategy/update-strategy-title.usecase';
 
-export type UpdateStrategyAction = { title: string; map: string };
+export type UpdateStrategyTitleAction = { strategyId: string; title: string };
 
-export async function updateStrategyAction(
+export async function updateStrategyTitleAction(
     formData: FormData
-): Promise<UpdateStrategyAction> {
+): Promise<UpdateStrategyTitleAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, title, map } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, title } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -27,23 +22,16 @@ export async function updateStrategyAction(
         },
         {
             key: 'title',
+            error: '전략 제목을 불러올 수 없습니다.',
             type: 'string',
-            allowUndefined: true,
-        },
-        {
-            key: 'map',
-            type: 'string',
-            allowUndefined: true,
         },
     ] as const);
 
-    const useCase = getService(UpdateStrategyUseCase);
+    const useCase = getService(UpdateStrategyTitleUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         title: title,
-        map: map,
     };
 
     return await useCase.execute(dto);
