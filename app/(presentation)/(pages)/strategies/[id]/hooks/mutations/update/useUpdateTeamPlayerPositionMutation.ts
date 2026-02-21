@@ -39,7 +39,7 @@ export function useUpdateTeamPlayerPositionMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateTeamPlayerMutation', error);
+            console.error('useUpdateTeamPlayerPositionMutation', error);
             toast.error(
                 error.message ??
                     '알 수 없는 오류로 팀 플레이어 수정에 실패했습니다.'
