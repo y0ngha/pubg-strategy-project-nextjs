@@ -5,6 +5,7 @@ import {
 } from '@/application/strategy/dto/share/update-strategy-share-permission.dto';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/strategy-share/update-strategy-share-permission.command';
+import { StrategySharePermissionLabels } from '@domain/strategy/enums/strategy-share-permission.enum';
 
 @injectable()
 export class UpdateStrategySharePermissionUseCase {
@@ -13,9 +14,7 @@ export class UpdateStrategySharePermissionUseCase {
         private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
-    async execute(
-        dto: UpdateStrategySharePermissionRequestDto
-    ): Promise<boolean> {
+    async execute(dto: UpdateStrategySharePermissionRequestDto) {
         const { strategyId, strategyShareId, permission } =
             UpdateStrategySharePermissionRequestSchema.parse(dto);
 
@@ -29,6 +28,10 @@ export class UpdateStrategySharePermissionUseCase {
             command
         );
 
-        return true;
+        return {
+            strategyShareId: strategyShareId.toString(),
+            permission: permission,
+            permissionLabel: StrategySharePermissionLabels[permission],
+        };
     }
 }
