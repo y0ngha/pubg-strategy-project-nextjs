@@ -37,7 +37,7 @@ export function useGetSharedStrategies(
         QueryKey,
         number
     >({
-        queryKey: [ReactQueryKeys.SHARED_STRATIGES, 'ALL'],
+        queryKey: [ReactQueryKeys.SHARED_STRATIGES_ALL],
         queryFn: async ({ pageParam }) => {
             return await getSharedStrategiesAction(
                 pageParam as number,
