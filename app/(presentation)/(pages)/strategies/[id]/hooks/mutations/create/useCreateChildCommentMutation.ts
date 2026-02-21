@@ -58,7 +58,7 @@ export function useCreateChildCommentMutation(strategyId: string) {
         });
     };
 
-    const findCommentIndexByChildCommentId = (
+    const findParentCommentIndexByParentCommentId = (
         comments: CommentResponseDto[],
         parentCommentId: string
     ) => {
@@ -112,7 +112,7 @@ export function useCreateChildCommentMutation(strategyId: string) {
             return comments;
         }
 
-        const parentCommentIndex = findCommentIndexByChildCommentId(
+        const parentCommentIndex = findParentCommentIndexByParentCommentId(
             comments,
             parentCommentId
         );
