@@ -1,4 +1,4 @@
-import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
+import { UpdateMarkerPositionUsecase } from '@/application/strategy/use-cases/marker/update-marker-position.usecase';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { TeamPlayerId } from '@domain/strategy/value-objects/team-player-id';
 import { getStrategyCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
@@ -7,8 +7,8 @@ import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.ex
 import { MarkerId } from '@domain/strategy/value-objects/marker-id';
 import { Position } from '@domain/strategy/value-objects/position';
 
-describe('UpdateMarkerUseCase', () => {
-    let useCase: UpdateMarkerUseCase;
+describe('UpdateMarkerPositionUsecase', () => {
+    let useCase: UpdateMarkerPositionUsecase;
     let mockStrategyCommandRepository: jest.Mocked<StrategyCommandRepositoryPort>;
 
     const strategyId = StrategyId.generate();
@@ -19,7 +19,9 @@ describe('UpdateMarkerUseCase', () => {
     beforeEach(() => {
         mockStrategyCommandRepository = getStrategyCommandRepositoryMocking();
 
-        useCase = new UpdateMarkerUseCase(mockStrategyCommandRepository);
+        useCase = new UpdateMarkerPositionUsecase(
+            mockStrategyCommandRepository
+        );
     });
 
     describe('성공 테스트', () => {

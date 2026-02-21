@@ -48,7 +48,7 @@ import {
 } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
 import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/delete-marker.usecase';
-import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
+import { UpdateMarkerPositionUsecase } from '@/application/strategy/use-cases/marker/update-marker-position.usecase';
 import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
 import {
@@ -188,7 +188,7 @@ const strategyUseCases: ClassDependency[] = [
     { class: UpdateEnemyTeamLabelUsecase },
     { class: AddMarkerUseCase },
     { class: DeleteMarkerUseCase },
-    { class: UpdateMarkerUseCase },
+    { class: UpdateMarkerPositionUsecase },
     { class: CreateStrategyShareUseCase },
     { class: RevokeStrategyShareUseCase },
     { class: UpdateStrategySharePermissionUseCase },

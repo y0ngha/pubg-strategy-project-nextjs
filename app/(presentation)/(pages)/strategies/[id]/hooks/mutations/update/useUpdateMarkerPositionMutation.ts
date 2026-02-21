@@ -7,11 +7,11 @@ import { QueryKey } from '@tanstack/query-core';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import {
-    UpdateMarkerAction,
-    updateMarkerAction,
-} from '@/(presentation)/strategy/actions/marker/update-marker.action';
+    UpdateMarkerPositionAction,
+    updateMarkerPositionAction,
+} from '@/(presentation)/strategy/actions/marker/update-marker-position.action';
 
-export function useUpdateMarkerMutation(strategyId: string) {
+export function useUpdateMarkerPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -26,7 +26,7 @@ export function useUpdateMarkerMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateMarkerAction(formData);
+            return await updateMarkerPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,7 +40,7 @@ export function useUpdateMarkerMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateMarkerMutation', error);
+            console.error('useUpdateMarkerPositionMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 마커 수정에 실패했습니다.'
             );
@@ -48,7 +48,7 @@ export function useUpdateMarkerMutation(strategyId: string) {
     });
 
     const generateNewTeamPlayers = (
-        data: UpdateMarkerAction,
+        data: UpdateMarkerPositionAction,
         teamPlayers: TeamPlayerResponseDto[]
     ) => {
         const { teamPlayerId } = data;
@@ -72,7 +72,10 @@ export function useUpdateMarkerMutation(strategyId: string) {
         });
     };
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateMarkerAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateMarkerPositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -88,6 +91,6 @@ export function useUpdateMarkerMutation(strategyId: string) {
     };
 
     return {
-        updateMarker: mutate,
+        updateMarkerPosition: mutate,
     };
 }
