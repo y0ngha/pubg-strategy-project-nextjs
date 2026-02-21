@@ -15,6 +15,7 @@ export type CreateParentCommentAction = {
     parentCommentId: string | null;
     createdAt: Date;
     isAuthor: boolean;
+    isParent: boolean;
 };
 
 export async function createParentCommentAction(

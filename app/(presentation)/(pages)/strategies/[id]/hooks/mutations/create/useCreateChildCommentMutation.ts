@@ -93,12 +93,7 @@ export function useCreateChildCommentMutation(strategyId: string) {
                 childComments: [
                     ...comment.childComments,
                     {
-                        id: data.id,
-                        authorId: data.authorId,
-                        authorEmail: data.authorEmail,
-                        content: data.content,
-                        createdAt: data.createdAt,
-                        isAuthor: data.isAuthor,
+                        ...data,
                     },
                 ],
             };

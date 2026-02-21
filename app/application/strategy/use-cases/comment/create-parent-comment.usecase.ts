@@ -37,6 +37,7 @@ export class CreateParentCommentUseCase {
             parentCommentId: null,
             createdAt: comment.createdAt,
             isAuthor: comment.isAuthor,
+            isParent: comment.isParent,
         };
     }
 }

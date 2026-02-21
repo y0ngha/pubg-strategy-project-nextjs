@@ -78,6 +78,7 @@ export function useCreateParentCommentMutation(strategyId: string) {
                 position: data.position!,
                 createdAt: data.createdAt,
                 isAuthor: data.isAuthor,
+                isParent: data.isParent,
             },
         ];
     };
