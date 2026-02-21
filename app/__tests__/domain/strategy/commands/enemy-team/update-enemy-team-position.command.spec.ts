@@ -1,9 +1,7 @@
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { EnemyTeamId } from '@domain/strategy/value-objects/enemy-team-id';
 import { Position } from '@domain/strategy/value-objects/position';
-import {
-    UpdateEnemyTeamPositionCommand
-} from '@domain/strategy/commands/enemy-team/update-enemy-team-position.command';
+import { UpdateEnemyTeamPositionCommand } from '@domain/strategy/commands/enemy-team/update-enemy-team-position.command';
 
 describe('UpdateEnemyTeamPositionCommand', () => {
     it('적 팀 위치 수정 Command가 생성된다.', () => {
