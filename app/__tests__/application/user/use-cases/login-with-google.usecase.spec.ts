@@ -64,7 +64,8 @@ describe('LoginWithGoogleUseCase', () => {
             expect(
                 mockUserQueryRepository.findByAccessToken
             ).toHaveBeenCalledTimes(1);
-            expect(result).toEqual(token);
+            expect(result.accessToken).toEqual(token.accessToken);
+            expect(result.refreshToken).toEqual(token.refreshToken);
             expect(result.user).toEqual({
                 id: userId,
                 email: dto.email,
