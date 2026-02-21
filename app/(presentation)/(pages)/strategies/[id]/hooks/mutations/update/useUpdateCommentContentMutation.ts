@@ -7,11 +7,11 @@ import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import {
-    UpdateCommentAction,
-    updateCommentAction,
-} from '@/(presentation)/strategy/actions/comment/update-comment.action';
+    UpdateCommentContentAction,
+    updateCommentContentAction,
+} from '@/(presentation)/strategy/actions/comment/update-comment-content.action';
 
-export function useUpdateCommentMutation(strategyId: string) {
+export function useUpdateCommentContentMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -26,7 +26,7 @@ export function useUpdateCommentMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateCommentAction(formData);
+            return await updateCommentContentAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,14 +40,17 @@ export function useUpdateCommentMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateCommentMutation', error);
+            console.error('useUpdateCommentContentMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 댓글 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateCommentAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateCommentContentAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -61,17 +64,16 @@ export function useUpdateCommentMutation(strategyId: string) {
     };
 
     const generateNewComments = (
-        data: UpdateCommentAction,
+        data: UpdateCommentContentAction,
         comments: CommentResponseDto[]
     ): CommentResponseDto[] => {
-        const { id, content, position } = data;
+        const { id, content } = data;
 
         return comments.map(parentComment => {
             if (parentComment.id === id) {
                 return {
                     ...parentComment,
                     content: content,
-                    position: position ? position : parentComment.position,
                 };
             }
 
@@ -98,6 +100,6 @@ export function useUpdateCommentMutation(strategyId: string) {
     };
 
     return {
-        updateComment: mutate,
+        updateCommentContent: mutate,
     };
 }

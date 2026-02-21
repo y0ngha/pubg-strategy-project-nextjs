@@ -1,11 +1,12 @@
 import { useCreateParentCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateParentCommentMutation';
 import React, { useState } from 'react';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
-import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
+import { useUpdateCommentContentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentContentMutation';
 import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
 import { useCreateChildCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateChildCommentMutation';
+import { useUpdateCommentPositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentPositionMutation';
 
 export function useCommentEvent(
     strategyId: string,
@@ -15,8 +16,10 @@ export function useCommentEvent(
         useCreateParentCommentMutation(strategyId);
     const { createChildComment: createChildCommentMutation } =
         useCreateChildCommentMutation(strategyId);
-    const { updateComment: updateCommentMutation } =
-        useUpdateCommentMutation(strategyId);
+    const { updateCommentContent: updateCommentContentMutation } =
+        useUpdateCommentContentMutation(strategyId);
+    const { updateCommentPosition: updateCommentPositionMutation } =
+        useUpdateCommentPositionMutation(strategyId);
     const { deleteComment: deleteCommentMutation } =
         useDeleteCommentMutation(strategyId);
 
@@ -113,7 +116,7 @@ export function useCommentEvent(
         formData.set('commentId', commentId);
         formData.set('content', content);
 
-        updateCommentMutation(formData);
+        updateCommentContentMutation(formData);
     };
 
     const moveComment = (
@@ -135,7 +138,7 @@ export function useCommentEvent(
         formData.set('commentId', commentId);
         formData.set('position', JSON.stringify(position));
 
-        updateCommentMutation(formData);
+        updateCommentPositionMutation(formData);
     };
 
     const deleteComment = (commentId: string) => {
