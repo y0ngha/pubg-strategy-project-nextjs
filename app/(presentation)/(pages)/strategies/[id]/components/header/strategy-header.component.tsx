@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Route } from '@/(presentation)/shared/constants/route';
 import { ChevronLeft } from 'lucide-react';
 import Button from '@/(presentation)/shared/components/button.component';
-import { useUpdateStrategyMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateStrategyMutation';
+import { useUpdateStrategyTitleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateStrategyTitleMutation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface StrategyUpdateFormInputs {
@@ -19,14 +19,14 @@ interface StrategyHeaderProps {
 }
 
 function StrategyHeader({ id, title }: StrategyHeaderProps) {
-    const { updateStrategy } = useUpdateStrategyMutation(id);
+    const { updateStrategyTitle } = useUpdateStrategyTitleMutation(id);
     const { register, handleSubmit } = useForm<StrategyUpdateFormInputs>();
 
     const onSubmit: SubmitHandler<StrategyUpdateFormInputs> = data => {
         const formData = new FormData();
         formData.set('title', data.title);
 
-        updateStrategy(formData);
+        updateStrategyTitle(formData);
     };
 
     return (

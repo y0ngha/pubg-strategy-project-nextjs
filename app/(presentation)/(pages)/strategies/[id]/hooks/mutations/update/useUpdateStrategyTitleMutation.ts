@@ -15,7 +15,7 @@ export function useUpdateStrategyTitleMutation(strategyId: string) {
     const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, 'ALL'];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const {
         mutate: updateStrategyTitle,
