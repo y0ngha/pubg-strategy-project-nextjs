@@ -5,12 +5,12 @@ import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import {
-    UpdateCircleAction,
-    updateCircleAction,
-} from '@/(presentation)/strategy/actions/circle/update-circle.action';
+    updateCirclePositionAction,
+    UpdateCirclePositionAction,
+} from '@/(presentation)/strategy/actions/circle/update-circle-position.action';
 import { QueryKey } from '@tanstack/query-core';
 
-export function useUpdateCircleMutation(strategyId: string) {
+export function useUpdateCirclePositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -25,7 +25,7 @@ export function useUpdateCircleMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateCircleAction(formData);
+            return await updateCirclePositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -39,14 +39,17 @@ export function useUpdateCircleMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateCircleMutation', error);
+            console.error('useUpdateCirclePositionMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 자기장 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateCircleAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateCirclePositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -57,11 +60,9 @@ export function useUpdateCircleMutation(strategyId: string) {
                 circles: oldStrategy.circles.map(circle => {
                     if (circle.id === data.id) {
                         return {
+                            ...circle,
                             id: data.id,
                             centerPosition: data.centerPosition,
-                            phase: data.phase,
-                            radius: data.radius,
-                            color: data.color,
                         };
                     }
 
@@ -72,6 +73,6 @@ export function useUpdateCircleMutation(strategyId: string) {
     };
 
     return {
-        updateCircle: mutate,
+        updateCirclePosition: mutate,
     };
 }
