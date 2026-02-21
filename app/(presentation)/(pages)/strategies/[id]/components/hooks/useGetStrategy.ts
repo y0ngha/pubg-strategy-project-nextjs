@@ -17,7 +17,7 @@ export function useGetStrategy(
         queryFn: async () => {
             return await getStrategyAction(strategyId);
         },
-        enabled: true,
+        enabled: !!strategyId,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24,
         retry: false,
