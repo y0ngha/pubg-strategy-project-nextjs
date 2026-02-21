@@ -7,7 +7,6 @@ import { Position } from '@/application/strategy/types/position';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type AddTeamPlayerAction = {
-    id: string;
     color: string;
     position: Position;
     priority: number;
@@ -20,12 +19,7 @@ export async function addTeamPlayerAction(
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, position } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, position } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -41,7 +35,6 @@ export async function addTeamPlayerAction(
     const useCase = getService(AddTeamPlayerUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         position: position,
     };

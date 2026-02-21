@@ -6,11 +6,11 @@ import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-ke
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { QueryKey } from '@tanstack/query-core';
 import {
-    UpdateTeamPlayerAction,
-    updateTeamPlayerAction,
-} from '@/(presentation)/strategy/actions/team-player/update-team-player.action';
+    updateTeamPlayerPositionAction,
+    UpdateTeamPlayerPositionAction,
+} from '@/(presentation)/strategy/actions/team-player/update-team-player-position.action';
 
-export function useUpdateTeamPlayerMutation(strategyId: string) {
+export function useUpdateTeamPlayerPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
     const user = useGetCurrentUser();
 
@@ -25,7 +25,7 @@ export function useUpdateTeamPlayerMutation(strategyId: string) {
             formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateTeamPlayerAction(formData);
+            return await updateTeamPlayerPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -47,7 +47,10 @@ export function useUpdateTeamPlayerMutation(strategyId: string) {
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateTeamPlayerAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateTeamPlayerPositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -71,6 +74,6 @@ export function useUpdateTeamPlayerMutation(strategyId: string) {
     };
 
     return {
-        updateTeamPlayer: mutate,
+        updateTeamPlayerPosition: mutate,
     };
 }
