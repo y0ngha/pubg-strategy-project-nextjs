@@ -12,17 +12,7 @@ export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
 
     await ensureAuthentication();
 
-    try {
-        const useCase = getService<GetCurrentUserUseCase>(
-            GetCurrentUserUseCase
-        );
+    const useCase = getService<GetCurrentUserUseCase>(GetCurrentUserUseCase);
 
-        const user = await useCase.execute();
-
-        return {
-            ...user,
-        };
-    } catch (e) {
-        throw e;
-    }
+    return await useCase.execute();
 }
