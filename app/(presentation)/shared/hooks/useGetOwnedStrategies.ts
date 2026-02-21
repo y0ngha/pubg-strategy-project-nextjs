@@ -37,7 +37,7 @@ export function useGetOwnedStrategies(
         QueryKey,
         number
     >({
-        queryKey: [ReactQueryKeys.STRATIGES_ALL],
+        queryKey: [ReactQueryKeys.STRATEGIES_ALL],
         queryFn: async ({ pageParam }) => {
             return await getOwnedStrategiesAction(
                 pageParam as number,

@@ -21,13 +21,13 @@ export default async function StrategiesDehydrate({
 
     await Promise.all([
         queryClient.prefetchInfiniteQuery({
-            queryKey: [ReactQueryKeys.STRATIGES_ALL],
+            queryKey: [ReactQueryKeys.STRATEGIES_ALL],
             queryFn: async ({ pageParam }) =>
                 await getOwnedStrategiesAction(pageParam, 15),
             initialPageParam: 1,
         }),
         queryClient.prefetchInfiniteQuery({
-            queryKey: [ReactQueryKeys.SHARED_STRATIGES_ALL],
+            queryKey: [ReactQueryKeys.SHARED_STRATIGIES_ALL],
             queryFn: async ({ pageParam }) =>
                 await getSharedStrategiesAction(pageParam, 15),
             initialPageParam: 1,

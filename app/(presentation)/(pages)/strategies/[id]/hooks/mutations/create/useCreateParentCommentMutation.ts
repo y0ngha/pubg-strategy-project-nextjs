@@ -13,8 +13,8 @@ import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-stra
 export function useCreateParentCommentMutation(strategyId: string) {
     const queryClient = getQueryClient();
 
-    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -23,7 +23,7 @@ export function useCreateParentCommentMutation(strategyId: string) {
             return await createParentCommentAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

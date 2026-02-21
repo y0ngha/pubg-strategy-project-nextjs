@@ -9,8 +9,8 @@ import { deleteAirplanePathAction } from '@/(presentation)/strategy/actions/airp
 export function useDeleteAirplanePathMutation(strategyId: string) {
     const queryClient = getQueryClient();
 
-    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {

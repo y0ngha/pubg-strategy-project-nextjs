@@ -12,8 +12,8 @@ import { QueryKey } from '@tanstack/query-core';
 export function useUpdateStrategyTitleMutation(strategyId: string) {
     const queryClient = getQueryClient();
 
-    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
 
     const {
         mutate: updateStrategyTitle,
@@ -28,7 +28,7 @@ export function useUpdateStrategyTitleMutation(strategyId: string) {
             return await updateStrategyTitleAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
+            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

@@ -43,7 +43,7 @@ export function useCreateStrategyMutation(
             context: MutationFunctionContext
         ) => {
             queryClient.invalidateQueries({
-                queryKey: [user?.id, ReactQueryKeys.STRATIGES],
+                queryKey: [user?.id, ReactQueryKeys.STRATIGIES],
             });
 
             options?.onSuccess?.(data, variables, onMutateResult, context);

@@ -13,7 +13,7 @@ export function useGetStrategy(
     >
 ) {
     return useQuery({
-        queryKey: [ReactQueryKeys.STRATIGES, strategyId],
+        queryKey: [ReactQueryKeys.STRATIGIES, strategyId],
         queryFn: async () => {
             return await getStrategyAction(strategyId);
         },
