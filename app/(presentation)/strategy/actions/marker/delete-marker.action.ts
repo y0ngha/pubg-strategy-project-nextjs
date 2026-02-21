@@ -11,36 +11,27 @@ export async function deleteMarkerAction(
 ): Promise<DeleteMarkerAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, markerId } = parseFormData(
-        formData,
-        [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'strategyId',
-                error: '전략 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'teamPlayerId',
-                error: '팀 플레이어 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'markerId',
-                error: '마커 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-        ] as const
-    );
+    const { strategyId, teamPlayerId, markerId } = parseFormData(formData, [
+        {
+            key: 'strategyId',
+            error: '전략 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'teamPlayerId',
+            error: '팀 플레이어 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'markerId',
+            error: '마커 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const useCase = getService(DeleteMarkerUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         markerId: markerId,
         teamPlayerId: teamPlayerId,
