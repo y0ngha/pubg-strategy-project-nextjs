@@ -1,30 +1,27 @@
 import { inject, injectable } from 'inversify';
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { FriendNotFoundException } from '@domain/friend/exceptions/friend.exceptions';
 import {
     CancelSentFriendRequestDto,
     CancelSentFriendRequestSchema,
 } from '@/application/friend/dto/cancel-sent-friend.dto';
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import { CancelSentFriendRequestCommand } from '@domain/friend/commands/cancel-sent-friend-request.command';
 
 @injectable()
 export class CancelSentFriendUseCase {
     constructor(
-        @inject(FriendRepositoryPort)
-        private readonly friendRepository: FriendRepositoryPort
+        @inject(FriendCommandRepositoryPort)
+        private readonly friendCommandRepository: FriendCommandRepositoryPort
     ) {}
 
     async execute(dto: CancelSentFriendRequestDto): Promise<boolean> {
-        const { id, userId } = CancelSentFriendRequestSchema.parse(dto);
+        const { id, currentStatus } = CancelSentFriendRequestSchema.parse(dto);
 
-        const friend = await this.friendRepository.findById(id);
+        const command = CancelSentFriendRequestCommand.create(
+            id,
+            currentStatus
+        );
 
-        if (!friend) {
-            throw new FriendNotFoundException(id.toString());
-        }
-
-        friend.cancel(userId);
-
-        await this.friendRepository.save(friend);
+        await this.friendCommandRepository.cancel(command);
 
         return true;
     }

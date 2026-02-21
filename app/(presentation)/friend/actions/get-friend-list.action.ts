@@ -7,18 +7,11 @@ import { GetFriendListResponseDto } from '@/application/friend/dto/get-friend-li
 
 export type GetFriendListAction = GetFriendListResponseDto;
 
-export async function getFriendListAction(
-    userId: string
-): Promise<GetFriendListAction> {
+export async function getFriendListAction(): Promise<GetFriendListAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
-
-    const dto = {
-        userId: userId,
-    };
-
     const useCase = getService<GetFriendListUseCase>(GetFriendListUseCase);
 
-    return await useCase.execute(dto);
+    return await useCase.execute();
 }

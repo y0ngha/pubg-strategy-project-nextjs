@@ -1,35 +1,30 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     AddTeamPlayerRequestDto,
     AddTeamPlayerRequestSchema,
 } from '@/application/strategy/dto/team-player/add-team-player.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateTeamPlayerCommand } from '@domain/strategy/commands/team-player/create-team-player.command';
+import { TEAM_PLAYER_COLOR_MAP } from '@domain/strategy/constants/team-player.constants';
 
 @injectable()
 export class AddTeamPlayerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: AddTeamPlayerRequestDto) {
-        const { actorId, strategyId, position } =
-            AddTeamPlayerRequestSchema.parse(dto);
+        const { strategyId, position } = AddTeamPlayerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = CreateTeamPlayerCommand.create(strategyId, position);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const teamPlayer = strategy.addTeamPlayer(actorId, position);
-
-        await this.strategyRepository.save(strategy);
+        const teamPlayer =
+            await this.strategyCommandRepositoryPort.createTeamPlayer(command);
 
         return {
-            id: teamPlayer.id.toString(),
-            color: teamPlayer.color,
+            id: teamPlayer.id,
+            color: TEAM_PLAYER_COLOR_MAP[teamPlayer.priority],
             priority: teamPlayer.priority,
             position: {
                 x: teamPlayer.position.x,

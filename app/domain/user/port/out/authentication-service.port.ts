@@ -1,17 +1,15 @@
-import { Email } from '@/domain/shared/value-objects/email';
-import { Password } from '../../value-objects/password';
-import { UserId } from '@/domain/shared/value-objects/user-id';
+import { LogoutCommand } from '@domain/user/commands/logout.command';
+import { LoginWithEmailCommand } from '@domain/user/commands/login-with-email.command';
+import { LoginWithGoogleCommand } from '@domain/user/commands/login-with-google.command';
 
 export abstract class AuthenticationServicePort {
     abstract login(
-        email: Email,
-        password: Password
+        command: LoginWithEmailCommand
     ): Promise<{ accessToken: string; refreshToken: string }>;
 
     abstract googleLogin(
-        email: Email,
-        token: string
+        command: LoginWithGoogleCommand
     ): Promise<{ accessToken: string; refreshToken: string }>;
 
-    abstract logout(userId: UserId): Promise<boolean>;
+    abstract logout(command: LogoutCommand): Promise<boolean>;
 }

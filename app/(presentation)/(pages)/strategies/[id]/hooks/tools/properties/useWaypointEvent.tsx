@@ -1,6 +1,6 @@
 import { useCreateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateWaypointMutation';
 import { toast } from 'react-toastify';
-import { useUpdateWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateWaypointMutation';
+import { useUpdateWaypointPositionsMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateWaypointPositionsMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { Fragment, useEffect, useEffectEvent, useState } from 'react';
 import { useDeleteWaypointMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteWaypointMutation';
@@ -16,8 +16,8 @@ export function useWaypointEvent(
 
     const { createWaypoint: createWaypointMutation } =
         useCreateWaypointMutation(strategyId);
-    const { updateWaypoint: updateWaypointMutation } =
-        useUpdateWaypointMutation(strategyId);
+    const { updateWaypointPositions: updateWaypointPositionsMutation } =
+        useUpdateWaypointPositionsMutation(strategyId);
     const { deleteWaypoint: deleteWaypointMutation } =
         useDeleteWaypointMutation(strategyId);
 
@@ -117,7 +117,7 @@ export function useWaypointEvent(
             if (waypoint) {
                 formData.set('waypointId', waypoint.id);
 
-                updateWaypointMutation(formData);
+                updateWaypointPositionsMutation(formData);
             } else {
                 createWaypointMutation(formData);
             }
@@ -164,7 +164,7 @@ export function useWaypointEvent(
         formData.set('waypointId', waypointId);
         formData.set('positions', JSON.stringify(positions));
 
-        updateWaypointMutation(formData);
+        updateWaypointPositionsMutation(formData);
     };
 
     const deleteWaypoint = (teamPlayerId: string, waypointId: string) => {

@@ -1,12 +1,13 @@
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
+import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
+import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
+import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { jest } from '@jest/globals';
 
-export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> {
+export function getFriendQueryRepositoryMocking(): jest.Mocked<FriendQueryRepositoryPort> {
     return {
-        save: jest.fn(),
-        delete: jest.fn(),
-        existsFriendBetween: jest.fn(),
         findById: jest.fn(),
         findAcceptedFriendsByUserId: jest.fn(),
         findReceivedFriendRequestsByRecipientUserId: jest.fn(),
@@ -14,22 +15,75 @@ export function getFriendRepositoryMocking(): jest.Mocked<FriendRepositoryPort> 
     };
 }
 
-export function getUserRepositoryMocking(): jest.Mocked<UserRepositoryPort> {
+export function getFriendCommandRepositoryMocking(): jest.Mocked<FriendCommandRepositoryPort> {
     return {
-        save: jest.fn(),
+        accept: jest.fn(),
+        reject: jest.fn(),
+        cancel: jest.fn(),
+        request: jest.fn(),
+    };
+}
+
+export function getUserQueryRepositoryMocking(): jest.Mocked<UserQueryRepositoryPort> {
+    return {
         findByUserId: jest.fn(),
-        delete: jest.fn(),
-        existsByEmail: jest.fn(),
         findByAccessToken: jest.fn(),
     };
 }
 
-export function getStrategyRepositoryMocking(): jest.Mocked<StrategyRepositoryPort> {
+export function getUserCommandRepositoryMocking(): jest.Mocked<UserCommandRepositoryPort> {
     return {
-        save: jest.fn(),
-        delete: jest.fn(),
+        changePassword: jest.fn(),
+        registerWithEmail: jest.fn(),
+        registerWithGoogle: jest.fn(),
+        withdrawal: jest.fn(),
+    };
+}
+
+export function getStrategyQueryRepositoryMocking(): jest.Mocked<StrategyQueryRepositoryPort> {
+    return {
         findById: jest.fn(),
-        findOwnedStrategiesByUserID: jest.fn(),
-        findSharedStrategiesByUserID: jest.fn(),
+        findOwnedStrategies: jest.fn(),
+        findSharedStrategies: jest.fn(),
+    };
+}
+
+export function getStrategyCommandRepositoryMocking(): jest.Mocked<StrategyCommandRepositoryPort> {
+    return {
+        createMarker: jest.fn(),
+        deleteMarker: jest.fn(),
+        updateMarkerPosition: jest.fn(),
+        createEnemyTeam: jest.fn(),
+        deleteEnemyTeam: jest.fn(),
+        updateEnemyTeamLabel: jest.fn(),
+        updateEnemyTeamPosition: jest.fn(),
+        createAirplanePath: jest.fn(),
+        deleteAirplanePath: jest.fn(),
+        updateAirplanePathPosition: jest.fn(),
+        createCircle: jest.fn(),
+        deleteCircle: jest.fn(),
+        updateCirclePhase: jest.fn(),
+        updateCirclePosition: jest.fn(),
+        createChildComment: jest.fn(),
+        createParentComment: jest.fn(),
+        deleteComment: jest.fn(),
+        updateCommentContent: jest.fn(),
+        updateCommentPosition: jest.fn(),
+        createWaypoint: jest.fn(),
+        deleteWaypoint: jest.fn(),
+        updateWaypointPositions: jest.fn(),
+        deleteTag: jest.fn(),
+        updateTagContent: jest.fn(),
+        createTag: jest.fn(),
+        updateTagPosition: jest.fn(),
+        createTeamPlayer: jest.fn(),
+        deleteTeamPlayer: jest.fn(),
+        updateTeamPlayerPosition: jest.fn(),
+        createStrategyShare: jest.fn(),
+        deleteStrategyShare: jest.fn(),
+        updateStrategySharePermission: jest.fn(),
+        createStrategy: jest.fn(),
+        deleteStrategy: jest.fn(),
+        updateStrategyTitle: jest.fn(),
     };
 }

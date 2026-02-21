@@ -3,21 +3,24 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+
+export type UpdateStrategySharePermissionAction = {
+    strategyShareId: string;
+    permission: string;
+    permissionLabel: string;
+};
 
 export async function updateStrategySharePermissionAction(
-    _: unknown,
     formData: FormData
-) {
+): Promise<UpdateStrategySharePermissionAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, strategyShareId, permission } = parseFormData(
+    const { strategyId, strategyShareId, permission } = parseFormData(
         formData,
         [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
             {
                 key: 'strategyId',
                 error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -39,11 +42,16 @@ export async function updateStrategySharePermissionAction(
     const useCase = getService(UpdateStrategySharePermissionUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         strategyShareId: strategyShareId,
         permission: permission,
     };
 
-    return await useCase.execute(dto);
+    const sharedPermission = await useCase.execute(dto);
+
+    return {
+        strategyShareId: sharedPermission.strategyShareId,
+        permission: sharedPermission.permission,
+        permissionLabel: sharedPermission.permissionLabel,
+    };
 }

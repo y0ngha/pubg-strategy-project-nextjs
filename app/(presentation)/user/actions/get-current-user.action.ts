@@ -8,21 +8,11 @@ import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentica
 export type GetCurrentUserAction = GetCurrentUserResponseDto;
 
 export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
 
-    try {
-        const useCase = getService<GetCurrentUserUseCase>(
-            GetCurrentUserUseCase
-        );
+    const getService = initializeRequestServices();
 
-        const user = await useCase.execute();
+    const useCase = getService<GetCurrentUserUseCase>(GetCurrentUserUseCase);
 
-        return {
-            ...user,
-        };
-    } catch (e) {
-        throw e;
-    }
+    return await useCase.execute();
 }

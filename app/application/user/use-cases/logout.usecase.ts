@@ -1,6 +1,6 @@
 import { AuthenticationServicePort } from '@/domain/user/port/out/authentication-service.port';
 import { inject, injectable } from 'inversify';
-import { LogoutRequestDto, LogoutRequestSchema } from '../dto/logout.dto';
+import { LogoutCommand } from '@domain/user/commands/logout.command';
 
 @injectable()
 export class LogoutUseCase {
@@ -9,9 +9,9 @@ export class LogoutUseCase {
         private readonly authenticationService: AuthenticationServicePort
     ) {}
 
-    async execute(dto: LogoutRequestDto): Promise<boolean> {
-        const { userId } = LogoutRequestSchema.parse(dto);
+    async execute(): Promise<boolean> {
+        const command = LogoutCommand.create();
 
-        return await this.authenticationService.logout(userId);
+        return await this.authenticationService.logout(command);
     }
 }

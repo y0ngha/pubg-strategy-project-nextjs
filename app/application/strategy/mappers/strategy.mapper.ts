@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { Strategy } from '@domain/strategy/entities/strategy.entity';
 import {
     AirplanePathResponseDto,
     ChildCommentResponseDto,
@@ -15,19 +14,22 @@ import {
 } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { Position as PositionInterface } from '@/application/strategy/types/position';
 import { PubgMap, PubgMapNames } from '@domain/strategy/enums/map.enum';
-import { UserId } from '@domain/shared/value-objects/user-id';
-import { StrategyShareNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
-import { TeamPlayer } from '@domain/strategy/entities/team-player.entity';
-import { EnemyTeam } from '@domain/strategy/entities/enemy-team.entity';
-import { Circle } from '@domain/strategy/entities/circle.entity';
-import { AirplanePath } from '@domain/strategy/entities/airplane-path.entity';
-import { Tag } from '@domain/strategy/entities/tag.entity';
-import { StrategyShare } from '@domain/strategy/entities/strategy-share.entity';
-import { Position } from '@domain/strategy/value-objects/position';
-import { Waypoint } from '@domain/strategy/entities/waypoint.entity';
-import { Marker } from '@domain/strategy/entities/marker.entity';
-import { Comment } from '@domain/strategy/entities/comment.entity';
-import { CommentId } from '@domain/strategy/value-objects/comment-id';
+import { Position } from '@/domain/strategy/models/position.model';
+import { Marker } from '@domain/strategy/models/marker.model';
+import { Waypoint } from '@domain/strategy/models/waypoint.model';
+import { TeamPlayer } from '@domain/strategy/models/team-player.model';
+import { EnemyTeam } from '@domain/strategy/models/enemy-team.model';
+import { Circle } from '@domain/strategy/models/circle.model';
+import { AirplanePath } from '@domain/strategy/models/airplane-path.model';
+import { Tag } from '@domain/strategy/models/tag.model';
+import { StrategyShare } from '@domain/strategy/models/strategy-share.model';
+import { Strategy } from '@domain/strategy/models/strategy.model';
+import { Comment } from '@domain/strategy/models/comment.model';
+import {
+    CIRCLE_COLOR_MAP,
+    CIRCLE_RADIUS_MAP,
+} from '@domain/strategy/constants/circle-phase.constants';
+import { TEAM_PLAYER_COLOR_MAP } from '@domain/strategy/constants/team-player.constants';
 
 @injectable()
 export class StrategyMapper {
@@ -43,29 +45,26 @@ export class StrategyMapper {
         [PubgMap.DESTON]: '/images/maps/Deston.webp',
     };
 
-    toResponse(entity: Strategy, actorId: UserId): GetStrategyResponseDto {
-        const permission = this.getPermission(entity, actorId);
-
+    toResponse(model: Strategy): GetStrategyResponseDto {
         return {
-            id: entity.id.toString(),
-            ownerId: entity.ownerId.toString(),
-            ownerEmail: entity.ownerEmail.toString(),
-            title: entity.title.value,
-            map: entity.map.toString(),
-            mapName: PubgMapNames[entity.map],
-            mapImage: this.mapImages[entity.map],
-            teamPlayers: entity.teamPlayers.map(tp => this.parseTeamPlayer(tp)),
-            enemyTeams: entity.enemyTeams.map(et => this.parseEnemyTeam(et)),
-            circles: entity.circles.map(c => this.parseCircle(c)),
-            airplanePath: entity.airplanePath
-                ? this.parseAirplanePath(entity.airplanePath)
+            id: model.id,
+            ownerId: model.ownerId,
+            ownerEmail: model.ownerEmail,
+            title: model.title,
+            map: model.map,
+            mapName: PubgMapNames[model.map],
+            mapImage: this.mapImages[model.map],
+            teamPlayers: model.teamPlayers.map(tp => this.parseTeamPlayer(tp)),
+            enemyTeams: model.enemyTeams.map(et => this.parseEnemyTeam(et)),
+            circles: model.circles.map(c => this.parseCircle(c)),
+            airplanePath: model.airplanePath
+                ? this.parseAirplanePath(model.airplanePath)
                 : undefined,
-            tags: entity.tags.map(tag => this.parseTag(tag)),
-            shares: entity.shares.map(share => this.parseStrategyShare(share)),
-            comments: this.parseParentComments(entity.comments, actorId),
-            permission: permission,
-            createdAt: entity.createdAt,
-            updatedAt: entity.updatedAt,
+            tags: model.tags.map(tag => this.parseTag(tag)),
+            shares: model.shares.map(share => this.parseStrategyShare(share)),
+            comments: this.parseParentComments(model.comments),
+            createdAt: model.createdAt,
+            updatedAt: model.updatedAt,
         };
     }
 
@@ -76,97 +75,90 @@ export class StrategyMapper {
         };
     }
 
-    private parseMarker(entity: Marker): MarkerResponseDto {
+    private parseMarker(model: Marker): MarkerResponseDto {
         return {
-            id: entity.id.toString(),
-            position: this.parsePosition(entity.position),
+            id: model.id,
+            position: this.parsePosition(model.position),
         };
     }
 
-    private parseWaypoint(entity: Waypoint): WaypointResponseDto {
+    private parseWaypoint(model: Waypoint): WaypointResponseDto {
         return {
-            id: entity.id.toString(),
-            positions: entity.positions.map(pos => this.parsePosition(pos)),
+            id: model.id,
+            positions: model.positions.map(pos => this.parsePosition(pos)),
         };
     }
 
-    private parseTeamPlayer(entity: TeamPlayer): TeamPlayerResponseDto {
+    private parseTeamPlayer(model: TeamPlayer): TeamPlayerResponseDto {
         return {
-            id: entity.id.toString(),
-            priority: entity.priority,
-            position: this.parsePosition(entity.position),
-            color: entity.color,
-            marker: entity.marker ? this.parseMarker(entity.marker) : undefined,
-            waypoint: entity.waypoint
-                ? this.parseWaypoint(entity.waypoint)
+            id: model.id,
+            priority: model.priority,
+            position: this.parsePosition(model.position),
+            color: TEAM_PLAYER_COLOR_MAP[model.priority],
+            marker: model.marker ? this.parseMarker(model.marker) : undefined,
+            waypoint: model.waypoint
+                ? this.parseWaypoint(model.waypoint)
                 : undefined,
         };
     }
 
-    private parseEnemyTeam(entity: EnemyTeam): EnemyTeamResponseDto {
+    private parseEnemyTeam(model: EnemyTeam): EnemyTeamResponseDto {
         return {
-            id: entity.id.toString(),
-            teamLabel: entity.teamLabel.toString(),
-            position: this.parsePosition(entity.position),
+            id: model.id,
+            teamLabel: model.teamLabel,
+            position: this.parsePosition(model.position),
         };
     }
 
-    private parseCircle(entity: Circle): CircleResponseDto {
+    private parseCircle(model: Circle): CircleResponseDto {
         return {
-            id: entity.id.toString(),
-            centerPosition: this.parsePosition(entity.centerPosition),
-            phase: entity.phase.value,
-            radius: entity.phase.radius,
-            color: entity.phase.color,
+            id: model.id,
+            centerPosition: this.parsePosition(model.centerPosition),
+            phase: model.phase,
+            radius: CIRCLE_RADIUS_MAP[model.phase],
+            color: CIRCLE_COLOR_MAP[model.phase],
         };
     }
 
-    private parseAirplanePath(entity: AirplanePath): AirplanePathResponseDto {
+    private parseAirplanePath(model: AirplanePath): AirplanePathResponseDto {
         return {
-            id: entity.id.toString(),
-            startPosition: this.parsePosition(entity.startPosition),
-            endPosition: this.parsePosition(entity.endPosition),
+            id: model.id,
+            startPosition: this.parsePosition(model.startPosition),
+            endPosition: this.parsePosition(model.endPosition),
         };
     }
 
-    private parseTag(entity: Tag): TagResponseDto {
+    private parseTag(model: Tag): TagResponseDto {
         return {
-            id: entity.id.toString(),
-            content: entity.content.value,
-            position: this.parsePosition(entity.position),
+            id: model.id,
+            content: model.content,
+            position: this.parsePosition(model.position),
         };
     }
 
-    private parseStrategyShare(
-        entity: StrategyShare
-    ): StrategyShareResponseDto {
+    private parseStrategyShare(model: StrategyShare): StrategyShareResponseDto {
         return {
-            id: entity.id.toString(),
-            sharedUserId: entity.sharedUserId.toString(),
-            sharedEmail: entity.sharedEmail.toString(),
-            permission: entity.permission.toString(),
+            id: model.id,
+            sharedUserId: model.sharedUserId,
+            sharedEmail: model.sharedEmail,
+            permission: model.permission,
         };
     }
 
-    private parseComments(
-        entities: Comment,
-        actorId: UserId
-    ): ChildCommentResponseDto {
+    private parseComments(entities: Comment): ChildCommentResponseDto {
         return {
-            id: entities.id.toString(),
-            authorId: entities.authorId.toString(),
-            authorEmail: entities.authorEmail.toString(),
-            content: entities.content.value,
+            id: entities.id,
+            authorId: entities.authorId,
+            authorEmail: entities.authorEmail,
+            content: entities.content,
             createdAt: entities.createdAt,
-            isAuthor: entities.authorId.equals(actorId),
+            isAuthor: entities.isAuthor,
+            isParent: entities.isParent,
         };
     }
 
-    private parseParentComments(
-        entities: Comment[],
-        actorId: UserId
-    ): CommentResponseDto[] {
-        const parentComments = entities.filter(entity => entity.isParent);
+    private parseParentComments(entities: Comment[]): CommentResponseDto[] {
+        const parentComments = entities.filter(model => model.isParent);
 
         return parentComments.map(parentComment => {
             this.ensureParentCommentPosition(
@@ -174,44 +166,28 @@ export class StrategyMapper {
                 parentComment.position
             );
 
-            const childComments = entities.filter(entity =>
-                entity.parentCommentId?.equals(parentComment.id)
+            const childComments = entities.filter(
+                model => model.parentCommentId === parentComment.id
             );
 
             return {
-                ...this.parseComments(parentComment, actorId),
+                ...this.parseComments(parentComment),
                 position: this.parsePosition(parentComment.position),
                 childComments: childComments.map(childComment =>
-                    this.parseComments(childComment, actorId)
+                    this.parseComments(childComment)
                 ),
             };
         });
     }
 
     private ensureParentCommentPosition(
-        commentId: CommentId,
+        commentId: string,
         position: Position | null
     ): asserts position is Position {
         if (position === null) {
             throw new Error(
-                `댓글 파싱중 오류가 발생했습니다.\n부모 댓글에 포지션이 비어있습니다: ${commentId.toString()}`
+                `댓글 파싱중 오류가 발생했습니다.\n부모 댓글에 포지션이 비어있습니다: ${commentId}`
             );
         }
-    }
-
-    private getPermission(strategy: Strategy, actorId: UserId): string {
-        if (strategy.ownerId.equals(actorId)) {
-            return '소유자';
-        }
-
-        const sharedStrategy = strategy.shares.find(share =>
-            share.sharedUserId.equals(actorId)
-        );
-
-        if (!sharedStrategy) {
-            throw new StrategyShareNotFoundException();
-        }
-
-        return sharedStrategy.isEditable ? '편집자' : '뷰어';
     }
 }

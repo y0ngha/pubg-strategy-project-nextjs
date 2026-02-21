@@ -1,31 +1,28 @@
 import { inject, injectable } from 'inversify';
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
-
-import { FriendNotFoundException } from '@domain/friend/exceptions/friend.exceptions';
 import {
     RejectReceivedFriendRequestDto,
     RejectReceivedFriendRequestSchema,
 } from '@/application/friend/dto/reject-received-friend.dto';
+import { RejectReceivedFriendRequestCommand } from '@domain/friend/commands/reject-received-friend-request.command';
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
 
 @injectable()
 export class RejectReceivedFriendUseCase {
     constructor(
-        @inject(FriendRepositoryPort)
-        private readonly friendRepository: FriendRepositoryPort
+        @inject(FriendCommandRepositoryPort)
+        private readonly friendCommandRepository: FriendCommandRepositoryPort
     ) {}
 
     async execute(dto: RejectReceivedFriendRequestDto): Promise<boolean> {
-        const { id, userId } = RejectReceivedFriendRequestSchema.parse(dto);
+        const { id, currentStatus } =
+            RejectReceivedFriendRequestSchema.parse(dto);
 
-        const friend = await this.friendRepository.findById(id);
+        const command = RejectReceivedFriendRequestCommand.create(
+            id,
+            currentStatus
+        );
 
-        if (!friend) {
-            throw new FriendNotFoundException(id.toString());
-        }
-
-        friend.reject(userId);
-
-        await this.friendRepository.save(friend);
+        await this.friendCommandRepository.reject(command);
 
         return true;
     }

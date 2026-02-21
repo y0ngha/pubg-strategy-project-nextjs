@@ -3,20 +3,18 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteAirplanePathAction = { airplanePathId: string };
 
 export async function deleteAirplanePathAction(
     formData: FormData
 ): Promise<DeleteAirplanePathAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, airplanePathId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, airplanePathId } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -34,7 +32,6 @@ export async function deleteAirplanePathAction(
     );
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         airplanePathId: airplanePathId,
     };

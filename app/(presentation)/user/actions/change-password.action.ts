@@ -10,12 +10,7 @@ export async function changePasswordAction(formData: FormData) {
 
     const getService = initializeRequestServices();
 
-    const { userId, currentPassword, newPassword } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { currentPassword, newPassword } = parseFormData(formData, [
         {
             key: 'currentPassword',
             error: '현재 비밀번호를 입력해주세요.',
@@ -29,7 +24,6 @@ export async function changePasswordAction(formData: FormData) {
     ] as const);
 
     const dto = {
-        userId: userId,
         currentPassword: currentPassword,
         newPassword: newPassword,
     };

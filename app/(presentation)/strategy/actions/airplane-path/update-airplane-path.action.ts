@@ -4,6 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateAirplanePathAction = {
     startPosition: Position;
@@ -13,15 +14,12 @@ export type UpdateAirplanePathAction = {
 export async function updateAirplanePathAction(
     formData: FormData
 ): Promise<UpdateAirplanePathAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, airplanePathId, startPosition, endPosition } =
+    const { strategyId, airplanePathId, startPosition, endPosition } =
         parseFormData(formData, [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
             {
                 key: 'strategyId',
                 error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -49,7 +47,6 @@ export async function updateAirplanePathAction(
     );
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         airplanePathId: airplanePathId,
         startPosition: startPosition,

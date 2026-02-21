@@ -1,31 +1,28 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     DeleteTeamPlayerRequestDto,
     DeleteTeamPlayerRequestSchema,
 } from '@/application/strategy/dto/team-player/delete-team-player.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteTeamPlayerCommand } from '@domain/strategy/commands/team-player/delete-team-player.command';
 
 @injectable()
 export class DeleteTeamPlayerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteTeamPlayerRequestDto) {
-        const { actorId, strategyId, teamPlayerId } =
+        const { strategyId, teamPlayerId } =
             DeleteTeamPlayerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteTeamPlayerCommand.create(
+            strategyId,
+            teamPlayerId
+        );
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeTeamPlayer(actorId, teamPlayerId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteTeamPlayer(command);
 
         return {
             teamPlayerId: teamPlayerId.toString(),

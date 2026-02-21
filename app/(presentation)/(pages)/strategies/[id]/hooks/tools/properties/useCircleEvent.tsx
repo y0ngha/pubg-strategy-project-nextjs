@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCreateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCircleMutation';
-import { useUpdateCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCircleMutation';
+import { useUpdateCirclePositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCirclePositionMutation';
 import { CircleResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteCircleMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCircleMutation';
 import PhaseSelectModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/phase-select.modal';
@@ -13,8 +13,8 @@ export function useCircleEvent(
 ) {
     const { createCircle: createCircleMutation } =
         useCreateCircleMutation(strategyId);
-    const { updateCircle: updateCircleMutation } =
-        useUpdateCircleMutation(strategyId);
+    const { updateCirclePosition: updateCircleMutation } =
+        useUpdateCirclePositionMutation(strategyId);
     const { deleteCircle: deleteCircleMutation } =
         useDeleteCircleMutation(strategyId);
 

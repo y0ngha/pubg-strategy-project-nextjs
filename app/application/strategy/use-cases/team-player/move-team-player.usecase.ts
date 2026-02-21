@@ -1,41 +1,37 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     MoveTeamPlayerRequestDto,
     MoveTeamPlayerRequestSchema,
 } from '@/application/strategy/dto/team-player/move-team-player.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { UpdateTeamPlayerPositionCommand } from '@domain/strategy/commands/team-player/update-team-player-position.command';
 
 @injectable()
 export class MoveTeamPlayerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: MoveTeamPlayerRequestDto) {
-        const { actorId, strategyId, teamPlayerId, position } =
+        const { strategyId, teamPlayerId, position } =
             MoveTeamPlayerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const teamPlayer = strategy.updateTeamPlayerPosition(
-            actorId,
+        const command = UpdateTeamPlayerPositionCommand.create(
+            strategyId,
             teamPlayerId,
             position
         );
 
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.updateTeamPlayerPosition(
+            command
+        );
 
         return {
-            id: teamPlayer.id.toString(),
+            id: teamPlayerId.toString(),
             position: {
-                x: teamPlayer.position.x,
-                y: teamPlayer.position.y,
+                x: position.x,
+                y: position.y,
             },
         };
     }

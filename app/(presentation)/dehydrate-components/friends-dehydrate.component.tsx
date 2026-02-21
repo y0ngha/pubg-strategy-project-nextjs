@@ -19,8 +19,8 @@ export default async function FriendsDehydrate({
     const queryClient = getQueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: [userId, ReactQueryKeys.FRIENDS],
-        queryFn: async () => await getFriendListAction(userId),
+        queryKey: [ReactQueryKeys.FRIENDS_ALL],
+        queryFn: async () => await getFriendListAction(),
     });
 
     const dehydratedState = dehydrate(queryClient);

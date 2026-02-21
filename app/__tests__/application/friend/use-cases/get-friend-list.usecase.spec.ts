@@ -1,20 +1,20 @@
-import { FriendRepositoryPort } from '@domain/friend/port/out/friend-repository.port';
+import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
 import { GetFriendListUseCase } from '@/application/friend/use-cases/get-friend-list.usecase';
-import { Friend } from '@domain/friend/entities/friend.entity';
 import { UserId } from '@domain/shared/value-objects/user-id';
 import { Email } from '@domain/shared/value-objects/email';
-import { getFriendRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
-import { FriendMapper } from '@/application/friend/mappers/friend.mapper';
+import { getFriendQueryRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { Friend } from '@domain/friend/models/friend.model';
+import { FriendId } from '@domain/friend/value-objects/friend-id';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 
 describe('GetFriendListUseCase', () => {
     let useCase: GetFriendListUseCase;
-    let mockFriendRepository: jest.Mocked<FriendRepositoryPort>;
-    const friendMapper = new FriendMapper();
+    let mockFriendQueryRepository: jest.Mocked<FriendQueryRepositoryPort>;
 
     beforeEach(() => {
-        mockFriendRepository = getFriendRepositoryMocking();
+        mockFriendQueryRepository = getFriendQueryRepositoryMocking();
 
-        useCase = new GetFriendListUseCase(mockFriendRepository, friendMapper);
+        useCase = new GetFriendListUseCase(mockFriendQueryRepository);
     });
 
     describe('정상 조회', () => {
@@ -22,65 +22,88 @@ describe('GetFriendListUseCase', () => {
             // give
             const userId = UserId.generate();
 
-            mockFriendRepository.findAcceptedFriendsByUserId.mockImplementation(
+            mockFriendQueryRepository.findAcceptedFriendsByUserId.mockImplementation(
                 async (): Promise<Friend[]> => {
                     return [1].map(i => {
                         const recipientUserId = UserId.generate();
 
-                        const friend = Friend.create(
-                            userId,
-                            recipientUserId,
-                            Email.create(`test${i}_requester@fixtures.com`),
-                            Email.create(`test${i}_recipient@fixtures.com`)
-                        );
-
-                        friend.accept(recipientUserId);
+                        const friend: Friend = {
+                            id: FriendId.generate().toString(),
+                            requesterUserId: userId.toString(),
+                            requesterUserEmail: Email.create(
+                                `test${i}_requester@fixtures.com`
+                            ).toString(),
+                            recipientUserId: recipientUserId.toString(),
+                            recipientUserEmail: Email.create(
+                                `test${i}_recipient@fixtures.com`
+                            ).toString(),
+                            status: FriendStatus.ACCEPTED,
+                            requestedAt: new Date(),
+                            respondedAt: new Date(),
+                        };
 
                         return friend;
                     });
                 }
             );
-            mockFriendRepository.findReceivedFriendRequestsByRecipientUserId.mockImplementation(
+            mockFriendQueryRepository.findReceivedFriendRequestsByRecipientUserId.mockImplementation(
                 async (): Promise<Friend[]> => {
                     return [1, 2].map(i => {
-                        return Friend.create(
-                            UserId.generate(),
-                            userId,
-                            Email.create(`test${i}_requester@fixtures.com`),
-                            Email.create(`test${i}_recipient@fixtures.com`)
-                        );
+                        const friend: Friend = {
+                            id: FriendId.generate().toString(),
+                            requesterUserId: UserId.generate().toString(),
+                            requesterUserEmail: Email.create(
+                                `test${i}_requester@fixtures.com`
+                            ).toString(),
+                            recipientUserId: userId.toString(),
+                            recipientUserEmail: Email.create(
+                                `test${i}_recipient@fixtures.com`
+                            ).toString(),
+                            status: FriendStatus.PENDING,
+                            requestedAt: new Date(),
+                            respondedAt: null,
+                        };
+
+                        return friend;
                     });
                 }
             );
-            mockFriendRepository.findSentFriendRequestsByRequesterUserId.mockImplementation(
+            mockFriendQueryRepository.findSentFriendRequestsByRequesterUserId.mockImplementation(
                 async (): Promise<Friend[]> => {
                     return [1, 2, 3].map(i => {
-                        return Friend.create(
-                            userId,
-                            UserId.generate(),
-                            Email.create(`test${i}_requester@fixtures.com`),
-                            Email.create(`test${i}_recipient@fixtures.com`)
-                        );
+                        const friend: Friend = {
+                            id: FriendId.generate().toString(),
+                            requesterUserId: userId.toString(),
+                            requesterUserEmail: Email.create(
+                                `test${i}_requester@fixtures.com`
+                            ).toString(),
+                            recipientUserId: UserId.generate().toString(),
+                            recipientUserEmail: Email.create(
+                                `test${i}_recipient@fixtures.com`
+                            ).toString(),
+                            status: FriendStatus.PENDING,
+                            requestedAt: new Date(),
+                            respondedAt: null,
+                        };
+
+                        return friend;
                     });
                 }
             );
-            const dto = {
-                userId: userId.toString(),
-            };
 
             // when
-            const result = await useCase.execute(dto);
+            const result = await useCase.execute();
 
             // then
             // then
             expect(
-                mockFriendRepository.findAcceptedFriendsByUserId
+                mockFriendQueryRepository.findAcceptedFriendsByUserId
             ).toHaveBeenCalledTimes(1);
             expect(
-                mockFriendRepository.findReceivedFriendRequestsByRecipientUserId
+                mockFriendQueryRepository.findReceivedFriendRequestsByRecipientUserId
             ).toHaveBeenCalledTimes(1);
             expect(
-                mockFriendRepository.findSentFriendRequestsByRequesterUserId
+                mockFriendQueryRepository.findSentFriendRequestsByRequesterUserId
             ).toHaveBeenCalledTimes(1);
 
             expect(result.friends).toHaveLength(1);
@@ -90,31 +113,28 @@ describe('GetFriendListUseCase', () => {
 
         it('친구 관계가 없어도, 오류가 나지 않고 빈 배열을 응답한다.', async () => {
             // give
-            mockFriendRepository.findAcceptedFriendsByUserId.mockResolvedValue(
+            mockFriendQueryRepository.findAcceptedFriendsByUserId.mockResolvedValue(
                 []
             );
-            mockFriendRepository.findReceivedFriendRequestsByRecipientUserId.mockResolvedValue(
+            mockFriendQueryRepository.findReceivedFriendRequestsByRecipientUserId.mockResolvedValue(
                 []
             );
-            mockFriendRepository.findSentFriendRequestsByRequesterUserId.mockResolvedValue(
+            mockFriendQueryRepository.findSentFriendRequestsByRequesterUserId.mockResolvedValue(
                 []
             );
 
-            const dto = {
-                userId: 'a0f01e35-f96b-4dee-a75b-89cea500ce50',
-            };
             // when
-            const result = await useCase.execute(dto);
+            const result = await useCase.execute();
 
             // then
             expect(
-                mockFriendRepository.findAcceptedFriendsByUserId
+                mockFriendQueryRepository.findAcceptedFriendsByUserId
             ).toHaveBeenCalledTimes(1);
             expect(
-                mockFriendRepository.findReceivedFriendRequestsByRecipientUserId
+                mockFriendQueryRepository.findReceivedFriendRequestsByRecipientUserId
             ).toHaveBeenCalledTimes(1);
             expect(
-                mockFriendRepository.findSentFriendRequestsByRequesterUserId
+                mockFriendQueryRepository.findSentFriendRequestsByRequesterUserId
             ).toHaveBeenCalledTimes(1);
 
             expect(result.friends).toHaveLength(0);
@@ -124,16 +144,12 @@ describe('GetFriendListUseCase', () => {
 
         it('예외가 발생하면, 예외가 그대로 전파되어야 한다', async () => {
             // given
-            mockFriendRepository.findAcceptedFriendsByUserId.mockRejectedValue(
+            mockFriendQueryRepository.findAcceptedFriendsByUserId.mockRejectedValue(
                 new Error()
             );
 
-            const dto = {
-                userId: 'a0f01e35-f96b-4dee-a75b-89cea500ce50',
-            };
-
             //when & then
-            await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
+            await expect(() => useCase.execute()).rejects.toThrow(Error);
         });
     });
 });

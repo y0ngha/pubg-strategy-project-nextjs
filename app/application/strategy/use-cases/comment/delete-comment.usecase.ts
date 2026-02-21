@@ -1,31 +1,24 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     DeleteCommentRequestDto,
     DeleteCommentRequestSchema,
 } from '@/application/strategy/dto/comment/delete-comment.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { DeleteCommentCommand } from '@domain/strategy/commands/comment/delete-comment.command';
 
 @injectable()
 export class DeleteCommentUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: DeleteCommentRequestDto) {
-        const { actorId, strategyId, commentId } =
-            DeleteCommentRequestSchema.parse(dto);
+        const { strategyId, commentId } = DeleteCommentRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
+        const command = DeleteCommentCommand.create(strategyId, commentId);
 
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.removeComment(actorId, commentId);
-
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.deleteComment(command);
 
         return {
             commentId: commentId.toString(),

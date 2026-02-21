@@ -1,38 +1,37 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     UpdateStrategySharePermissionRequestDto,
     UpdateStrategySharePermissionRequestSchema,
 } from '@/application/strategy/dto/share/update-strategy-share-permission.dto';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { UpdateStrategySharePermissionCommand } from '@domain/strategy/commands/strategy-share/update-strategy-share-permission.command';
+import { StrategySharePermissionLabels } from '@domain/strategy/enums/strategy-share-permission.enum';
 
 @injectable()
 export class UpdateStrategySharePermissionUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
-    async execute(
-        dto: UpdateStrategySharePermissionRequestDto
-    ): Promise<boolean> {
-        const { actorId, strategyId, strategyShareId, permission } =
+    async execute(dto: UpdateStrategySharePermissionRequestDto) {
+        const { strategyId, strategyShareId, permission } =
             UpdateStrategySharePermissionRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        strategy.updateStrategySharePermission(
-            actorId,
+        const command = UpdateStrategySharePermissionCommand.create(
+            strategyId,
             strategyShareId,
             permission
         );
 
-        await this.strategyRepository.save(strategy);
+        await this.strategyCommandRepositoryPort.updateStrategySharePermission(
+            command
+        );
 
-        return true;
+        return {
+            strategyShareId: strategyShareId.toString(),
+            permission: permission,
+            permissionLabel: StrategySharePermissionLabels[permission],
+        };
     }
 }

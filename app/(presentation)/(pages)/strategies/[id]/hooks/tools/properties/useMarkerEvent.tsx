@@ -1,6 +1,6 @@
 import { useCreateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateMarkerMutation';
 import { toast } from 'react-toastify';
-import { useUpdateMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerMutation';
+import { useUpdateMarkerPositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateMarkerPositionMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteMarkerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteMarkerMutation';
 import { Fragment, useState } from 'react';
@@ -14,8 +14,8 @@ export function useMarkerEvent(
 ) {
     const { createMarker: createMarkerMutation } =
         useCreateMarkerMutation(strategyId);
-    const { updateMarker: updateMarkerMutation } =
-        useUpdateMarkerMutation(strategyId);
+    const { updateMarkerPosition: updateMarkerPositionMutation } =
+        useUpdateMarkerPositionMutation(strategyId);
     const { deleteMarker: deleteMarkerMutation } =
         useDeleteMarkerMutation(strategyId);
 
@@ -71,7 +71,7 @@ export function useMarkerEvent(
             if (marker) {
                 formData.set('markerId', marker.id);
 
-                updateMarkerMutation(formData);
+                updateMarkerPositionMutation(formData);
             } else {
                 createMarkerMutation(formData);
             }
@@ -114,7 +114,7 @@ export function useMarkerEvent(
         formData.set('markerId', markerId);
         formData.set('position', JSON.stringify(position));
 
-        updateMarkerMutation(formData);
+        updateMarkerPositionMutation(formData);
     };
 
     const deleteMarker = (teamPlayerId: string, markerId: string) => {

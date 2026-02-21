@@ -1,32 +1,23 @@
 import { z } from 'zod';
-import { UserId } from '@domain/shared/value-objects/user-id';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
 import { Position } from '@/application/strategy/types/position';
 
 export interface GetStrategyRequestDto {
-    actorId: string;
     strategyId: string;
 }
 
 export const GetStrategyRequestSchema = z.object({
-    actorId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
     strategyId: z.string().transform(value => {
         return StrategyId.create(value);
     }),
 });
 
 export interface GetStrategiesRequestDto {
-    actorId: string;
     page: number;
     limit: number;
 }
 
 export const GetStrategiesRequestSchema = z.object({
-    actorId: z.string().transform(value => {
-        return UserId.create(value);
-    }),
     page: z.number(),
     limit: z.number(),
 });
@@ -91,6 +82,7 @@ export interface CommentResponseDto {
     content: string;
     createdAt: Date;
     isAuthor: boolean;
+    isParent: boolean;
     childComments: ChildCommentResponseDto[];
 }
 
@@ -115,8 +107,6 @@ export interface GetStrategyResponseDto {
     tags: TagResponseDto[];
     shares: StrategyShareResponseDto[];
     comments: CommentResponseDto[];
-
-    permission: string;
 
     createdAt: Date;
     updatedAt: Date;

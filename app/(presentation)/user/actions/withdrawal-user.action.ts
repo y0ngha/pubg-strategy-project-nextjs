@@ -2,24 +2,14 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
-import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
-export async function withdrawalUserAction(_: unknown, formData: FormData) {
+export async function withdrawalUserAction() {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
-
-    const { id } = parseFormData(formData, [
-        {
-            key: 'id',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
-    ] as const);
-
-    const dto = {
-        id: id,
-    };
 
     const useCase = getService<WithdrawalUseCase>(WithdrawalUseCase);
 
-    return await useCase.execute(dto);
+    return await useCase.execute();
 }

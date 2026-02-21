@@ -1,38 +1,33 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
 import {
     AddMarkerRequestDto,
     AddMarkerRequestSchema,
 } from '@/application/strategy/dto/marker/add-marker.dto';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateMarkerCommand } from '@domain/strategy/commands/marker/create-marker.command';
 
 @injectable()
 export class AddMarkerUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepository: StrategyCommandRepositoryPort
     ) {}
 
     async execute(dto: AddMarkerRequestDto) {
-        const { actorId, strategyId, teamPlayerId, position } =
+        const { strategyId, teamPlayerId, position } =
             AddMarkerRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const marker = strategy.addTeamPlayerMarker(
-            actorId,
+        const command = CreateMarkerCommand.create(
+            strategyId,
             teamPlayerId,
             position
         );
 
-        await this.strategyRepository.save(strategy);
+        const marker =
+            await this.strategyCommandRepository.createMarker(command);
 
         return {
-            id: marker.id.toString(),
+            id: marker.id,
             teamPlayerId: teamPlayerId.toString(),
             position: {
                 x: marker.position.x,

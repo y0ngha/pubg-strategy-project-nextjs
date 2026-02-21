@@ -1,47 +1,41 @@
 import { inject, injectable } from 'inversify';
-import { StrategyRepositoryPort } from '@domain/strategy/port/out/strategy-repository.port';
-import { StrategyNotFoundException } from '@domain/strategy/exceptions/strategy.exceptions';
 import {
     CreateStrategyShareRequestDto,
     CreateStrategyShareRequestSchema,
 } from '@/application/strategy/dto/share/create-strategy-share.dto';
-import { UserRepositoryPort } from '@domain/user/port/out/user-repository.port';
-import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
+import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
+import { CreateStrategyShareCommand } from '@domain/strategy/commands/strategy-share/create-strategy-share.command';
+import { StrategySharePermissionLabels } from '@domain/strategy/enums/strategy-share-permission.enum';
 
 @injectable()
 export class CreateStrategyShareUseCase {
     constructor(
-        @inject(StrategyRepositoryPort)
-        private readonly strategyRepository: StrategyRepositoryPort,
-        @inject(UserRepositoryPort)
-        private readonly userRepository: UserRepositoryPort
+        @inject(StrategyCommandRepositoryPort)
+        private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
-    async execute(dto: CreateStrategyShareRequestDto): Promise<boolean> {
-        const { actorId, strategyId, targetUserId, permission } =
+    async execute(dto: CreateStrategyShareRequestDto) {
+        const { strategyId, targetUserId, permission } =
             CreateStrategyShareRequestSchema.parse(dto);
 
-        const strategy = await this.strategyRepository.findById(strategyId);
-
-        if (!strategy) {
-            throw new StrategyNotFoundException();
-        }
-
-        const user = await this.userRepository.findByUserId(targetUserId);
-
-        if (!user) {
-            throw new UserNotFoundException();
-        }
-
-        strategy.addStrategyShare(
-            actorId,
+        const command = CreateStrategyShareCommand.create(
+            strategyId,
             targetUserId,
-            user.email,
             permission
         );
 
-        await this.strategyRepository.save(strategy);
+        const strategyShare =
+            await this.strategyCommandRepositoryPort.createStrategyShare(
+                command
+            );
 
-        return true;
+        return {
+            id: strategyShare.id,
+            sharedUserId: strategyShare.sharedUserId,
+            sharedEmail: strategyShare.sharedEmail,
+            permission: strategyShare.permission,
+            permissionLabel:
+                StrategySharePermissionLabels[strategyShare.permission],
+        };
     }
 }
