@@ -1,17 +1,20 @@
-import { useCreateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateCommentMutation';
+import { useCreateParentCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateParentCommentMutation';
 import React, { useState } from 'react';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useUpdateCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateCommentMutation';
 import { useDeleteCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteCommentMutation';
 import StrategyCommentWindow from '@/(presentation)/(pages)/strategies/[id]/components/modals/strategy-comment-window.modal';
 import CommentsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/comment-property.component';
+import { useCreateChildCommentMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateChildCommentMutation';
 
 export function useCommentEvent(
     strategyId: string,
     comments: CommentResponseDto[]
 ) {
-    const { createComment: createCommentMutation } =
-        useCreateCommentMutation(strategyId);
+    const { createParentComment: createParentCommentMutation } =
+        useCreateParentCommentMutation(strategyId);
+    const { createChildComment: createChildCommentMutation } =
+        useCreateChildCommentMutation(strategyId);
     const { updateComment: updateCommentMutation } =
         useUpdateCommentMutation(strategyId);
     const { deleteComment: deleteCommentMutation } =
@@ -86,19 +89,23 @@ export function useCommentEvent(
         return commentA.createdAt.getTime() - commentB.createdAt.getTime();
     };
 
+    const isCreateParentComment = (
+        parentCommentId: string | null
+    ): parentCommentId is null => {
+        return parentCommentId === null;
+    };
+
     const createComment = (content: string, parentCommentId: string | null) => {
         const formData = new FormData();
         formData.set('content', content);
 
-        if (!parentCommentId) {
+        if (isCreateParentComment(parentCommentId)) {
             formData.set('position', JSON.stringify(position));
-        }
-
-        if (parentCommentId) {
+            createParentCommentMutation(formData);
+        } else {
             formData.set('parentCommentId', parentCommentId);
+            createChildCommentMutation(formData);
         }
-
-        createCommentMutation(formData);
     };
 
     const updateComment = (commentId: string, content: string) => {
