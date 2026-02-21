@@ -1,8 +1,7 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
@@ -10,17 +9,12 @@ import { deleteTagAction } from '@/(presentation)/strategy/actions/tag/delete-ta
 
 export function useDeleteTagMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
             return await deleteTagAction(formData);

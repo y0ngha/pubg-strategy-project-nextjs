@@ -35,17 +35,13 @@ export async function loginWithEmailAction(
 
     const useCase = getService<LoginWithEmailUseCase>(LoginWithEmailUseCase);
 
-    try {
-        const { accessToken, refreshToken, user } = await useCase.execute(dto);
+    const { accessToken, refreshToken, user } = await useCase.execute(dto);
 
-        await saveTokensByCookieStore(accessToken, refreshToken);
-        await saveUserIdByCookieStore(user.id);
+    await saveTokensByCookieStore(accessToken, refreshToken);
+    await saveUserIdByCookieStore(user.id);
 
-        return {
-            id: user.id,
-            email: user.email,
-        };
-    } catch (e) {
-        throw e;
-    }
+    return {
+        id: user.id,
+        email: user.email,
+    };
 }

@@ -1,31 +1,25 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
-import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
 import { toast } from 'react-toastify';
+import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import {
-    UpdateTagAction,
-    updateTagAction,
-} from '@/(presentation)/strategy/actions/tag/update-tag.action';
+    UpdateEnemyTeamPositionAction,
+    updateEnemyTeamPositionAction,
+} from '@/(presentation)/strategy/actions/enemy-team/update-enemy-team-position.action';
 import { QueryKey } from '@tanstack/query-core';
 
-export function useUpdateTagMutation(strategyId: string) {
+export function useUpdateEnemyTeamPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateTagAction(formData);
+            return await updateEnemyTeamPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -39,14 +33,17 @@ export function useUpdateTagMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateTagMutation', error);
+            console.error('useUpdateEnemyTeamPositionMutation', error);
             toast.error(
-                error.message ?? '알 수 없는 오류로 태그 수정에 실패했습니다.'
+                error.message ?? '알 수 없는 오류로 적 팀 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateTagAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateEnemyTeamPositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -54,22 +51,22 @@ export function useUpdateTagMutation(strategyId: string) {
 
             return {
                 ...oldStrategy,
-                tags: oldStrategy.tags.map(tag => {
-                    if (tag.id === data.id) {
+                enemyTeams: oldStrategy.enemyTeams.map(enemyTeam => {
+                    if (enemyTeam.id === data.id) {
                         return {
+                            ...enemyTeam,
                             id: data.id,
-                            content: data.content,
                             position: data.position,
                         };
                     }
 
-                    return tag;
+                    return enemyTeam;
                 }),
             };
         });
     };
 
     return {
-        updateTag: mutate,
+        updateEnemyTeamPosition: mutate,
     };
 }

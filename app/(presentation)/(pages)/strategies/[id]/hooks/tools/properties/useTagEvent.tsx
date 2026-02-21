@@ -1,15 +1,17 @@
 import { useCreateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateTagMutation';
 import React, { useState } from 'react';
-import { useUpdateTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTagMutation';
 import { TagResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteTagMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTagMutation';
 import EnterTagContentModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-tag-content.modal';
 import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import TagsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/tag-property.component';
+import { useUpdateTagPositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTagPositionMutation';
 
 export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
     const { createTag: createTagMutation } = useCreateTagMutation(strategyId);
-    const { updateTag: updateTagMutation } = useUpdateTagMutation(strategyId);
+    const { updateTagPosition: updateTagPositionMutation } =
+        useUpdateTagPositionMutation(strategyId);
+
     const { deleteTag: deleteTagMutation } = useDeleteTagMutation(strategyId);
 
     const [isEnterTagContentModalOpen, setIsEnterTagContentModalOpen] =
@@ -72,7 +74,7 @@ export function useTagEvent(strategyId: string, tags: TagResponseDto[]) {
         formData.set('tagId', tagId);
         formData.set('position', JSON.stringify(position));
 
-        updateTagMutation(formData);
+        updateTagPositionMutation(formData);
     };
 
     const deleteTag = (tagId: string) => {

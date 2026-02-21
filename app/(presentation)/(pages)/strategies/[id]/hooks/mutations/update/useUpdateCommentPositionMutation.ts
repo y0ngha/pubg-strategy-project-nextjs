@@ -1,32 +1,26 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import {
-    UpdateCommentAction,
-    updateCommentAction,
-} from '@/(presentation)/strategy/actions/comment/update-comment.action';
+    UpdateCommentPositionAction,
+    updateCommentPositionAction,
+} from '@/(presentation)/strategy/actions/comment/update-comment-poisition.action';
 
-export function useUpdateCommentMutation(strategyId: string) {
+export function useUpdateCommentPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateCommentAction(formData);
+            return await updateCommentPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,14 +34,17 @@ export function useUpdateCommentMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateCommentMutation', error);
+            console.error('useUpdateCommentPositionMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 댓글 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateCommentAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateCommentPositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -61,35 +58,16 @@ export function useUpdateCommentMutation(strategyId: string) {
     };
 
     const generateNewComments = (
-        data: UpdateCommentAction,
+        data: UpdateCommentPositionAction,
         comments: CommentResponseDto[]
     ): CommentResponseDto[] => {
-        const { id, content, position } = data;
+        const { id, position } = data;
 
         return comments.map(parentComment => {
             if (parentComment.id === id) {
                 return {
                     ...parentComment,
-                    content: content,
-                    position: position ? position : parentComment.position,
-                };
-            }
-
-            if (parentComment.childComments.length > 0) {
-                return {
-                    ...parentComment,
-                    childComments: parentComment.childComments.map(
-                        childComment => {
-                            if (childComment.id === id) {
-                                return {
-                                    ...childComment,
-                                    content: content,
-                                };
-                            }
-
-                            return childComment;
-                        }
-                    ),
+                    position: position,
                 };
             }
 
@@ -98,6 +76,6 @@ export function useUpdateCommentMutation(strategyId: string) {
     };
 
     return {
-        updateComment: mutate,
+        updateCommentPosition: mutate,
     };
 }

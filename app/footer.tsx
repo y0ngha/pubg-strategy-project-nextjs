@@ -166,8 +166,14 @@ function Footer() {
             <FooterContainer>
                 <FooterGrid>
                     <FooterIntroduce />
-                    <FooterNavigation title={'Product'} navigationItems={NavigationItems} />
-                    <FooterNavigation title={'Legal'} navigationItems={LegalItems} />
+                    <FooterNavigation
+                        title={'Product'}
+                        navigationItems={NavigationItems}
+                    />
+                    <FooterNavigation
+                        title={'Legal'}
+                        navigationItems={LegalItems}
+                    />
                 </FooterGrid>
 
                 <FooterCopyright />

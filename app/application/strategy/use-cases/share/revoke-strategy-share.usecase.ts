@@ -13,7 +13,7 @@ export class RevokeStrategyShareUseCase {
         private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
-    async execute(dto: RevokeStrategyShareRequestDto): Promise<boolean> {
+    async execute(dto: RevokeStrategyShareRequestDto) {
         const { strategyId, strategyShareId } =
             RevokeStrategyShareRequestSchema.parse(dto);
 
@@ -24,6 +24,8 @@ export class RevokeStrategyShareUseCase {
 
         await this.strategyCommandRepositoryPort.deleteStrategyShare(command);
 
-        return true;
+        return {
+            strategyShareId: strategyShareId.toString(),
+        };
     }
 }

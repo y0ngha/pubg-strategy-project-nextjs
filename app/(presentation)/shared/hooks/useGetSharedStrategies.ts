@@ -4,11 +4,10 @@ import {
     UseInfiniteQueryResult,
 } from '@tanstack/react-query';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import {
     getSharedStrategiesAction,
     GetSharedStrategiesAction,
-} from '@/(presentation)/strategy/actions/get-shared-strategies.action';
+} from '@/(presentation)/strategy/actions/strategy/get-shared-strategies.action';
 import { InfiniteData, type QueryKey } from '@tanstack/query-core';
 
 export function useGetSharedStrategies(
@@ -31,8 +30,6 @@ export function useGetSharedStrategies(
         | 'initialPageParam'
     >
 ): UseInfiniteQueryResult<InfiniteData<GetSharedStrategiesAction>, Error> {
-    const user = useGetCurrentUser();
-
     return useInfiniteQuery<
         GetSharedStrategiesAction,
         Error,
@@ -40,21 +37,14 @@ export function useGetSharedStrategies(
         QueryKey,
         number
     >({
-        queryKey: [user.data?.id, ReactQueryKeys.SHARED_STRATIGES],
+        queryKey: [ReactQueryKeys.SHARED_STRATIGES_ALL],
         queryFn: async ({ pageParam }) => {
-            if (user.data?.id === undefined) {
-                return Promise.reject(
-                    new Error('유저 고유 식별자를 불러오지 못했습니다.')
-                );
-            }
-
             return await getSharedStrategiesAction(
-                user.data?.id,
                 pageParam as number,
                 limit ?? 15
             );
         },
-        enabled: user.data?.id !== undefined,
+        enabled: true,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24,
         retry: false,

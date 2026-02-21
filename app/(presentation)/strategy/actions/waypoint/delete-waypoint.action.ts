@@ -11,36 +11,27 @@ export async function deleteWaypointAction(
 ): Promise<DeleteWaypointAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, waypointId } = parseFormData(
-        formData,
-        [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'strategyId',
-                error: '전략 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'teamPlayerId',
-                error: '팀 플레이어 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-            {
-                key: 'waypointId',
-                error: '웨이포인트 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
-        ] as const
-    );
+    const { strategyId, teamPlayerId, waypointId } = parseFormData(formData, [
+        {
+            key: 'strategyId',
+            error: '전략 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'teamPlayerId',
+            error: '팀 플레이어 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'waypointId',
+            error: '웨이포인트 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+    ] as const);
 
     const useCase = getService(DeleteWaypointUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
         waypointId: waypointId,

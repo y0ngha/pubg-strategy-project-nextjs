@@ -21,6 +21,7 @@ export class UpdateStrategyTitleUseCase {
         await this.strategyCommandRepositoryPort.updateStrategyTitle(command);
 
         return {
+            strategyId: strategyId.toString(),
             title: title.toString(),
         };
     }

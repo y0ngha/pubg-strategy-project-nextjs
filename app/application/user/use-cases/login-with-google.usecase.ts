@@ -6,6 +6,8 @@ import {
     LoginWithGoogleRequestSchema,
 } from '../dto/login-with-google.dto';
 import { LoginWithGoogleCommand } from '@domain/user/commands/login-with-google.command';
+import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
+import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
 
 @injectable()
 export class LoginWithGoogleUseCase {
@@ -13,18 +15,31 @@ export class LoginWithGoogleUseCase {
         @inject(GoogleAuthServicePort)
         private readonly googleAuthService: GoogleAuthServicePort,
         @inject(AuthenticationServicePort)
-        private readonly authenticationService: AuthenticationServicePort
+        private readonly authenticationService: AuthenticationServicePort,
+        @inject(UserQueryRepositoryPort)
+        private readonly userQueryRepositoryPort: UserQueryRepositoryPort
     ) {}
 
-    async execute(
-        dto: LoginWithGoogleRequestDto
-    ): Promise<{ accessToken: string; refreshToken: string }> {
-        const { email, token } = LoginWithGoogleRequestSchema.parse(dto);
+    async execute(dto: LoginWithGoogleRequestDto) {
+        const { email, googleToken } = LoginWithGoogleRequestSchema.parse(dto);
 
         // this.googleAuthService.getToken()
 
-        const command = LoginWithGoogleCommand.create(email, token);
+        const command = LoginWithGoogleCommand.create(email, googleToken);
 
-        return await this.authenticationService.googleLogin(command);
+        const token = await this.authenticationService.googleLogin(command);
+
+        const user = await this.userQueryRepositoryPort.findByAccessToken(
+            token.accessToken
+        );
+
+        if (user === null) {
+            throw new UserNotFoundException();
+        }
+
+        return {
+            ...token,
+            user: { id: user.id, email: user.email },
+        };
     }
 }

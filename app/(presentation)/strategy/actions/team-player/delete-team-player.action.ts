@@ -11,12 +11,7 @@ export async function deleteTeamPlayerAction(
 ): Promise<DeleteTeamPlayerAction> {
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, teamPlayerId } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -32,7 +27,6 @@ export async function deleteTeamPlayerAction(
     const useCase = getService(DeleteTeamPlayerUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
     };

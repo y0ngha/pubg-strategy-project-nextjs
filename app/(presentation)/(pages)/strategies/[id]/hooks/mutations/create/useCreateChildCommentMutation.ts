@@ -1,32 +1,27 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
+
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { toast } from 'react-toastify';
-import {
-    CreateCommentAction,
-    createCommentAction,
-} from '@/(presentation)/strategy/actions/comment/create-comment.action';
 import { QueryKey } from '@tanstack/query-core';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import {
+    createChildCommentAction,
+    CreateChildCommentAction,
+} from '@/(presentation)/strategy/actions/comment/create-child-comment.action';
 
-export function useCreateCommentMutation(strategyId: string) {
+export function useCreateChildCommentMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await createCommentAction(formData);
+            return await createChildCommentAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,14 +35,17 @@ export function useCreateCommentMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useCreateCommentMutation', error);
+            console.error('useCreateChildCommentMutation', error);
             toast.error(
                 error.message ?? '알 수 없는 오류로 댓글 생성에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: CreateCommentAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: CreateChildCommentAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -60,7 +58,7 @@ export function useCreateCommentMutation(strategyId: string) {
         });
     };
 
-    const findCommentIndexByParentCommentId = (
+    const findCommentIndexByChildCommentId = (
         comments: CommentResponseDto[],
         parentCommentId: string
     ) => {
@@ -75,12 +73,8 @@ export function useCreateCommentMutation(strategyId: string) {
         return index;
     };
 
-    const isParentComment = (parentCommentId: string | null) => {
-        return parentCommentId !== null;
-    };
-
     const appendChildComment = (
-        data: CreateCommentAction,
+        data: CreateChildCommentAction,
         parentIndex: number,
         comments: CommentResponseDto[]
     ): CommentResponseDto[] => {
@@ -98,59 +92,39 @@ export function useCreateCommentMutation(strategyId: string) {
                         authorId: data.authorId,
                         authorEmail: data.authorEmail,
                         content: data.content,
+                        parentCommentId: data.parentCommentId,
                         createdAt: data.createdAt,
                         isAuthor: data.isAuthor,
+                        isParent: data.isParent,
                     },
                 ],
             };
         });
     };
 
-    const appendParentComment = (
-        data: CreateCommentAction,
-        comments: CommentResponseDto[]
-    ): CommentResponseDto[] => {
-        return [
-            ...comments,
-            {
-                id: data.id,
-                authorId: data.authorId,
-                authorEmail: data.authorEmail,
-                content: data.content,
-                childComments: [],
-                position: data.position!,
-                createdAt: data.createdAt,
-                isAuthor: data.isAuthor,
-            },
-        ];
-    };
-
     const generateNewComments = (
-        data: CreateCommentAction,
+        data: CreateChildCommentAction,
         comments: CommentResponseDto[]
     ) => {
-        const { parentCommentId, position } = data;
-        if (isParentComment(parentCommentId)) {
-            const parentCommentIndex = findCommentIndexByParentCommentId(
-                comments,
-                parentCommentId
-            );
+        const { parentCommentId } = data;
 
-            if (parentCommentIndex === null) {
-                return comments;
-            }
-
-            return appendChildComment(data, parentCommentIndex, comments);
-        } else {
-            if (position === null) {
-                return comments;
-            }
-
-            return appendParentComment(data, comments);
+        if (!parentCommentId) {
+            return comments;
         }
+
+        const parentCommentIndex = findCommentIndexByChildCommentId(
+            comments,
+            parentCommentId
+        );
+
+        if (parentCommentIndex === null) {
+            return comments;
+        }
+
+        return appendChildComment(data, parentCommentIndex, comments);
     };
 
     return {
-        createComment: mutate,
+        createChildComment: mutate,
     };
 }

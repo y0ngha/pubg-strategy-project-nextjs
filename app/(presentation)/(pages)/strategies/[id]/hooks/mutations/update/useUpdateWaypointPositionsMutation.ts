@@ -1,32 +1,26 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { useMutation } from '@tanstack/react-query';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
-import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import {
-    UpdateMarkerAction,
-    updateMarkerAction,
-} from '@/(presentation)/strategy/actions/marker/update-marker.action';
+    UpdateWaypointPositionsAction,
+    updateWaypointPositionsAction,
+} from '@/(presentation)/strategy/actions/waypoint/update-waypoint-positions.action';
+import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 
-export function useUpdateMarkerMutation(strategyId: string) {
+export function useUpdateWaypointPositionsMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateMarkerAction(formData);
+            return await updateWaypointPositionsAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -40,15 +34,16 @@ export function useUpdateMarkerMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateMarkerMutation', error);
+            console.error('useUpdateWaypointPositionsMutation', error);
             toast.error(
-                error.message ?? '알 수 없는 오류로 마커 수정에 실패했습니다.'
+                error.message ??
+                    '알 수 없는 오류로 웨이포인트 생성에 실패했습니다.'
             );
         },
     });
 
     const generateNewTeamPlayers = (
-        data: UpdateMarkerAction,
+        data: UpdateWaypointPositionsAction,
         teamPlayers: TeamPlayerResponseDto[]
     ) => {
         const { teamPlayerId } = data;
@@ -58,21 +53,24 @@ export function useUpdateMarkerMutation(strategyId: string) {
                 return player;
             }
 
-            if (!player.marker) {
+            if (!player.waypoint) {
                 return player;
             }
 
             return {
                 ...player,
-                marker: {
-                    ...player.marker,
-                    position: data.position,
+                waypoint: {
+                    ...player.waypoint,
+                    positions: data.positions,
                 },
             };
         });
     };
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateMarkerAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateWaypointPositionsAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -88,6 +86,6 @@ export function useUpdateMarkerMutation(strategyId: string) {
     };
 
     return {
-        updateMarker: mutate,
+        updateWaypointPositions: mutate,
     };
 }

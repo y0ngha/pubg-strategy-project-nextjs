@@ -153,6 +153,7 @@ export class StrategyMapper {
             content: entities.content,
             createdAt: entities.createdAt,
             isAuthor: entities.isAuthor,
+            isParent: entities.isParent,
         };
     }
 

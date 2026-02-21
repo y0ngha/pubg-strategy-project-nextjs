@@ -21,12 +21,7 @@ export async function createCircleAction(
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, phase, position } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, phase, position } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -47,7 +42,6 @@ export async function createCircleAction(
     const useCase = getService(CreateCircleUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         phase: phase,
         position: position,

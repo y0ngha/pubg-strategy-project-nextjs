@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
-import { getOwnedStrategiesAction } from '@/(presentation)/strategy/actions/get-owned-strategies.action';
+import { getOwnedStrategiesAction } from '@/(presentation)/strategy/actions/strategy/get-owned-strategies.action';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { getSharedStrategiesAction } from '@/(presentation)/strategy/actions/get-shared-strategies.action';
+import { getSharedStrategiesAction } from '@/(presentation)/strategy/actions/strategy/get-shared-strategies.action';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getUserIdByCookieStore } from '@/(presentation)/dehydrate-components/utils/get-user-id.util';
 
@@ -21,15 +21,15 @@ export default async function StrategiesDehydrate({
 
     await Promise.all([
         queryClient.prefetchInfiniteQuery({
-            queryKey: [userId, ReactQueryKeys.STRATIGES],
+            queryKey: [ReactQueryKeys.STRATIGES_ALL],
             queryFn: async ({ pageParam }) =>
-                await getOwnedStrategiesAction(userId, pageParam, 15),
+                await getOwnedStrategiesAction(pageParam, 15),
             initialPageParam: 1,
         }),
         queryClient.prefetchInfiniteQuery({
-            queryKey: [userId, ReactQueryKeys.SHARED_STRATIGES],
+            queryKey: [ReactQueryKeys.SHARED_STRATIGES_ALL],
             queryFn: async ({ pageParam }) =>
-                await getSharedStrategiesAction(userId, pageParam, 15),
+                await getSharedStrategiesAction(pageParam, 15),
             initialPageParam: 1,
         }),
     ]);

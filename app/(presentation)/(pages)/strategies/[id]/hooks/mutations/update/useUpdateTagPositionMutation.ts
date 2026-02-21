@@ -1,31 +1,25 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
-import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
+import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import {
-    UpdateTeamPlayerAction,
-    updateTeamPlayerAction,
-} from '@/(presentation)/strategy/actions/team-player/update-team-player.action';
+    UpdateTagPositionAction,
+    updateTagPositionAction,
+} from '@/(presentation)/strategy/actions/tag/update-tag-position.action';
 
-export function useUpdateTeamPlayerMutation(strategyId: string) {
+export function useUpdateTagPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateTeamPlayerAction(formData);
+            return await updateTagPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -39,15 +33,14 @@ export function useUpdateTeamPlayerMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateTeamPlayerMutation', error);
+            console.error('useUpdateTagPositionMutation', error);
             toast.error(
-                error.message ??
-                    '알 수 없는 오류로 팀 플레이어 수정에 실패했습니다.'
+                error.message ?? '알 수 없는 오류로 태그 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateTeamPlayerAction) => {
+    const cacheUpdate = (queryKey: QueryKey, data: UpdateTagPositionAction) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -55,22 +48,22 @@ export function useUpdateTeamPlayerMutation(strategyId: string) {
 
             return {
                 ...oldStrategy,
-                teamPlayers: oldStrategy.teamPlayers.map(teamPlayer => {
-                    if (teamPlayer.id === data.id) {
+                tags: oldStrategy.tags.map(tag => {
+                    if (tag.id === data.id) {
                         return {
-                            ...teamPlayer,
+                            ...tag,
                             id: data.id,
                             position: data.position,
                         };
                     }
 
-                    return teamPlayer;
+                    return tag;
                 }),
             };
         });
     };
 
     return {
-        updateTeamPlayer: mutate,
+        updateTagPosition: mutate,
     };
 }

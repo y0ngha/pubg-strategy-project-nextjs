@@ -2,48 +2,45 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { UpdateStrategyUseCase } from '@/application/strategy/use-cases/update-strategy.usecase';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateEnemyTeamLabelUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
 
-export type UpdateStrategyAction = { title: string; map: string };
+export type UpdateEnemyTeamLabelAction = {
+    id: string;
+    teamLabel: string;
+};
 
-export async function updateStrategyAction(
+export async function updateEnemyTeamLabelAction(
     formData: FormData
-): Promise<UpdateStrategyAction> {
+): Promise<UpdateEnemyTeamLabelAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, title, map } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, enemyTeamId, teamLabel } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
-            key: 'title',
+            key: 'enemyTeamId',
+            error: '적 팀 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
-            allowUndefined: true,
         },
         {
-            key: 'map',
+            key: 'teamLabel',
+            error: '팀 라벨을 불러올 수 없습니다.',
             type: 'string',
-            allowUndefined: true,
         },
     ] as const);
 
-    const useCase = getService(UpdateStrategyUseCase);
+    const useCase = getService(UpdateEnemyTeamLabelUsecase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
-        title: title,
-        map: map,
+        enemyTeamId: enemyTeamId,
+        teamLabel: teamLabel,
     };
 
     return await useCase.execute(dto);

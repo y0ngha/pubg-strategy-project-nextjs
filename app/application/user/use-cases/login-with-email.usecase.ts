@@ -6,6 +6,8 @@ import { AuthenticationServicePort } from '@/domain/user/port/out/authentication
 import { PasswordCipherPort } from '@/domain/user/port/out/password-cipher.port';
 import { inject, injectable } from 'inversify';
 import { LoginWithEmailCommand } from '@domain/user/commands/login-with-email.command';
+import { UserQueryRepositoryPort } from '@domain/user/port/repositories/user-query-repository.port';
+import { UserNotFoundException } from '@domain/user/exceptions/user.exceptions';
 
 @injectable()
 export class LoginWithEmailUseCase {
@@ -13,13 +15,12 @@ export class LoginWithEmailUseCase {
         @inject(PasswordCipherPort)
         private readonly passwordCipher: PasswordCipherPort,
         @inject(AuthenticationServicePort)
-        private readonly authenticationService: AuthenticationServicePort
+        private readonly authenticationService: AuthenticationServicePort,
+        @inject(UserQueryRepositoryPort)
+        private readonly userQueryRepositoryPort: UserQueryRepositoryPort
     ) {}
 
-    async execute(dto: LoginWithEmailRequestDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }> {
+    async execute(dto: LoginWithEmailRequestDto) {
         const { email, password } = LoginWithEmailRequestSchema.parse(dto);
 
         const command = LoginWithEmailCommand.create(
@@ -28,6 +29,19 @@ export class LoginWithEmailUseCase {
             this.passwordCipher
         );
 
-        return await this.authenticationService.login(command);
+        const token = await this.authenticationService.login(command);
+
+        const user = await this.userQueryRepositoryPort.findByAccessToken(
+            token.accessToken
+        );
+
+        if (user === null) {
+            throw new UserNotFoundException();
+        }
+
+        return {
+            ...token,
+            user: { id: user.id, email: user.email },
+        };
     }
 }

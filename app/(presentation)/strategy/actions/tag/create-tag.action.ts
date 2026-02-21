@@ -19,12 +19,7 @@ export async function createTagAction(
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, content, position } = parseFormData(formData, [
-        {
-            key: 'userId',
-            error: '유저 고유 식별자를 불러올 수 없습니다.',
-            type: 'string',
-        },
+    const { strategyId, content, position } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -45,7 +40,6 @@ export async function createTagAction(
     const useCase = getService(CreateTagUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         content: content,
         position: position,

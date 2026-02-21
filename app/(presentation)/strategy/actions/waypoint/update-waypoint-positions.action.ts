@@ -2,29 +2,24 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { UpdateMarkerUseCase } from '@/application/strategy/use-cases/marker/update-marker.usecase';
-import { Position } from '@/application/strategy/types/position';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateWaypointPositionsUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
 
-export type UpdateMarkerAction = {
+export type UpdateWaypointPositionsAction = {
     teamPlayerId: string;
-    position: Position;
+    positions: { x: number; y: number }[];
 };
 
-export async function updateMarkerAction(
+export async function updateWaypointPositionsAction(
     formData: FormData
-): Promise<UpdateMarkerAction> {
+): Promise<UpdateWaypointPositionsAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { userId, strategyId, teamPlayerId, markerId, position } =
-        parseFormData(formData, [
-            {
-                key: 'userId',
-                error: '유저 고유 식별자를 불러올 수 없습니다.',
-                type: 'string',
-            },
+    const { strategyId, teamPlayerId, waypointId, positions } = parseFormData(
+        formData,
+        [
             {
                 key: 'strategyId',
                 error: '전략 고유 식별자를 불러올 수 없습니다.',
@@ -36,25 +31,26 @@ export async function updateMarkerAction(
                 type: 'string',
             },
             {
-                key: 'markerId',
-                error: '마커 고유 식별자를 불러올 수 없습니다.',
+                key: 'waypointId',
+                error: '웨이포인트 고유 식별자를 불러올 수 없습니다.',
                 type: 'string',
             },
             {
-                key: 'position',
-                error: '마커 위치를 불러올 수 없습니다.',
+                key: 'positions',
+                error: '웨이포인트 위치를 불러올 수 없습니다.',
                 type: 'position',
+                isArray: true,
             },
-        ] as const);
+        ] as const
+    );
 
-    const useCase = getService(UpdateMarkerUseCase);
+    const useCase = getService(UpdateWaypointPositionsUseCase);
 
     const dto = {
-        actorId: userId,
         strategyId: strategyId,
         teamPlayerId: teamPlayerId,
-        markerId: markerId,
-        position: position,
+        waypointId: waypointId,
+        positions: positions,
     };
 
     return await useCase.execute(dto);

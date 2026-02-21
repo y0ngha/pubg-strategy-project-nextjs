@@ -7,7 +7,7 @@ import { UpdateMarkerPositionCommand } from '@domain/strategy/commands/marker/up
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
 
 @injectable()
-export class UpdateMarkerUseCase {
+export class UpdateMarkerPositionUsecase {
     constructor(
         @inject(StrategyCommandRepositoryPort)
         private readonly strategyCommandRepository: StrategyCommandRepositoryPort

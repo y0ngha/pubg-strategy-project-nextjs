@@ -9,7 +9,11 @@ export class UpdateCirclePhaseCommand {
         public readonly phase: CirclePhase
     ) {}
 
-    static create(strategyId: StrategyId, circleId: CircleId, phase: CirclePhase) {
+    static create(
+        strategyId: StrategyId,
+        circleId: CircleId,
+        phase: CirclePhase
+    ) {
         return new UpdateCirclePhaseCommand(strategyId, circleId, phase);
     }
 }

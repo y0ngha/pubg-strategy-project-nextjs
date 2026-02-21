@@ -1,6 +1,6 @@
 import { useCreateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateTeamPlayerMutation';
 import React, { useState } from 'react';
-import { useUpdateTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerMutation';
+import { useUpdateTeamPlayerPositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateTeamPlayerPositionMutation';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteTeamPlayerMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteTeamPlayerMutation';
 import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
@@ -12,8 +12,8 @@ export function useTeamPlayerEvent(
 ) {
     const { createTeamPlayer: createTeamPlayerMutation } =
         useCreateTeamPlayerMutation(strategyId);
-    const { updateTeamPlayer: updateTeamPlayerMutation } =
-        useUpdateTeamPlayerMutation(strategyId);
+    const { updateTeamPlayerPosition: updateTeamPlayerPositionMutation } =
+        useUpdateTeamPlayerPositionMutation(strategyId);
     const { deleteTeamPlayer: deleteTeamPlayerMutation } =
         useDeleteTeamPlayerMutation(strategyId);
 
@@ -59,7 +59,7 @@ export function useTeamPlayerEvent(
         formData.set('teamPlayerId', teamPlayerId);
         formData.set('position', JSON.stringify(position));
 
-        updateTeamPlayerMutation(formData);
+        updateTeamPlayerPositionMutation(formData);
     };
 
     const deleteTeamPlayer = (teamPlayerId: string) => {

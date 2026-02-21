@@ -13,13 +13,15 @@ export class DeleteStrategyUseCase {
         private readonly strategyCommandRepositoryPort: StrategyCommandRepositoryPort
     ) {}
 
-    async execute(dto: DeleteStrategyRequestDto): Promise<boolean> {
+    async execute(dto: DeleteStrategyRequestDto) {
         const { strategyId } = DeleteStrategyRequestSchema.parse(dto);
 
         const command = DeleteStrategyCommand.create(strategyId);
 
         await this.strategyCommandRepositoryPort.deleteStrategy(command);
 
-        return true;
+        return {
+            strategyId: strategyId.toString(),
+        };
     }
 }

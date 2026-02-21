@@ -4,7 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 
-export async function requestFriendAction(_: unknown, formData: FormData) {
+export async function requestFriendAction(formData: FormData) {
     const getService = initializeRequestServices();
 
     const { userId, recipientUserId } = parseFormData(formData, [

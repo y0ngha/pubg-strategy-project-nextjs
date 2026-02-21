@@ -1,31 +1,25 @@
 import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
 import { useMutation } from '@tanstack/react-query';
-import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
-import { GetStrategyAction } from '@/(presentation)/strategy/actions/get-strategy.action';
-import {
-    UpdateCircleAction,
-    updateCircleAction,
-} from '@/(presentation)/strategy/actions/circle/update-circle.action';
+import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { QueryKey } from '@tanstack/query-core';
+import {
+    updateTeamPlayerPositionAction,
+    UpdateTeamPlayerPositionAction,
+} from '@/(presentation)/strategy/actions/team-player/update-team-player-position.action';
 
-export function useUpdateCircleMutation(strategyId: string) {
+export function useUpdateTeamPlayerPositionMutation(strategyId: string) {
     const queryClient = getQueryClient();
-    const user = useGetCurrentUser();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGES, strategyId];
-    const strategiesQueryKey: QueryKey = [
-        user.data?.id,
-        ReactQueryKeys.STRATIGES,
-    ];
+    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATIGES_ALL];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user.data?.id ?? '');
             formData.set('strategyId', strategyId);
 
-            return await updateCircleAction(formData);
+            return await updateTeamPlayerPositionAction(formData);
         },
         onSuccess: data => {
             cacheUpdate([ReactQueryKeys.STRATIGES, strategyId], data);
@@ -39,14 +33,18 @@ export function useUpdateCircleMutation(strategyId: string) {
                 queryKey: strategyQueryKey,
             });
 
-            console.error('useUpdateCircleMutation', error);
+            console.error('useUpdateTeamPlayerPositionMutation', error);
             toast.error(
-                error.message ?? '알 수 없는 오류로 자기장 수정에 실패했습니다.'
+                error.message ??
+                    '알 수 없는 오류로 팀 플레이어 수정에 실패했습니다.'
             );
         },
     });
 
-    const cacheUpdate = (queryKey: QueryKey, data: UpdateCircleAction) => {
+    const cacheUpdate = (
+        queryKey: QueryKey,
+        data: UpdateTeamPlayerPositionAction
+    ) => {
         queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
             if (!oldStrategy) {
                 return undefined;
@@ -54,24 +52,22 @@ export function useUpdateCircleMutation(strategyId: string) {
 
             return {
                 ...oldStrategy,
-                circles: oldStrategy.circles.map(circle => {
-                    if (circle.id === data.id) {
+                teamPlayers: oldStrategy.teamPlayers.map(teamPlayer => {
+                    if (teamPlayer.id === data.id) {
                         return {
+                            ...teamPlayer,
                             id: data.id,
-                            centerPosition: data.centerPosition,
-                            phase: data.phase,
-                            radius: data.radius,
-                            color: data.color,
+                            position: data.position,
                         };
                     }
 
-                    return circle;
+                    return teamPlayer;
                 }),
             };
         });
     };
 
     return {
-        updateCircle: mutate,
+        updateTeamPlayerPosition: mutate,
     };
 }

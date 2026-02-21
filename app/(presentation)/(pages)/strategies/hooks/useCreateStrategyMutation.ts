@@ -3,7 +3,7 @@ import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
     CreateStrategyAction,
     createStrategyAction,
-} from '@/(presentation)/strategy/actions/create-strategy.action';
+} from '@/(presentation)/strategy/actions/strategy/create-strategy.action';
 import { toast } from 'react-toastify';
 import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
