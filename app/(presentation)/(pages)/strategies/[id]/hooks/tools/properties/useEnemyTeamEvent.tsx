@@ -1,11 +1,11 @@
 import { useCreateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/create/useCreateEnemyTeamMutation';
 import React, { useState } from 'react';
-import { useUpdateEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateEnemyTeamMutation';
 import { EnemyTeamResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { useDeleteEnemyTeamMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/delete/useDeleteEnemyTeamMutation';
 import EnterTeamLabelModal from '@/(presentation)/(pages)/strategies/[id]/components/modals/enter-team-label.modal';
 import { PropertyClickPayload } from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-body.component';
 import EnemyTeamsLayer from '@/(presentation)/(pages)/strategies/[id]/components/tools/properties/enemy-team-property.component';
+import { useUpdateEnemyTeamPositionMutation } from '@/(presentation)/(pages)/strategies/[id]/hooks/mutations/update/useUpdateEnemyTeamPositionMutation';
 
 export function useEnemyTeamEvent(
     strategyId: string,
@@ -13,8 +13,8 @@ export function useEnemyTeamEvent(
 ) {
     const { createEnemyTeam: createEnemyTeamMutation } =
         useCreateEnemyTeamMutation(strategyId);
-    const { updateEnemyTeam: updateEnemyTeamMutation } =
-        useUpdateEnemyTeamMutation(strategyId);
+    const { updateEnemyTeamPosition: updateEnemyTeamPositionMutation } =
+        useUpdateEnemyTeamPositionMutation(strategyId);
     const { deleteEnemyTeam: deleteEnemyTeamMutation } =
         useDeleteEnemyTeamMutation(strategyId);
 
@@ -83,7 +83,7 @@ export function useEnemyTeamEvent(
         formData.set('enemyTeamId', enemyTeamId);
         formData.set('position', JSON.stringify(position));
 
-        updateEnemyTeamMutation(formData);
+        updateEnemyTeamPositionMutation(formData);
     };
 
     const deleteEnemyTeam = (enemyTeamId: string) => {

@@ -2,32 +2,31 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
-import { Position } from '@/application/strategy/types/position';
+import { UpdateEnemyTeamPositionUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { Position } from '@domain/strategy/models/position.model';
 
-export type AddEnemyTeamAction = {
+export type UpdateEnemyTeamPositionAction = {
     id: string;
-    teamLabel: string;
     position: Position;
 };
 
-export async function addEnemyTeamAction(
+export async function updateEnemyTeamPositionAction(
     formData: FormData
-): Promise<AddEnemyTeamAction> {
+): Promise<UpdateEnemyTeamPositionAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { strategyId, teamLabel, position } = parseFormData(formData, [
+    const { strategyId, enemyTeamId, position } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
-            key: 'teamLabel',
-            error: '팀 라벨을 불러올 수 없습니다.',
+            key: 'enemyTeamId',
+            error: '적 팀 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
@@ -37,11 +36,11 @@ export async function addEnemyTeamAction(
         },
     ] as const);
 
-    const useCase = getService(AddEnemyTeamUseCase);
+    const useCase = getService(UpdateEnemyTeamPositionUsecase);
 
     const dto = {
         strategyId: strategyId,
-        teamLabel: teamLabel,
+        enemyTeamId: enemyTeamId,
         position: position,
     };
 

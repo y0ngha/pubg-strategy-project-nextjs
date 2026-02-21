@@ -2,27 +2,30 @@
 
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
-import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
-import { Position } from '@/application/strategy/types/position';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { UpdateEnemyTeamLabelUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
 
-export type AddEnemyTeamAction = {
+export type UpdateEnemyTeamLabelAction = {
     id: string;
     teamLabel: string;
-    position: Position;
 };
 
-export async function addEnemyTeamAction(
+export async function updateEnemyTeamLabelAction(
     formData: FormData
-): Promise<AddEnemyTeamAction> {
+): Promise<UpdateEnemyTeamLabelAction> {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
 
-    const { strategyId, teamLabel, position } = parseFormData(formData, [
+    const { strategyId, enemyTeamId, teamLabel } = parseFormData(formData, [
         {
             key: 'strategyId',
             error: '전략 고유 식별자를 불러올 수 없습니다.',
+            type: 'string',
+        },
+        {
+            key: 'enemyTeamId',
+            error: '적 팀 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
         {
@@ -30,19 +33,14 @@ export async function addEnemyTeamAction(
             error: '팀 라벨을 불러올 수 없습니다.',
             type: 'string',
         },
-        {
-            key: 'position',
-            error: '위치를 불러올 수 없습니다.',
-            type: 'position',
-        },
     ] as const);
 
-    const useCase = getService(AddEnemyTeamUseCase);
+    const useCase = getService(UpdateEnemyTeamLabelUsecase);
 
     const dto = {
         strategyId: strategyId,
+        enemyTeamId: enemyTeamId,
         teamLabel: teamLabel,
-        position: position,
     };
 
     return await useCase.execute(dto);
