@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteCircleUseCase } from '@/application/strategy/use-cases/circle/delete-circle.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteCircleAction = { circleId: string };
 
 export async function deleteCircleAction(
     formData: FormData
 ): Promise<DeleteCircleAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, circleId } = parseFormData(formData, [

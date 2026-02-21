@@ -3,6 +3,7 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateStrategySharePermissionAction = {
     strategyShareId: string;
@@ -13,6 +14,8 @@ export type UpdateStrategySharePermissionAction = {
 export async function updateStrategySharePermissionAction(
     formData: FormData
 ): Promise<UpdateStrategySharePermissionAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, strategyShareId, permission } = parseFormData(

@@ -4,6 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { UpdateAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/update-airplane-path.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { Position } from '@/application/strategy/types/position';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateAirplanePathAction = {
     startPosition: Position;
@@ -13,6 +14,8 @@ export type UpdateAirplanePathAction = {
 export async function updateAirplanePathAction(
     formData: FormData
 ): Promise<UpdateAirplanePathAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, airplanePathId, startPosition, endPosition } =

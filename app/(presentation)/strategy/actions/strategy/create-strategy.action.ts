@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { CreateStrategyUseCase } from '@/application/strategy/use-cases/strategy/create-strategy.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type CreateStrategyAction = { id: string; map: string; title: string };
 
 export async function createStrategyAction(
     formData: FormData
 ): Promise<CreateStrategyAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { title, map } = parseFormData(formData, [

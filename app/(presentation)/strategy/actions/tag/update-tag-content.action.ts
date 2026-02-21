@@ -3,6 +3,7 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateTagContentUseCase } from '@/application/strategy/use-cases/tag/update-tag-content.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateTagContentAction = {
     id: string;
@@ -12,6 +13,8 @@ export type UpdateTagContentAction = {
 export async function updateTagContentAction(
     formData: FormData
 ): Promise<UpdateTagContentAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, tagId, content } = parseFormData(formData, [

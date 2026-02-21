@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteAirplanePathAction = { airplanePathId: string };
 
 export async function deleteAirplanePathAction(
     formData: FormData
 ): Promise<DeleteAirplanePathAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, airplanePathId } = parseFormData(formData, [

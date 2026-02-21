@@ -14,9 +14,9 @@ export async function getSharedStrategiesAction(
     page: number,
     limit: number
 ): Promise<GetSharedStrategiesAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     try {
         const useCase = getService(GetSharedStrategiesUseCase);

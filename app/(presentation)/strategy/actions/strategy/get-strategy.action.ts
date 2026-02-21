@@ -8,9 +8,9 @@ import { GetStrategyUseCase } from '@/application/strategy/use-cases/strategy/ge
 export type GetStrategyAction = GetStrategyResponseDto;
 
 export async function getStrategyAction(strategyId: string) {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     const useCase = getService(GetStrategyUseCase);
 

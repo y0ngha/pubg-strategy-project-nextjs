@@ -3,12 +3,15 @@
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteTagAction = { tagId: string };
 
 export async function deleteTagAction(
     formData: FormData
 ): Promise<DeleteTagAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, tagId } = parseFormData(formData, [

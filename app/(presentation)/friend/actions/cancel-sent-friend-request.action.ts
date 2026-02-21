@@ -3,8 +3,11 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export async function cancelSentFriendRequestAction(formData: FormData) {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { id, currentStatus } = parseFormData(formData, [

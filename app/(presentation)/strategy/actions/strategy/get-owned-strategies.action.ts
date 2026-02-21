@@ -14,9 +14,9 @@ export async function getOwnedStrategiesAction(
     page: number,
     limit: number
 ): Promise<GetOwnedStrategiesAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     try {
         const useCase = getService(GetOwnedStrategiesUseCase);

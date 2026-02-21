@@ -6,21 +6,6 @@ import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper'
 
 export type RegisterWithEmailAction = boolean;
 
-function ensureConfirmPasswordMatch(
-    password: string,
-    confirmPasswordMatch: string
-) {
-    if (password !== confirmPasswordMatch) {
-        throw new Error('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-    }
-}
-
-function ensureAgreementTerms(terms: boolean) {
-    if (!terms) {
-        throw new Error('이용약관에 반드시 동의해야합니다.');
-    }
-}
-
 export async function registerWithEmailAction(
     formData: FormData
 ): Promise<RegisterWithEmailAction> {
@@ -70,5 +55,19 @@ export async function registerWithEmailAction(
         return true;
     } catch (e) {
         throw e;
+    }
+}
+
+function ensureConfirmPasswordMatch(
+    password: string,
+    confirmPasswordMatch: string
+) {
+    if (password !== confirmPasswordMatch) {
+        throw new Error('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    }
+}
+function ensureAgreementTerms(terms: boolean) {
+    if (!terms) {
+        throw new Error('이용약관에 반드시 동의해야합니다.');
     }
 }

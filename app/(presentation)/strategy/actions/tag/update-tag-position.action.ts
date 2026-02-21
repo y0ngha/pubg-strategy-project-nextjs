@@ -4,6 +4,7 @@ import { initializeRequestServices } from '@global/di/server/get-server-dependen
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { UpdateTagPositionUseCase } from '@/application/strategy/use-cases/tag/update-tag-position.usecase';
 import { Position } from '@domain/strategy/models/position.model';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type UpdateTagPositionAction = {
     id: string;
@@ -13,6 +14,8 @@ export type UpdateTagPositionAction = {
 export async function updateTagPositionAction(
     formData: FormData
 ): Promise<UpdateTagPositionAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, tagId, position } = parseFormData(formData, [

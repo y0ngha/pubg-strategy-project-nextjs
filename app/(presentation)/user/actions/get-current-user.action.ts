@@ -8,9 +8,9 @@ import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentica
 export type GetCurrentUserAction = GetCurrentUserResponseDto;
 
 export async function getCurrentUserAction(): Promise<GetCurrentUserAction> {
-    const getService = initializeRequestServices();
-
     await ensureAuthentication();
+
+    const getService = initializeRequestServices();
 
     const useCase = getService<GetCurrentUserUseCase>(GetCurrentUserUseCase);
 

@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/delete-comment.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteCommentAction = { commentId: string };
 
 export async function deleteCommentAction(
     formData: FormData
 ): Promise<DeleteCommentAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, commentId } = parseFormData(formData, [

@@ -3,12 +3,15 @@
 import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/delete-marker.usecase';
+import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
 
 export type DeleteMarkerAction = { teamPlayerId: string; markerId: string };
 
 export async function deleteMarkerAction(
     formData: FormData
 ): Promise<DeleteMarkerAction> {
+    await ensureAuthentication();
+
     const getService = initializeRequestServices();
 
     const { strategyId, teamPlayerId, markerId } = parseFormData(formData, [
