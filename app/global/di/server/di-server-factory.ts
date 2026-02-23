@@ -20,13 +20,16 @@ import { LogoutUseCase } from '@/application/user/use-cases/logout.usecase';
 import { RegisterWithEmailUseCase } from '@/application/user/use-cases/register-with-email.usecase';
 import { WithdrawalUseCase } from '@/application/user/use-cases/withdrawal.usecase';
 import { FriendQueryRepositoryPort } from '@domain/friend/port/repositories/friend-query-repository.port';
-import { FriendQueryRepositoryAdapter } from '@infrastructure/friend/adapter/repositories/friend-query-repository.adapter';
+import {
+    FriendQueryRepositoryAdapter
+} from '@infrastructure/friend/adapter/repositories/friend-query-repository.adapter';
 import { CancelSentFriendUseCase } from '@/application/friend/use-cases/cancel-sent-friend.usecase';
-import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/accept-received-friend.usecase';
 import { GetFriendListUseCase } from '@/application/friend/use-cases/get-friend-list.usecase';
 import { RejectReceivedFriendUseCase } from '@/application/friend/use-cases/reject-received-friend.usecase';
 import { RequestFriendUseCase } from '@/application/friend/use-cases/request-friend.usecase';
-import { StrategyQueryRepositoryAdapter } from '@infrastructure/strategy/adapter/repositories/strategy-query-repository.adapter';
+import {
+    StrategyQueryRepositoryAdapter
+} from '@infrastructure/strategy/adapter/repositories/strategy-query-repository.adapter';
 import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
 import { AddAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/add-airplane-path.usecase';
 import { DeleteAirplanePathUseCase } from '@/application/strategy/use-cases/airplane-path/delete-airplane-path.usecase';
@@ -39,13 +42,17 @@ import { DeleteCommentUseCase } from '@/application/strategy/use-cases/comment/d
 import { UpdateCommentPositionUseCase } from '@/application/strategy/use-cases/comment/update-comment-position.usecase';
 import { AddEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/add-enemy-team.usecase';
 import { DeleteEnemyTeamUseCase } from '@/application/strategy/use-cases/enemy-team/delete-enemy-team.usecase';
-import { UpdateEnemyTeamPositionUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
+import {
+    UpdateEnemyTeamPositionUsecase
+} from '@/application/strategy/use-cases/enemy-team/update-enemy-team-position.usecase';
 import { AddMarkerUseCase } from '@/application/strategy/use-cases/marker/add-marker.usecase';
 import { DeleteMarkerUseCase } from '@/application/strategy/use-cases/marker/delete-marker.usecase';
 import { UpdateMarkerPositionUsecase } from '@/application/strategy/use-cases/marker/update-marker-position.usecase';
 import { CreateStrategyShareUseCase } from '@/application/strategy/use-cases/share/create-strategy-share.usecase';
 import { RevokeStrategyShareUseCase } from '@/application/strategy/use-cases/share/revoke-strategy-share.usecase';
-import { UpdateStrategySharePermissionUseCase } from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
+import {
+    UpdateStrategySharePermissionUseCase
+} from '@/application/strategy/use-cases/share/update-strategy-share-permission.usecase';
 import { CreateTagUseCase } from '@/application/strategy/use-cases/tag/create-tag.usecase';
 import { DeleteTagUseCase } from '@/application/strategy/use-cases/tag/delete-tag.usecase';
 import { UpdateTagPositionUseCase } from '@/application/strategy/use-cases/tag/update-tag-position.usecase';
@@ -54,7 +61,9 @@ import { DeleteTeamPlayerUseCase } from '@/application/strategy/use-cases/team-p
 import { MoveTeamPlayerUseCase } from '@/application/strategy/use-cases/team-player/move-team-player.usecase';
 import { AddWaypointUseCase } from '@/application/strategy/use-cases/waypoint/add-waypoint.usecase';
 import { DeleteWaypointUseCase } from '@/application/strategy/use-cases/waypoint/delete-waypoint.usecase';
-import { UpdateWaypointPositionsUseCase } from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
+import {
+    UpdateWaypointPositionsUseCase
+} from '@/application/strategy/use-cases/waypoint/update-waypoint-positions.usecase';
 import { GetOwnedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-owned-strategies.usecase';
 import { GetSharedStrategiesUseCase } from '@/application/strategy/use-cases/strategy/get-shared-strategies.usecase';
 import { StrategyMapper } from '@/application/strategy/mappers/strategy.mapper';
@@ -65,16 +74,27 @@ import { UpdateStrategyTitleUseCase } from '@/application/strategy/use-cases/str
 import { PasswordValidatorPort } from '@domain/user/port/in/password-validator.port';
 import { PasswordValidatorAdapter } from '@infrastructure/user/adapter/driving/password-validator.adapter';
 import { UserCommandRepositoryPort } from '@domain/user/port/repositories/user-command-repository.port';
-import { UserCommandRepositoryAdapter } from '@infrastructure/user/adapter/repositories/user-command-repository.adapter';
-import { FriendCommandRepositoryAdapter } from '@infrastructure/friend/adapter/repositories/friend-command-repository.adapter';
+import {
+    UserCommandRepositoryAdapter
+} from '@infrastructure/user/adapter/repositories/user-command-repository.adapter';
+import {
+    FriendCommandRepositoryAdapter
+} from '@infrastructure/friend/adapter/repositories/friend-command-repository.adapter';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
-import { StrategyCommandRepositoryAdapter } from '@infrastructure/strategy/adapter/repositories/strategy-command-repository.adapter';
+import {
+    StrategyCommandRepositoryAdapter
+} from '@infrastructure/strategy/adapter/repositories/strategy-command-repository.adapter';
 import { StrategyCommandRepositoryPort } from '@domain/strategy/port/repositories/strategy-command-repository.port';
-import { UpdateEnemyTeamLabelUsecase } from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
+import {
+    UpdateEnemyTeamLabelUsecase
+} from '@/application/strategy/use-cases/enemy-team/update-enemy-team-label.usecase';
 import { CreateChildCommentUseCase } from '@/application/strategy/use-cases/comment/create-child-comment.usecase';
 import { UpdateCommentContentUseCase } from '@/application/strategy/use-cases/comment/update-comment-content.usecase';
 import { UpdateCirclePhaseUseCase } from '@/application/strategy/use-cases/circle/update-circle-phase.usecase';
 import { UpdateTagContentUseCase } from '@/application/strategy/use-cases/tag/update-tag-content.usecase';
+import {
+    AcceptReceivedFriendRequestUseCase
+} from '@/application/friend/use-cases/accept-received-friend-request.usecase';
 
 /**
  * User
@@ -131,7 +151,7 @@ const friendRepositories: ClassDependency[] = [
     },
 ];
 const friendUseCases: ClassDependency[] = [
-    { class: AcceptReceivedFriendUseCase },
+    { class: AcceptReceivedFriendRequestUseCase },
     { class: CancelSentFriendUseCase },
     { class: GetFriendListUseCase },
     { class: RejectReceivedFriendUseCase },
