@@ -1,9 +1,9 @@
-import { UserId } from '@domain/shared/value-objects/user-id';
+import { Email } from '@domain/shared/value-objects/email';
 
 export class RequestFriendCommand {
-    private constructor(public readonly recipientUserId: UserId) {}
+    private constructor(public readonly email: Email) {}
 
-    static create(recipientUserId: UserId) {
-        return new RequestFriendCommand(recipientUserId);
+    static create(email: Email) {
+        return new RequestFriendCommand(email);
     }
 }

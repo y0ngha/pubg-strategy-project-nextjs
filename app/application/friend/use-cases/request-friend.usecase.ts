@@ -14,9 +14,9 @@ export class RequestFriendUseCase {
     ) {}
 
     async execute(dto: RequestFriendRequestDto): Promise<boolean> {
-        const { recipientUserId } = RequestFriendRequestSchema.parse(dto);
+        const { email } = RequestFriendRequestSchema.parse(dto);
 
-        const command = RequestFriendCommand.create(recipientUserId);
+        const command = RequestFriendCommand.create(email);
 
         await this.friendCommandRepository.request(command);
 
