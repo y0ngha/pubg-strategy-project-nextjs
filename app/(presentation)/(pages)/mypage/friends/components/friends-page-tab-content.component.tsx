@@ -179,7 +179,7 @@ function FriendListItemActions({
     const currentAction = actionMap[type];
 
     return (
-        <>
+        <div className={'flex gap-4'}>
             {currentAction.secondary && (
                 <Button
                     variant={'secondary'}
@@ -196,7 +196,7 @@ function FriendListItemActions({
                     {currentAction.primary.label}
                 </Button>
             )}
-        </>
+        </div>
     );
 }
 
