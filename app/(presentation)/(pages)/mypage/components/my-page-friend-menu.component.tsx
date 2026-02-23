@@ -1,6 +1,6 @@
 'use client';
 
-import MyPageMenuCard from '@/(presentation)/(pages)/my-page/components/my-page-menu-card.component';
+import MyPageMenuCard from '@/(presentation)/(pages)/mypage/components/my-page-menu-card.component';
 import { Users } from 'lucide-react';
 import { Route } from '@/(presentation)/shared/constants/route';
 import { useGetFriends } from '@/(presentation)/shared/hooks/useGetFriends';

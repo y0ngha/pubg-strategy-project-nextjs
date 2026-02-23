@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import PasswordChangeModal from '@/(presentation)/(pages)/my-page/modals/password-change.modal';
+import PasswordChangeModal from '@/(presentation)/(pages)/mypage/modals/password-change.modal';
 
 export function usePasswordChangeModal() {
     const [isOpen, setIsOpen] = useState<boolean>(false);

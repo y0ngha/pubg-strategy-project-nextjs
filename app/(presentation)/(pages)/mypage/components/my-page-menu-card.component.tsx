@@ -3,8 +3,8 @@
 import Card from '@/(presentation)/shared/components/card.component';
 import { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
-import MyPageIcon from '@/(presentation)/(pages)/my-page/components/my-page-icon.component';
-import MyPageCardContent from '@/(presentation)/(pages)/my-page/components/my-page-card-content.component';
+import MyPageIcon from '@/(presentation)/(pages)/mypage/components/my-page-icon.component';
+import MyPageCardContent from '@/(presentation)/(pages)/mypage/components/my-page-card-content.component';
 import Skeleton from '@/(presentation)/shared/components/skeleton.component';
 
 interface MenuCardProps {

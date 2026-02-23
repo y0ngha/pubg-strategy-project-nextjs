@@ -1,9 +1,9 @@
-import MyPageHeader from '@/(presentation)/(pages)/my-page/components/my-page-header.component';
-import MyPageProfile from '@/(presentation)/(pages)/my-page/components/my-page-profile.component';
-import MyPageMenuContainer from '@/(presentation)/(pages)/my-page/components/my-page-menu-container.component';
+import MyPageHeader from '@/(presentation)/(pages)/mypage/components/my-page-header.component';
+import MyPageProfile from '@/(presentation)/(pages)/mypage/components/my-page-profile.component';
+import MyPageMenuContainer from '@/(presentation)/(pages)/mypage/components/my-page-menu-container.component';
 import FriendsDehydrate from '@/(presentation)/dehydrate-components/friends-dehydrate.component';
-import MyPageFriendMenu from '@/(presentation)/(pages)/my-page/components/my-page-friend-menu.component';
-import MyPagePasswordChangeMenu from '@/(presentation)/(pages)/my-page/components/my-page-password-change-menu.component';
+import MyPageFriendMenu from '@/(presentation)/(pages)/mypage/components/my-page-friend-menu.component';
+import MyPagePasswordChangeMenu from '@/(presentation)/(pages)/mypage/components/my-page-password-change-menu.component';
 
 export default function MyPage() {
     return (
