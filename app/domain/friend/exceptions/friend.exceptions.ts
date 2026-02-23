@@ -1,8 +1,4 @@
 import { DomainException } from '@domain/shared/exceptions/domain.exception';
-import {
-    FriendStatus,
-    FriendStatusLabels,
-} from '@domain/friend/enum/friend-status.enum';
 
 export class FriendUpdateInvalidPermission extends DomainException {
     constructor() {
@@ -11,8 +7,8 @@ export class FriendUpdateInvalidPermission extends DomainException {
 }
 
 export class FriendUpdateInvalidStatus extends DomainException {
-    constructor(friendStatus: FriendStatus) {
-        super(`이미 ${FriendStatusLabels[friendStatus]} 상태 입니다.`);
+    constructor() {
+        super(`친구 상태를 업데이트하기에 유효하지 않은 상태입니다.`);
     }
 }
 

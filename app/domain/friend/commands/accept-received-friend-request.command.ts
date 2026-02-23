@@ -13,7 +13,7 @@ export class AcceptReceivedFriendRequestCommand {
 
     private static ensureFriendStatusUpdateAvailable(status: FriendStatus) {
         if (status !== FriendStatus.PENDING) {
-            throw new FriendUpdateInvalidStatus(status);
+            throw new FriendUpdateInvalidStatus();
         }
     }
 }
