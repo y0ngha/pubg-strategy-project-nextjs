@@ -5,7 +5,7 @@ import FriendsPageBody from '@/(presentation)/(pages)/mypage/friends/components/
 
 export default function FriendsPage() {
     return (
-        <div className={'mx-auto max-w-3xl space-y-6 px-4 py-10'}>
+        <div className={'mx-auto h-screen max-w-3xl space-y-6 px-4 py-10'}>
             <FriendsPageNavigation />
             <FriendsPageHeader>친구 관리</FriendsPageHeader>
             <FriendsPageFindNewFriend />
