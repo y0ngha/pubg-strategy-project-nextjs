@@ -21,6 +21,7 @@ export function getFriendCommandRepositoryMocking(): jest.Mocked<FriendCommandRe
         reject: jest.fn(),
         cancel: jest.fn(),
         request: jest.fn(),
+        delete: jest.fn(),
     };
 }
 

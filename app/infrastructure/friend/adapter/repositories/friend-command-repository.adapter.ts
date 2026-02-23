@@ -3,6 +3,7 @@ import { RejectReceivedFriendRequestCommand } from '@domain/friend/commands/reje
 import { AcceptReceivedFriendRequestCommand } from '@domain/friend/commands/accept-received-friend-request.command';
 import { CancelSentFriendRequestCommand } from '@domain/friend/commands/cancel-sent-friend-request.command';
 import { RequestFriendCommand } from '@domain/friend/commands/request-friend.command';
+import { DeleteFriendCommand } from '@domain/friend/commands/delete-friend.command';
 
 export class FriendCommandRepositoryAdapter extends FriendCommandRepositoryPort {
     accept(command: AcceptReceivedFriendRequestCommand): Promise<void> {
@@ -18,6 +19,10 @@ export class FriendCommandRepositoryAdapter extends FriendCommandRepositoryPort 
     }
 
     request(command: RequestFriendCommand): Promise<void> {
+        throw new Error('Not Implemented.');
+    }
+
+    delete(command: DeleteFriendCommand): Promise<void> {
         throw new Error('Not Implemented.');
     }
 }
