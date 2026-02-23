@@ -16,7 +16,7 @@ function FriendsPageNavigation() {
                 }
             >
                 <ArrowLeft className={'mr-2 h-5 w-5'} />
-                <span className={'font-medium'}>마이페이지로 돌아가기</span>
+                <span className={'font-medium'}>내 정보로 돌아가기</span>
             </button>
         </div>
     );
