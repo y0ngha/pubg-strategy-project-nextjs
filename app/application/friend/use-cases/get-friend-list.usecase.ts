@@ -38,12 +38,9 @@ export class GetFriendListUseCase {
     private modelToResponseDto(friend: Friend): GetFriendResponseDto {
         return {
             id: friend.id,
-            requesterUserId: friend.requesterUserId,
-            recipientUserId: friend.recipientUserId,
             status: friend.status,
             statusLabel: FriendStatusLabels[friend.status],
-            requesterUserEmail: friend.requesterUserEmail,
-            recipientUserEmail: friend.recipientUserEmail,
+            displayEmail: friend.displayEmail,
         };
     }
 }
