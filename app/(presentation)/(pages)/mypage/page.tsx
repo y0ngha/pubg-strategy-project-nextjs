@@ -1,22 +1,22 @@
-import MyPageHeader from '@/(presentation)/(pages)/mypage/components/my-page-header.component';
-import MyPageProfile from '@/(presentation)/(pages)/mypage/components/my-page-profile.component';
-import MyPageMenuContainer from '@/(presentation)/(pages)/mypage/components/my-page-menu-container.component';
-import FriendsDehydrate from '@/(presentation)/dehydrate-components/friends-dehydrate.component';
-import MyPageFriendMenu from '@/(presentation)/(pages)/mypage/components/my-page-friend-menu.component';
-import MyPagePasswordChangeMenu from '@/(presentation)/(pages)/mypage/components/my-page-password-change-menu.component';
+import FriendsDehydrate from '@/(presentation)/dehydrates/friends-dehydrate.component';
+import PasswordChangeMenu from '@/(presentation)/auth/components/password-change/my-page-password-change-menu.component';
+import Header from '@/(presentation)/(pages)/mypage/_components/header.component';
+import MenuContainer from '@/(presentation)/(pages)/mypage/_components/menu-container.component';
+import Profile from '@/(presentation)/users/components/profile.component';
+import FriendMenu from '@/(presentation)/(pages)/mypage/_components/friend-menu.component';
 
 export default function MyPage() {
     return (
         <FriendsDehydrate>
             <div className={'mx-auto h-screen max-w-2xl space-y-6 px-4 py-10'}>
-                <MyPageHeader>내 정보 관리</MyPageHeader>
+                <Header>내 정보 관리</Header>
 
-                <MyPageProfile />
+                <Profile />
 
-                <MyPageMenuContainer>
-                    <MyPageFriendMenu />
-                    <MyPagePasswordChangeMenu />
-                </MyPageMenuContainer>
+                <MenuContainer>
+                    <FriendMenu />
+                    <PasswordChangeMenu />
+                </MenuContainer>
             </div>
         </FriendsDehydrate>
     );

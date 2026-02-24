@@ -1,15 +1,15 @@
-import FriendsPageNavigation from '@/(presentation)/(pages)/mypage/friends/components/friends-page-navigation.component';
-import FriendsPageHeader from '@/(presentation)/(pages)/mypage/friends/components/friends-page-header.component';
-import FriendsPageFindNewFriend from '@/(presentation)/(pages)/mypage/friends/components/friends-page-find-new-friend.component';
-import FriendsPageBody from '@/(presentation)/(pages)/mypage/friends/components/friends-page-body.component';
+import Header from '@/(presentation)/(pages)/mypage/friends/_components/header.component';
+import Navigation from '@/(presentation)/(pages)/mypage/friends/_components/navigation.component';
+import FindNewFriend from '@/(presentation)/friends/components/find-new-friend.component';
+import Friends from '@/(presentation)/(pages)/mypage/friends/_components/friends.component';
 
 export default function FriendsPage() {
     return (
         <div className={'mx-auto h-screen max-w-3xl space-y-6 px-4 py-10'}>
-            <FriendsPageNavigation />
-            <FriendsPageHeader>친구 관리</FriendsPageHeader>
-            <FriendsPageFindNewFriend />
-            <FriendsPageBody />
+            <Navigation />
+            <Header>친구 관리</Header>
+            <FindNewFriend />
+            <Friends />
         </div>
     );
 }

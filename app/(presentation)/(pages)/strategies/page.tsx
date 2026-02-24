@@ -1,14 +1,14 @@
-import StrategiesTabs from '@/(presentation)/(pages)/strategies/components/tabs/strategies-tabs.component';
-import MyStrategies from '@/(presentation)/(pages)/strategies/components/tables/my-strategies.component';
-import StrategiesDehydrate from '@/(presentation)/dehydrate-components/strategies-dehydrate.component';
-import StrategiesPageLayout from '@/(presentation)/(pages)/strategies/components/strategies-page-layout.component';
-import SharedStrategies from '@/(presentation)/(pages)/strategies/components/tables/shared-strategies.component';
-import StrategiesTabContent from './components/tabs/strategies-tab-content.component';
-import StrategiesHeaderLayout from '@/(presentation)/(pages)/strategies/components/header/strategies-header-layout.component';
-import StrategiesHeader from '@/(presentation)/(pages)/strategies/components/header/strategies-header.component';
-import StrategyCreateButton from '@/(presentation)/(pages)/strategies/components/header/strategy-create-button.component';
-import StrategyCreateModalController from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal-controller.component';
-import StrategyCreateModal from '@/(presentation)/(pages)/strategies/components/modals/strategy-create-modal.component';
+import MyStrategies from '@/(presentation)/strategies/components/root/my-strategies.component';
+import StrategiesDehydrate from '@/(presentation)/dehydrates/strategies-dehydrate.component';
+import SharedStrategies from '@/(presentation)/strategies/components/root/shared-strategies.component';
+import StrategyCreateModalController from '@/(presentation)/strategies/modals/root/strategy-create-modal-controller.component';
+import StrategyCreateModal from '@/(presentation)/strategies/modals/root/strategy-create-modal.component';
+import StrategiesTabs from '@/(presentation)/(pages)/strategies/_components/strategies-tabs.component';
+import StrategiesTabContent from '@/(presentation)/(pages)/strategies/_components/strategies-tabs-content.component';
+import PageLayout from '@/(presentation)/(pages)/strategies/_components/page-layout.component';
+import HeaderLayout from '@/(presentation)/(pages)/strategies/_components/header-layout.component';
+import Header from '@/(presentation)/(pages)/strategies/_components/header.component';
+import CreateButton from '@/(presentation)/(pages)/strategies/_components/create-button.component';
 
 interface StrategyDashboardProps {
     searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -53,13 +53,13 @@ export default async function StrategyDashboard({
 
     return (
         <StrategiesDehydrate>
-            <StrategiesPageLayout
+            <PageLayout
                 headerLayout={
-                    <StrategiesHeaderLayout
-                        header={<StrategiesHeader />}
+                    <HeaderLayout
+                        header={<Header />}
                         strategyCreate={
                             <StrategyCreateModalController
-                                trigger={<StrategyCreateButton />}
+                                trigger={<CreateButton />}
                                 modal={<StrategyCreateModal />}
                             />
                         }

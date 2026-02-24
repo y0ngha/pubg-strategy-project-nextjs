@@ -1,12 +1,12 @@
-import LoginIntroduce from '@/(presentation)/(pages)/login/components/login-introduce.component';
-import SocialLogin from '@/(presentation)/(pages)/login/components/social-login.component';
-import EmailLogin from '@/(presentation)/(pages)/login/components/email-login.component';
-import LoginPageLayout from '@/(presentation)/(pages)/login/components/login-page-layout.component';
-import Register from '@/(presentation)/(pages)/login/components/register.component';
-import EmailLoginDivider from '@/(presentation)/(pages)/login/components/email-login-divider.component';
-import LoginHeader from '@/(presentation)/(pages)/login/components/login-header.component';
+import SocialLogin from '@/(presentation)/auth/components/login/social-login.component';
+import EmailLogin from '@/(presentation)/auth/components/login/email-login.component';
+import Register from '@/(presentation)/auth/components/login/register.component';
 import { redirect } from 'next/navigation';
 import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
+import PageLayout from '@/(presentation)/(pages)/login/_components/page-layout.component';
+import Introduce from '@/(presentation)/(pages)/login/_components/introduce.component';
+import Divider from '@/(presentation)/(pages)/login/_components/divider.component';
+import Header from '@/(presentation)/(pages)/login/_components/header.component';
 
 export default async function Login() {
     const isLoggedIn = await isAuthenticationComplete();
@@ -16,13 +16,13 @@ export default async function Login() {
     }
 
     return (
-        <LoginPageLayout
-            introduce={<LoginIntroduce />}
+        <PageLayout
+            introduce={<Introduce />}
             form={
                 <>
-                    <LoginHeader />
+                    <Header />
                     <SocialLogin />
-                    <EmailLoginDivider />
+                    <Divider />
                     <EmailLogin />
                     <Register />
                 </>
