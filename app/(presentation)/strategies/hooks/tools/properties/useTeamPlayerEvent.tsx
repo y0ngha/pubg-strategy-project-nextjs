@@ -90,5 +90,6 @@ export function useTeamPlayerEvent(
         toggleSelectedTeamPlayerId,
         createTeamPlayer,
         TeamPlayersLayer: Layer,
+        selectedTeamPlayerId,
     };
 }
