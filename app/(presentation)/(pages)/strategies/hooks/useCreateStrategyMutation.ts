@@ -31,9 +31,6 @@ export function useCreateStrategyMutation(
         isSuccess,
     } = useMutation({
         mutationFn: async (formData: FormData) => {
-            formData.set('userId', user?.id ?? '');
-            formData.set('userEmail', user?.email ?? '');
-
             return await createStrategyAction(formData);
         },
         onSuccess: (
