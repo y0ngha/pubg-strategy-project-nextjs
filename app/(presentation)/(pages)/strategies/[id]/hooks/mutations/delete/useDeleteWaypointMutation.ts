@@ -7,12 +7,17 @@ import { QueryKey } from '@tanstack/query-core';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { deleteWaypointAction } from '@/(presentation)/strategy/actions/waypoint/delete-waypoint.action';
 import { TeamPlayerResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useDeleteWaypointMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {

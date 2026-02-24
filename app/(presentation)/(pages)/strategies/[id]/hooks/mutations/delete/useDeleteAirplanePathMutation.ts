@@ -5,12 +5,17 @@ import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/ge
 import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { deleteAirplanePathAction } from '@/(presentation)/strategy/actions/airplane-path/delete-airplane-path.action';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useDeleteAirplanePathMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {

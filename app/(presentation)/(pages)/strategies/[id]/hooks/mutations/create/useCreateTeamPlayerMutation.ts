@@ -8,12 +8,17 @@ import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useCreateTeamPlayerMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -22,7 +27,7 @@ export function useCreateTeamPlayerMutation(strategyId: string) {
             return await addTeamPlayerAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
+            cacheUpdate(strategyQueryKey, data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

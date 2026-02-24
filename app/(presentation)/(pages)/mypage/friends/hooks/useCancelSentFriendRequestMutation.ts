@@ -3,8 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { toast } from 'react-toastify';
 import { cancelSentFriendRequestAction } from '@/(presentation)/friend/actions/cancel-sent-friend-request.action';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useCancelSentFriendRequestMutation() {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const { mutate } = useMutation({
@@ -23,7 +25,7 @@ export function useCancelSentFriendRequestMutation() {
         },
         onSettled: () => {
             queryClient.invalidateQueries({
-                queryKey: [ReactQueryKeys.FRIENDS_ALL],
+                queryKey: [user?.id, ReactQueryKeys.FRIENDS_ALL],
             });
         },
     });

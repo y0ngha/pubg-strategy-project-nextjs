@@ -8,12 +8,17 @@ import {
     updateEnemyTeamPositionAction,
 } from '@/(presentation)/strategy/actions/enemy-team/update-enemy-team-position.action';
 import { QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useUpdateEnemyTeamPositionMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -22,7 +27,7 @@ export function useUpdateEnemyTeamPositionMutation(strategyId: string) {
             return await updateEnemyTeamPositionAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
+            cacheUpdate(strategyQueryKey, data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,
