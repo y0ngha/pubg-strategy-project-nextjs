@@ -1,6 +1,6 @@
 import { StrategyQueryRepositoryPort } from '@domain/strategy/port/repositories/strategy-query-repository.port';
 import { StrategyId } from '@domain/strategy/value-objects/strategy-id';
-import { Strategy } from '@domain/strategy/entities/strategy.entity';
+import { Strategy } from '@domain/strategy/models/strategy.model';
 
 export class StrategyQueryRepositoryAdapter extends StrategyQueryRepositoryPort {
     findById(id: StrategyId): Promise<Strategy | null> {
