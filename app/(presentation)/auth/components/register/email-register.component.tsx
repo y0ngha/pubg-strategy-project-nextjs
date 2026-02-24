@@ -4,7 +4,7 @@ import Input from '@/(presentation)/shared/components/input.component';
 import Button from '@/(presentation)/shared/components/button.component';
 import { useEmailRegisterMutation } from '@/(presentation)/auth/hooks/mutations/useEmailRegisterMutation';
 import Checkbox from '@/(presentation)/shared/components/checkbox.component';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -68,7 +68,7 @@ function EmailRegister() {
                 (필수) 서비스 이용약관에 동의합니다.{' '}
                 <Link
                     className={'opacity-70 hover:opacity-100'}
-                    href={Route.TERMS}
+                    href={Routes.TERMS}
                     target={'_blank'}
                 >
                     [약관 보기]

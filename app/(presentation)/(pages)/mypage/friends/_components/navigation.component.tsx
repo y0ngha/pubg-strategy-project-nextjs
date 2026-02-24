@@ -1,6 +1,6 @@
 'use client';
 
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +10,7 @@ function Navigation() {
     return (
         <div className={'mb-6 flex items-center'}>
             <button
-                onClick={() => router.push(Route.MYPAGE)}
+                onClick={() => router.push(Routes.MYPAGE)}
                 className={
                     'flex cursor-pointer items-center text-gray-500 transition-colors hover:text-blue-600'
                 }

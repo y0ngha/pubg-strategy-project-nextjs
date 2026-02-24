@@ -1,7 +1,7 @@
 'use client';
 
 import { Users } from 'lucide-react';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { useRouter } from 'next/navigation';
 import MenuCard from '@/(presentation)/(pages)/mypage/_components/menu-card.component';
 import { useFriendSummary } from '@/(presentation)/friends/hooks/useFriendSummary';
@@ -16,7 +16,7 @@ function FriendMenu() {
             title={'친구 관리'}
             description={description}
             isPending={isPending}
-            handleClick={() => router.push(Route.FRIENDS)}
+            handleClick={() => router.push(Routes.FRIENDS)}
         />
     );
 }

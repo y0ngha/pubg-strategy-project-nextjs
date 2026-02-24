@@ -2,7 +2,7 @@
 
 import Input from '@/(presentation)/shared/components/input.component';
 import Link from 'next/link';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { ChevronLeft } from 'lucide-react';
 import Button from '@/(presentation)/shared/components/button.component';
 import { useUpdateStrategyTitleMutation } from '@/(presentation)/strategies/hooks/mutations/update/useUpdateStrategyTitleMutation';
@@ -34,7 +34,7 @@ function StrategyHeader({ id, title }: StrategyHeaderProps) {
             <div
                 className={'flex h-full flex-1 items-center justify-start p-2'}
             >
-                <Link href={Route.STRATEGIES}>
+                <Link href={Routes.STRATEGIES}>
                     <div className={'flex flex-row gap-1'}>
                         <ChevronLeft />
                         뒤로가기

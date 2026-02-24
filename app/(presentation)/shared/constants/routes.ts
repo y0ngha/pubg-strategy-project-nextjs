@@ -1,4 +1,4 @@
-export const Route = {
+export const Routes = {
     STATS: '/stats',
     STRATEGIES: '/strategies',
     LEADERBOARD: '/leaderboard',
@@ -12,4 +12,4 @@ export const Route = {
     STRATEGIES_NEW: '/strategies/new',
 } as const;
 
-export type Route = (typeof Route)[keyof typeof Route];
+export type Routes = (typeof Routes)[keyof typeof Routes];

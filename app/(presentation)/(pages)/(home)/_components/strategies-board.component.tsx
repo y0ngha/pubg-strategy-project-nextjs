@@ -5,7 +5,7 @@ import { ArrowRight, FileText } from 'lucide-react';
 import Link from 'next/link';
 import MapBadge from '@/(presentation)/shared/components/map-badge.component';
 import { ReactNode } from 'react';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { StrategyPost } from '@/(presentation)/shared/types/strategy';
 import { useGetStrategies } from '@/(presentation)/strategies/hooks/queries/useGetStrategies';
 
@@ -21,7 +21,7 @@ function StrategiesBoardTitle({ children }: { children: ReactNode }) {
 function StrategiesBoardMoreLink({ children }: { children: ReactNode }) {
     return (
         <Link
-            href={Route.STRATEGIES}
+            href={Routes.STRATEGIES}
             className={
                 'text-muted-foreground hover:text-primary flex cursor-pointer items-center text-xs'
             }

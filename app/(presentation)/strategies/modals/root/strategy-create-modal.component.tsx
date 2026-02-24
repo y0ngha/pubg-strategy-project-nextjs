@@ -7,7 +7,7 @@ import Select from '@/(presentation)/shared/components/select.component';
 import { PubgMap, PubgMapNames } from '@domain/strategy/enums/map.enum';
 import { useCreateStrategyMutation } from '@/(presentation)/strategies/hooks/mutations/create/useCreateStrategyMutation';
 import { useRouter } from 'next/navigation';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface StrategyCreateFormInputs {
@@ -28,7 +28,7 @@ function StrategyCreateModal({
 
     const { createStrategy } = useCreateStrategyMutation({
         onSuccess: data => {
-            router.push(`${Route.STRATEGIES}/${data.id}`);
+            router.push(`${Routes.STRATEGIES}/${data.id}`);
         },
     });
 

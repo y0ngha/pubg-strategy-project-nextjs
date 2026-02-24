@@ -5,7 +5,7 @@ import Card from '@/(presentation)/shared/components/card.component';
 import { HTMLAttributes, ReactNode } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import ServerIcon from '@/(presentation)/shared/icons/server-icon.component';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 
 type PubgServer = 'steam' | 'kakao';
 
@@ -43,7 +43,7 @@ function RankerBoardTitle({ children }: { children: ReactNode }) {
 function RankerBoardMoreLink({ children }: { children: ReactNode }) {
     return (
         <Link
-            href={Route.LEADERBOARD}
+            href={Routes.LEADERBOARD}
             className={
                 'text-muted-foreground hover:text-primary flex items-center text-xs'
             }

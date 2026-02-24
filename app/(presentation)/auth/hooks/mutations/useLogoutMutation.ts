@@ -4,7 +4,7 @@ import { logoutAction } from '@/(presentation)/auth/actions/logout.action';
 import { toast } from 'react-toastify';
 import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
 import { useRouter } from 'next/navigation';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 
 export function useLogoutMutation() {
     const router = useRouter();
@@ -16,7 +16,7 @@ export function useLogoutMutation() {
         },
         onSuccess: () => {
             queryClient.clear();
-            router.push(Route.MAIN);
+            router.push(Routes.MAIN);
         },
         onError: error => {
             queryClient.invalidateQueries({
