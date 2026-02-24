@@ -1,7 +1,7 @@
 'use client';
 
 import { useFriendsPageTab } from '@/(presentation)/(pages)/mypage/friends/hooks/useFriendsPageTab';
-import { useGetFriends } from '@/(presentation)/(pages)/mypage/friends/hooks/useGetFriends';
+import { useGetFriends } from '@/(presentation)/shared/hooks/useGetFriends';
 
 function FriendsPageBody() {
     const { data } = useGetFriends();
