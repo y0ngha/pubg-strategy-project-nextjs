@@ -1,15 +1,15 @@
 'use client';
 
 import { Lock } from 'lucide-react';
-import MyPageMenuCard from '@/(presentation)/(pages)/mypage/_components/my-page-menu-card.component';
 import { usePasswordChangeModal } from '@/(presentation)/auth/hooks/usePasswordChangeModal';
+import MenuCard from '@/(presentation)/(pages)/mypage/_components/menu-card.component';
 
-function MyPagePasswordChangeMenu() {
+function PasswordChangeMenu() {
     const { PasswordChangeModal, openPasswordModal } = usePasswordChangeModal();
 
     return (
         <>
-            <MyPageMenuCard
+            <MenuCard
                 icon={<Lock className={'text-orange-600'} />}
                 title={'비밀번호 변경'}
                 description={'계정 보안 및 로그인 설정'}
@@ -21,6 +21,6 @@ function MyPagePasswordChangeMenu() {
     );
 }
 
-MyPagePasswordChangeMenu.displayName = 'MyPagePasswordChangeMenu';
+PasswordChangeMenu.displayName = 'PasswordChangeMenu';
 
-export default MyPagePasswordChangeMenu;
+export default PasswordChangeMenu;

@@ -1,9 +1,9 @@
 import FriendsDehydrate from '@/(presentation)/dehydrates/friends-dehydrate.component';
-import PasswordChangeMenu from '@/(presentation)/auth/components/password-change/my-page-password-change-menu.component';
 import Header from '@/(presentation)/(pages)/mypage/_components/header.component';
 import MenuContainer from '@/(presentation)/(pages)/mypage/_components/menu-container.component';
 import Profile from '@/(presentation)/users/components/profile.component';
 import FriendMenu from '@/(presentation)/(pages)/mypage/_components/friend-menu.component';
+import PasswordChangeMenu from '@/(presentation)/auth/components/password-change/password-change-menu.component';
 
 export default function MyPage() {
     return (
