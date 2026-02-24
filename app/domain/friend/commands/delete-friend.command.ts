@@ -13,7 +13,7 @@ export class DeleteFriendCommand {
 
     private static ensureFriendStatusUpdateAvailable(status: FriendStatus) {
         if (status !== FriendStatus.ACCEPTED) {
-            throw new FriendUpdateInvalidStatus();
+            throw new FriendUpdateInvalidStatus(status);
         }
     }
 }
