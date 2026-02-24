@@ -3,12 +3,13 @@ import { getFriendCommandRepositoryMocking } from '@/__tests__/application/helpe
 import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.exceptions';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
 import { DeleteFriendUseCase } from '@/application/friend/use-cases/delete-friend.usecase';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 
 describe('DeleteFriendUseCase', () => {
     let useCase: DeleteFriendUseCase;
     let mockFriendCommandRepository: jest.Mocked<FriendCommandRepositoryPort>;
 
-    const friendId = FriendId.generate();
+    const id = FriendId.generate();
 
     beforeEach(() => {
         mockFriendCommandRepository = getFriendCommandRepositoryMocking();
@@ -19,7 +20,8 @@ describe('DeleteFriendUseCase', () => {
         it('정상적인 UserId를 보내면, Command를 생성하여 Repository에 전달한다.', async () => {
             // give
             const dto = {
-                friendId: friendId.toString(),
+                id: id.toString(),
+                currentStatus: FriendStatus.ACCEPTED,
             };
 
             // when
@@ -29,7 +31,7 @@ describe('DeleteFriendUseCase', () => {
             expect(mockFriendCommandRepository.delete).toHaveBeenCalledTimes(1);
             expect(mockFriendCommandRepository.delete).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    friendId: friendId,
+                    id: id,
                 })
             );
         });
@@ -39,7 +41,8 @@ describe('DeleteFriendUseCase', () => {
         it('UUID 형태가 아닌 UserId를 보내면, DTO 파싱 과정에서 에러가 발생하여 Repository에 전달하지도 않는다.', async () => {
             // give
             const dto = {
-                friendId: 'asdf-1234',
+                id: 'asdf-1234',
+                currentStatus: FriendStatus.ACCEPTED,
             };
 
             // when & then
@@ -58,7 +61,8 @@ describe('DeleteFriendUseCase', () => {
             });
 
             const dto = {
-                friendId: friendId.toString(),
+                id: id.toString(),
+                currentStatus: FriendStatus.ACCEPTED,
             };
 
             //when & then
