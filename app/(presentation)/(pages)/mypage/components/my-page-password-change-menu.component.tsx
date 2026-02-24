@@ -1,8 +1,8 @@
 'use client';
 
 import { Lock } from 'lucide-react';
-import MyPageMenuCard from '@/(presentation)/(pages)/my-page/components/my-page-menu-card.component';
-import { usePasswordChangeModal } from '@/(presentation)/(pages)/my-page/hooks/usePasswordChangeModal';
+import MyPageMenuCard from '@/(presentation)/(pages)/mypage/components/my-page-menu-card.component';
+import { usePasswordChangeModal } from '@/(presentation)/(pages)/mypage/hooks/usePasswordChangeModal';
 
 function MyPagePasswordChangeMenu() {
     const { PasswordChangeModal, openPasswordModal } = usePasswordChangeModal();

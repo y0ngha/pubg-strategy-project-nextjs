@@ -1,12 +1,12 @@
-import { UserId } from '@/domain/shared/value-objects/user-id';
 import { z } from 'zod';
+import { Email } from '@domain/shared/value-objects/email';
 
 export interface RequestFriendRequestDto {
-    recipientUserId: string;
+    email: string;
 }
 
 export const RequestFriendRequestSchema = z.object({
-    recipientUserId: z.string().transform(value => {
-        return UserId.create(value);
+    email: z.string().transform(value => {
+        return Email.create(value);
     }),
 });

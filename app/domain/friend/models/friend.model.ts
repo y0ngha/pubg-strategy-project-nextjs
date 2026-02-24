@@ -9,4 +9,5 @@ export interface Friend {
     readonly recipientUserEmail: string;
     readonly requestedAt: Date;
     readonly respondedAt: Date | null;
+    readonly displayEmail: string;
 }

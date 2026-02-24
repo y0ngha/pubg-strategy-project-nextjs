@@ -7,7 +7,7 @@ import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/fr
 import { AcceptReceivedFriendRequestCommand } from '@domain/friend/commands/accept-received-friend-request.command';
 
 @injectable()
-export class AcceptReceivedFriendUseCase {
+export class AcceptReceivedFriendRequestUseCase {
     constructor(
         @inject(FriendCommandRepositoryPort)
         private readonly friendCommandRepository: FriendCommandRepositoryPort

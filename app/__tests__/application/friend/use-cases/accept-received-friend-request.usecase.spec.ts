@@ -1,12 +1,12 @@
-import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/accept-received-friend.usecase';
 import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
 import { FriendUpdateInvalidStatus } from '@domain/friend/exceptions/friend.exceptions';
 import { getFriendCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
 import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
 import { FriendId } from '@domain/friend/value-objects/friend-id';
+import { AcceptReceivedFriendRequestUseCase } from '@/application/friend/use-cases/accept-received-friend-request.usecase';
 
-describe('AcceptReceivedFriendUseCase', () => {
-    let useCase: AcceptReceivedFriendUseCase;
+describe('AcceptReceivedFriendRequestUseCase', () => {
+    let useCase: AcceptReceivedFriendRequestUseCase;
     let mockFriendCommandRepository: jest.Mocked<FriendCommandRepositoryPort>;
 
     const friendId = FriendId.generate();
@@ -14,7 +14,9 @@ describe('AcceptReceivedFriendUseCase', () => {
     beforeEach(() => {
         mockFriendCommandRepository = getFriendCommandRepositoryMocking();
 
-        useCase = new AcceptReceivedFriendUseCase(mockFriendCommandRepository);
+        useCase = new AcceptReceivedFriendRequestUseCase(
+            mockFriendCommandRepository
+        );
     });
 
     describe('성공 테스트', () => {

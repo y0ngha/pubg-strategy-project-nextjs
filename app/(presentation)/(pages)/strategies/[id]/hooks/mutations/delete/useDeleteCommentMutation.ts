@@ -7,12 +7,17 @@ import { QueryKey } from '@tanstack/query-core';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
 import { deleteCommentAction } from '@/(presentation)/strategy/actions/comment/delete-comment.action';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useDeleteCommentMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {

@@ -1,11 +1,11 @@
 'use server';
 
-import { initializeRequestServices } from '@global/di/server/get-server-dependency';
-import { AcceptReceivedFriendUseCase } from '@/application/friend/use-cases/accept-received-friend.usecase';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { ensureAuthentication } from '@/(presentation)/shared/helpers/authentication.helper';
+import { DeleteFriendUseCase } from '@/application/friend/use-cases/delete-friend.usecase';
+import { initializeRequestServices } from '@global/di/server/get-server-dependency';
 
-export async function acceptReceivedFriendAction(formData: FormData) {
+export async function deleteFriendAction(formData: FormData) {
     await ensureAuthentication();
 
     const getService = initializeRequestServices();
@@ -28,9 +28,7 @@ export async function acceptReceivedFriendAction(formData: FormData) {
         currentStatus: currentStatus,
     };
 
-    const useCase = getService<AcceptReceivedFriendUseCase>(
-        AcceptReceivedFriendUseCase
-    );
+    const useCase = getService<DeleteFriendUseCase>(DeleteFriendUseCase);
 
     return await useCase.execute(dto);
 }

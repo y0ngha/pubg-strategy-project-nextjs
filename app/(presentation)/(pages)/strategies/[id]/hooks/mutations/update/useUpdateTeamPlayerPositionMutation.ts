@@ -8,12 +8,17 @@ import {
     updateTeamPlayerPositionAction,
     UpdateTeamPlayerPositionAction,
 } from '@/(presentation)/strategy/actions/team-player/update-team-player-position.action';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useUpdateTeamPlayerPositionMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -22,7 +27,7 @@ export function useUpdateTeamPlayerPositionMutation(strategyId: string) {
             return await updateTeamPlayerPositionAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
+            cacheUpdate(strategyQueryKey, data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

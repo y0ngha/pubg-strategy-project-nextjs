@@ -8,12 +8,17 @@ import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-ke
 import { GetStrategyAction } from '@/(presentation)/strategy/actions/strategy/get-strategy.action';
 import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useCreateAirplanePathMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -22,7 +27,7 @@ export function useCreateAirplanePathMutation(strategyId: string) {
             return await addAirplanePathAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
+            cacheUpdate(strategyQueryKey, data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

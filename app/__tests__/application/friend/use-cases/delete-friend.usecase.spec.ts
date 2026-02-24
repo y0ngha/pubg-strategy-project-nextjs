@@ -1,0 +1,72 @@
+import { FriendCommandRepositoryPort } from '@domain/friend/port/repositories/friend-command-repository.port';
+import { getFriendCommandRepositoryMocking } from '@/__tests__/application/helpers/repository-mocking.helpers';
+import { InvalidEntityIdException } from '@domain/shared/exceptions/entity-id.exceptions';
+import { FriendId } from '@domain/friend/value-objects/friend-id';
+import { DeleteFriendUseCase } from '@/application/friend/use-cases/delete-friend.usecase';
+import { FriendStatus } from '@domain/friend/enum/friend-status.enum';
+
+describe('DeleteFriendUseCase', () => {
+    let useCase: DeleteFriendUseCase;
+    let mockFriendCommandRepository: jest.Mocked<FriendCommandRepositoryPort>;
+
+    const id = FriendId.generate();
+
+    beforeEach(() => {
+        mockFriendCommandRepository = getFriendCommandRepositoryMocking();
+        useCase = new DeleteFriendUseCase(mockFriendCommandRepository);
+    });
+
+    describe('성공 테스트', () => {
+        it('정상적인 UserId를 보내면, Command를 생성하여 Repository에 전달한다.', async () => {
+            // give
+            const dto = {
+                id: id.toString(),
+                currentStatus: FriendStatus.ACCEPTED,
+            };
+
+            // when
+            await useCase.execute(dto);
+
+            // then
+            expect(mockFriendCommandRepository.delete).toHaveBeenCalledTimes(1);
+            expect(mockFriendCommandRepository.delete).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: id,
+                })
+            );
+        });
+    });
+
+    describe('실패 테스트', () => {
+        it('UUID 형태가 아닌 UserId를 보내면, DTO 파싱 과정에서 에러가 발생하여 Repository에 전달하지도 않는다.', async () => {
+            // give
+            const dto = {
+                id: 'asdf-1234',
+                currentStatus: FriendStatus.ACCEPTED,
+            };
+
+            // when & then
+            await expect(useCase.execute(dto)).rejects.toThrow(
+                InvalidEntityIdException
+            );
+            expect(mockFriendCommandRepository.delete).toHaveBeenCalledTimes(0);
+        });
+
+        it('Use Case 내 도메인 호출 과정에서 예외가 발생하면, 예외가 그대로 전파되어야 한다.', async () => {
+            jest.spyOn(
+                mockFriendCommandRepository,
+                'delete'
+            ).mockImplementation(() => {
+                throw new Error();
+            });
+
+            const dto = {
+                id: id.toString(),
+                currentStatus: FriendStatus.ACCEPTED,
+            };
+
+            //when & then
+            await expect(() => useCase.execute(dto)).rejects.toThrow(Error);
+        });
+    });
+});

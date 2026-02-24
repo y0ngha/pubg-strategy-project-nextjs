@@ -10,16 +10,16 @@ export async function requestFriendAction(formData: FormData) {
 
     const getService = initializeRequestServices();
 
-    const { recipientUserId } = parseFormData(formData, [
+    const { email } = parseFormData(formData, [
         {
-            key: 'recipientUserId',
+            key: 'email',
             error: '친구 요청을 받는 유저 고유 식별자를 불러올 수 없습니다.',
             type: 'string',
         },
     ] as const);
 
     const dto = {
-        recipientUserId: recipientUserId,
+        email: email,
     };
 
     const useCase = getService<RequestFriendUseCase>(RequestFriendUseCase);

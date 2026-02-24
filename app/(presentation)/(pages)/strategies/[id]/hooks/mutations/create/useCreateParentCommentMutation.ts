@@ -9,12 +9,17 @@ import {
 } from '@/(presentation)/strategy/actions/comment/create-parent-comment.action';
 import { QueryKey } from '@tanstack/query-core';
 import { CommentResponseDto } from '@/application/strategy/dto/strategy/get-strategy.dto';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useCreateParentCommentMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -23,7 +28,7 @@ export function useCreateParentCommentMutation(strategyId: string) {
             return await createParentCommentAction(formData);
         },
         onSuccess: data => {
-            cacheUpdate([ReactQueryKeys.STRATIGIES, strategyId], data);
+            cacheUpdate(strategyQueryKey, data);
 
             queryClient.invalidateQueries({
                 queryKey: strategiesQueryKey,

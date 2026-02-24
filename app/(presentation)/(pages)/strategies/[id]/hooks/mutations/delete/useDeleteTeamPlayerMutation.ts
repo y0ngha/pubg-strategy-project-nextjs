@@ -6,12 +6,17 @@ import { toast } from 'react-toastify';
 import { QueryKey } from '@tanstack/query-core';
 import { parseFormData } from '@/(presentation)/shared/helpers/form-data.helper';
 import { deleteTeamPlayerAction } from '@/(presentation)/strategy/actions/team-player/delete-team-player.action';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useDeleteTeamPlayerMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
     const queryClient = getQueryClient();
 
     const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
-    const strategiesQueryKey: QueryKey = [ReactQueryKeys.STRATEGIES_ALL];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {

@@ -9,6 +9,7 @@ import {
     GetSharedStrategiesAction,
 } from '@/(presentation)/strategy/actions/strategy/get-shared-strategies.action';
 import { InfiniteData, type QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/shared/hooks/useGetCurrentUser';
 
 export function useGetSharedStrategies(
     limit?: number,
@@ -30,6 +31,8 @@ export function useGetSharedStrategies(
         | 'initialPageParam'
     >
 ): UseInfiniteQueryResult<InfiniteData<GetSharedStrategiesAction>, Error> {
+    const { data: user } = useGetCurrentUser();
+
     return useInfiniteQuery<
         GetSharedStrategiesAction,
         Error,
@@ -37,14 +40,14 @@ export function useGetSharedStrategies(
         QueryKey,
         number
     >({
-        queryKey: [ReactQueryKeys.SHARED_STRATIGIES_ALL],
+        queryKey: [user?.id, ReactQueryKeys.SHARED_STRATIGIES_ALL],
         queryFn: async ({ pageParam }) => {
             return await getSharedStrategiesAction(
                 pageParam as number,
                 limit ?? 15
             );
         },
-        enabled: true,
+        enabled: !!user?.id,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24,
         retry: false,

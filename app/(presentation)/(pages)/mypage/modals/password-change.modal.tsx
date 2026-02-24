@@ -2,7 +2,7 @@ import Modal from '@/(presentation)/shared/components/modal.component';
 import Button from '@/(presentation)/shared/components/button.component';
 import Input from '@/(presentation)/shared/components/input.component';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { usePasswordChangeMutation } from '@/(presentation)/(pages)/my-page/hooks/usePasswordChangeMutation';
+import { usePasswordChangeMutation } from '@/(presentation)/(pages)/mypage/hooks/usePasswordChangeMutation';
 
 interface PasswordChangeFormInputs {
     currentPassword: string;
