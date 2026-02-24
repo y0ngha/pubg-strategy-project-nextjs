@@ -15,6 +15,11 @@ import { useFriendActions } from '@/(presentation)/(pages)/mypage/friends/hooks/
 
 type FriendAction = (id: string, currentStatus: string) => void;
 
+type FriendType =
+    | typeof MY_FIRENDS_TAB
+    | typeof RECEIVED_FRIEND_REQUESTS_TAB
+    | typeof SEND_FRIEND_REQUESTS_TAB;
+
 interface FriendsPageTabContentProps {
     activeTab: string;
     friends: GetFriendResponseDto[];
@@ -54,6 +59,36 @@ function FriendsPageTabContent({
     );
 }
 
+interface FriendListItemContentProps {
+    data: GetFriendResponseDto[];
+    type: FriendType;
+    onPrimaryButtonClick?: FriendAction;
+    onSecondaryButtonClick?: FriendAction;
+    emptyText: string;
+}
+
+function FriendListItemContent({
+    data,
+    type,
+    onPrimaryButtonClick,
+    onSecondaryButtonClick,
+    emptyText,
+}: FriendListItemContentProps) {
+    if (data.length === 0) {
+        return <p className={'py-10 text-center text-gray-500'}>{emptyText}</p>;
+    }
+
+    return data.map(friend => (
+        <FriendListItem
+            key={friend.id}
+            friend={friend}
+            type={type}
+            onPrimaryButtonClick={onPrimaryButtonClick}
+            onSecondaryButtonClick={onSecondaryButtonClick}
+        />
+    ));
+}
+
 function MyFriends({
     friends,
     onDeleteFriend,
@@ -61,22 +96,14 @@ function MyFriends({
     FriendsPageTabContentProps,
     'friends'
 >) {
-    if (friends.length === 0) {
-        return (
-            <p className={'py-10 text-center text-gray-500'}>
-                등록된 친구가 없습니다.
-            </p>
-        );
-    }
-
-    return friends.map(friend => (
-        <FriendListItem
-            key={friend.id}
-            friend={friend}
+    return (
+        <FriendListItemContent
+            data={friends}
             type={MY_FIRENDS_TAB}
             onSecondaryButtonClick={onDeleteFriend}
+            emptyText={'등록된 친구가 없습니다.'}
         />
-    ));
+    );
 }
 
 function ReceivedFriendRequests({
@@ -87,23 +114,15 @@ function ReceivedFriendRequests({
     FriendsPageTabContentProps,
     'receivedFriendRequests'
 >) {
-    if (receivedFriendRequests.length === 0) {
-        return (
-            <p className={'py-10 text-center text-gray-500'}>
-                받은 친구 요청이 없습니다.
-            </p>
-        );
-    }
-
-    return receivedFriendRequests.map(friend => (
-        <FriendListItem
-            key={friend.id}
-            friend={friend}
+    return (
+        <FriendListItemContent
+            data={receivedFriendRequests}
             type={RECEIVED_FRIEND_REQUESTS_TAB}
             onPrimaryButtonClick={onAcceptFriend}
             onSecondaryButtonClick={onRejectFriend}
+            emptyText={'받은 친구 요청이 없습니다.'}
         />
-    ));
+    );
 }
 
 function SentFriendRequests({
@@ -113,29 +132,18 @@ function SentFriendRequests({
     FriendsPageTabContentProps,
     'sentFriendRequests'
 >) {
-    if (sentFriendRequests.length === 0) {
-        return (
-            <p className={'py-10 text-center text-gray-500'}>
-                보낸 친구 요청이 없습니다.
-            </p>
-        );
-    }
-
-    return sentFriendRequests.map(friend => (
-        <FriendListItem
-            key={friend.id}
-            friend={friend}
+    return (
+        <FriendListItemContent
+            data={sentFriendRequests}
             type={SEND_FRIEND_REQUESTS_TAB}
             onSecondaryButtonClick={onCancelFriendRequest}
+            emptyText={'보낸 친구 요청이 없습니다.'}
         />
-    ));
+    );
 }
 
 interface FriendListItemActionsProps {
-    type:
-        | typeof MY_FIRENDS_TAB
-        | typeof RECEIVED_FRIEND_REQUESTS_TAB
-        | typeof SEND_FRIEND_REQUESTS_TAB;
+    type: FriendType;
     id: string;
     currentStatus: string;
     onPrimaryButtonClick?: FriendAction;
@@ -202,10 +210,7 @@ function FriendListItemActions({
 
 interface FriendListItemProps {
     friend: GetFriendResponseDto;
-    type:
-        | typeof MY_FIRENDS_TAB
-        | typeof RECEIVED_FRIEND_REQUESTS_TAB
-        | typeof SEND_FRIEND_REQUESTS_TAB;
+    type: FriendType;
     onPrimaryButtonClick?: FriendAction;
     onSecondaryButtonClick?: FriendAction;
 }
