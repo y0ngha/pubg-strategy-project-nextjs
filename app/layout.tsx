@@ -3,12 +3,14 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import ReactQueryProviders from '@/react-query-provider';
+import ReactQueryProviders from '@/(presentation)/shared/providers/react-query-provider';
 import { ReactNode } from 'react';
 import UserDehydrate from '@/(presentation)/dehydrates/user-dehydrate.component';
 import Footer from '@/footer';
 import Navigation from '@/navigation';
 import AuthFeedbackListner from '@/auth-feedback-listner';
+import AlertProvider from '@/(presentation)/shared/providers/alert-provider';
+import ConfirmProvider from '@/(presentation)/shared/providers/confirm-provider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -39,10 +41,17 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
             >
                 <Navigation />
+
                 <ReactQueryProviders>
-                    <UserDehydrate>
-                        <main className={'w-full flex-1'}>{children}</main>
-                    </UserDehydrate>
+                    <ConfirmProvider>
+                        <AlertProvider>
+                            <UserDehydrate>
+                                <main className={'w-full flex-1'}>
+                                    {children}
+                                </main>
+                            </UserDehydrate>
+                        </AlertProvider>
+                    </ConfirmProvider>
                 </ReactQueryProviders>
 
                 <AuthFeedbackListner />
