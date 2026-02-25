@@ -16,6 +16,6 @@ function PageLayout({ hero, main }: PageLayoutProps) {
     );
 }
 
-PageLayout.displayName = 'HomePageLayout';
+PageLayout.displayName = 'PageLayout';
 
 export default PageLayout;

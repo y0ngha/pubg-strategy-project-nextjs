@@ -27,6 +27,6 @@ function PageLayout({
     );
 }
 
-PageLayout.displayName = 'LoginPageLayout';
+PageLayout.displayName = 'PageLayout';
 
 export default PageLayout;

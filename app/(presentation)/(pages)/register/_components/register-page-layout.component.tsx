@@ -27,6 +27,6 @@ function RegisterPageLayout({
     );
 }
 
-RegisterPageLayout.displayName = 'RegisterPageLayout';
+RegisterPageLayout.displayName = 'PageLayout';
 
 export default RegisterPageLayout;
