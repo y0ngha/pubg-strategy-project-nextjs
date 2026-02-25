@@ -1,0 +1,74 @@
+import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
+import { useMutation } from '@tanstack/react-query';
+import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
+import { GetStrategyAction } from '@/(presentation)/strategies/actions/strategy/get-strategy.action';
+import { toast } from 'react-toastify';
+import { QueryKey } from '@tanstack/query-core';
+import { deleteAirplanePathAction } from '@/(presentation)/strategies/actions/airplane-path/delete-airplane-path.action';
+import { useGetCurrentUser } from '@/(presentation)/users/hooks/queries/useGetCurrentUser';
+
+export function useDeleteAirplanePathMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
+    const queryClient = getQueryClient();
+
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
+
+    const { mutate } = useMutation({
+        mutationFn: async (formData: FormData) => {
+            formData.set('strategyId', strategyId);
+
+            return await deleteAirplanePathAction(formData);
+        },
+        onMutate: () => {
+            const previousStrategy =
+                queryClient.getQueryData<GetStrategyAction>(strategyQueryKey);
+
+            optimisticUpdate(strategyQueryKey);
+
+            return { previousStrategy };
+        },
+        onError: (error, _, onMutateResult) => {
+            if (onMutateResult?.previousStrategy) {
+                queryClient.setQueryData(
+                    strategyQueryKey,
+                    onMutateResult.previousStrategy
+                );
+            }
+
+            console.error('useDeleteAirplanePathMutation', error);
+            toast.error(
+                error.message ??
+                    '알 수 없는 오류로 비행기 동선 삭제에 실패했습니다.'
+            );
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: strategiesQueryKey,
+            });
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+        },
+    });
+
+    const optimisticUpdate = (queryKey: QueryKey) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                airplanePath: undefined,
+            };
+        });
+    };
+
+    return {
+        deleteAirplanePath: mutate,
+    };
+}

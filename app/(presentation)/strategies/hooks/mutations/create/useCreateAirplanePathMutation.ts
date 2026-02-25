@@ -1,0 +1,70 @@
+import { getQueryClient } from '@/(presentation)/shared/helpers/query-client.helpers';
+import { useMutation } from '@tanstack/react-query';
+import {
+    AddAirplanePathAction,
+    addAirplanePathAction,
+} from '@/(presentation)/strategies/actions/airplane-path/add-airplane-path.action';
+import { ReactQueryKeys } from '@/(presentation)/shared/constants/react-query-keys';
+import { GetStrategyAction } from '@/(presentation)/strategies/actions/strategy/get-strategy.action';
+import { toast } from 'react-toastify';
+import { QueryKey } from '@tanstack/query-core';
+import { useGetCurrentUser } from '@/(presentation)/users/hooks/queries/useGetCurrentUser';
+
+export function useCreateAirplanePathMutation(strategyId: string) {
+    const { data: user } = useGetCurrentUser();
+    const queryClient = getQueryClient();
+
+    const strategyQueryKey: QueryKey = [ReactQueryKeys.STRATIGIES, strategyId];
+    const strategiesQueryKey: QueryKey = [
+        user?.id,
+        ReactQueryKeys.STRATEGIES_ALL,
+    ];
+
+    const { mutate } = useMutation({
+        mutationFn: async (formData: FormData) => {
+            formData.set('strategyId', strategyId);
+
+            return await addAirplanePathAction(formData);
+        },
+        onSuccess: data => {
+            cacheUpdate(strategyQueryKey, data);
+
+            queryClient.invalidateQueries({
+                queryKey: strategiesQueryKey,
+            });
+        },
+        onError: error => {
+            queryClient.invalidateQueries({
+                queryKey: strategyQueryKey,
+            });
+
+            console.error('useCreateAirplanePathMutation', error);
+            toast.error(
+                error.message ??
+                    '알 수 없는 오류로 비행기 동선 생성에 실패했습니다.'
+            );
+        },
+        onSettled: () => {},
+    });
+
+    const cacheUpdate = (queryKey: QueryKey, data: AddAirplanePathAction) => {
+        queryClient.setQueryData<GetStrategyAction>(queryKey, oldStrategy => {
+            if (!oldStrategy) {
+                return undefined;
+            }
+
+            return {
+                ...oldStrategy,
+                airplanePath: {
+                    id: data.id,
+                    startPosition: data.startPosition,
+                    endPosition: data.endPosition,
+                },
+            };
+        });
+    };
+
+    return {
+        createAirplanePath: mutate,
+    };
+}

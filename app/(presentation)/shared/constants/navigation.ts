@@ -1,9 +1,9 @@
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 
 export const NavigationItems = [
-    { name: '전적검색', href: Route.STATS },
-    { name: '전략', href: Route.STRATEGIES },
-    { name: '순위', href: Route.LEADERBOARD },
+    { name: '전적검색', href: Routes.STATS },
+    { name: '전략', href: Routes.STRATEGIES },
+    { name: '순위', href: Routes.LEADERBOARD },
 ];
 
-export const LegalItems = [{ name: '이용약관', href: Route.TERMS }];
+export const LegalItems = [{ name: '이용약관', href: Routes.TERMS }];

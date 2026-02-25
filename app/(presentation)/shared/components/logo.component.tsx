@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 
 function Logo() {
     return (
-        <Link href={Route.MAIN} className={'flex items-center gap-2'}>
+        <Link href={Routes.MAIN} className={'flex items-center gap-2'}>
             <span
                 className={
                     'hidden text-xl font-black tracking-tighter italic sm:inline-block'

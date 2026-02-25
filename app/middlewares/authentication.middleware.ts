@@ -1,12 +1,12 @@
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
 import { NextRequest, NextResponse } from 'next/server';
 import { CookieKeys } from '@/application/constants/cookie-keys';
 
 const NEED_AUTHENTICATION_PATHNAMES = [
-    Route.MYPAGE,
-    Route.STRATEGIES,
-    Route.FRIENDS,
+    Routes.MYPAGE,
+    Routes.STRATEGIES,
+    Routes.FRIENDS,
 ];
 
 export async function authenticationMiddleware(
@@ -25,7 +25,7 @@ export async function authenticationMiddleware(
 }
 
 function getRedirectUrl(baseUrl: string): URL {
-    const redirectUrl = new URL(`${Route.LOGIN}`, baseUrl);
+    const redirectUrl = new URL(`${Routes.LOGIN}`, baseUrl);
     redirectUrl.searchParams.set('t', new Date().getTime().toString());
 
     return redirectUrl;

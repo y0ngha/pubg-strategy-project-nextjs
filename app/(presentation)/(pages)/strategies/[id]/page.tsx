@@ -1,5 +1,5 @@
-import StrategyPageLayout from '@/(presentation)/(pages)/strategies/[id]/components/strategy-page-layout.component';
-import StrategyPageContent from '@/(presentation)/(pages)/strategies/[id]/components/body/strategy-page-content.component';
+import StrategyPageContent from '@/(presentation)/strategies/components/[id]/body/strategy-page-content.component';
+import PageLayout from '@/(presentation)/(pages)/strategies/[id]/_components/page-layout.component';
 
 export default async function Strategy({
     params,
@@ -8,5 +8,5 @@ export default async function Strategy({
 }) {
     const { id } = await params;
 
-    return <StrategyPageLayout content={<StrategyPageContent id={id} />} />;
+    return <PageLayout content={<StrategyPageContent id={id} />} />;
 }

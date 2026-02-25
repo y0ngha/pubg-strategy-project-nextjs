@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import Logo from '@/(presentation)/shared/components/logo.component';
 import { isAuthenticationComplete } from '@/(presentation)/shared/helpers/authentication.helper';
 import { NavigationItems } from '@/(presentation)/shared/constants/navigation';
-import { Route } from '@/(presentation)/shared/constants/route';
+import { Routes } from '@/(presentation)/shared/constants/routes';
 
 function NavigationBar({ children }: { children: ReactNode }) {
     return (
@@ -71,7 +71,7 @@ function NavigationBarOpenSearch() {
 
 function NavigationBarMyPage() {
     return (
-        <Link href={Route.MYPAGE}>
+        <Link href={Routes.MYPAGE}>
             <Button size={'sm'} className={'hidden font-bold sm:flex'}>
                 MyPage
             </Button>
@@ -81,7 +81,7 @@ function NavigationBarMyPage() {
 
 function NavigationBarLogin() {
     return (
-        <Link href={Route.LOGIN}>
+        <Link href={Routes.LOGIN}>
             <Button size={'sm'} className={'hidden font-bold sm:flex'}>
                 로그인
             </Button>
