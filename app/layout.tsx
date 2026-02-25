@@ -9,6 +9,7 @@ import UserDehydrate from '@/(presentation)/dehydrates/user-dehydrate.component'
 import Footer from '@/footer';
 import Navigation from '@/navigation';
 import AuthFeedbackListner from '@/auth-feedback-listner';
+import AlertProvider from '@/(presentation)/shared/providers/alert-provider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -39,10 +40,13 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
             >
                 <Navigation />
+
                 <ReactQueryProviders>
-                    <UserDehydrate>
-                        <main className={'w-full flex-1'}>{children}</main>
-                    </UserDehydrate>
+                    <AlertProvider>
+                        <UserDehydrate>
+                            <main className={'w-full flex-1'}>{children}</main>
+                        </UserDehydrate>
+                    </AlertProvider>
                 </ReactQueryProviders>
 
                 <AuthFeedbackListner />
