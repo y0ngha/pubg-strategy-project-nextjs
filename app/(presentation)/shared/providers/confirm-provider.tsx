@@ -9,7 +9,11 @@ import {
 } from 'react';
 import Confirm from '@/(presentation)/shared/modals/confirm.modal';
 
-type ModalData = { title: string; content: ReactNode; onConfirm: () => void };
+type ModalData = {
+    title: string;
+    content: ReactNode;
+    onConfirm: () => void | Promise<void>;
+};
 
 interface ConfirmContextValue {
     isOpen: boolean;

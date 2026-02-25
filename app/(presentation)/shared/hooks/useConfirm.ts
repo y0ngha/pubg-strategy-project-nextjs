@@ -12,7 +12,11 @@ export function useConfirm() {
         context.setIsOpen(true);
     };
 
-    const show = (title: string, content: ReactNode, onConfirm: () => void) => {
+    const show = (
+        title: string,
+        content: ReactNode,
+        onConfirm: () => void | Promise<void>
+    ) => {
         context.setModalData({ title, content, onConfirm });
         open();
     };

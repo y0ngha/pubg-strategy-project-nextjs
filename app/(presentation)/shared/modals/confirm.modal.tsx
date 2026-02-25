@@ -7,7 +7,7 @@ import Button from '@/(presentation)/shared/components/button.component';
 interface ConfirmProps {
     isOpen: boolean;
     onClose: () => void;
-    onConfirm: () => void;
+    onConfirm: () => void | Promise<void>;
     title: string;
     content: ReactNode;
 }
@@ -25,8 +25,8 @@ function Confirm({ isOpen, onClose, onConfirm, title, content }: ConfirmProps) {
                 </Button>
                 <Button
                     variant={'primary'}
-                    onClick={() => {
-                        onConfirm();
+                    onClick={async () => {
+                        await onConfirm();
                         onClose();
                     }}
                 >
