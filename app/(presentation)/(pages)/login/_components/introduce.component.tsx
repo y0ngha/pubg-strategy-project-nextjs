@@ -5,7 +5,7 @@ function Introduce() {
         <div className={'relative h-full w-full'}>
             <Image
                 src={'/images/login-bg.webp'}
-                alt={' Background'}
+                alt={'Login Background'}
                 className={'-z-10 object-cover opacity-50'}
                 fill
                 priority
