@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import ReactQueryProviders from '@/react-query-provider';
+import ReactQueryProviders from '@/(presentation)/shared/providers/react-query-provider';
 import { ReactNode } from 'react';
 import UserDehydrate from '@/(presentation)/dehydrates/user-dehydrate.component';
 import Footer from '@/footer';
