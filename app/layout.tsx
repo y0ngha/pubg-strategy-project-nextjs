@@ -10,6 +10,7 @@ import Footer from '@/footer';
 import Navigation from '@/navigation';
 import AuthFeedbackListner from '@/auth-feedback-listner';
 import AlertProvider from '@/(presentation)/shared/providers/alert-provider';
+import ConfirmProvider from '@/(presentation)/shared/providers/confirm-provider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -42,11 +43,15 @@ export default async function RootLayout({
                 <Navigation />
 
                 <ReactQueryProviders>
-                    <AlertProvider>
-                        <UserDehydrate>
-                            <main className={'w-full flex-1'}>{children}</main>
-                        </UserDehydrate>
-                    </AlertProvider>
+                    <ConfirmProvider>
+                        <AlertProvider>
+                            <UserDehydrate>
+                                <main className={'w-full flex-1'}>
+                                    {children}
+                                </main>
+                            </UserDehydrate>
+                        </AlertProvider>
+                    </ConfirmProvider>
                 </ReactQueryProviders>
 
                 <AuthFeedbackListner />
