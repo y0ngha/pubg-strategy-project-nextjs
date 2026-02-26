@@ -8,6 +8,8 @@ import React, {
     HTMLAttributes,
     isValidElement,
     ReactNode,
+    RefAttributes,
+    RefObject,
     SetStateAction,
     useEffect,
     useRef,
@@ -16,34 +18,24 @@ import React, {
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { useSafetyContext } from '@/(presentation)/shared/hooks/useSafetyContext';
 import Button from '@/(presentation)/shared/components/button.component';
-import { cva, VariantProps } from 'class-variance-authority';
+import { useDropdownPosition } from '@/(presentation)/shared/hooks/useDropdownPosition';
+import { createPortal } from 'react-dom';
 
 interface DropdownContextValue {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
+    dropdownRef: RefObject<HTMLDivElement | null>;
+    triggerRef: RefObject<HTMLElement | null>;
+    defaultTriggerRef: RefObject<HTMLButtonElement | null>;
 }
 
 const DropdownContext = createContext<DropdownContextValue | undefined>(
     undefined
 );
 
-const ContentVariants = cva(
-    'bg-background border-border text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 absolute z-50 mt-2 w-56 min-w-32 origin-top-right rounded-md border p-1 shadow-md',
-    {
-        variants: {
-            align: {
-                end: 'right-0',
-                start: 'left-0',
-                center: 'left-1/2 -translate-x-1/2',
-            },
-        },
-    }
-);
-
-interface ContentProps
-    extends
-        HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof ContentVariants> {}
+interface ContentProps extends HTMLAttributes<HTMLDivElement> {
+    align: 'start' | 'center' | 'end';
+}
 
 interface TriggerProps extends HTMLAttributes<HTMLElement> {
     asChild?: boolean;
@@ -52,6 +44,9 @@ interface TriggerProps extends HTMLAttributes<HTMLElement> {
 function Dropdown({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLElement>(null);
+    const defaultTriggerRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -70,7 +65,15 @@ function Dropdown({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <DropdownContext.Provider value={{ open, setOpen }}>
+        <DropdownContext.Provider
+            value={{
+                open,
+                setOpen,
+                dropdownRef,
+                triggerRef,
+                defaultTriggerRef,
+            }}
+        >
             <div
                 ref={containerRef}
                 className={'relative inline-block cursor-pointer text-left'}
@@ -101,7 +104,11 @@ function Trigger({
     if (asChild) {
         const child = Children.only(children);
 
-        if (!isValidElement<HTMLAttributes<HTMLElement>>(child)) {
+        if (
+            !isValidElement<
+                RefAttributes<HTMLElement> & HTMLAttributes<HTMLElement>
+            >(child)
+        ) {
             throw new Error(
                 'Dropdown.Trigger 내부 요소가 하나가 아니거나, ReactElement가 아닙니다.'
             );
@@ -109,6 +116,7 @@ function Trigger({
 
         return cloneElement(child, {
             ...props,
+            ref: context?.triggerRef,
             className: cn(child.props.className, className),
             onClick: (e: React.MouseEvent<HTMLElement>) => {
                 child.props.onClick?.(e);
@@ -119,6 +127,7 @@ function Trigger({
 
     return (
         <Button
+            ref={context?.defaultTriggerRef}
             variant={'ghost'}
             onClick={handleToggle}
             className={cn('cursor-pointer', className)}
@@ -136,12 +145,32 @@ function Content({ align, children, className, ...props }: ContentProps) {
         'Dropdown.Content Dropdown 컴포넌트 내부에서만 사용할 수 있습니다.'
     );
 
+    const position = useDropdownPosition(
+        context?.dropdownRef,
+        context?.triggerRef ?? context?.defaultTriggerRef,
+        context?.open,
+        align
+    );
+
     if (!context.open) return null;
 
-    return (
-        <div className={cn(ContentVariants({ align }), className)} {...props}>
+    return createPortal(
+        <div
+            className={cn(
+                'bg-background border-border text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 absolute z-50 mt-2 w-56 min-w-32 origin-top-right rounded-md border p-1 shadow-md',
+                className
+            )}
+            {...props}
+            ref={context?.dropdownRef}
+            style={{
+                position: 'fixed',
+                top: position?.top,
+                left: position?.left,
+            }}
+        >
             {children}
-        </div>
+        </div>,
+        document.body
     );
 }
 

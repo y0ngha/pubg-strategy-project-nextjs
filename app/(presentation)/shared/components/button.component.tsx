@@ -1,5 +1,6 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@/(presentation)/shared/utils/class-names.util';
+import { ButtonHTMLAttributes, RefObject } from 'react';
 
 const ButtonVariants = cva(
     'cursor-pointer inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
@@ -30,13 +31,23 @@ const ButtonVariants = cva(
 
 interface ButtonProps
     extends
-        React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof ButtonVariants> {}
+        ButtonHTMLAttributes<HTMLButtonElement>,
+        VariantProps<typeof ButtonVariants> {
+    ref?: RefObject<HTMLButtonElement | null>;
+}
 
-function Button({ className, children, variant, size, ...props }: ButtonProps) {
+function Button({
+    className,
+    children,
+    variant,
+    size,
+    ref,
+    ...props
+}: ButtonProps) {
     return (
         <button
             className={cn(ButtonVariants({ variant, size, className }))}
+            ref={ref}
             {...props}
         >
             {children}
