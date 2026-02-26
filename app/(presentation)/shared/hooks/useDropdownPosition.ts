@@ -9,8 +9,6 @@ import {
 interface Position {
     top: number;
     left: number;
-    placement: 'bottom' | 'top';
-    direction: 'right' | 'left';
 }
 
 export function useDropdownPosition(
@@ -33,24 +31,18 @@ export function useDropdownPosition(
 
         let top = rect.bottom;
         let left = rect.right;
-        let placement: 'bottom' | 'top' = 'bottom';
-        let direction: 'left' | 'right' = 'right';
 
         if (rect.bottom + dropdownHeight > viewportHeight) {
             top = rect.top - dropdownHeight;
-            placement = 'top';
         }
 
         if (rect.left + dropdownWidth > viewportWidth) {
             left = rect.right - dropdownWidth;
-            direction = 'left';
         }
 
         setPosition({
             top,
             left,
-            placement,
-            direction,
         });
     });
 
