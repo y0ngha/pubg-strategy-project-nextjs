@@ -5,7 +5,11 @@ import Friends from '@/(presentation)/(pages)/mypage/friends/_components/friends
 
 export default function FriendsPage() {
     return (
-        <div className={'mx-auto h-screen max-w-3xl space-y-6 px-4 py-10'}>
+        <div
+            className={
+                'mx-auto flex h-screen max-w-3xl flex-col space-y-6 px-4 py-10'
+            }
+        >
             <Navigation />
             <Header>친구 관리</Header>
             <FindNewFriend />
