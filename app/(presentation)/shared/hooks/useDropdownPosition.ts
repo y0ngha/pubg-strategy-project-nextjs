@@ -41,7 +41,7 @@ export function useDropdownPosition(
             placement = 'top';
         }
 
-        if (rect.left + dropdownHeight > viewportWidth) {
+        if (rect.left + dropdownWidth > viewportWidth) {
             left = rect.right - dropdownWidth;
             direction = 'left';
         }
