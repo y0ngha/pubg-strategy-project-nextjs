@@ -36,7 +36,7 @@ function FriendsTabsContent({
     const { accept, remove, reject, cancel } = useFriendActions();
 
     return (
-        <div className={'space-y-3'}>
+        <div className={'space-y-3 overflow-y-auto'}>
             <Switch value={activeTab}>
                 <Switch.Case value={MY_FIRENDS_TAB}>
                     <MyFriends friends={friends} onDeleteFriend={remove} />
