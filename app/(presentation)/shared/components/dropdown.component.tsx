@@ -8,6 +8,8 @@ import React, {
     HTMLAttributes,
     isValidElement,
     ReactNode,
+    RefAttributes,
+    RefObject,
     SetStateAction,
     useEffect,
     useRef,
@@ -17,10 +19,15 @@ import { cn } from '@/(presentation)/shared/utils/class-names.util';
 import { useSafetyContext } from '@/(presentation)/shared/hooks/useSafetyContext';
 import Button from '@/(presentation)/shared/components/button.component';
 import { cva, VariantProps } from 'class-variance-authority';
+import { useDropdownPosition } from '@/(presentation)/shared/hooks/useDropdownPosition';
+import { createPortal } from 'react-dom';
 
 interface DropdownContextValue {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
+    dropdownRef: RefObject<HTMLDivElement | null>;
+    triggerRef: RefObject<HTMLElement | null>;
+    defaultTriggerRef: RefObject<HTMLButtonElement | null>;
 }
 
 const DropdownContext = createContext<DropdownContextValue | undefined>(
@@ -52,6 +59,9 @@ interface TriggerProps extends HTMLAttributes<HTMLElement> {
 function Dropdown({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLElement>(null);
+    const defaultTriggerRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -70,7 +80,15 @@ function Dropdown({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <DropdownContext.Provider value={{ open, setOpen }}>
+        <DropdownContext.Provider
+            value={{
+                open,
+                setOpen,
+                dropdownRef,
+                triggerRef,
+                defaultTriggerRef,
+            }}
+        >
             <div
                 ref={containerRef}
                 className={'relative inline-block cursor-pointer text-left'}
@@ -101,7 +119,11 @@ function Trigger({
     if (asChild) {
         const child = Children.only(children);
 
-        if (!isValidElement<HTMLAttributes<HTMLElement>>(child)) {
+        if (
+            !isValidElement<
+                RefAttributes<HTMLElement> & HTMLAttributes<HTMLElement>
+            >(child)
+        ) {
             throw new Error(
                 'Dropdown.Trigger 내부 요소가 하나가 아니거나, ReactElement가 아닙니다.'
             );
@@ -109,6 +131,7 @@ function Trigger({
 
         return cloneElement(child, {
             ...props,
+            ref: context?.triggerRef,
             className: cn(child.props.className, className),
             onClick: (e: React.MouseEvent<HTMLElement>) => {
                 child.props.onClick?.(e);
@@ -119,6 +142,7 @@ function Trigger({
 
     return (
         <Button
+            ref={context?.defaultTriggerRef}
             variant={'ghost'}
             onClick={handleToggle}
             className={cn('cursor-pointer', className)}
@@ -136,12 +160,28 @@ function Content({ align, children, className, ...props }: ContentProps) {
         'Dropdown.Content Dropdown 컴포넌트 내부에서만 사용할 수 있습니다.'
     );
 
+    const position = useDropdownPosition(
+        context?.dropdownRef,
+        context?.triggerRef ?? context?.defaultTriggerRef,
+        context?.open
+    );
+
     if (!context.open) return null;
 
-    return (
-        <div className={cn(ContentVariants({ align }), className)} {...props}>
+    return createPortal(
+        <div
+            className={cn(ContentVariants({ align }), className)}
+            {...props}
+            ref={context?.dropdownRef}
+            style={{
+                position: 'fixed',
+                top: position?.top,
+                left: position?.left,
+            }}
+        >
             {children}
-        </div>
+        </div>,
+        document.body
     );
 }
 
