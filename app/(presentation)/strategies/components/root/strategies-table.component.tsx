@@ -69,7 +69,7 @@ function StrategiesTable<
 
     const virtualizer = useVirtualizer({
         count: strategies.length,
-        estimateSize: () => 73,
+        estimateSize: () => 64,
         getScrollElement: () => tableContainerRef.current,
         overscan: 5,
         measureElement:
@@ -130,11 +130,10 @@ function StrategiesTable<
             >
                 {items.map(item => {
                     const strategy = strategies[item.index];
-
                     return (
                         <Table.Row
                             key={strategy.id}
-                            className={`flex`}
+                            className={`absolute flex w-full`}
                             data-index={item.index}
                             ref={virtualizer.measureElement}
                             style={{
